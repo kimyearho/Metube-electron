@@ -1,5 +1,3 @@
-# SharePodv2
-
-![Imgur](https://t1.daumcdn.net/cfile/tistory/26326737590AF3B226)
+![Imgur](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
 
 <br/>
