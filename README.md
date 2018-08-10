@@ -8,4 +8,4 @@ I am using vue to improve the performance and problems of existing SharePod (v1)
 (The image below is under development and may change in design.)
 
 ![Imgur](https://i.imgur.com/nHD7n0m.png)
-![Imgur](https://i.imgur.com/VxBtNxQ.png)
+![Imgur](https://i.imgur.com/39Q8H5K.png)
