@@ -2,7 +2,7 @@
 ***
 
 ### What's new ?
-We are using vue to improve the performance and problems of existing SharePod (v1). In v1, we are redesigning it to complement many problems and problems and improve the player's capabilities. The new player will be displayed soon. thanks!
+I am using vue to improve the performance and problems of existing SharePod (v1). We have resolved and redesigned many of the problems we encountered in developing v1. The v2 version will show you how it evolved as a music player. Thank you.
 
 ### Screenshot
 (The image below is under development and may change in design.)
