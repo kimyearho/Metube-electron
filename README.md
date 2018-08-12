@@ -1,4 +1,4 @@
-![Imgur](https://t1.daumcdn.net/cfile/tistory/26326737590AF3B226)
+![Imgur](https://cdn-images-1.medium.com/max/1600/1*H4uJnCQuAfIlqJGekzYffw.jpeg)
 ***
 
 ### What's new ?
