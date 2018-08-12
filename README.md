@@ -7,5 +7,8 @@ I am using vue to improve the performance and problems of existing SharePod (v1)
 ### Screenshot
 (The image below is under development and may change in design.)
 
-![Imgur](https://i.imgur.com/nHD7n0m.png)
-![Imgur](https://i.imgur.com/39Q8H5K.png)
+![Imgur](https://i.imgur.com/wy3MOPV.png)
+![Imgur](https://i.imgur.com/6PgLmi1.png)
+![Imgur](https://i.imgur.com/eulXy6z.png)
+![Imgur](https://i.imgur.com/lVZkKBo.png)
+![Imgur](https://i.imgur.com/2zGLXMS.png)
