@@ -10,5 +10,7 @@ As a music player, we will provide it as open source if it is developed and stab
 ### Screenshot
 (The image below is under development and may change in design.)
 
+![Imgur](https://i.imgur.com/9KqCGcS.png)
+![Imgur](https://i.imgur.com/6PZQ4ZO.png)
 ![Imgur](https://i.imgur.com/30UDGeI.png)
 ![Imgur](https://i.imgur.com/60VjqhN.png)
