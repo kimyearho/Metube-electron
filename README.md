@@ -11,6 +11,7 @@ As a music player, we will provide it as open source if it is developed and stab
 
 - [x] Playlist (Channel/Single/Playlist/Live)
 - [x] Video Search (Channel/Single/Playlist/Live)
+- [x] Search Paging
 - [x] Video Play
 - [x] Video Pause
 - [x] Video Volume
