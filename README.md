@@ -13,6 +13,7 @@ As a music player, we will provide it as open source if it is developed and stab
 - [x] Video Search (Channel/Single/Playlist/Live)
 - [x] Video Play
 - [x] Video Pause
+- [x] Video Volume
 - [ ] Video Next
 - [ ] Video Current
 - [x] PlayBarTransform
