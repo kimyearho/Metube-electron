@@ -18,6 +18,7 @@ As a music player, we will provide it as open source if it is developed and stab
 - [x] Video Volume
 - [x] Video Next Play
 - [x] Video Previous Play
+- [x] Video Repeat Play
 - [x] Setting
 - [x] PlayBarTransform
 
