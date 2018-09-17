@@ -29,6 +29,15 @@ Thank you
 - [x] PlayBarTransform
 - [x] Video error check
 
+### Readmap
+
+- [ ] Shuffle
+- [ ] Extend menu
+- [ ] Video Link Add
+- [ ] Google+ Login
+- [ ] Collection
+
+
 ### Screenshot
 (The image below is under development and may change in design.)
 
