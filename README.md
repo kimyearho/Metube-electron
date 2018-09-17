@@ -21,6 +21,7 @@ As a music player, we will provide it as open source if it is developed and stab
 - [x] Video Repeat Play
 - [x] Setting
 - [x] PlayBarTransform
+- [x] Video error check
 
 ### Screenshot
 (The image below is under development and may change in design.)
