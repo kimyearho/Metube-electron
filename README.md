@@ -14,6 +14,9 @@ New versions are deployed in the repository.
 there may be bugs and please register issues.
 Thank you
 
+### Mac Support?
+The Mac version will be available after the official release.
+
 ### Feature
 
 - [x] Playlist (Channel/Single/Playlist/Live)
