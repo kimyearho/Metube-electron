@@ -22,16 +22,15 @@ The Mac version will be available after the official release.
 - [x] Playlist (Channel/Single/Playlist/Live)
 - [x] Video Search (Channel/Single/Playlist/Live)
 - [x] Search Paging
-- [x] Auto Search Complate
+- [x] Auto Search Complate (max 10)
 - [x] Video Play
 - [x] Video Pause
 - [x] Video Volume
 - [x] Video Next Play
 - [x] Video Previous Play
 - [x] Video Repeat Play
+- [x] Video Error Check
 - [x] Setting
-- [x] PlayBarTransform
-- [x] Video error check
 
 ### Readmap
 
