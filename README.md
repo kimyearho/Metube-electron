@@ -32,5 +32,6 @@ Thank you
 ### Screenshot
 (The image below is under development and may change in design.)
 
-![Imgur](https://i.imgur.com/NLg1aef.png)
-![Imgur](https://i.imgur.com/rBDBXmm.png)
+![Imgur](https://i.imgur.com/ynT04Ij.png)
+![Imgur](https://i.imgur.com/fVD15I9.png)
+![Imgur](https://i.imgur.com/hEGBNiD.png)
