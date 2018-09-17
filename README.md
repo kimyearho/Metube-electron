@@ -13,6 +13,9 @@ The beta version does not support automatic updates.
 New versions are deployed in the repository. 
 Thank you
 
+### ※
+This app is in beta. Therefore, there may be bugs and please register issues.
+
 ### Feature
 
 - [x] Playlist (Channel/Single/Playlist/Live)
