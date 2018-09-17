@@ -11,10 +11,8 @@ As a music player, we will provide it as open source if it is developed and stab
 This app is currently in beta. 
 The beta version does not support automatic updates. 
 New versions are deployed in the repository. 
+there may be bugs and please register issues.
 Thank you
-
-### ※
-This app is in beta. Therefore, there may be bugs and please register issues.
 
 ### Feature
 
