@@ -4,9 +4,6 @@
 ### What's new ?
 I am using vue to improve the performance and problems of existing SharePod (v1). <br> We have resolved and redesigned many of the problems we encountered in developing v1.
 
-### Do you want to open source?
-As a music player, we will provide it as open source if it is developed and stabilized to a certain extent.
-
 ### Reference
 This app is currently in beta. 
 The beta version does not support automatic updates. 
