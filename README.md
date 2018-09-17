@@ -7,6 +7,12 @@ I am using vue to improve the performance and problems of existing SharePod (v1)
 ### Do you want to open source?
 As a music player, we will provide it as open source if it is developed and stabilized to a certain extent.
 
+### Reference
+This app is currently in beta. 
+The beta version does not support automatic updates. 
+New versions are deployed in the repository. 
+Thank you
+
 ### Feature
 
 - [x] Playlist (Channel/Single/Playlist/Live)
