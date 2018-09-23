@@ -40,6 +40,6 @@ The Mac version will be available after the official release.
 ### Screenshot
 (The image below is under development and may change in design.)
 
-![Imgur](https://i.imgur.com/ynT04Ij.png)
-![Imgur](https://i.imgur.com/fVD15I9.png)
-![Imgur](https://i.imgur.com/hEGBNiD.png)
+![Imgur](https://i.imgur.com/7Wc1SWn.png)
+![Imgur](https://i.imgur.com/Ll4j5I9.png)
+![Imgur](https://i.imgur.com/Sqqw9jn.png)
