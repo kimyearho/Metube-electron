@@ -2,7 +2,7 @@
 ***
 
 ### What's new ?
-I am using vue to improve the performance and problems of existing SharePod (v1). <br> We have resolved and redesigned many of the problems we encountered in developing v1.
+We are creating a simple and simple YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. It is currently in beta, so functionality may be limited. Please see below for details.
 
 ### Reference
 This app is currently in beta. 
