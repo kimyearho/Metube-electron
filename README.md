@@ -16,9 +16,9 @@ The Mac version will be available after the official release.
 
 ### Feature
 
-- [x] Playlist (Channel/Single/Playlist/Live)
-- [x] Video Search (Channel/Single/Playlist/Live)
-- [x] Auto Search Complate (max 10)
+- [x] PlayList
+- [x] Video Search
+- [x] Auto Search Complate
 - [x] Video Play
 - [x] Video Pause
 - [x] Video Volume
