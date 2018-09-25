@@ -26,13 +26,12 @@ The Mac version will be available after the official release.
 - [x] Video Previous Play
 - [x] Video Repeat Play
 - [x] Video Error Check
+- [x] Extend menu
 - [x] Setting
 
 ### Readmap
 
 - [ ] Shuffle
-- [ ] Extend menu
-- [ ] Video Link Add
 - [ ] Google+ Login
 - [ ] Collection
 
