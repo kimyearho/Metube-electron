@@ -29,7 +29,7 @@ The Mac version will be available after the official release.
 - [x] Context Menu
 - [x] Setting
 
-### Readmap
+### Roadmap
 
 - [ ] Shuffle
 - [ ] Google+ Login
