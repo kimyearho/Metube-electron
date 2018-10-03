@@ -27,12 +27,12 @@ The Mac version will be available after the official release.
 - [x] Video Repeat Play
 - [x] Video Error Check
 - [x] Context Menu
+- [x] Google+ Login
 - [x] Setting
 
 ### Roadmap
 
 - [ ] Shuffle
-- [ ] Google+ Login
 - [ ] Collection
 
 
