@@ -1,5 +1,5 @@
-![Imgur](https://i.imgur.com/6Z2O4A9.png)
-![Imgur](https://i.imgur.com/MYUB8qb.png)
+![Imgur](https://i.imgur.com/xszoj1h.png)
+![Imgur](https://i.imgur.com/N4EXUGT.png)
 ***
 
 ### What's new ?
