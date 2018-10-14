@@ -1,4 +1,5 @@
-![Imgur](https://i.imgur.com/qKenxpi.png)
+![Imgur](https://i.imgur.com/6Z2O4A9.png)
+![Imgur](https://i.imgur.com/MYUB8qb.png)
 ***
 
 ### What's new ?
@@ -34,10 +35,3 @@ The Mac version will be available after the official release.
 
 - [ ] Shuffle
 - [ ] Collection
-
-
-### Screenshot
-(The image below is under development and may change in design.)
-
-![Imgur](https://i.imgur.com/6Z2O4A9.png)
-![Imgur](https://i.imgur.com/MYUB8qb.png)
