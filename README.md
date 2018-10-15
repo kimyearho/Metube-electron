@@ -19,3 +19,4 @@ The Mac version will be available after the official release.
 
 - [ ] Shuffle
 - [ ] Collection
+- [ ] Synchronization
