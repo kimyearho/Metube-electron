@@ -15,22 +15,6 @@ Thank you
 ### Mac Support?
 The Mac version will be available after the official release.
 
-### Feature
-
-- [x] PlayList
-- [x] Video Search
-- [x] Auto Search Complate
-- [x] Video Play
-- [x] Video Pause
-- [x] Video Volume
-- [x] Video Next Play
-- [x] Video Previous Play
-- [x] Video Repeat Play
-- [x] Video Error Check
-- [x] Context Menu
-- [x] Google+ Login
-- [x] Setting
-
 ### Roadmap
 
 - [ ] Shuffle
