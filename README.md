@@ -23,4 +23,4 @@ The Mac version will be available after the official release.
 - [ ] Synchronization
 - [ ] Social Share
 - [ ] Your favorite music
-- [ ] Soundcloud ntegrated
+- [ ] Soundcloud integrated
