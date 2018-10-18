@@ -16,6 +16,11 @@ Thank you
 ### Mac Support?
 The Mac version will be available after the official release.
 
+### Publish
+* https://betapage.co/startup/metube
+* https://www.producthunt.com/posts/metube
+
+
 ### Roadmap
 
 - [ ] Shuffle
