@@ -3,6 +3,8 @@
 
 ***
 
+![Img](https://img.betapage.co/images/120730889-120732982.jpg)
+
 ### What's new ?
 We are creating a simple and simple YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. It is currently in beta, so functionality may be limited. Please see below for details.
 
@@ -19,6 +21,7 @@ The Mac version will be available after the official release.
 ### Publish
 * https://betapage.co/startup/metube
 * https://www.producthunt.com/posts/metube
+* https://electronjs.org/apps/metube
 
 
 ### Roadmap
