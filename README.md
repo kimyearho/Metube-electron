@@ -23,11 +23,12 @@ The Mac version will be available after the official release.
 * https://www.producthunt.com/posts/metube
 * https://electronjs.org/apps/metube
 
+### Progress
+- [o] Collection
 
 ### Roadmap
 
 - [ ] Shuffle
-- [ ] Collection
 - [ ] Synchronization
 - [ ] Social Share
 - [ ] Your favorite music
