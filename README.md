@@ -24,7 +24,7 @@ The Mac version will be available after the official release.
 * https://electronjs.org/apps/metube
 
 ### Progress
-- [o] Collection
+- [x] Collection
 
 ### Roadmap
 
