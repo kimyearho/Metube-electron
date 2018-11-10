@@ -1,9 +1,6 @@
 ![Imgur](https://i.imgur.com/8euvstf.png)
 ![Imgur](https://i.imgur.com/ygh080o.png)
 
-![Imgur](https://i.imgur.com/X4H7Loh.png)
-![Imgur](https://i.imgur.com/poy6NKN.png)
-
 ***
 
 ![Img](https://img.betapage.co/images/120730889-120732982.jpg)
