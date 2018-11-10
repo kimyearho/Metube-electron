@@ -5,7 +5,7 @@
 
 ***
 
-![Img](https://img.betapage.co/images/120730889-120732982.jpg)
+![Img](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
 
 ### What's new ?
 We are creating a simple and simple YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. It is currently in beta, so functionality may be limited. Please see below for details.
