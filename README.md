@@ -18,7 +18,7 @@ there may be bugs and please register issues.
 Thank you
 
 ### Mac Support?
-The Mac version will be available after the official release.
+Can not build because there is no Mac related device. If you purchase a machine, we will support it together.
 
 ### Publish
 * https://betapage.co/startup/metube
