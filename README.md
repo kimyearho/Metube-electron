@@ -1,4 +1,4 @@
-# v1.1 UPDATE!
+# [2018-11-25] v1.2 UPDATE!
 
 ![Imgur](https://i.imgur.com/f06vxGj.png)
 ![Imgur](https://i.imgur.com/tt8DKkJ.png)
