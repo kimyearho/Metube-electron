@@ -25,6 +25,9 @@ Can not build because there is no Mac related device. If you purchase a machine,
 * https://www.producthunt.com/posts/metube
 * https://electronjs.org/apps/metube
 
+### Trello (for korea)
+<https://trello.com/b/qj4gO2br/metube>
+
 ### Contact Us
 Do you have any questions? Please feel free to contact us by email. Feedback is also welcome. <br>
 <kstory8715@gmail.com>
