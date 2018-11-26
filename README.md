@@ -24,14 +24,3 @@ Can not build because there is no Mac related device. If you purchase a machine,
 * https://betapage.co/startup/metube
 * https://www.producthunt.com/posts/metube
 * https://electronjs.org/apps/metube
-
-### Progress
-- [x] My Playlist
-
-### Roadmap
-
-- [ ] Shuffle
-- [ ] Synchronization
-- [ ] Social Share
-- [ ] Your favorite music
-- [ ] Soundcloud integrated
