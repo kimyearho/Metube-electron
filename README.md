@@ -24,3 +24,6 @@ Can not build because there is no Mac related device. If you purchase a machine,
 * https://betapage.co/startup/metube
 * https://www.producthunt.com/posts/metube
 * https://electronjs.org/apps/metube
+
+### Contact Us
+Do you have any questions? Please feel free to contact us by email. Feedback is also welcome.
