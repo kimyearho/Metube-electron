@@ -21,7 +21,7 @@ Thank you
 Can not build because there is no Mac related device. If you purchase a machine, we will support it together.
 
 ### Source Open
-I wish this project could be used by anyone. It aims at better ideas and perfection. Source code distribution is currently undergoing various preparations. Therefore, please wait a moment.
+I hope this project can be used by anyone. It aims to be a better idea and perfection. Source code distribution is preparing for license review. Therefore, please wait a moment.
 
 ### Publish
 * https://betapage.co/startup/metube
