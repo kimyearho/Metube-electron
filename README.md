@@ -29,5 +29,28 @@ Can not build because there is no Mac related device. If you purchase a machine,
 <https://trello.com/b/qj4gO2br/metube>
 
 ### Contact Us
-Do you have any questions? Please feel free to contact us by email. Feedback is also welcome. <br>
+Hi guys.
+
+I really like the YouTube platform, where you can watch a variety of music.
+In fact, this application started to develop because I was inconvenient to use Youtube in my work while I was working.
+So I wanted to develop it as a desktop application rather than a web application, and there was a bit more variety in my desire.
+I wanted to make features that Youtube does not offer, and I wanted to make it more diverse.
+So "MeTube" was born. I'm a web application programmer, but not a designer.
+Therefore, I tend to worry about UI / UX and design.
+
+There are a lot of functions that I am planning.
+But we need more ideas.
+I want to open the source, communicate with various people, develop and complete the app.
+But "MeTube" is not known to many people yet.
+
+As an open source music program, I would like to make it together if it is well known.
+I do not use English very well, so communication may be somewhat lacking.
+But I think that part can be resolved somehow.
+If only they have faith and will!
+
+We can not collect all the opinions, but we are seriously reviewing them.
+Please give us your feedback if you have any comments.
+
+Thank you. <br>
+
 <kstory8715@gmail.com>
