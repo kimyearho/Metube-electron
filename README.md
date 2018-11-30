@@ -26,5 +26,4 @@ Can not build because there is no Mac related device. If you purchase a machine,
 <https://trello.com/b/qj4gO2br/metube>
 
 ### Contact Us
-<br/>
 <kstory8715@gmail.com>
