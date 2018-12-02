@@ -1,7 +1,7 @@
-# [2018-12-01] v1.2.1 UPDATE!
+# [2018-12-02] v1.2.2 UPDATE
 
-![Imgur](https://i.imgur.com/f06vxGj.png)
-![Imgur](https://i.imgur.com/tt8DKkJ.png)
+![Imgur](https://i.imgur.com/kielrFC.png)
+![Imgur](https://i.imgur.com/9kTa1mq.png)
 
 ***
 
