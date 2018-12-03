@@ -18,7 +18,7 @@ git Subscribe to the top "watch release" to keep the latest version at all times
 Can not build because there is no Mac related device. If you purchase a machine, we will support it together.
 
 ### Publish
-* https://electronjs.org/apps/metube
+https://electronjs.org/apps/metube
 
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
