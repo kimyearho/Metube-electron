@@ -21,6 +21,6 @@ https://electronjs.org/apps/metube
 <https://trello.com/b/qj4gO2br/metube>
 
 ### Contact Us
-Do you have any questions? <br>
+Do you have any questions?
 Please leave the email <br>
 <kstory8715@gmail.com>
