@@ -14,9 +14,6 @@ We are creating a simple  YouTube video player. The main purpose is a music play
 New version releases are always deployed in the repository.
 git Subscribe to the top "watch release" to keep the latest version at all times.
 
-### Mac Support?
-Can not build because there is no Mac related device. If you purchase a machine, we will support it together.
-
 ### Publish
 https://electronjs.org/apps/metube
 
