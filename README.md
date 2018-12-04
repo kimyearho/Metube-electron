@@ -1,4 +1,4 @@
-# [2018-12-02] v1.2.2 UPDATE
+# [2018-12-04] v1.2.3 UPDATE
 
 ![Imgur](https://i.imgur.com/kielrFC.png)
 ![Imgur](https://i.imgur.com/9kTa1mq.png)
