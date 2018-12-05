@@ -11,8 +11,9 @@
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
 
 ### Reference
-New version releases are always deployed in the repository.
-git Subscribe to the top "watch release" to keep the latest version at all times.
+New version releases are always deployed in the repository. The new version update is fast
+To keep up to date, always subscribe to the parent "watch release".
+Star is a great power for developers.
 
 ### Publish
 https://electronjs.org/apps/metube
