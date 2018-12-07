@@ -21,7 +21,7 @@ Star is a great power for developers.
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB, and it is also very safe because some Google user information does not communicate with a separate server.
 
-### Next Plan
+### Next Plan (v1.2.3 -> v1.3)
 In the next version, you will add your own collection management as a key feature. Now you can create your own collections and manage them by adding them directly to the collection you want. This feature has many considerations and issues to solve. We are currently working very smoothly and are working hard to make it available soon. Several other things will change.
 
 ### Open source?
