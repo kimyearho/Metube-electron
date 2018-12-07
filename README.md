@@ -7,7 +7,7 @@
 
 ![Img](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
 
-### Project
+### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 
 ### What's new ?
