@@ -1,7 +1,7 @@
-# [2018-12-04] v1.2.3 UPDATE
+# [2018-12-04] v1.3.0 UPDATE
 
-![Imgur](https://i.imgur.com/kielrFC.png)
-![Imgur](https://i.imgur.com/9kTa1mq.png)
+![Imgur](https://i.imgur.com/OoTch73.png)
+![Imgur](https://i.imgur.com/7WT3pmy.png)
 
 ***
 
@@ -20,9 +20,6 @@ Star is a great power for developers.
 
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
-
-### Next Plan (v1.2.3 -> v1.3)
-In the next version, you will add your own collection management as a key feature. Now you can create your own collections and manage them by adding them directly to the collection you want. This feature has many considerations and issues to solve. We are currently working very smoothly and are working hard to make it available soon. Several other things will change.
 
 ### Open source?
 After the 1.3 version is updated, we will start preparing to open the source in earnest. Many developers are interested in contributing.
