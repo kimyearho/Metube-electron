@@ -21,9 +21,6 @@ Star is a great power for developers.
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
-### Open source?
-After the 1.3 version is updated, we will start preparing to open the source in earnest. Many developers are interested in contributing.
-
 ### Publish
 https://electronjs.org/apps/metube
 
