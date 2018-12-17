@@ -21,6 +21,9 @@ Star is a great power for developers.
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
+### Next Plan
+My collection playlists will have a drag-and-drop feature that will allow them to sort by the way they want, and will be applied first. In the future, we will be able to control the playlists retrieved from YouTube.
+
 ### Publish
 https://electronjs.org/apps/metube
 
