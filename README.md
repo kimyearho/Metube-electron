@@ -23,6 +23,7 @@ Star is a great power for developers.
 
 ### Next Plan
 My collection playlists will have a drag-and-drop feature that will allow them to sort by the way they want, and will be applied first. In the future, we will be able to control the playlists retrieved from YouTube.
+In the meantime, we will focus on convenience for major functions.
 
 ### Publish
 https://electronjs.org/apps/metube
