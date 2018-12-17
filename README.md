@@ -30,7 +30,5 @@ https://electronjs.org/apps/metube
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
 
-### Contact Us
-Do you have any questions?
-Please leave the email <br>
-<kstory8715@gmail.com>
+### Support
+If you like the program, please click on the star! It will help developers a lot.
