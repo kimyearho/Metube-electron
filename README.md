@@ -16,7 +16,7 @@ We are creating a simple  YouTube video player. The main purpose is a music play
 ### Reference
 New version releases are always deployed in the repository. The new version update is fast
 To keep up to date, always subscribe to the parent "watch release".
-Star is a great power for developers.
+If you like the program, please click on the star! It will help developers a lot.
 
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
@@ -32,4 +32,5 @@ https://electronjs.org/apps/metube
 <https://trello.com/b/qj4gO2br/metube>
 
 ### Support
-If you like the program, please click on the star! It will help developers a lot.
+I want to continue developing Metube. We welcome those who can help. <br/>
+<kstory8715@gmail.com>
