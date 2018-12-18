@@ -51,7 +51,11 @@ const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
 ```
 
 ### DB related
-I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information.
+I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information. <br/>
+To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
+<https://pouchdb.com/>
+
+### DB Debug
 
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
