@@ -58,7 +58,7 @@ To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 <https://pouchdb.com/>
 
 ### Plan
-We are currently working on code improvements and function name modifications. <
+We are currently working on code improvements and function name modifications. <br/>
 You should also change the comment to English.
 
 ***
