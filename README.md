@@ -21,16 +21,53 @@ If you like the program, please click on the star! It will help developers a lot
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
-### Next Plan
-My collection playlists will have a drag-and-drop feature that will allow them to sort by the way they want, and will be applied first. In the future, we will be able to control the playlists retrieved from YouTube.
-In the meantime, we will focus on convenience for major functions.
+***
 
-### Publish
-https://electronjs.org/apps/metube
+### Installation
+```
+# install
+> yarn
+
+# run
+> yarn run dev
+
+# build
+> yarn run build
+```
+
+### Require
+Private keys are not included. Get your private key directly.
+```js
+# src/analiytics/analiytics.js
+const analytics = new Analytics.default("[[ KEY ID HERE ]]")
+
+# src/auth/auth.js (Google OAuth)
+const CLIENT_ID = "[[ CLIENT ID HERE ]]"
+const CLIENT_SECRET = "[[ CLIENT SECRET HERE ]]"
+
+# src/renderer/plugins/pouchdb/index.js
+Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
+
+# src/renderer/service/common-service.js
+const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
+```
+
+### DB related
+I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information. <br/>
+To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
+<https://pouchdb.com/>
+
+### Plan
+We are currently working on code improvements and function name modifications. <br/>
+You should also change the comment to English.
+
+***
 
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
 
-### Support
+### Contributing
 I want to continue developing Metube. We welcome those who can help. <br/>
-<kstory8715@gmail.com>
+
+## License
+GNU General Public License v3.0
