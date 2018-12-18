@@ -57,6 +57,10 @@ I use PouchDB as my local database. Please refer to the PouchDB documentation fo
 To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 <https://pouchdb.com/>
 
+### Plan
+We are currently working on code improvements and function name modifications. <
+You should also change the comment to English.
+
 ***
 
 ### Trello (for korean)
