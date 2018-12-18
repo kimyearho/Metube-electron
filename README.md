@@ -62,9 +62,8 @@ To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
 
-### Support
+### Contributing
 I want to continue developing Metube. We welcome those who can help. <br/>
-<kstory8715@gmail.com>
 
 <br/>
 
