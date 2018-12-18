@@ -41,7 +41,7 @@ Private keys are not included. Get your private key directly.
 # src/analiytics/analiytics.js
 const analytics = new Analytics.default("[[ KEY ID HERE ]]")
 
-# src/auth/auth.js
+# src/auth/auth.js (Google OAuth)
 const CLIENT_ID = "[[ CLIENT ID HERE ]]"
 const CLIENT_SECRET = "[[ CLIENT SECRET HERE ]]"
 
