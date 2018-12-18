@@ -65,3 +65,9 @@ To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 ### Support
 I want to continue developing Metube. We welcome those who can help. <br/>
 <kstory8715@gmail.com>
+
+<br/>
+
+```
+GNU General Public License v3.0
+```
