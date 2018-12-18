@@ -28,6 +28,38 @@ In the meantime, we will focus on convenience for major functions.
 ### Publish
 https://electronjs.org/apps/metube
 
+### Require
+Private keys are not included. Get your private key directly.
+```js
+# src/analiytics/analiytics.js
+const analytics = new Analytics.default("[[ KEY ID HERE ]]")
+
+# src/auth/auth.js
+const CLIENT_ID = "[[ CLIENT ID HERE ]]"
+const CLIENT_SECRET = "[[ CLIENT SECRET HERE ]]"
+
+# src/renderer/plugins/pouchdb/index.js
+Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
+
+# src/renderer/service/common-service.js
+const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
+```
+
+### Installation
+```
+# install
+> yarn
+
+# run
+> yarn run dev
+
+# build
+> yarn run build
+```
+
+### DB related
+I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information.
+
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
 
