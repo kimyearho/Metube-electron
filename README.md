@@ -21,6 +21,20 @@ If you like the program, please click on the star! It will help developers a lot
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
+***
+
+### Installation
+```
+# install
+> yarn
+
+# run
+> yarn run dev
+
+# build
+> yarn run build
+```
+
 ### Require
 Private keys are not included. Get your private key directly.
 ```js
@@ -36,18 +50,6 @@ Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
 
 # src/renderer/service/common-service.js
 const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
-```
-
-### Installation
-```
-# install
-> yarn
-
-# run
-> yarn run dev
-
-# build
-> yarn run build
 ```
 
 ### DB related
