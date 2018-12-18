@@ -69,8 +69,5 @@ You should also change the comment to English.
 ### Contributing
 I want to continue developing Metube. We welcome those who can help. <br/>
 
-<br/>
-
-```
+## License
 GNU General Public License v3.0
-```
