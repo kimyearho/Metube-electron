@@ -1,6 +1,6 @@
 const { ipcMain } = require("electron");
 const Analytics = require("electron-google-analytics");
-const analytics = new Analytics.default("[[ KEY ID HERE ]]");
+const analytics = new Analytics.default("UA-128591940-1");
 const uuidV4 = require("uuid/v4");
 const uuid = uuidV4();
 
