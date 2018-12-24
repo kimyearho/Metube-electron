@@ -5,6 +5,9 @@ import request from "request";
 
 const playerPath = "http://localhost:7070";
 
+// Chrome AutoPlay Policy disable
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -55,7 +58,7 @@ function createWindow() {
   mainWindow.loadURL(winURL);
 
   if (process.env.NODE_ENV === "development") {
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   } else {
     // Annotation processing if not used
     require("../analiytics/analytics")(app);
@@ -75,6 +78,7 @@ function createWindow() {
     });
     player.setMenu(null);
     player.loadURL(playerPath);
+    player.webContents.openDevTools();
     player.on("close", e => {
       if (mainWindow) {
         e.preventDefault();

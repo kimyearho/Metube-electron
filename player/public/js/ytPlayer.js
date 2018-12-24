@@ -1,7 +1,6 @@
 let ytPlayer;
 
 class YTPlayer {
-
   constructor() {
     this.listenToWin();
     this.startProgressChecker();
@@ -11,10 +10,10 @@ class YTPlayer {
   setState(state) {
     this.playerState = state;
     if (this.videoEnded) {
-      this.send('onEnd');
+      this.send("onEnd");
       this.sendCurrentTime();
     }
-    this.send('onStateChange', this.playerState);
+    this.send("onStateChange", this.playerState);
     return false;
   }
 
@@ -46,11 +45,11 @@ class YTPlayer {
   }
 
   loadVideoById(param) {
-    ytPlayer.loadVideoById({ videoId: param, suggestedQuality: 'tiny' });
+    ytPlayer.loadVideoById({ videoId: param, suggestedQuality: "tiny" });
   }
 
   sendCurrentTime() {
-    this.send('currentTime', ytPlayer.getCurrentTime());
+    this.send("currentTime", ytPlayer.getCurrentTime());
   }
 
   setVolume(value) {
@@ -58,7 +57,7 @@ class YTPlayer {
   }
 
   logout() {
-    window.location.replace('');
+    window.location.replace("");
   }
 
   waitToBuffer() {
@@ -70,7 +69,8 @@ class YTPlayer {
           clearInterval(bufferWaitInterval);
           resolve();
         }
-        if (--timeOut < 0) { // eslint-disable-line no-plusplus
+        if (--timeOut < 0) {
+          // eslint-disable-line no-plusplus
           clearInterval(bufferWaitInterval);
           reject();
         }
@@ -89,33 +89,33 @@ class YTPlayer {
 
   // 메인에서 전달받은 이벤트
   listenToWin() {
-    window.ipcRenderer.on('win2Player', (e, args) => {
-      const [command, data] = args;
+    window.ipcRenderer.on("win2Player", (e, args) => {
+      let [command, data] = args;
       this[command](data);
     });
   }
 
   // 메인으로 이벤트 전송
   send(command, args) {
-    window.ipcRenderer.send('player2Win', [command, args]);
+    window.ipcRenderer.send("player2Win", [command, args]);
   }
 }
 
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/player_api';
+const tag = document.createElement("script");
+tag.src = "https://www.youtube.com/player_api";
 
-const firstScriptTag = document.getElementsByTagName('script')[0];
+const firstScriptTag = document.getElementsByTagName("script")[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var element = document.getElementById("ytplayer");
 element.classList.add("video-frame");
 
-window.onYouTubePlayerAPIReady = () => {
+window.onYouTubePlayerAPIReady = function() {
   let yt;
 
-  ytPlayer = new YT.Player('ytplayer', {
-    width: '100%',
-    height: '100%',
+  ytPlayer = new YT.Player("ytplayer", {
+    width: "100%",
+    height: "100%",
     playerVars: {
       showinfo: 0,
       controls: 0,
@@ -125,11 +125,11 @@ window.onYouTubePlayerAPIReady = () => {
     events: {
       onReady() {
         yt = new YTPlayer();
-        yt.send('onReady');
+        yt.send("onReady");
       },
       onStateChange(e) {
         yt.setState(e.data);
-      },
-    },
+      }
+    }
   });
 };
