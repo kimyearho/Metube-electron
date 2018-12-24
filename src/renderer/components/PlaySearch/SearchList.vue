@@ -188,9 +188,7 @@ export default {
           let data2 = data[1].data.items;
           let results = this.$lodash.concat(data1, data2);
 
-          this.$lodash.forEach
-
-          // this.recommandList = this.$lodash.uniqWith(results, this.$lodash.isEqual);
+          this.recommandList = this.$lodash.uniqWith(results, this.$lodash.isEqual);
           // this.recommandList = this.$lodash.concat(data1, data2);
         })
         .catch(err => {
