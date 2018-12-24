@@ -7,24 +7,15 @@
 
 <template>
   <div>
-    <el-dropdown
-      trigger="click"
-      @command="menuEvent"
-    >
+    <el-dropdown trigger="click" @command="menuEvent">
       <a class="cursor">
-        <img
-          class="contextMenu"
-          src="@/assets/images/svg/context-menu.svg"
-        >
+        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
       </a>
-      <el-dropdown-menu
-        slot="dropdown"
-        v-if="videoId === data.videoId"
-      >
-        <el-dropdown-item
-          class="bold"
-          :disabled="user === null"
-        >
+      <el-dropdown-menu slot="dropdown" v-if="videoId === data.videoId">
+        <el-dropdown-item class="bold" command="A1" :disabled="user === null">
+          <i class="el-icon-news"></i> Open Youtube
+        </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A2" :disabled="user === null">
           <i class="el-icon-delete"></i> Remove
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -33,9 +24,9 @@
 </template>
 
 <script>
-import storeMixin from '@/components/Mixin/index'
+import storeMixin from "@/components/Mixin/index";
 export default {
-  name: 'MyContextMenu',
+  name: "MyContextMenu",
   mixins: [storeMixin],
   props: {
     id: String,
@@ -46,63 +37,72 @@ export default {
   data() {
     return {
       user: null
-    }
+    };
   },
   mounted() {
-    this.user = this.getUserId()
+    this.user = this.getUserId();
   },
   methods: {
     menuEvent(ev) {
-      let musicInfo = this.getMusicInfos();
-      if (musicInfo) {
-        if (this.videoId === musicInfo.videoId) {
-          this.$modal.show('dialog', {
-            title: 'Info',
-            text: 'You can not delete videos that are playing',
-            buttons: [
-              {
-                title: 'Close'
-              }
-            ]
-          })
-        } else {
-          this.delete()
-        }
+      if (ev === "A1") {
+        this.watchYoutube();
       } else {
-        this.delete()
+        let musicInfo = this.getMusicInfos();
+        if (musicInfo) {
+          if (this.videoId === musicInfo.videoId) {
+            this.$modal.show("dialog", {
+              title: "Info",
+              text: "You can not delete videos that are playing",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          } else {
+            this.delete();
+          }
+        } else {
+          this.delete();
+        }
+      }
+    },
+    watchYoutube() {
+      if (this.videoId) {
+        this.$ipcRenderer.send(
+          "button:watchYoutubePopup",
+          `https://www.youtube.com/watch?v=${this.videoId}`
+        );
       }
     },
     delete() {
       this.$local
         .find({
           selector: {
-            type: 'profile',
+            type: "profile",
             userId: this.user
           }
         })
         .then(result => {
-          let docs = result.docs[0]
+          let docs = result.docs[0];
           if (docs) {
-            let playlists = docs.playlists
+            let playlists = docs.playlists;
             let playlistDataIndex = this.$lodash.findIndex(docs.playlists, {
               _key: this.id
-            })
+            });
 
             if (playlistDataIndex != undefined) {
               // 나의 컬렉션 목록중 _key와 일치하는 재생목록정보를 찾는다.
               let playlistData = this.$lodash
                 .chain(docs.playlists)
                 .find({ _key: this.id })
-                .value()
+                .value();
               // 재생목록정보내 포함된 트랙에서 비디오를 삭제하고 배열로 돌려받는다.
-              playlistData.tracks = this.$lodash.reject(
-                playlistData.tracks,
-                {
-                  videoId: this.videoId
-                }
-              )
+              playlistData.tracks = this.$lodash.reject(playlistData.tracks, {
+                videoId: this.videoId
+              });
               // 위 작업후 나의 컬렉션목록에 데이터를 갱신 후 업데이트
-              docs.playlists[playlistDataIndex] = playlistData
+              docs.playlists[playlistDataIndex] = playlistData;
               this.$local.put(docs).then(res => {
                 if (res.ok) {
                   /**
@@ -111,26 +111,26 @@ export default {
                    * 그렇지 않으면 재생순서가 어긋난다. 단, 비디오가 재생중이지 않다면 저장하지 않아도 된다.
                    */
                   if (this.getMusicInfos() != undefined) {
-                    let musicInfos = this.getMusicInfos()
-                    let playIndex = musicInfos.index
+                    let musicInfos = this.getMusicInfos();
+                    let playIndex = musicInfos.index;
                     if (playIndex > this.index) {
-                      musicInfos.index = this.index
+                      musicInfos.index = this.index;
                       // // 재생정보 세팅
-                      this.$store.commit('setPlayingMusicInfo', musicInfos)
+                      this.$store.commit("setPlayingMusicInfo", musicInfos);
 
                       // 재생정보 변경 이벤트
-                      this.$eventBus.$emit('playMusicSetting')
+                      this.$eventBus.$emit("playMusicSetting");
                     }
                   }
-                  this.$emit('is-success', true)
+                  this.$emit("is-success", true);
                 }
-              })
+              });
             }
           }
-        })
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped>

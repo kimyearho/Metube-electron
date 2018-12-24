@@ -57,7 +57,9 @@
           </ul>
         </div>
 
-        <el-carousel
+        <el-carousel 
+          v-loading="loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
           :interval="3000"
           type="card"
           indicator-position="none"
@@ -148,6 +150,7 @@ export default {
       isMore: false,
       isAppend: false,
       isTag: false,
+      loading: false,
       load: false,
       timer: 0,
       state: 0
@@ -177,6 +180,7 @@ export default {
   },
   methods: {
     recommandTrack() {
+      this.loading = true
       let request1, request2, request3;
       if (this.$locale === "ko") {
         request1 = $commons.youtubePlaylistSearch("한국 노래 탑 100");
@@ -208,6 +212,7 @@ export default {
                 .uniqWith(this.$lodash.isEqual)
                 .shuffle()
                 .value();
+              this.loading = false
             }
           });
         })
