@@ -58,14 +58,15 @@
         </div>
 
         <el-carousel
-          :interval="4000"
+          :interval="3000"
           type="card"
           indicator-position="none"
           height="100px"
           style="margin:10px;"
         >
-          <el-carousel-item v-for="item in recommandList" :key="item.id.playlistId">
-            <img width="174" height="100" :src="item.snippet.thumbnails.medium.url">
+          <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
+            <img width="174" height="100" :src="item.image">
+            <span class="recommandMusic">{{ item.title }}</span>
           </el-carousel-item>
         </el-carousel>
 
@@ -154,10 +155,8 @@ export default {
   },
   created() {
     this.searchText = this.getSearchKeyword();
+    this.recommandTrack();
     this.init(this.searchText);
-    if (this.$locale === "ko") {
-      this.recommandTrack();
-    }
   },
   watch: {
     searchText(value) {
@@ -178,21 +177,42 @@ export default {
   },
   methods: {
     recommandTrack() {
-      let request1 = $commons.youtubePlaylistSearch("K POP 2018");
-      let request2 = $commons.youtubePlaylistSearch("TOP 2018 KPOP");
+      let request1, request2, request3;
+      if (this.$locale === "ko") {
+        request1 = $commons.youtubePlaylistSearch("한국 노래 탑 100");
+        request2 = $commons.youtubePlaylistSearch("KPOP 2018");
+        request3 = $commons.youtubePlaylistSearch("메리 크리스마스");
+      } else {
+        request1 = $commons.youtubePlaylistSearch("iTunes Charts");
+        request2 = $commons.youtubePlaylistSearch("Billboard Charts");
+        request3 = $commons.youtubePlaylistSearch("Merry Christmas 2018");
+      }
       const fetchURL = url => this.$http.get(url);
-      const promiseArray = [request1, request2].map(fetchURL);
+      const promiseArray = [request1, request2, request3].map(fetchURL);
       Promise.all(promiseArray)
         .then(data => {
           let data1 = data[0].data.items;
           let data2 = data[1].data.items;
-          let results = this.$lodash.concat(data1, data2);
-
-          this.recommandList = this.$lodash.uniqWith(results, this.$lodash.isEqual);
-          // this.recommandList = this.$lodash.concat(data1, data2);
+          let data3 = data[1].data.items;
+          let results = this.$lodash.concat(data1, data2).concat(data3);
+          let arr = [];
+          this.$lodash.forEach(results, (items, index) => {
+            let obj = {};
+            obj.playlistId = items.id.playlistId;
+            obj.title = items.snippet.title;
+            obj.image = items.snippet.thumbnails.medium.url;
+            arr.push(obj);
+            if (arr.length === results.length - 1) {
+              this.recommandList = this.$lodash
+                .chain(arr)
+                .uniqWith(this.$lodash.isEqual)
+                .shuffle()
+                .value();
+            }
+          });
         })
         .catch(err => {
-          console.log(err)
+          console.log(err);
         });
     },
     handleScroll() {
@@ -555,6 +575,15 @@ export default {
   opacity: 0.75;
   line-height: 200px;
   margin: 0;
+}
+
+.recommandMusic {
+  z-index: 9999;
+  position: absolute;
+  color: rgb(255, 255, 255);
+  top: 63px;
+  font-size: 11px;
+  padding-left: 5px;
 }
 
 .el-carousel__item:nth-child(2n) {
