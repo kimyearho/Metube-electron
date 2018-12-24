@@ -38,7 +38,7 @@
     <Snow
       v-if="isSnow"
       :active="true"
-      zIndex="1000"
+      zIndex="3000"
       :wind="1"
       :swing="0"
       speed="l"
@@ -235,7 +235,6 @@ export default {
                     _key: key
                   });
                   let playlist = data.tracks;
-                  console.log(playlist)
                   if (playlist != undefined) {
                     if (playlist.length > nextIndex) {
                       this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);

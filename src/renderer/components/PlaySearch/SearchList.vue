@@ -181,7 +181,7 @@ export default {
       if (this.$locale === "ko") {
         request1 = $commons.youtubePlaylistSearch("한국 노래 탑 100");
         request2 = $commons.youtubePlaylistSearch("KPOP 2018");
-        request3 = $commons.youtubePlaylistSearch("메리 크리스마스");
+        request3 = $commons.youtubePlaylistSearch("Billboard Charts");
       } else {
         request1 = $commons.youtubePlaylistSearch("iTunes Charts");
         request2 = $commons.youtubePlaylistSearch("Billboard Charts");
@@ -193,7 +193,7 @@ export default {
         .then(data => {
           let data1 = data[0].data.items;
           let data2 = data[1].data.items;
-          let data3 = data[1].data.items;
+          let data3 = data[2].data.items;
           let results = this.$lodash.concat(data1, data2).concat(data3);
           let arr = [];
           this.$lodash.forEach(results, (items, index) => {
@@ -613,7 +613,7 @@ export default {
 }
 
 .dynamicHeight {
-  max-height: 415px;
+  max-height: 300px;
 }
 
 .no_keyword {
