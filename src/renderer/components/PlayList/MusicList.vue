@@ -20,7 +20,7 @@
             </a>
             <!-- 컬렉션 등록 -->
             <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
-              <like
+              <collection-register
                 ref="likes"
                 :isLikeToggle="isLikeToggle"
                 :data="data"
@@ -119,21 +119,21 @@
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import storeMixin from '@/components/Mixin/index'
-import collectionQueryMixin from '@/components/Mixin/collections'
-import contextMenu from '@/components/ContextMenu/ContextMenu'
-import loading from '@/components/Loader/Loader'
-import like from '@/components/Collections/like/like'
+import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
+import StoreMixin from '@/components/Mixin/index'
+import CollectionQueryMixin from '@/components/Mixin/collections'
+import ContextMenu from '@/components/Context/ContextMenu'
+import Loading from '@/components/Loader/Loader'
+import CollectionRegister from '@/components/Collections/regist/CollectionRegister'
 
 export default {
   name: 'MusicList',
-  mixins: [storeMixin, collectionQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin],
   components: {
-    subPlayerBar,
-    loading,
-    contextMenu,
-    like
+    CollectionRegister,
+    ContextMenu,
+    SubPlayerBar,
+    Loading
   },
   data () {
     return {

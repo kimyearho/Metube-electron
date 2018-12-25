@@ -127,16 +127,16 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import storeMixin from "@/components/Mixin/index";
-import subPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import loading from "@/components/Loader/Loader";
+import StoreMixin from "@/components/Mixin/index";
+import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import Loading from "@/components/Loader/Loader";
 
 export default {
   name: "SearchList",
-  mixins: [storeMixin],
+  mixins: [StoreMixin],
   components: {
-    loading,
-    subPlayerBar
+    Loading,
+    SubPlayerBar
   },
   data() {
     return {
@@ -204,7 +204,11 @@ export default {
             let obj = {};
             obj.playlistId = items.id.playlistId;
             obj.title = items.snippet.title;
-            obj.image = items.snippet.thumbnails.medium.url;
+            if(items.snippet.thumbnails.medium != undefined) {
+              obj.image = items.snippet.thumbnails.medium.url;
+            } else {
+              obj.image = items.snippet.thumbnails.default.url;
+            }
             arr.push(obj);
             if (arr.length === results.length - 1) {
               this.recommandList = this.$lodash

@@ -20,7 +20,7 @@
             </a>
             <!-- 컬렉션 등록 -->
             <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
-              <like
+              <collection-register
                 ref="likes"
                 :isLikeToggle="isLikeToggle"
                 :data="data"
@@ -132,25 +132,25 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import storeMixin from "@/components/Mixin/index";
-import collectionQueryMixin from "@/components/Mixin/collections";
-import contextMenu from "@/components/ContextMenu/ContextMenu";
-import mainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
-import loading from "@/components/Loader/Loader";
-import like from "@/components/Collections/like/like";
+import StoreMixin from "@/components/Mixin/index";
+import CollectionQueryMixin from "@/components/Mixin/collections";
+import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
+import ContextMenu from "@/components/Context/ContextMenu";
+import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
 import MarqueeText from "vue-marquee-text-component";
+import Loading from "@/components/Loader/Loader";
 
 const options = { container: "#muiscList", offset: -80 };
 
 export default {
   name: "MusicPlayList",
-  mixins: [storeMixin, collectionQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin],
   components: {
-    mainPlayerBar,
-    loading,
-    contextMenu,
+    CollectionRegister,
+    ContextMenu,
+    MainPlayerBar,
     MarqueeText,
-    like
+    Loading,
   },
   data() {
     return {

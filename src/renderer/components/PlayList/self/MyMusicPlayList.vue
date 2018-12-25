@@ -133,12 +133,12 @@
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import mainPlayerBar from '@/components/PlayerBar/MainPlayerBar'
+import MainPlayerBar from '@/components/PlayerBar/MainPlayerBar'
 import StoreMixin from '@/components/Mixin/index'
 import MyCollectionMixin from '@/components/Mixin/mycollection'
-import MyContextMenu from '@/components/ContextMenu/MyContextMenu'
-import loading from '@/components/Loader/Loader'
-import draggable from 'vuedraggable'
+import MyContextMenu from '@/components/Context/MyContextMenu'
+import Loading from '@/components/Loader/Loader'
+import Draggable from 'vuedraggable'
 import MarqueeText from 'vue-marquee-text-component'
 
 const options = { container: '#myMusicList', offset: -80 }
@@ -147,10 +147,10 @@ export default {
   name: 'MyMusicPlayList',
   mixins: [StoreMixin, MyCollectionMixin],
   components: {
-    loading,
-    mainPlayerBar,
+    Loading,
+    MainPlayerBar,
     MarqueeText,
-    draggable,
+    Draggable,
     MyContextMenu
   },
   data() {

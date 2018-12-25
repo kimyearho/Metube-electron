@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import storeMixin from '@/components/Mixin/index'
-import RegisteredMusicList from '@/components/list/self/modal/RegisteredMusicList'
+import StoreMixin from '@/components/Mixin/index'
+import RegisteredMusicList from '@/components/PlayList/self/modal/RegisteredMusicList'
 export default {
   name: 'ContextMenu',
-  mixins: [storeMixin],
+  mixins: [StoreMixin],
   components: {
     RegisteredMusicList
   },

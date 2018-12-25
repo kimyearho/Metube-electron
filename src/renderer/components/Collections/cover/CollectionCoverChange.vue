@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import storeMixin from '@/components/Mixin/index'
-import commonMixin from '@/components/Mixin/common'
+import StoreMixin from '@/components/Mixin/index'
+import CommonMixin from '@/components/Mixin/common'
 export default {
-  name: 'AlbumCoverChangeModal',
-  mixins: [storeMixin, commonMixin],
+  name: 'CollectionCoverChange',
+  mixins: [StoreMixin, CommonMixin],
   props: {
     data: {
       type: Object,
@@ -58,7 +58,7 @@ export default {
 
         // this가 사용되지 않으므로 임시적으로 self로 대체
         img.onload = function () {
-          self.albumCoverChange(url)
+          self.CollectionCoverChange(url)
         }
         img.onerror = function () {
           self.messageDialog('Error', self.$t('COMMONS.DIALOG.ERROR_URL'))
@@ -69,7 +69,7 @@ export default {
         self.messageDialog('Info', self.$t('COMMONS.DIALOG.BLANK_FORM'))
       }
     },
-    albumCoverChange (img) {
+    CollectionCoverChange (img) {
       this.$local
         .find({
           selector: {

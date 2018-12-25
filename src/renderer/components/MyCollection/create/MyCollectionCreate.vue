@@ -8,39 +8,19 @@
 <template>
   <div>
     <el-dialog
-      title="MY COLLECTION EDIT"
+      title="MY COLLECTION"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
       :append-to-body="true"
       width="300px"
-      @open="get"
     >
-      <el-form
-        :model="form"
-        ref="form"
-        label-position="top"
-        :rules="rules"
-      >
-        <el-form-item
-          label="Collection name"
-          :label-width="formLabelWidth"
-          prop="name"
-        >
-          <el-input
-            v-model="form.name"
-            autocomplete="off"
-          ></el-input>
+      <el-form :model="form" ref="form" label-position="top" :rules="rules">
+        <el-form-item label="Collection name" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="Category"
-          :label-width="formLabelWidth"
-          prop="category"
-        >
-          <el-select
-            v-model="form.category"
-            placeholder="Please select a category"
-          >
+        <el-form-item label="Category" :label-width="formLabelWidth" prop="category">
+          <el-select v-model="form.category" placeholder="Please select a category">
             <el-option
               v-for="item in form.categories"
               :key="item.label"
@@ -50,38 +30,27 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          size="mini"
-          @click="closeModal"
-        >Cancel</el-button>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="save"
-        >Confirm</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="closeModal">Cancel</el-button>
+        <el-button type="primary" size="mini" @click="save">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import storeMixin from '@/components/Mixin/index'
-import commonMixin from '@/components/Mixin/common'
+import StoreMixin from '@/components/Mixin/index'
+import CommonMixin from '@/components/Mixin/common'
 export default {
-  name: 'AddMyCollection',
-  mixins: [storeMixin, commonMixin],
+  name: 'MyCollectionCreate',
+  mixins: [StoreMixin, CommonMixin],
   props: {
-    id: String,
     isOpen: {
       type: Boolean,
       default: false
     }
   },
-  data() {
+  data () {
     return {
       formLabelWidth: '120px',
       rules: {
@@ -129,57 +98,42 @@ export default {
     }
   },
   methods: {
-    get() {
-      let user = this.getUserId()
-      if (user) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: user
-            }
-          }).then(result => {
-            let docs = result.docs[0]
-            if (docs) {
-              let data = this.$lodash.find(docs.playlists, { _key: this.id })
-              this.form.name = data.title;
-              this.form.category = data.category
-            }
-          })
-      } else {
-        // no login
-      }
-    },
-    save() {
+    save () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          let user = this.getUserId()
-          if (user) {
-            this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: user
-                }
-              }).then(result => {
-                let docs = result.docs[0]
-                if (docs) {
-                  // 인덱스 찾음
-                  let trackIndex = this.$lodash.findIndex(docs.playlists, { _key: this.id })
-                  docs.playlists[trackIndex].title = this.form.name
-                  docs.playlists[trackIndex].category = this.form.category
-                  this.$local.put(docs).then(res => {
-                    if (res.ok) {
-                      this.$emit('is-success', true);
-                    }
-                  })
-                }
-              })
+          const myCollection = {
+            _key: this.getCollectionKey(),
+            title: this.form.name,
+            category: this.form.category,
+            thumbnails:
+              'http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg',
+            creates: this.$moment().format('YYYYMMDDkkmmss'),
+            created: this.$moment().format('YYYY-MM-DD kk:mm:ss'),
+            tracks: []
           }
+          this.$local
+            .find({
+              selector: {
+                type: 'profile',
+                userId: this.getUserId()
+              }
+            })
+            .then(result => {
+              let docs = result.docs[0]
+              if (docs) {
+                docs.playlists.push(myCollection)
+                this.$local.put(docs).then(res => {
+                  if (res.ok) {
+                    this.$refs.form.resetFields()
+                    this.$emit('is-success', true)
+                  }
+                })
+              }
+            })
         }
       })
     },
-    closeModal() {
+    closeModal () {
       this.$refs.form.resetFields()
       this.form.category = ''
       this.$emit('is-close', false)

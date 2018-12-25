@@ -133,7 +133,6 @@ export default {
                   .orderBy(["creates"], ["desc"])
                   .take(4)
                   .value();
-                this.load = true;
               }
             } else {
               this.playlists = [];
@@ -142,8 +141,6 @@ export default {
           .catch(err => {
             console.log(err);
           });
-      } else {
-        this.load = true;
       }
     },
 
@@ -175,15 +172,12 @@ export default {
                   .orderBy(["creates"], ["desc"])
                   .take(4)
                   .value();
-                this.load = true;
               }
             }
           })
           .catch(err => {
             console.log(err);
           });
-      } else {
-        this.load = true;
       }
     },
 

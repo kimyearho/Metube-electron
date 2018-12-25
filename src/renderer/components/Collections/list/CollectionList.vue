@@ -100,30 +100,38 @@
     <loading v-show="!load"></loading>
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal ref="coverModal" :data="selectedData" @is-success="saveCover"/>
+    <cover-change-modal ref="coverModal" 
+                        :data="selectedData" 
+                        @is-success="saveCover"/>
 
-    <create-from :isOpen="isCreate" @is-success="myCollectionSync" @is-close="closeModal"/>
+    <create-from :isOpen="isCreate" 
+                 @is-success="myCollectionSync" 
+                 @is-close="closeModal"/>
   </div>
 </template>
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import collectionQueryMixin from '@/components/Mixin/collections'
-import myQueryMixin from '@/components/Mixin/mycollection'
-import coverChangeModal from '@/components/Collections/cover/coverChange'
-import storeMixin from '@/components/Mixin/index'
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import createFrom from '@/components/Collections/create/CollectionCreate'
-import loading from '@/components/Loader/Loader'
+import CollectionQueryMixin from '@/components/Mixin/collections'
+import MyQueryMixin from '@/components/Mixin/mycollection'
+import CoverChangeModal from '@/components/Collections/cover/CollectionCoverChange'
+import StoreMixin from '@/components/Mixin/index'
+import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
+import CreateFrom from '@/components/MyCollection/create/MyCollectionCreate'
+import Loading from '@/components/Loader/Loader'
 
 export default {
   name: 'CollectionList',
-  mixins: [storeMixin, collectionQueryMixin, myQueryMixin],
+  mixins: [
+    StoreMixin, 
+    CollectionQueryMixin, 
+    MyQueryMixin
+  ],
   components: {
-    coverChangeModal,
-    subPlayerBar,
-    createFrom,
-    loading
+    CoverChangeModal,
+    SubPlayerBar,
+    CreateFrom,
+    Loading
   },
   data () {
     return {
