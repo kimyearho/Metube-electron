@@ -54,15 +54,15 @@
 </template>
 
 <script>
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import storeMixin from '@/components/Mixin/index'
-import commonMixin from '@/components/Mixin/common'
+import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
+import StoreMixin from '@/components/Mixin/index'
+import CommonMixin from '@/components/Mixin/common'
 
 export default {
   name: 'SignInPage',
-  mixins: [storeMixin, commonMixin],
+  mixins: [StoreMixin, CommonMixin],
   components: {
-    subPlayerBar
+    SubPlayerBar
   },
   data () {
     return {
@@ -99,42 +99,6 @@ export default {
       this.isSignin = false
       this.$store.commit('setGoogleProfile', null)
     },
-    getCollectionCount () {
-      if (this.getUserId()) {
-        this.$local
-          .find({
-            selector: {
-              type: 'profile',
-              userId: this.getUserId()
-            },
-            fields: ['_id', 'collections']
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            if (docs) {
-              let collections = docs.collections
-              this.playlistCount = this.$lodash
-                .chain(collections)
-                .filter(item => {
-                  item.playType === 'play'
-                })
-                .size()
-                .value()
-
-              this.channelCount = this.$lodash
-                .chain(collections)
-                .filter(item => {
-                  item.playType === 'channel'
-                })
-                .size()
-                .value()
-            }
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      }
-    },
     success () {
       this.isSignin = true
       this.profileData = this.getProfile()
@@ -167,13 +131,13 @@ export default {
               this.$local
                 .post(data)
                 .then(res => {
-                  this.getCollectionCount()
+                  // this.getCollectionCount()
                 })
                 .catch(err => {
                   console.log(err)
                 })
             } else {
-              this.getCollectionCount()
+              // this.getCollectionCount()
             }
           })
           .catch(err => {

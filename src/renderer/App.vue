@@ -51,11 +51,11 @@
 
 <script>
 import Snow from "vue-niege";
-import storeMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Mixin/index";
 
 export default {
-  name: "MeTube",
-  mixins: [storeMixin],
+  name: "App",
+  mixins: [StoreMixin],
   components: {
     Snow
   },

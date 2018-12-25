@@ -133,12 +133,12 @@
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import mainPlayerBar from '@/components/PlayerBar/MainPlayerBar'
+import MainPlayerBar from '@/components/PlayerBar/MainPlayerBar'
 import StoreMixin from '@/components/Mixin/index'
 import MyCollectionMixin from '@/components/Mixin/mycollection'
-import MyContextMenu from '@/components/ContextMenu/MyContextMenu'
-import loading from '@/components/Loader/Loader'
-import draggable from 'vuedraggable'
+import MyContextMenu from '@/components/Context/MyContextMenu'
+import Loading from '@/components/Loader/Loader'
+import Draggable from 'vuedraggable'
 import MarqueeText from 'vue-marquee-text-component'
 
 const options = { container: '#myMusicList', offset: -80 }
@@ -147,10 +147,10 @@ export default {
   name: 'MyMusicPlayList',
   mixins: [StoreMixin, MyCollectionMixin],
   components: {
-    loading,
-    mainPlayerBar,
+    Loading,
+    MainPlayerBar,
     MarqueeText,
-    draggable,
+    Draggable,
     MyContextMenu
   },
   data() {
@@ -220,9 +220,10 @@ export default {
      */
     feachData() {
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
+      var self = this;
       setTimeout(() => {
-        let id = '#item' + this.$route.params.start
-        this.$scrollTo(id, -1, options)
+        let id = '#item' + self.$route.params.start
+        self.$scrollTo(id, -1, options)
       }, 350)
 
       this.startIndex = this.$route.params.start
@@ -303,8 +304,6 @@ export default {
 
       playingItem.index = startTrack
       playingItem.name = this.id
-
-      // 재생세팅
       this.playSetting(playingItem)
     },
 
@@ -329,9 +328,10 @@ export default {
         playingItem.name = musicInfo.name
 
         this.playSetting(playingItem)
-        this.nextTrackScroll(-1)
         if (index === 0) {
           this.endScrollTop()
+        } else {
+          this.nextTrackScroll(-1)
         }
       }
     },
@@ -348,10 +348,7 @@ export default {
         playingItem.index = previousIndex
         playingItem.name = musicInfo.name
 
-        // 비디오 세팅
         this.playSetting(playingItem)
-
-        // 스크롤 이동
         this.nextTrackScroll(500)
       } else {
         this.playItem(0)
@@ -372,10 +369,7 @@ export default {
         playingItem.index = 0
         playingItem.name = musicInfo.name
 
-        // 비디오 세팅
         this.playSetting(playingItem)
-
-        // 스크롤을 맨 위로 이동
         this.endScrollTop()
       } else {
         // 재생목록에서 해당하는 트랙번호의 비디오
@@ -383,10 +377,7 @@ export default {
         playingItem.index = nextIndex
         playingItem.name = musicInfo.name
 
-        // // 비디오 세팅
         this.playSetting(playingItem)
-
-        // 다음 비디오 스크롤
         this.nextTrackScroll(500)
       }
     },
@@ -404,18 +395,13 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails
 
-      // // 재생정보 세팅
       this.$store.commit('setPlayingMusicInfo', playingItem)
-      // 재생정보 변경 이벤트
       this.$eventBus.$emit('playMusicSetting')
-      // 재생
       this.$ipcRenderer.send('win2Player', [
         'loadVideoById',
         playingItem.videoId
       ])
-      // 상태체크 시작
       this.$eventBus.$emit('statusCheck')
-      // 로딩 완료
       this.load = true
     },
 
@@ -428,7 +414,11 @@ export default {
      */
     nextTrackScroll(duration) {
       if (this.$route.name === 'MY-PLAYING-PLAYLIST') {
-        this.$scrollTo(`#item${this.selectedIndex}`, duration, options)
+       let cancelScroll = this.$scrollTo(`#item${this.selectedIndex}`, duration, options)
+       setTimeout(() => {
+         console.log('cancel Scroll')
+         cancelScroll();
+       }, 3000);
       }
     },
 
@@ -439,7 +429,11 @@ export default {
      */
     endScrollTop() {
       if (this.$route.name === 'MY-PLAYING-PLAYLIST') {
-        this.$scrollTo('#item0', -1, options)
+        let cancelScroll = this.$scrollTo('#item0', -1, options)
+        setTimeout(() => {
+         console.log('cancel Scroll2')
+         cancelScroll();
+       }, 3000);
       }
     },
 

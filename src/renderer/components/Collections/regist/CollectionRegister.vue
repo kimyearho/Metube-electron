@@ -24,11 +24,11 @@
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import storeMixin from '@/components/Mixin/index'
+import StoreMixin from '@/components/Mixin/index'
 
 export default {
-  name: 'RegisterCollection',
-  mixins: [storeMixin],
+  name: 'CollectionRegister',
+  mixins: [StoreMixin],
   props: {
     isLikeToggle: {
       type: Boolean,

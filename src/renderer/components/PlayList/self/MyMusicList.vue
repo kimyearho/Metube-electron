@@ -151,27 +151,27 @@
 
 <script>
 import * as $commons from '@/service/commons-service.js'
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import storeMixin from '@/components/Mixin/index'
-import collectionQueryMixin from '@/components/Mixin/collections'
-import CoverChangeModal from '@/components/Collections/cover/coverChange'
-import myQueryMixin from '@/components/Mixin/mycollection'
-import MyContextMenu from '@/components/ContextMenu/MyContextMenu'
-import CollectionModifyForm from '@/components/Collections/modify/CollectionModify'
-import draggable from 'vuedraggable'
-import loading from '@/components/Loader/Loader'
+import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
+import StoreMixin from '@/components/Mixin/index'
+import MyQueryMixin from '@/components/Mixin/mycollection'
+import CollectionQueryMixin from '@/components/Mixin/collections'
+import CoverChangeModal from '@/components/Collections/cover/CollectionCoverChange'
+import CollectionModifyForm from '@/components/MyCollection/modify/MyCollectionModify'
+import MyContextMenu from '@/components/Context/MyContextMenu'
+import Draggable from 'vuedraggable'
+import Loading from '@/components/Loader/Loader'
 
 export default {
   name: 'MyMusicList',
-  mixins: [storeMixin, collectionQueryMixin, myQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
   components: {
-    subPlayerBar,
-    loading,
-    myQueryMixin,
+    SubPlayerBar,
+    Loading,
+    MyQueryMixin,
     MyContextMenu,
     CoverChangeModal,
     CollectionModifyForm,
-    draggable
+    Draggable
   },
   data() {
     return {

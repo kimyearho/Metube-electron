@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import storeMixin from '@/components/Mixin/index'
+import StoreMixin from '@/components/Mixin/index'
 export default {
   name: 'RegisteredMusicList',
-  mixins: [storeMixin],
+  mixins: [StoreMixin],
   props: {
     isOpen: {
       type: Boolean,

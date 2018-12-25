@@ -7,16 +7,13 @@
 
 <template>
   <div>
-    <top-header />
+    <top-header/>
     <div class="wrapper">
       <!-- 비로그인 상태 -->
       <el-row v-if="!isLogin">
         <el-col class="infos">{{ $t('COLLECTION.NO_LOGIN') }}</el-col>
         <el-col class="link">
-          <el-button
-            type="primary"
-            @click="signLink"
-          >{{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}</el-button>
+          <el-button type="primary" @click="signLink">{{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}</el-button>
         </el-col>
       </el-row>
 
@@ -25,38 +22,22 @@
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img
-                width="20"
-                src="@/assets/images/svg/collection.svg"
-              >
+              <img width="20" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
             </div>
-            <strong
-              class="tr"
-              style="font-size:11px;"
-            >{{ $t('COLLECTION.INDEX') }}</strong>
+            <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>
           </div>
         </el-col>
       </el-row>
 
-      <el-row
-        v-if="isLogin"
-        class="el-scorll"
-        :class="{ dynamicHeight: isSub }"
-      >
+      <el-row v-if="isLogin" class="el-scorll" :class="{ dynamicHeight: isSub }">
         <!-- 상위4개 재생목록 -->
         <el-col>
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('my-collection')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>
             </label>
             <a>
@@ -72,61 +53,26 @@
 
         <el-col
           class="noList"
-          v-if="isLogin && customPlaylist.length === 0"
+          v-if="isLogin && myCollections.length === 0"
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in customPlaylist"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in myCollections" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="thumbnail"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="myCollectionLabel">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
               <div class="playWrapper">
                 <div class="overlayMenu">
-                  <a
-                    class="cursor"
-                    @click="showMyCollectionList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMyCollectionList(item)" title="Play">
+                    <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f25 fa" icon="times"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showCoverModal(item)"
-                    title="Cover change"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="images"
-                    />
+                  <a class="cursor" @click="showCoverModal(item)" title="Cover change">
+                    <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
                 </div>
               </div>
@@ -142,14 +88,8 @@
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.PLAY_LIST') }}</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('play')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('play')">（more）</a>
               </small>
             </label>
           </div>
@@ -160,55 +100,20 @@
           v-if="isLogin && playlists.length === 0"
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in playlists"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in playlists" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="thumbnail"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper">
                 <div class="overlayMenu">
-                  <a
-                    class="cursor"
-                    @click="showMusicList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                    <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f25 fa" icon="times"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showCoverModal(item)"
-                    title="Cover change"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="images"
-                    />
+                  <a class="cursor" @click="showCoverModal(item)" title="Cover change">
+                    <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
                 </div>
               </div>
@@ -226,14 +131,8 @@
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('channel')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('channel')">（more）</a>
               </small>
             </label>
           </div>
@@ -244,45 +143,17 @@
           v-if="isLogin && channelLists.length === 0"
         >{{ $t('COLLECTION.NO_CHANNEL') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in channelLists"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in channelLists" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="thumbnail channelThumb"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="thumbnail channelThumb" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper channelWrapper">
                 <div class="overlayMenu channelMenu">
-                  <a
-                    class="cursor"
-                    @click="showMusicList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f30 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                    <font-awesome-icon class="f30 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f30 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f30 fa" icon="times"/>
                   </a>
                 </div>
               </div>
@@ -298,27 +169,16 @@
       </el-row>
     </div>
 
-    <!-- 로딩 컴포넌트 -->
-    <loading v-show="!load" />
-
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isSub" />
+    <sub-player-bar v-show="isSub"/>
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal
-      ref="coverModal"
-      :data="selectedData"
-      @is-success="saveCover"
-    />
+    <cover-change-modal ref="coverModal" :data="selectedData" @is-success="saveCover"/>
 
     <!-- 신규 컬렉션 등록 -->
-    <create-from
-      :isOpen="isCreate"
-      @is-success="myCollectionSync"
-      @is-close="closeModal"
-    />
+    <create-from :isOpen="isCreate" @is-success="myCollectionSync" @is-close="closeModal"/>
 
-    <like
+    <collection-register
       ref="likes"
       :isLikeToggle="true"
       :data="data"
@@ -331,33 +191,33 @@
 </template>
 
 <script>
-import collectionQueryMixin from '@/components/Mixin/collections'
-import myQueryMixin from '@/components/Mixin/mycollection'
-import coverChangeModal from './cover/coverChange'
-import storeMixin from '@/components/Mixin/index'
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import loading from '@/components/Loader/Loader'
-import createFrom from '@/components/Collections/create/CollectionCreate'
-import like from '@/components/Collections/like/like'
+import CollectionQueryMixin from "@/components/Mixin/collections";
+import MyQueryMixin from "@/components/Mixin/mycollection";
+import StoreMixin from "@/components/Mixin/index";
+import CoverChangeModal from "./cover/CollectionCoverChange";
+import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
+import CreateFrom from "@/components/MyCollection/create/MyCollectionCreate";
+import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import Loading from "@/components/Loader/Loader";
 
 export default {
-  name: 'Collections',
-  mixins: [storeMixin, collectionQueryMixin, myQueryMixin],
+  name: "Collections",
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
   components: {
-    coverChangeModal,
-    subPlayerBar,
-    createFrom,
-    loading,
-    like
+    CollectionRegister,
+    CoverChangeModal,
+    CreateFrom,
+    SubPlayerBar,
+    Loading
   },
   data() {
     return {
-      activeName: 'first',
+      activeName: "first",
       playlists: [],
       playlistId: null,
       playType: null,
       channelLists: [],
-      customPlaylist: [],
+      myCollections: [],
       load: false,
       isSub: false,
       isLikeToggle: false,
@@ -365,119 +225,115 @@ export default {
       isLogin: false,
       data: null,
       selectedData: null
-    }
+    };
   },
   created() {
-    this.init()
+    if (this.getUserId()) {
+      this.isLogin = true;
+    }
+    /** @overide */
+    this.getMyCollection();
 
     /** @overide */
-    this.getMyCollection()
+    this.getPlaylist();
 
     /** @overide */
-    this.getPlaylist()
-
-    /** @overide */
-    this.getChannelList()
+    this.getChannelList();
   },
   beforeMount() {
-    this.$store.commit('setIndexPath', this.$route.path)
+    this.$store.commit("setIndexPath", this.$route.path);
   },
   methods: {
-    init() {
-      if (this.getUserId()) {
-        this.isLogin = true
-      }
-    },
     myCollectionSync() {
-      this.isCreate = false
+      this.isCreate = false;
       /** @overide */
-      this.getMyCollection()
+      this.getMyCollection();
     },
     collectionAdd() {
-      this.isCreate = true
+      this.isCreate = true;
     },
     showRemove(data) {
-      this.$modal.show('dialog', {
-        title: 'Info',
-        text: this.$t('COLLECTION.REMOVE_ALBUM'),
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: this.$t("COLLECTION.REMOVE_ALBUM"),
         buttons: [
           {
-            title: 'Yes',
+            title: "Yes",
             handler: () => {
-              this.$set(this, 'data', data)
-              this.$set(this, 'playType', data.playType)
+              this.$set(this, "data", data);
+              this.$set(this, "playType", data.playType);
               if (data.category) {
                 /** @overide */
-                this.myCollectionRemove(data, 'index')
+                this.myCollectionRemove(data, "index");
               } else {
                 /** @overide */
-                this.albumRemoveCallback()
+                this.albumRemoveCallback();
               }
             }
           },
           {
-            title: 'Close'
+            title: "Close"
           }
         ]
-      })
+      });
     },
     toggleChange(value) {
-      this.isLikeToggle = value
+      this.isLikeToggle = value;
     },
     showMyCollectionList(item) {
-      this.$store.commit('setPath', this.$route.path)
+      this.$store.commit("setPath", this.$route.path);
       this.$router.push({
-        name: 'NOT-MY-PLAYLIST',
+        name: "NOT-MY-PLAYLIST",
         params: {
-          playType: 'self',
+          playType: "self",
           id: item._key
         }
-      })
+      });
     },
     showMusicList(item) {
-      this.$store.commit('setPath', this.$route.path)
+      this.$store.commit("setPath", this.$route.path);
       this.$router.push({
-        name: 'NOT-PLAYING-PLAYLIST',
+        name: "NOT-PLAYING-PLAYLIST",
         params: {
           playType: item.playType,
-          id: item.playType === 'play' ? item.playlistId : item.channelId
+          id: item.playType === "play" ? item.playlistId : item.channelId
         }
-      })
+      });
     },
     showCollectionList(type) {
-      this.$store.commit('setPath', this.$route.path)
+      this.$store.commit("setPath", this.$route.path);
       this.$router.push({
-        name: 'COLLECTION-LIST',
+        name: "COLLECTION-LIST",
         params: {
           playType: type
         }
-      })
+      });
     },
     showCoverModal(item) {
-      this.$refs.coverModal.showModal()
-      this.$set(this, 'selectedData', item)
+      this.$refs.coverModal.showModal();
+      this.$set(this, "selectedData", item);
     },
     saveCover(data) {
       if (data) {
-        if (data.playType === 'play') {
-          this.getPlaylist()
-        } else if (data.playType === 'channel') {
-          this.getChannelList()
+        if (data.playType === "play") {
+          this.getPlaylist();
+        } else if (data.playType === "channel") {
+          this.getChannelList();
         } else {
-          this.getMyCollection()
+          this.getMyCollection();
         }
       }
     },
     signLink() {
       this.$router.push({
-        name: 'login'
-      })
+        name: "login"
+      });
     },
     closeModal() {
-      this.isCreate = false
+      this.isCreate = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -109,11 +109,11 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import storeMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Mixin/index";
 
 export default {
   name: "MainPlayerBar",
-  mixins: [storeMixin],
+  mixins: [StoreMixin],
   data() {
     return {
       range: 0,

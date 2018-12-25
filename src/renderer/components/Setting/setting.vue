@@ -130,14 +130,14 @@
 </template>
 
 <script>
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import storeMixin from '@/components/Mixin/index'
+import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
+import StoreMixin from '@/components/Mixin/index'
 
 export default {
   name: 'SettingPage',
-  mixins: [storeMixin],
+  mixins: [StoreMixin],
   components: {
-    subPlayerBar
+    SubPlayerBar
   },
   data() {
     return {
