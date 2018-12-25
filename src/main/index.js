@@ -5,6 +5,9 @@ import request from "request";
 
 const playerPath = "http://localhost:7070";
 
+// https connect true
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 // Chrome AutoPlay Policy disable
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 

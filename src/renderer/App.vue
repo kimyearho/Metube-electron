@@ -260,8 +260,11 @@ export default {
       this.$db
         .get("adfe10ffbd1f206762f478326800a5b6")
         .then(doc => {
+          console.log('doc => ', doc)
           let live_version = `${doc.version}`;
           let local_version = this.$version;
+          console.log('live => ', live_version)
+          console.log('local => ', local_version)
           // new version.
           if (live_version != local_version) {
             this.isCheck = true;
