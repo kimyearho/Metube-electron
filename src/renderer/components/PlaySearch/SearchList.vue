@@ -67,8 +67,8 @@
           style="margin:10px;"
         >
           <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
-            <img width="174" height="100" :src="item.image">
-            <span class="recommandMusic">{{ item.title }}</span>
+            <img width="174" height="100" :src="item.image" @click="route(item)">
+            <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
           </el-carousel-item>
         </el-carousel>
 
