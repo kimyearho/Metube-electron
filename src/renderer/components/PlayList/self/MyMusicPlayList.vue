@@ -138,7 +138,7 @@ import StoreMixin from '@/components/Mixin/index'
 import MyCollectionMixin from '@/components/Mixin/mycollection'
 import MyContextMenu from '@/components/Context/MyContextMenu'
 import Loading from '@/components/Loader/Loader'
-import Draggable from 'vuedraggable'
+import draggable from 'vuedraggable'
 import MarqueeText from 'vue-marquee-text-component'
 
 const options = { container: '#myMusicList', offset: -80 }
@@ -150,7 +150,7 @@ export default {
     Loading,
     MainPlayerBar,
     MarqueeText,
-    Draggable,
+    draggable,
     MyContextMenu
   },
   data() {
