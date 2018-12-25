@@ -1,4 +1,4 @@
-# [2018-12-18] v1.3.1 UPDATE
+# [2018-12-25] v1.3.2 UPDATE
 
 ![Imgur](https://i.imgur.com/OoTch73.png)
 ![Imgur](https://i.imgur.com/7WT3pmy.png)
