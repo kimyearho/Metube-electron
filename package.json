@@ -26,11 +26,6 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "publish": [
-      {
-        "provider": "generic"
-      }
-    ],
     "dmg": {
       "contents": [
         {
