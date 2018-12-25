@@ -26,17 +26,17 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
-if (process.env.NODE_ENV != "development") {
-  let shouldQuit = app.makeSingleInstance(() => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-  });
-  if (shouldQuit) {
-    app.quit();
-  }
-}
+// if (process.env.NODE_ENV != "development") {
+//   let shouldQuit = app.makeSingleInstance(() => {
+//     if (mainWindow) {
+//       if (mainWindow.isMinimized()) mainWindow.restore();
+//       mainWindow.focus();
+//     }
+//   });
+//   if (shouldQuit) {
+//     app.quit();
+//   }
+// }
 
 // Create Main Window
 function createWindow() {
