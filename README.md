@@ -1,6 +1,5 @@
 # [2018-12-18] v1.3.1 UPDATE
 
-![Img](http://cdn01.dailycaller.com/wp-content/uploads/2017/12/Merry-Christmas-Shutterstock-Alhovik.jpg) <br/><br/>
 ![Imgur](https://i.imgur.com/OoTch73.png)
 ![Imgur](https://i.imgur.com/7WT3pmy.png)
 
