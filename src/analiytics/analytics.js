@@ -8,7 +8,7 @@ module.exports = function(app) {
   // app start
   ipcMain.on("event:appStart", function(e, args) {
     return analytics
-      .screen("SharePod", `${app.getVersion()}`, "", "", "main", uuid)
+      .screen(`Metube`, `${app.getVersion()}`, "None", "None", "main", uuid)
       .then(response => {
         return response;
       })

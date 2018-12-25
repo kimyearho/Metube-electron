@@ -58,10 +58,7 @@ function createWindow() {
   mainWindow.loadURL(winURL);
 
   if (process.env.NODE_ENV === "development") {
-    // mainWindow.webContents.openDevTools();
-  } else {
-    // Annotation processing if not used
-    require("../analiytics/analytics")(app);
+    mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on("closed", () => {
@@ -78,7 +75,6 @@ function createWindow() {
     });
     player.setMenu(null);
     player.loadURL(playerPath);
-    player.webContents.openDevTools();
     player.on("close", e => {
       if (mainWindow) {
         e.preventDefault();
@@ -223,3 +219,5 @@ ipcMain.on("player2Win", (e, args) => {
     /* window already closed */
   }
 });
+
+require("../analiytics/analytics")(app);
