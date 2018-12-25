@@ -10,10 +10,10 @@ let PouchDB = require("pouchdb-core")
 
 // 개발용
 // pouchdb-server or couchdb
-Vue.prototype.$local = new PouchDB('http://localhost:5984/metube')
+// Vue.prototype.$local = new PouchDB('http://localhost:5984/metube')
 
 // 로컬
-// Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
+Vue.prototype.$local = new PouchDB("metubev3");
 
 // 서비스
 // pouchdb-server or couchdb

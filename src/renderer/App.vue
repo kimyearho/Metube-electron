@@ -89,9 +89,7 @@ export default {
         this.status.push(newVal);
       }
     );
-    if (process.env.NODE_ENV === "production") {
-      this.onNewReleaseCheck();
-    }
+    this.onNewReleaseCheck();
   },
   methods: {
     docs() {
