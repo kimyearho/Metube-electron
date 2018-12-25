@@ -24,7 +24,7 @@ export function youtubeSearch(text) {
 export function youtubePlaylistSearch(text) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&q=${text}`)
-    .concat(`&type=playlist&maxResults=15&safeSearch=strict&key=${API_KEY}`);
+    .concat(`&type=playlist&maxResults=30&safeSearch=strict&key=${API_KEY}`);
 }
 
 /**

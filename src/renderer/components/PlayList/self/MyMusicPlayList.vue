@@ -224,7 +224,7 @@ export default {
       setTimeout(() => {
         let id = '#item' + self.$route.params.start
         self.$scrollTo(id, -1, options)
-      }, 500)
+      }, 350)
 
       this.startIndex = this.$route.params.start
       this.playType = this.$route.params.playType

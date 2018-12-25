@@ -183,33 +183,29 @@ export default {
       this.loading = true
       let request1, request2, request3;
       if (this.$locale === "ko") {
-        request1 = $commons.youtubePlaylistSearch("한국 노래 탑 100");
-        request2 = $commons.youtubePlaylistSearch("KPOP 2018");
-        request3 = $commons.youtubePlaylistSearch("Billboard Charts");
+        request1 = $commons.youtubePlaylistSearch("Melon 100");
+        request2 = $commons.youtubePlaylistSearch("Korea Top Music");
       } else {
         request1 = $commons.youtubePlaylistSearch("iTunes Charts");
         request2 = $commons.youtubePlaylistSearch("Billboard Charts");
-        request3 = $commons.youtubePlaylistSearch("Merry Christmas 2018");
       }
       const fetchURL = url => this.$http.get(url);
-      const promiseArray = [request1, request2, request3].map(fetchURL);
+      const promiseArray = [request1, request2].map(fetchURL);
       Promise.all(promiseArray)
         .then(data => {
           let data1 = data[0].data.items;
           let data2 = data[1].data.items;
-          let data3 = data[2].data.items;
-          let results = this.$lodash.concat(data1, data2).concat(data3);
+          // let data3 = data[2].data.items;
+          let results = this.$lodash.concat(data1, data2)
           let arr = [];
           this.$lodash.forEach(results, (items, index) => {
             let obj = {};
-            obj.playlistId = items.id.playlistId;
-            obj.title = items.snippet.title;
-            if(items.snippet.thumbnails.medium != undefined) {
+            if(items.snippet.thumbnails) {
+              obj.playlistId = items.id.playlistId;
+              obj.title = items.snippet.title.substring(0, 40)
               obj.image = items.snippet.thumbnails.medium.url;
-            } else {
-              obj.image = items.snippet.thumbnails.default.url;
+              arr.push(obj);
             }
-            arr.push(obj);
             if (arr.length === results.length - 1) {
               this.recommandList = this.$lodash
                 .chain(arr)
