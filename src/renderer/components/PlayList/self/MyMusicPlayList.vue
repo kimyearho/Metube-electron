@@ -9,27 +9,18 @@
   <div>
     <div id="player">
       <!-- 타이틀바 컴포넌트 -->
-      <top-header @reloadMusicList="feachData" />
+      <top-header @reloadMusicList="feachData"/>
 
       <div class="zaudio_wrapper">
         <!-- 커버 영역 -->
         <div class="zaudio_container">
           <div class="side_menu">
-            <a
-              class="cursor"
-              @click="goBack"
-            >
-              <img
-                src="@/assets/images/svg/menu-back.svg"
-                title="Back"
-              >
+            <a class="cursor" @click="goBack">
+              <img src="@/assets/images/svg/menu-back.svg" title="Back">
             </a>
           </div>
           <div class>
-            <img
-              class="cover"
-              :src="cover"
-            >
+            <img class="cover" :src="cover">
             <div class="zaudio_trackinfo trackinfo">
               <span class="label_related label_v">{{ category }}</span>
               <br>
@@ -65,16 +56,10 @@
             :class="selectedIndex === index ? active : ''"
           >
             <!-- 썸네일 -->
-            <img
-              class="thumbnails"
-              :src="item.thumbnails"
-            >
+            <img class="thumbnails" :src="item.thumbnails">
 
             <!-- 비디오 제목 -->
-            <span
-              class="music-title cursor"
-              @click="playItem(index)"
-            >{{ item.title }}</span>
+            <span class="music-title cursor" @click="playItem(index)">{{ item.title }}</span>
 
             <!-- 비디오 라벨 -->
             <span style="flex-grow:1"></span>
@@ -82,10 +67,7 @@
               class="label_video"
               v-if="item.videoId && item.isLive !== 'live'"
             >{{ item.duration }}</span>
-            <span
-              class="label_live"
-              v-if="item.videoId && item.isLive === 'live' "
-            >LIVE</span>
+            <span class="label_live" v-if="item.videoId && item.isLive === 'live' ">LIVE</span>
 
             <!-- My Context Menu -->
             <my-context-menu
@@ -119,32 +101,28 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
 <script>
-import * as $commons from '@/service/commons-service.js'
-import MainPlayerBar from '@/components/PlayerBar/MainPlayerBar'
-import StoreMixin from '@/components/Mixin/index'
-import MyCollectionMixin from '@/components/Mixin/mycollection'
-import MyContextMenu from '@/components/Context/MyContextMenu'
-import Loading from '@/components/Loader/Loader'
-import draggable from 'vuedraggable'
-import MarqueeText from 'vue-marquee-text-component'
+import * as $commons from "@/service/commons-service.js";
+import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
+import StoreMixin from "@/components/Mixin/index";
+import MyCollectionMixin from "@/components/Mixin/mycollection";
+import MyContextMenu from "@/components/Context/MyContextMenu";
+import Loading from "@/components/Loader/Loader";
+import draggable from "vuedraggable";
+import MarqueeText from "vue-marquee-text-component";
 
-const options = { container: '#myMusicList', offset: -80 }
+const options = { container: "#myMusicList", offset: -80 };
 
 export default {
-  name: 'MyMusicPlayList',
+  name: "MyMusicPlayList",
   mixins: [StoreMixin, MyCollectionMixin],
   components: {
     Loading,
@@ -160,15 +138,15 @@ export default {
       totalTracks: null,
       playType: null,
       id: null,
-      active: 'active',
-      cover: '',
-      coverTitle: '',
-      category: '',
-      channelTitle: '',
+      active: "active",
+      cover: "",
+      coverTitle: "",
+      category: "",
+      channelTitle: "",
       selectedIndex: 0,
       startIndex: 0,
       playlist: []
-    }
+    };
   },
   created() {
     /**
@@ -176,24 +154,24 @@ export default {
      * 실제 재생목록은 음악이 재생중이라면 외부에서 이벤트를 계속 전달하므로, beforeDestory 훅에서 작성하면 안된다.
      * beforeDestory 훅에서 작성하게되면 페이지를 벗어날때 이벤트가 제거되므로, 루트에서 전달하는 이벤트를 수신할 수 없다.
      */
-    this.$eventBus.$off('playlist-nextMusicPlay')
+    this.$eventBus.$off("playlist-nextMusicPlay");
 
     /**
      * 다음 비디오 시작을 알리는 이벤트를 수신한다.
      * 이벤트 중첩을 피하기 위해 $once를 사용할 수도 있지만, 사용자가 재생목록에서 벗어나지 않았다면,
      * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
      */
-    this.$eventBus.$on('playlist-nextMusicPlay', this.subscribeNextVideo)
+    this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
   },
   mounted() {
-    this.feachData()
+    this.feachData();
   },
   methods: {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        const sortPlaylist = this.playlist
-        this.syncMyCollection(sortPlaylist)
+        const sortPlaylist = this.playlist;
+        this.syncMyCollection(sortPlaylist);
       }
     },
 
@@ -201,18 +179,18 @@ export default {
      * 비디오 삭제 후 콜백 이벤트
      */
     removeCallback() {
-      let musicInfo = this.getMusicInfos()
-      this.selectedIndex = musicInfo.index
+      let musicInfo = this.getMusicInfos();
+      this.selectedIndex = musicInfo.index;
 
       /** @override 재생목록 동기화 */
-      this.removeTosyncPlaylist()
+      this.removeTosyncPlaylist();
     },
 
     /**
      * 다음 순번의 비디오 수신
      */
     subscribeNextVideo(index) {
-      this.playItem(index, 'sync')
+      this.playItem(index, "sync");
     },
 
     /**
@@ -222,39 +200,39 @@ export default {
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
       var self = this;
       setTimeout(() => {
-        let id = '#item' + self.$route.params.start
-        self.$scrollTo(id, -1, options)
-      }, 350)
+        let id = "#item" + self.$route.params.start;
+        self.$scrollTo(id, -1, options);
+      }, 350);
 
-      this.startIndex = this.$route.params.start
-      this.playType = this.$route.params.playType
-      this.id = this.$route.params.id
-      let user_id = this.getUserId()
+      this.startIndex = this.$route.params.start;
+      this.playType = this.$route.params.playType;
+      this.id = this.$route.params.id;
+      let user_id = this.getUserId();
       if (user_id) {
         this.$local
           .find({
             selector: {
-              type: 'profile',
+              type: "profile",
               userId: user_id
             },
-            fields: ['playlists']
+            fields: ["playlists"]
           })
           .then(result => {
-            let docs = result.docs[0]
-            let playlists = docs.playlists
+            let docs = result.docs[0];
+            let playlists = docs.playlists;
             if (playlists) {
               // 재생목록
               let data = this.$lodash.find(playlists, {
                 _key: this.id
-              })
+              });
 
-              this.playlist = data.tracks
+              this.playlist = data.tracks;
 
               // 카테고리
-              this.category = data.category
+              this.category = data.category;
 
               // 재생정보 가져오기
-              let musicInfo = this.getMusicInfos()
+              let musicInfo = this.getMusicInfos();
 
               // 현재 재생중인 재생정보가 있는지?
               if (musicInfo) {
@@ -262,30 +240,30 @@ export default {
                 // id -> 이 재생목록의 key값
                 // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
                 if (musicInfo.name != this.id) {
-                  this.autoStart()
+                  this.autoStart();
                 } else {
                   // 현재 재생중인정보가 이 재생목록과 같은경우.
                   // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
                   if (musicInfo.index === this.startIndex) {
                     // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
-                    this.cover = musicInfo.thumbnails
-                    this.coverTitle = musicInfo.title
-                    this.channelTitle = musicInfo.channelTitle
-                    this.selectedIndex = musicInfo.index
-                    this.load = true
+                    this.cover = musicInfo.thumbnails;
+                    this.coverTitle = musicInfo.title;
+                    this.channelTitle = musicInfo.channelTitle;
+                    this.selectedIndex = musicInfo.index;
+                    this.load = true;
                   } else {
                     // 인덱스가 서로 다르므로 새로 시작
-                    this.autoStart()
+                    this.autoStart();
                   }
                 }
               } else {
-                this.autoStart()
+                this.autoStart();
               }
               // 총 트랙 수
-              this.totalTracks = data.tracks.length
-              this.load = true
+              this.totalTracks = data.tracks.length;
+              this.load = true;
             }
-          })
+          });
       }
     },
 
@@ -294,17 +272,17 @@ export default {
      */
     autoStart() {
       // 재생목록 아이디
-      this.playType = this.$route.params.playType
+      this.playType = this.$route.params.playType;
 
       // 첫 시작 트랙번호
-      let startTrack = this.$route.params.start
+      let startTrack = this.$route.params.start;
 
       // 재생목록에서 해당하는 트랙번호의 비디오
-      let playingItem = this.playlist[startTrack]
+      let playingItem = this.playlist[startTrack];
 
-      playingItem.index = startTrack
-      playingItem.name = this.id
-      this.playSetting(playingItem)
+      playingItem.index = startTrack;
+      playingItem.name = this.id;
+      this.playSetting(playingItem);
     },
 
     /**
@@ -315,23 +293,23 @@ export default {
      */
     playItem(index, event) {
       // 재생정보
-      let musicInfo = this.getMusicInfos()
+      let musicInfo = this.getMusicInfos();
 
       // 외부에서 EventBus로 재생햇을경우
       if (event != undefined) {
         /** @override 재생목록 동기화 */
-        this.getMyMusicSyncList(index, musicInfo)
+        this.getMyMusicSyncList(index, musicInfo);
       } else {
         // 재생목록에서 해당하는 트랙번호의 비디오
-        let playingItem = this.playlist[index]
-        playingItem.index = index
-        playingItem.name = musicInfo.name
+        let playingItem = this.playlist[index];
+        playingItem.index = index;
+        playingItem.name = musicInfo.name;
 
-        this.playSetting(playingItem)
+        this.playSetting(playingItem);
         if (index === 0) {
-          this.endScrollTop()
+          this.endScrollTop();
         } else {
-          this.nextTrackScroll(-1)
+          this.nextTrackScroll(-1);
         }
       }
     },
@@ -340,18 +318,18 @@ export default {
      * 메인 플레이어바 이전 곡 재생
      */
     previousPlayItem() {
-      let musicInfo = this.getMusicInfos()
-      let previousIndex = musicInfo.index - 1
+      let musicInfo = this.getMusicInfos();
+      let previousIndex = musicInfo.index - 1;
       if (previousIndex !== -1) {
         // 재생목록에서 해당하는 트랙번호의 비디오
-        let playingItem = this.playlist[previousIndex]
-        playingItem.index = previousIndex
-        playingItem.name = musicInfo.name
+        let playingItem = this.playlist[previousIndex];
+        playingItem.index = previousIndex;
+        playingItem.name = musicInfo.name;
 
-        this.playSetting(playingItem)
-        this.nextTrackScroll(500)
+        this.playSetting(playingItem);
+        this.nextTrackScroll(500);
       } else {
-        this.playItem(0)
+        this.playItem(0);
       }
     },
 
@@ -359,26 +337,26 @@ export default {
      * 메인 플레이어바 다음 곡 재생
      */
     nextPlayItem() {
-      let musicInfo = this.getMusicInfos()
-      let nextIndex = musicInfo.index + 1
+      let musicInfo = this.getMusicInfos();
+      let nextIndex = musicInfo.index + 1;
 
       // 목록의 총 갯수와 다음 인덱스가 동일하면 (목록의 끝 )
       if (this.totalTracks === nextIndex) {
         // 처음부터 재생
-        let playingItem = this.playlist[0]
-        playingItem.index = 0
-        playingItem.name = musicInfo.name
+        let playingItem = this.playlist[0];
+        playingItem.index = 0;
+        playingItem.name = musicInfo.name;
 
-        this.playSetting(playingItem)
-        this.endScrollTop()
+        this.playSetting(playingItem);
+        this.endScrollTop();
       } else {
         // 재생목록에서 해당하는 트랙번호의 비디오
-        let playingItem = this.playlist[nextIndex]
-        playingItem.index = nextIndex
-        playingItem.name = musicInfo.name
+        let playingItem = this.playlist[nextIndex];
+        playingItem.index = nextIndex;
+        playingItem.name = musicInfo.name;
 
-        this.playSetting(playingItem)
-        this.nextTrackScroll(500)
+        this.playSetting(playingItem);
+        this.nextTrackScroll(500);
       }
     },
 
@@ -388,21 +366,21 @@ export default {
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
     playSetting(playingItem) {
-      this.selectedIndex = playingItem.index
-      this.coverTitle = playingItem.title
-      this.channelTitle = playingItem.channelTitle
+      this.selectedIndex = playingItem.index;
+      this.coverTitle = playingItem.title;
+      this.channelTitle = playingItem.channelTitle;
       this.cover = playingItem.imageInfo
         ? playingItem.imageInfo
-        : playingItem.thumbnails
+        : playingItem.thumbnails;
 
-      this.$store.commit('setPlayingMusicInfo', playingItem)
-      this.$eventBus.$emit('playMusicSetting')
-      this.$ipcRenderer.send('win2Player', [
-        'loadVideoById',
+      this.$store.commit("setPlayingMusicInfo", playingItem);
+      this.$eventBus.$emit("playMusicSetting");
+      this.$ipcRenderer.send("win2Player", [
+        "loadVideoById",
         playingItem.videoId
-      ])
-      this.$eventBus.$emit('statusCheck')
-      this.load = true
+      ]);
+      this.$eventBus.$emit("statusCheck");
+      this.load = true;
     },
 
     /**
@@ -413,12 +391,16 @@ export default {
      * @param {duration} 지연시간
      */
     nextTrackScroll(duration) {
-      if (this.$route.name === 'MY-PLAYING-PLAYLIST') {
-       let cancelScroll = this.$scrollTo(`#item${this.selectedIndex}`, duration, options)
-       setTimeout(() => {
-         console.log('cancel Scroll')
-         cancelScroll();
-       }, 3000);
+      if (this.$route.name === "MY-PLAYING-PLAYLIST") {
+        let cancelScroll = this.$scrollTo(
+          `#item${this.selectedIndex}`,
+          duration,
+          options
+        );
+        setTimeout(() => {
+          console.log("cancel Scroll");
+          cancelScroll();
+        }, 3000);
       }
     },
 
@@ -428,12 +410,12 @@ export default {
      * 외부에서 이벤트로 실행할때는 재생목록이 아니므로 offset 오류가 난다.
      */
     endScrollTop() {
-      if (this.$route.name === 'MY-PLAYING-PLAYLIST') {
-        let cancelScroll = this.$scrollTo('#item0', -1, options)
+      if (this.$route.name === "MY-PLAYING-PLAYLIST") {
+        let cancelScroll = this.$scrollTo("#item0", -1, options);
         setTimeout(() => {
-         console.log('cancel Scroll2')
-         cancelScroll();
-       }, 3000);
+          console.log("cancel Scroll2");
+          cancelScroll();
+        }, 3000);
       }
     },
 
@@ -441,10 +423,10 @@ export default {
      * 이전 페이지로 돌아간다.
      */
     goBack() {
-      this.$router.push(this.$store.getters.getCurrentPath)
+      this.$router.push(this.$store.getters.getCurrentPath);
     }
   }
-}
+};
 </script>
 
 <style scoped>

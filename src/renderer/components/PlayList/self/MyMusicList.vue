@@ -47,24 +47,8 @@
           <div class="overay"></div>
         </div>
 
-        <ul
-          id="list"
-          class="zaudio_playlist"
-          :class="{ dynamicHeight: isMini }"
-          v-if="playlist.length === 0"
-        >
-          <li style="height: 140px;">
-            <span style="margin-left:40px;">😭 There is no registered video.</span>
-          </li>
-          <!-- 개발자 가이드라인  -->
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </ul>
-
         <!-- 재생목록 드래그 지점 -->
         <draggable
-          v-if="playlist.length > 0"
           element="ul"
           id="list"
           class="zaudio_playlist"
