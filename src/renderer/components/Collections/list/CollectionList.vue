@@ -144,7 +144,7 @@ export default {
     if (this.playType === 'my-collection') {
       this.getMyCollectionList()
     } else {
-      this.getList()
+      this.getCollectionList()
     }
   },
   methods: {
@@ -218,7 +218,7 @@ export default {
     saveCover (data) {
       if (data) {
         if (data.playType === 'play') {
-          this.getList()
+          this.getCollectionList()
         } else if (data.playType === 'channel') {
           this.getChannelList()
         } else {

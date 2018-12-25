@@ -378,6 +378,8 @@ export default {
 
     /** @overide */
     this.getChannelList()
+
+    this.load = true
   },
   beforeMount() {
     this.$store.commit('setIndexPath', this.$route.path)
