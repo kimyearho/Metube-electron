@@ -12,25 +12,13 @@
       <div class="zaudio_playercontrols">
         <!-- 프로그레스바 영역 -->
         <div class="zaudio_seekbar">
-          <progress
-            class="cursor"
-            @click="seekTo"
-            :value="range"
-            min="0"
-            :max="maxTime"
-          />
-          <span
-            class="playingLive"
-            v-if="isLive"
-          >L I V E - P L A Y I N G</span>
+          <progress class="cursor" @click="seekTo" :value="range" min="0" :max="maxTime"/>
+          <span class="playingLive" v-if="isLive">L I V E - P L A Y I N G</span>
           <span class="zaudio_tracktime">{{ totalTime }}</span>
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div
-          class="zaudio_buttonwrapper"
-          style="margin-top: 10px;"
-        >
+        <div class="zaudio_buttonwrapper" style="margin-top: 10px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
@@ -38,7 +26,7 @@
               width="35"
               height="15"
               src="@/assets/images/svg/play-previous-button.svg"
-              @click="previousVideo"
+              @click="!isDelay ? previousVideo() : buttonDelay()"
             >
 
             <!-- 재생 -->
@@ -65,7 +53,7 @@
               width="35"
               height="15"
               src="@/assets/images/svg/play-next-button.svg"
-              @click="nextVideo"
+              @click="!isDelay ? nextVideo() : buttonDelay()"
             >
 
             <!-- 반복 재생 -->
@@ -78,7 +66,7 @@
               :title="$t('PLAYERBAR.REPEAT_OFF')"
               @click="repeatOn"
             >
-
+            
             <img
               class="cursor"
               v-else
@@ -99,7 +87,7 @@
               :title="$t('PLAYERBAR.VOLUME_OFF')"
               @click="volumeOn"
             >
-
+            
             <img
               class="cursor"
               v-else
@@ -111,14 +99,7 @@
             >
           </div>
           <div style="max-width:20%;padding-right:10px;">
-            <input
-              type="range"
-              ref="volumeSlider"
-              v-model="volume"
-              step="1"
-              min="0"
-              max="100"
-            >
+            <input type="range" ref="volumeSlider" v-model="volume" step="1" min="0" max="100">
           </div>
         </div>
       </div>
@@ -127,187 +108,206 @@
 </template>
 
 <script>
-import * as $commons from '@/service/commons-service.js'
-import storeMixin from '@/components/Mixin/index'
+import * as $commons from "@/service/commons-service.js";
+import storeMixin from "@/components/Mixin/index";
 
 export default {
-  name: 'MainPlayerBar',
+  name: "MainPlayerBar",
   mixins: [storeMixin],
   data() {
     return {
       range: 0,
-      time: '',
+      time: "",
       maxTime: 0,
-      totalTime: '',
+      totalTime: "",
       state: 0,
-      loop: '',
+      loop: "",
       volume: 50,
       isLive: false,
       isPlay: true,
       isRepeat: false,
+      isDelay: false,
       isVolume: false
-    }
+    };
   },
   created() {
     // 영상의 재생시간 수신
-    this.$eventBus.$on('playerSecond', this.progressRange)
+    this.$eventBus.$on("playerSecond", this.progressRange);
 
     // 재생음악의 정보 수신
-    this.$eventBus.$on('playMusicSetting', this.playMusicSetting)
+    this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
 
     // 영상을 클릭했을때 수신
-    this.$eventBus.$on('playerPause', this.playerPause)
+    this.$eventBus.$on("playerPause", this.playerPause);
 
     // 영상을 클릭했을때 수신
-    this.$eventBus.$on('playerPlay', this.playerPlay)
+    this.$eventBus.$on("playerPlay", this.playerPlay);
   },
   watch: {
     // 볼륨 감시
     volume(v) {
-      this.volume = v
-      this.$store.commit('setVolume', this.volume)
-      this.$ipcRenderer.send('win2Player', ['setVolume', this.volume])
+      this.volume = v;
+      this.$store.commit("setVolume", this.volume);
+      this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
     }
   },
   mounted() {
     // 재생 기본설정
-    this.playReady()
+    this.playReady();
 
     // 현재 재생음악의 정보를 설정
-    this.fetchData()
+    this.fetchData();
 
     // 반복
-    this.isRepeat = this.getRepeat()
+    this.isRepeat = this.getRepeat();
   },
   beforeDestroy() {
-    this.$eventBus.$off('playerPause')
-    this.$eventBus.$off('playerPlay')
+    this.$eventBus.$off("playerPause");
+    this.$eventBus.$off("playerPlay");
   },
   methods: {
     // 재생정보 및 플레이타입 설정
     fetchData() {
-      let musicInfo = this.getMusicInfos()
+      let musicInfo = this.getMusicInfos();
       if (musicInfo) {
-        this.maxTime = musicInfo.duration_time
-        this.totalTime = musicInfo.duration
+        this.maxTime = musicInfo.duration_time;
+        this.totalTime = musicInfo.duration;
         if (musicInfo.isLive) {
-          this.isLive = musicInfo.isLive != 'none'
+          this.isLive = musicInfo.isLive != "none";
         }
         if (this.getPlayType() === null) {
-          this.isPlay = true
-          this.$store.commit('setPlayType', this.isPlay)
+          this.isPlay = true;
+          this.$store.commit("setPlayType", this.isPlay);
         } else {
-          this.isPlay = this.getPlayType()
+          this.isPlay = this.getPlayType();
         }
       }
     },
 
     // 재생준비 (기본 볼륨: 50)
     playReady() {
-      this.volume = this.getVolume()
-      this.$store.commit('setVolume', this.volume)
+      this.volume = this.getVolume();
+      this.$store.commit("setVolume", this.volume);
       if (this.volume === 0) {
-        this.volume = 50
+        this.volume = 50;
       }
-      this.$ipcRenderer.send('win2Player', ['setVolume', this.volume])
+      this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
     },
 
     // 재생정보 세팅
     playMusicSetting() {
-      let musicInfo = this.getMusicInfos()
-      this.maxTime = musicInfo.duration_time
-      this.totalTime = musicInfo.duration
+      let musicInfo = this.getMusicInfos();
+      this.maxTime = musicInfo.duration_time;
+      this.totalTime = musicInfo.duration;
       if (musicInfo.isLive) {
-        this.isLive = musicInfo.isLive != 'none'
+        this.isLive = musicInfo.isLive != "none";
       }
-      this.isPlay = true
+      this.isPlay = true;
     },
 
     // 프로그레스
     progressRange($event) {
-      this.range = this.second($event)
+      this.range = this.second($event);
     },
 
     // 일시정지
     playerPause() {
-      this.isPlay = true
+      this.isPlay = true;
     },
 
     // 재생
     playerPlay() {
-      this.isPlay = false
+      this.isPlay = false;
     },
 
     // 일시정지 -> 재생으로 전환
     pause() {
-      this.isPlay = true
-      this.$ipcRenderer.send('win2Player', ['playVideo'])
-      this.$store.commit('setPlayType', this.isPlay)
+      this.isPlay = true;
+      this.$ipcRenderer.send("win2Player", ["playVideo"]);
+      this.$store.commit("setPlayType", this.isPlay);
     },
 
     // 이전 비디오
     previousVideo() {
-      this.$emit('previousVideoTrack')
+      this.isDelay = true;
+      let self = this;
+      setTimeout(function() {
+        self.isDelay = false;
+      }, 3000);
+      this.$emit("previousVideoTrack");
     },
 
     // 재생 중 -> 일시정지로 전환
     play() {
-      this.isPlay = false
-      this.$ipcRenderer.send('win2Player', ['pauseVideo'])
-      this.$store.commit('setPlayType', this.isPlay)
+      this.isPlay = false;
+      this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
+      this.$store.commit("setPlayType", this.isPlay);
     },
 
     // 클릭이벤트로 재생시간 이동
     seekTo(e) {
-      let target = $(e.currentTarget)
-      let widthclicked = e.pageX - target.offset().left
-      let totalWidth = target.width()
-      let calc = (widthclicked / totalWidth) * this.maxTime
-      let calc_fix = calc.toFixed(0)
-      this.$ipcRenderer.send('win2Player', ['seekTo', calc_fix])
+      let target = $(e.currentTarget);
+      let widthclicked = e.pageX - target.offset().left;
+      let totalWidth = target.width();
+      let calc = (widthclicked / totalWidth) * this.maxTime;
+      let calc_fix = calc.toFixed(0);
+      this.$ipcRenderer.send("win2Player", ["seekTo", calc_fix]);
     },
 
     // 볼륨 ON
     volumeOn() {
-      this.volume = 0
-      this.isVolume = true
-      this.$ipcRenderer.send('win2Player', ['setVolume', 0])
+      this.volume = 0;
+      this.isVolume = true;
+      this.$ipcRenderer.send("win2Player", ["setVolume", 0]);
     },
 
     // 볼륨 OFF
     volumeOff() {
-      this.volume = 50
-      this.isVolume = false
-      this.$ipcRenderer.send('win2Player', ['setVolume', this.volume])
+      this.volume = 50;
+      this.isVolume = false;
+      this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
     },
 
     // 다음 비디오
     nextVideo() {
-      this.$emit('nextVideoTrack')
+      this.isDelay = true;
+      let self = this;
+      setTimeout(function() {
+        self.isDelay = false;
+      }, 3000);
+      this.$emit("nextVideoTrack");
+    },
+
+    buttonDelay() {
+      this.$message({
+        showClose: true,
+        message: this.$t('PLAYERBAR.BUTTON_DELAY'),
+        type: "error"
+      });
     },
 
     // 반복 ON
     repeatOn() {
-      this.isRepeat = true
-      this.$store.commit('setRepeat', true)
+      this.isRepeat = true;
+      this.$store.commit("setRepeat", true);
     },
 
     // 반복 OFF
     repeatOff() {
-      this.isRepeat = false
-      this.$store.commit('setRepeat', false)
+      this.isRepeat = false;
+      this.$store.commit("setRepeat", false);
     },
 
     // 문자열을 숫자형으로 변환
     second(n) {
       if (n != undefined) {
-        return parseInt(n)
+        return parseInt(n);
       } else {
-        return 0
+        return 0;
       }
     }
   }
-}
+};
 </script>
 
 <style scope>
@@ -362,5 +362,9 @@ input[type="range"]::-webkit-slider-thumb {
   font-weight: 700;
   color: #fd4545;
   left: 125px;
+}
+
+.el-message {
+  min-width: 310px;
 }
 </style>

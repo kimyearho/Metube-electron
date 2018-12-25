@@ -40,7 +40,7 @@ export default {
   top: 32px;
   left: -15px;
   right: 0;
-  z-index: 999;
+  z-index: 2222;
 }
 html {
   height: 100%;

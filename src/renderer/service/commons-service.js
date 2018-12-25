@@ -1,5 +1,5 @@
 const API_URL = "https://www.googleapis.com/youtube/v3";
-const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
+const API_KEY = "AIzaSyDTveVmzb3_2z1TSO-2fWfKX46Kf7dm0HI";
 
 export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`;
 
@@ -14,6 +14,17 @@ export function youtubeSearch(text) {
     .concat(
       `&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${API_KEY}`
     );
+}
+
+/**
+ * Youtube 음악검색
+ *
+ * @param {*} text - 검색어
+ */
+export function youtubePlaylistSearch(text) {
+  return API_URL.concat("/search?")
+    .concat(`part=snippet&q=${text}`)
+    .concat(`&type=playlist&maxResults=15&safeSearch=strict&key=${API_KEY}`);
 }
 
 /**

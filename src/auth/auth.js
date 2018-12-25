@@ -2,8 +2,8 @@ import { BrowserWindow } from "electron";
 import { google } from "googleapis";
 import nodeUrl from "url";
 
-const CLIENT_ID = "[[ CLIENT ID HERE ]]";
-const CLIENT_SECRET = "[[ CLIENT SECRET HERE ]]";
+const CLIENT_ID = "1016872945508-v0qtui0mkqsl9ci7ooc8okc4bul0pkvm.apps.googleusercontent.com";
+const CLIENT_SECRET = "9sN_SVAEkzfmO3lMS9VO7lfD";
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID,
   CLIENT_SECRET,

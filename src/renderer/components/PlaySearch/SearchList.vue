@@ -57,6 +57,21 @@
           </ul>
         </div>
 
+        <el-carousel 
+          v-loading="loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          :interval="3000"
+          type="card"
+          indicator-position="none"
+          height="100px"
+          style="margin:10px;"
+        >
+          <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
+            <img width="174" height="100" :src="item.image" @click="route(item)">
+            <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
+          </el-carousel-item>
+        </el-carousel>
+
         <!-- 검색목록  -->
         <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
           <li
@@ -111,267 +126,313 @@
 </template>
 
 <script>
-import * as $commons from '@/service/commons-service.js'
-import storeMixin from '@/components/Mixin/index'
-import subPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import loading from '@/components/Loader/Loader'
+import * as $commons from "@/service/commons-service.js";
+import storeMixin from "@/components/Mixin/index";
+import subPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import loading from "@/components/Loader/Loader";
 
 export default {
-  name: 'SearchList',
+  name: "SearchList",
   mixins: [storeMixin],
   components: {
     loading,
     subPlayerBar
   },
-  data () {
+  data() {
     return {
       searchList: [],
       autoSearchList: [],
       autoSearchSize: 0,
-      searchText: '',
+      searchText: "",
       searchKeywords: [],
+      recommandList: [],
       isMini: false,
       isMore: false,
       isAppend: false,
       isTag: false,
+      loading: false,
       load: false,
       timer: 0,
       state: 0
-    }
+    };
   },
-  created () {
-    this.searchText = this.getSearchKeyword()
-    this.init(this.searchText)
+  created() {
+    this.searchText = this.getSearchKeyword();
+    this.recommandTrack();
+    this.init(this.searchText);
   },
   watch: {
-    searchText (value) {
+    searchText(value) {
       if (this.$lodash.size(value) === 0) {
-        this.isAppend = false
+        this.isAppend = false;
       }
     }
   },
-  beforeMount () {
-    this.$store.commit('setIndexPath', this.$route.path)
+  beforeMount() {
+    this.$store.commit("setIndexPath", this.$route.path);
   },
-  mounted () {
-    let pos = this.getScrollPos()
-    this.$el.querySelector('#list').scrollTo(0, pos)
+  mounted() {
+    let pos = this.getScrollPos();
+    this.$el.querySelector("#list").scrollTo(0, pos);
   },
-  beforeDestroy () {
-    this.handleScroll()
+  beforeDestroy() {
+    this.handleScroll();
   },
   methods: {
-    handleScroll () {
-      let pos = this.$el.querySelector('#list').scrollTop
-      this.$store.commit('setScrollPos', pos)
+    recommandTrack() {
+      this.loading = true
+      let request1, request2, request3;
+      if (this.$locale === "ko") {
+        request1 = $commons.youtubePlaylistSearch("한국 노래 탑 100");
+        request2 = $commons.youtubePlaylistSearch("KPOP 2018");
+        request3 = $commons.youtubePlaylistSearch("Billboard Charts");
+      } else {
+        request1 = $commons.youtubePlaylistSearch("iTunes Charts");
+        request2 = $commons.youtubePlaylistSearch("Billboard Charts");
+        request3 = $commons.youtubePlaylistSearch("Merry Christmas 2018");
+      }
+      const fetchURL = url => this.$http.get(url);
+      const promiseArray = [request1, request2, request3].map(fetchURL);
+      Promise.all(promiseArray)
+        .then(data => {
+          let data1 = data[0].data.items;
+          let data2 = data[1].data.items;
+          let data3 = data[2].data.items;
+          let results = this.$lodash.concat(data1, data2).concat(data3);
+          let arr = [];
+          this.$lodash.forEach(results, (items, index) => {
+            let obj = {};
+            obj.playlistId = items.id.playlistId;
+            obj.title = items.snippet.title;
+            obj.image = items.snippet.thumbnails.medium.url;
+            arr.push(obj);
+            if (arr.length === results.length - 1) {
+              this.recommandList = this.$lodash
+                .chain(arr)
+                .uniqWith(this.$lodash.isEqual)
+                .shuffle()
+                .value();
+              this.loading = false
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    tagSearch (tag) {
-      this.submit(tag)
+    handleScroll() {
+      let pos = this.$el.querySelector("#list").scrollTop;
+      this.$store.commit("setScrollPos", pos);
     },
-    showTag () {
+    tagSearch(tag) {
+      this.submit(tag);
+    },
+    showTag() {
       if (!this.getUserId()) {
-        this.$modal.show('dialog', {
-          title: 'Info',
-          text: this.$t('COLLECTION.NO_LOGIN'),
+        this.$modal.show("dialog", {
+          title: "Info",
+          text: this.$t("COLLECTION.NO_LOGIN"),
           buttons: [
             {
-              title: 'Close'
+              title: "Close"
             }
           ]
-        })
+        });
       } else {
         if (this.isTag) {
-          this.isTag = false
+          this.isTag = false;
         } else {
-          this.isTag = true
+          this.isTag = true;
         }
       }
     },
-    searchReset () {
-      this.searchText = ''
-      this.isAppend = false
+    searchReset() {
+      this.searchText = "";
+      this.isAppend = false;
     },
-    searchTop () {
+    searchTop() {
       let options = {
-        container: '#list',
+        container: "#list",
         offset: -80
-      }
-      this.$scrollTo('#item0', 0, options)
+      };
+      this.$scrollTo("#item0", 0, options);
     },
-    init (text) {
-      let musicInfo = this.getMusicInfos()
+    init(text) {
+      let musicInfo = this.getMusicInfos();
       if (musicInfo) {
-        this.isMini = !this.isMini
+        this.isMini = !this.isMini;
       }
-      let totalSearchList = this.getNextSearchList()
+      let totalSearchList = this.getNextSearchList();
       if (this.$lodash.size(totalSearchList) === 0) {
         if (text === null) {
-          text = 'Music'
+          text = "top music 2018";
         } else {
-          this.$store.commit('setSearchText', text)
+          this.$store.commit("setSearchText", text);
         }
-        let request = $commons.youtubeSearch(text)
+        let request = $commons.youtubeSearch(text);
         this.$http
           .get(request)
           .then(res => {
             if (res.data.nextPageToken) {
-              this.$store.commit('setNextPageToken', res.data.nextPageToken)
+              this.$store.commit("setNextPageToken", res.data.nextPageToken);
             }
-            this.$store.commit('setSearchList', res.data.items)
-            this.$store.dispatch('setSearchDuration').then(results => {
-              this.searchList = results
-              this.load = true
-            })
+            this.$store.commit("setSearchList", res.data.items);
+            this.$store.dispatch("setSearchDuration").then(results => {
+              this.searchList = results;
+              this.load = true;
+            });
           })
           .catch(error => {
-            console.error(error)
-          })
+            console.error(error);
+          });
       } else {
-        this.searchList = totalSearchList
-        this.load = true
+        this.searchList = totalSearchList;
+        this.load = true;
       }
-      this.getKeyword()
+      this.getKeyword();
     },
-    submit (text, tag) {
-      this.load = false
-      this.isAppend = false
-      this.$store.commit('setNextSearchList', undefined)
-      if (text === undefined || text === '') {
-        text = 'Music'
+    submit(text, tag) {
+      this.load = false;
+      this.isAppend = false;
+      this.$store.commit("setNextSearchList", undefined);
+      if (text === undefined || text === "") {
+        text = "top music 2018";
       } else {
-        this.$store.commit('setSearchText', text)
+        this.$store.commit("setSearchText", text);
       }
-      let request = $commons.youtubeSearch(text)
+      let request = $commons.youtubeSearch(text);
       this.$http
         .get(request)
         .then(res => {
           if (res.data.nextPageToken) {
-            this.$store.commit('setNextPageToken', res.data.nextPageToken)
+            this.$store.commit("setNextPageToken", res.data.nextPageToken);
           }
-          this.$store.commit('setSearchList', res.data.items)
-          this.$store.dispatch('setSearchDuration').then(results => {
-            this.searchList = results
+          this.$store.commit("setSearchList", res.data.items);
+          this.$store.dispatch("setSearchDuration").then(results => {
+            this.searchList = results;
             if (tag === undefined) {
-              this.updateKeyword(text)
+              this.updateKeyword(text);
             }
-            this.isAppend = false
-            this.$el.querySelector('#list').scrollTo(0, 0)
-            this.load = true
-          })
+            this.isAppend = false;
+            this.$el.querySelector("#list").scrollTo(0, 0);
+            this.load = true;
+          });
         })
         .catch(error => {
-          console.error(error)
-        })
-      this.isAppend = false
-      this.isTag = false
+          console.error(error);
+        });
+      this.isAppend = false;
+      this.isTag = false;
     },
-    getKeyword () {
+    getKeyword() {
       if (this.getUserId()) {
         this.$local
           .find({
             selector: {
-              type: 'profile',
+              type: "profile",
               userId: this.getUserId()
             },
-            fields: ['_id', 'keywords']
+            fields: ["_id", "keywords"]
           })
           .then(result => {
-            let docs = result.docs[0]
+            let docs = result.docs[0];
             if (docs) {
-              let keywords = docs.keywords
+              let keywords = docs.keywords;
               keywords = this.$lodash
                 .chain(keywords)
-                .orderBy(['created'], ['desc'])
+                .orderBy(["created"], ["desc"])
                 .take(10)
-                .map('searchKey')
-                .value()
+                .map("searchKey")
+                .value();
               this.searchKeywords = this.$lodash.uniqWith(
                 keywords,
                 this.$lodash.isEqual
-              )
+              );
             }
-          })
+          });
       }
     },
-    updateKeyword (k) {
-      let id = this.getUserId()
+    updateKeyword(k) {
+      let id = this.getUserId();
       if (id) {
         this.$local
           .find({
             selector: {
-              type: 'profile',
+              type: "profile",
               userId: id
             }
           })
           .then(result => {
-            let docs = result.docs[0]
+            let docs = result.docs[0];
             docs.keywords.push({
               searchKey: k,
-              created: this.$moment().format('YYYYMMDDkkmmss')
-            })
+              created: this.$moment().format("YYYYMMDDkkmmss")
+            });
             this.$local.put(docs).then(() => {
-              this.getKeyword()
-            })
-          })
+              this.getKeyword();
+            });
+          });
       }
     },
-    route (item) {
-      this.$store.commit('setPath', this.$route.path)
+    route(item) {
+      this.$store.commit("setPath", this.$route.path);
       if (item.playlistId) {
         this.$router.push({
-          name: 'NOT-PLAYING-PLAYLIST',
+          name: "NOT-PLAYING-PLAYLIST",
           params: {
-            playType: 'play',
+            playType: "play",
             id: item.playlistId
           }
-        })
+        });
       } else if (item.videoId) {
         this.$router.push({
-          name: 'NOT-PLAYING-PLAYLIST',
+          name: "NOT-PLAYING-PLAYLIST",
           params: {
-            playType: 'related',
+            playType: "related",
             id: item.videoId
           }
-        })
+        });
       } else {
         this.$router.push({
-          name: 'NOT-PLAYING-PLAYLIST',
+          name: "NOT-PLAYING-PLAYLIST",
           params: {
-            playType: 'channel',
+            playType: "channel",
             id: item.channelId
           }
-        })
+        });
       }
     },
-    nextPageLoad () {
-      this.isMore = true
+    nextPageLoad() {
+      this.isMore = true;
       let text =
-        this.getSearchKeyword() === null ? 'Music' : this.getSearchKeyword()
-      let request = $commons.youtubePagingSearch(text, this.getNextPageToken())
+        this.getSearchKeyword() === null
+          ? "top music 2018"
+          : this.getSearchKeyword();
+      let request = $commons.youtubePagingSearch(text, this.getNextPageToken());
       this.$http
         .get(request)
         .then(res => {
           if (res.data.nextPageToken) {
-            this.$store.commit('setNextPageToken', res.data.nextPageToken)
+            this.$store.commit("setNextPageToken", res.data.nextPageToken);
           }
-          this.$store.commit('setSearchList', res.data.items)
-          this.$store.dispatch('setSearchDuration').then(results => {
-            this.searchList = this.$lodash.concat(this.searchList, results)
-            this.$store.commit('setNextSearchList', this.searchList)
-            this.isMore = false
-          })
+          this.$store.commit("setSearchList", res.data.items);
+          this.$store.dispatch("setSearchDuration").then(results => {
+            this.searchList = this.$lodash.concat(this.searchList, results);
+            this.$store.commit("setNextSearchList", this.searchList);
+            this.isMore = false;
+          });
         })
         .catch(error => {
-          console.error(error)
-        })
+          console.error(error);
+        });
     },
-    autoComplateSearch (event) {
+    autoComplateSearch(event) {
       if (
-        event.key !== 'Enter' &&
-        event.key !== 'Control' &&
-        event.key !== 'Shift' &&
-        event.key !== 'CapsLock' &&
-        event.key !== 'Tab' &&
+        event.key !== "Enter" &&
+        event.key !== "Control" &&
+        event.key !== "Shift" &&
+        event.key !== "CapsLock" &&
+        event.key !== "Tab" &&
         event.keyCode !== 32 &&
         event.keyCode !== 27 &&
         event.keyCode !== 112 &&
@@ -387,50 +448,50 @@ export default {
         event.keyCode !== 122 &&
         event.keyCode !== 123
       ) {
-        let re = /([xEA-xED][x80-xBF]{2}|[a-zA-Z0-9.~!@#$%&*()_+^'\"`~;:<>,?/{}[]|]|[ㄱ-ㅎ가-힣])+/g
-        if (this.searchText !== '') {
+        let re = /([xEA-xED][x80-xBF]{2}|[a-zA-Z0-9.~!@#$%&*()_+^'\"`~;:<>,?/{}[]|]|[ㄱ-ㅎ가-힣])+/g;
+        if (this.searchText !== "") {
           if (re.test(this.searchText)) {
             if (this.timer) {
-              clearTimeout(this.timer)
-              this.timer = null
+              clearTimeout(this.timer);
+              this.timer = null;
             }
             this.timer = setTimeout(() => {
-              let url = $commons.googleSearchPath.concat(this.searchText)
+              let url = $commons.googleSearchPath.concat(this.searchText);
               this.$http
                 .jsonp(url)
                 .then(res => {
                   let value = this.$lodash.map(res[1], item => {
                     return {
                       name: item[0]
-                    }
-                  })
-                  let searchText = this.$lodash.toLower(this.searchText)
-                  let searchResults = this.$lodash.map(value, 'name')
-                  this.autoSearchList = []
+                    };
+                  });
+                  let searchText = this.$lodash.toLower(this.searchText);
+                  let searchResults = this.$lodash.map(value, "name");
+                  this.autoSearchList = [];
                   this.$lodash.forEach(searchResults, item => {
-                    this.autoSearchList.push(item)
-                  })
-                  this.isAppend = true
+                    this.autoSearchList.push(item);
+                  });
+                  this.isAppend = true;
                 })
                 .catch(error => {
-                  console.error(error)
-                })
-            }, 100)
+                  console.error(error);
+                });
+            }, 100);
           }
         } else {
           // 검색어가 없을 때 자동검색목록 닫음.
-          this.isAppend = false
-          this.$store.commit('setSearchText', this.searchText)
+          this.isAppend = false;
+          this.$store.commit("setSearchText", this.searchText);
         }
       }
     },
 
-    itemSelected (item) {
-      this.searchText = item
-      this.submit(this.searchText)
+    itemSelected(item) {
+      this.searchText = item;
+      this.submit(this.searchText);
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -513,8 +574,33 @@ export default {
   outline: none;
 }
 
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.recommandMusic {
+  z-index: 9999;
+  position: absolute;
+  color: rgb(255, 255, 255);
+  top: 63px;
+  font-size: 11px;
+  padding-left: 5px;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+
 .zaudio_playlist {
-  max-height: 465px;
+  max-height: 350px;
   margin-top: 3px;
 }
 
@@ -532,7 +618,7 @@ export default {
 }
 
 .dynamicHeight {
-  max-height: 415px;
+  max-height: 300px;
 }
 
 .no_keyword {

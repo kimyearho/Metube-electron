@@ -17,3 +17,5 @@ _replicator
 _users
 pouch__all_dbs__
 config.json
+static
+build/*

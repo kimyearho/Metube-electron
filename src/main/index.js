@@ -5,6 +5,12 @@ import request from "request";
 
 const playerPath = "http://localhost:7070";
 
+// https connect true
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+// Chrome AutoPlay Policy disable
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -23,17 +29,17 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
-if (process.env.NODE_ENV != "development") {
-  let shouldQuit = app.makeSingleInstance(() => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-  });
-  if (shouldQuit) {
-    app.quit();
-  }
-}
+// if (process.env.NODE_ENV != "development") {
+//   let shouldQuit = app.makeSingleInstance(() => {
+//     if (mainWindow) {
+//       if (mainWindow.isMinimized()) mainWindow.restore();
+//       mainWindow.focus();
+//     }
+//   });
+//   if (shouldQuit) {
+//     app.quit();
+//   }
+// }
 
 // Create Main Window
 function createWindow() {
@@ -56,9 +62,6 @@ function createWindow() {
 
   if (process.env.NODE_ENV === "development") {
     mainWindow.webContents.openDevTools();
-  } else {
-    // Annotation processing if not used
-    require("../analiytics/analytics")(app);
   }
 
   mainWindow.on("closed", () => {
@@ -219,3 +222,5 @@ ipcMain.on("player2Win", (e, args) => {
     /* window already closed */
   }
 });
+
+require("../analiytics/analytics")(app);

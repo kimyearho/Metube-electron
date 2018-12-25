@@ -53,14 +53,10 @@ Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
 const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
 ```
 
-### DB related
+### Local Database
 I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information. <br/>
 To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 <https://pouchdb.com/>
-
-### Plan
-We are currently working on code improvements and function name modifications. <br/>
-You should also change the comment to English.
 
 ***
 
