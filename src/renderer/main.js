@@ -40,6 +40,9 @@ import lodash from "lodash";
 /* VueClipboard */
 import VueClipboard from "vue-clipboard2";
 
+/* mousetrap */
+import mousetrap from "mousetrap";
+
 library.add(fas);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("top-header", topHeader);
@@ -57,6 +60,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$version = require("electron").remote.app.getVersion();
 Vue.prototype.$locale = require("electron").remote.app.getLocale();
+Vue.prototype.$trap = mousetrap;
 
 /* eslint-disable no-new */
 new Vue({
