@@ -3,8 +3,8 @@ import { googleLogin, getOauth2Client } from "../auth/auth";
 import { exec } from "child_process";
 import request from "request";
 
-// const playerPath = "http://sharepod.kr";
-const playerPath = "http://localhost:7070";
+const playerPath = "http://sharepod.kr";
+// const playerPath = "http://localhost:7070";
 
 // https connect true
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
