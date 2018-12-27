@@ -19,18 +19,21 @@
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item>
         <el-dropdown-item class="bold" command="A3" :disabled="user === null">
+          <i class="el-icon-star-on"></i> Link Copy
+        </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A4" :disabled="user === null">
           <i class="el-icon-delete"></i> Remove
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
 
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
+    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
   </div>
 </template>
 
 <script>
 import StoreMixin from "@/components/Mixin/index";
-import SocialShareModal from "@/components/Context/modal/SocialShareModal"
+import SocialShareModal from "@/components/Context/modal/SocialShareModal";
 
 export default {
   name: "MyContextMenu",
@@ -55,13 +58,40 @@ export default {
   },
   methods: {
     closeModal() {
-      this.isShare = false
+      this.isShare = false;
     },
     menuEvent(ev) {
       if (ev === "A1") {
         this.watchYoutube();
       } else if (ev === "A2") {
-        this.isShare = true
+        this.isShare = true;
+      } else if (ev === "A3") {
+        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
+        let self = this
+        this.$copyText(link).then(
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Success",
+              text: "😁 The link has been saved to the clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          },
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Error",
+              text: "😥 Failed to copy link to clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          }
+        );
       } else {
         let musicInfo = this.getMusicInfos();
         if (musicInfo) {
@@ -177,5 +207,8 @@ export default {
 }
 .bold {
   font-weight: 500;
+}
+.el-message {
+  min-width: 310px;
 }
 </style>

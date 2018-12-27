@@ -19,6 +19,9 @@
         <el-dropdown-item class="bold" command="A3">
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A4">
+          <i class="el-icon-star-on"></i> Link Copy
+        </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
@@ -58,8 +61,35 @@ export default {
         this.watchYoutube()
       } else if(ev === 'A2') {
         this.addCollection()
-      } else {
+      } else if(ev === 'A3') {
         this.isShare = true
+      } else {
+        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
+        let self = this
+        this.$copyText(link).then(
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Success",
+              text: "😁 The link has been saved to the clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          },
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Error",
+              text: "😥 Failed to copy link to clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          }
+        );
       }
     },
     watchYoutube () {
