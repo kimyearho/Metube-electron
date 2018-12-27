@@ -161,10 +161,6 @@ export default {
     // 반복
     this.isRepeat = this.getRepeat();
   },
-  beforeDestroy() {
-    this.$eventBus.$off("playerPause");
-    this.$eventBus.$off("playerPlay");
-  },
   methods: {
     // 재생정보 및 플레이타입 설정
     fetchData() {

@@ -9,9 +9,6 @@ const playerPath = "http://sharepod.kr";
 // https connect true
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-// Chrome AutoPlay Policy disable
-app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -30,17 +27,17 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
-// if (process.env.NODE_ENV != "development") {
-//   let shouldQuit = app.makeSingleInstance(() => {
-//     if (mainWindow) {
-//       if (mainWindow.isMinimized()) mainWindow.restore();
-//       mainWindow.focus();
-//     }
-//   });
-//   if (shouldQuit) {
-//     app.quit();
-//   }
-// }
+if (process.env.NODE_ENV != "development") {
+  let shouldQuit = app.makeSingleInstance(() => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+  if (shouldQuit) {
+    app.quit();
+  }
+}
 
 // Create Main Window
 function createWindow() {
@@ -146,6 +143,19 @@ ipcMain.on("main:googleAuth", () => {
           });
         }
       });
+  });
+});
+
+ipcMain.on("event:social", (e, args) => {
+  popupWindow = new BrowserWindow({
+    width: 800,
+    height: 600
+  });
+  console.log(args);
+  popupWindow.loadURL(args.socialUrl);
+  popupWindow.on("close", e => {
+    popupWindow.hide();
+    popupWindow = null;
   });
 });
 

@@ -14,22 +14,31 @@
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
         <el-dropdown-item class="bold" command="A2" :disabled="isCheck || isSign === null">
-          <i class="el-icon-plus"></i> My Collection
+          <i class="el-icon-plus"></i> Add to Collection
+        </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A3">
+          <i class="el-icon-share"></i> Social Share
+        </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A4">
+          <i class="el-icon-star-on"></i> Link Copy
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
+    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
   </div>
 </template>
 
 <script>
 import StoreMixin from '@/components/Mixin/index'
 import RegisteredMusicList from '@/components/PlayList/self/modal/RegisteredMusicList'
+import SocialShareModal from "@/components/Context/modal/SocialShareModal"
 export default {
   name: 'ContextMenu',
   mixins: [StoreMixin],
   components: {
-    RegisteredMusicList
+    RegisteredMusicList,
+    SocialShareModal
   },
   props: {
     videoId: String,
@@ -39,7 +48,8 @@ export default {
     return {
       registerOpen: false,
       isSign: null,
-      isCheck: false
+      isCheck: false,
+      isShare: false
     }
   },
   mounted () {
@@ -49,8 +59,37 @@ export default {
     menuEvent (ev) {
       if (ev === 'A1') {
         this.watchYoutube()
-      } else {
+      } else if(ev === 'A2') {
         this.addCollection()
+      } else if(ev === 'A3') {
+        this.isShare = true
+      } else {
+        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
+        let self = this
+        this.$copyText(link).then(
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Success",
+              text: "😁 The link has been saved to the clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          },
+          function(e) {
+            self.$modal.show("dialog", {
+              title: "Error",
+              text: "😥 Failed to copy link to clipboard.",
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          }
+        );
       }
     },
     watchYoutube () {
@@ -66,6 +105,7 @@ export default {
     },
     closeModal (is) {
       this.registerOpen = is
+      this.isShare = false
     }
   }
 }

@@ -7,27 +7,18 @@
   <div>
     <div id="player">
       <!-- 타이틀바 컴포넌트 -->
-      <top-header @reloadMusicList="feachData" />
+      <top-header @reloadMusicList="feachData"/>
 
       <div class="zaudio_wrapper">
         <!-- 커버 영역 -->
         <div class="zaudio_container">
           <div class="side_menu">
-            <a
-              class="cursor"
-              @click="goBack"
-            >
-              <img
-                src="@/assets/images/svg/menu-back.svg"
-                title="Back"
-              >
+            <a class="cursor" @click="goBack">
+              <img src="@/assets/images/svg/menu-back.svg" title="Back">
             </a>
           </div>
           <div class>
-            <img
-              class="cover"
-              :src="cover"
-            >
+            <img class="cover" :src="cover">
             <div class="zaudio_trackinfo trackinfo">
               <span class="label_related label_v">{{ category }}</span>
               <br>
@@ -44,20 +35,10 @@
                     style="margin-right:10px;"
                     @click="collectionEdit"
                   >
-                    <font-awesome-icon
-                      class="f20"
-                      icon="edit"
-                    />
+                    <font-awesome-icon class="f20" icon="edit"/>
                   </a>
-                  <a
-                    class="cursor"
-                    title="Cover change"
-                    @click="collectionCoverChange"
-                  >
-                    <font-awesome-icon
-                      class="f20"
-                      icon="images"
-                    />
+                  <a class="cursor" title="Cover change" @click="collectionCoverChange">
+                    <font-awesome-icon class="f20" icon="images"/>
                   </a>
                 </div>
               </div>
@@ -76,30 +57,11 @@
           :list="playlist"
           @end="endDrag"
         >
-          <li
-            v-if="playlist.length === 0"
-            style="height: 140px;"
-          >
-            <span style="margin-left:40px;">😭 There is no registered video.</span>
-          </li>
-          <li
-            :id="`item${index}`"
-            v-for="(item, index) in playlist"
-            :key="index"
-          >
-            <img
-              class="thumbnails"
-              :src="item.thumbnails"
-            >
-            <span
-              class="music-title cursor"
-              @click="route(item, index)"
-            >{{ item.title }}</span>
+          <li :id="`item${index}`" v-for="(item, index) in playlist" :key="index">
+            <img class="thumbnails" :src="item.thumbnails">
+            <span class="music-title cursor" @click="route(item, index)">{{ item.title }}</span>
             <span style="flex-grow:1"></span>
-            <span
-              class="label_video"
-              v-if="item.videoId"
-            >{{ item.duration }}</span>
+            <span class="label_video" v-if="item.videoId">{{ item.duration }}</span>
             <my-context-menu
               :id="id"
               :index="index"
@@ -117,11 +79,6 @@
       </div>
     </div>
 
-    <!-- 로딩 컴포넌트 -->
-    <transition name="fade">
-      <loading v-show="!load" />
-    </transition>
-
     <!-- 컬렉션 수정 -->
     <collection-modify-form
       :id="id"
@@ -131,38 +88,30 @@
     />
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal
-      ref="coverModal"
-      :data="collectionData"
-      @is-success="syncCollectionCover"
-    />
+    <cover-change-modal ref="coverModal" :data="collectionData" @is-success="syncCollectionCover"/>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
 <script>
-import * as $commons from '@/service/commons-service.js'
-import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import StoreMixin from '@/components/Mixin/index'
-import MyQueryMixin from '@/components/Mixin/mycollection'
-import CollectionQueryMixin from '@/components/Mixin/collections'
-import CoverChangeModal from '@/components/Collections/cover/CollectionCoverChange'
-import CollectionModifyForm from '@/components/MyCollection/modify/MyCollectionModify'
-import MyContextMenu from '@/components/Context/MyContextMenu'
-import Draggable from 'vuedraggable'
-import Loading from '@/components/Loader/Loader'
+import * as $commons from "@/service/commons-service.js";
+import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import StoreMixin from "@/components/Mixin/index";
+import MyQueryMixin from "@/components/Mixin/mycollection";
+import CollectionQueryMixin from "@/components/Mixin/collections";
+import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
+import CollectionModifyForm from "@/components/MyCollection/modify/MyCollectionModify";
+import MyContextMenu from "@/components/Context/MyContextMenu";
+import draggable from "vuedraggable";
+import Loading from "@/components/Loader/Loader";
 
 export default {
-  name: 'MyMusicList',
+  name: "MyMusicList",
   mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
   components: {
     SubPlayerBar,
@@ -171,7 +120,7 @@ export default {
     MyContextMenu,
     CoverChangeModal,
     CollectionModifyForm,
-    Draggable
+    draggable
   },
   data() {
     return {
@@ -183,122 +132,122 @@ export default {
       playType: null,
       id: null,
       collectionData: null,
-      cover: '',
-      coverTitle: '',
-      channelTitle: '',
-      category: '',
+      cover: "",
+      coverTitle: "",
+      channelTitle: "",
+      category: "",
       playlist: []
-    }
+    };
   },
   created() {
-    this.feachData()
+    this.feachData();
   },
   methods: {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        const sortPlaylist = this.playlist
-        this.syncMyCollection(sortPlaylist)
+        const sortPlaylist = this.playlist;
+        this.syncMyCollection(sortPlaylist);
       }
     },
     syncCollectionInfo() {
       this.$local
         .find({
           selector: {
-            type: 'profile',
+            type: "profile",
             userId: this.getUserId()
           },
-          fields: ['playlists']
+          fields: ["playlists"]
         })
         .then(result => {
-          let docs = result.docs[0]
-          let playlists = docs.playlists
+          let docs = result.docs[0];
+          let playlists = docs.playlists;
           if (playlists) {
             let data = this.$lodash.find(playlists, {
               _key: this.id
-            })
-            this.category = data.category
-            this.coverTitle = data.title
-            this.closeModal()
+            });
+            this.category = data.category;
+            this.coverTitle = data.title;
+            this.closeModal();
           }
-        })
+        });
     },
     syncCollectionCover() {
       this.$local
         .find({
           selector: {
-            type: 'profile',
+            type: "profile",
             userId: this.getUserId()
           },
-          fields: ['playlists']
+          fields: ["playlists"]
         })
         .then(result => {
-          let docs = result.docs[0]
-          let playlists = docs.playlists
+          let docs = result.docs[0];
+          let playlists = docs.playlists;
           if (playlists) {
             let data = this.$lodash.find(playlists, {
               _key: this.id
-            })
-            this.cover = data.thumbnails
+            });
+            this.cover = data.thumbnails;
           }
-        })
+        });
     },
     feachData() {
-      this.playType = this.$route.params.playType
-      this.id = this.$route.params.id
-      let musicInfo = this.getMusicInfos()
+      this.playType = this.$route.params.playType;
+      this.id = this.$route.params.id;
+      let musicInfo = this.getMusicInfos();
       if (musicInfo) {
-        this.isMini = true
+        this.isMini = true;
       }
-      let user_id = this.getUserId()
+      let user_id = this.getUserId();
       if (user_id) {
         this.$local
           .find({
             selector: {
-              type: 'profile',
+              type: "profile",
               userId: user_id
             },
-            fields: ['playlists']
+            fields: ["playlists"]
           })
           .then(result => {
-            let docs = result.docs[0]
-            let playlists = docs.playlists
+            let docs = result.docs[0];
+            let playlists = docs.playlists;
             if (playlists) {
               let data = this.$lodash.find(playlists, {
                 _key: this.id
-              })
+              });
 
-              this.category = data.category
-              this.cover = data.thumbnails
-              this.coverTitle = data.title
-              this.channelTitle = 'MyChannel'
-              this.totalTracks = data.tracks.length
-              this.playlist = data.tracks
+              this.category = data.category;
+              this.cover = data.thumbnails;
+              this.coverTitle = data.title;
+              this.channelTitle = "MyChannel";
+              this.totalTracks = data.tracks.length;
+              this.playlist = data.tracks;
 
               // option
-              this.collectionData = {}
+              this.collectionData = {};
               this.collectionData._key = this.id;
-              this.collectionData.category = this.category
+              this.collectionData.category = this.category;
               // this.$set(this, 'collectionData', this.collectionData)
 
-              this.load = true
+              this.load = true;
             }
-          })
+          });
       }
     },
     route(items, index) {
-      this.$store.commit('setPath', this.$route.path)
+      this.$store.commit("setPath", this.$route.path);
       this.$router.push({
-        name: 'MY-PLAYING-PLAYLIST',
+        name: "MY-PLAYING-PLAYLIST",
         params: {
           playType: this.playType,
           id: this.$route.params.id,
           start: index
         }
-      })
+      });
     },
     collectionCoverChange() {
-      this.$refs.coverModal.showModal()
+      this.$refs.coverModal.showModal();
     },
     collectionEdit() {
       this.isModify = true;
@@ -307,10 +256,10 @@ export default {
       this.isModify = false;
     },
     goBack() {
-      this.$router.push(this.$store.getters.getIndexPath)
+      this.$router.push(this.$store.getters.getIndexPath);
     }
   }
-}
+};
 </script>
 
 <style scoped>

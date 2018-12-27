@@ -44,7 +44,7 @@
               <el-button
                 type="success"
                 size="mini"
-                style="padding: 3px 16px;float: right;"
+                style="padding: 3px 10px;float: right;"
                 @click="collectionAdd"
               >add</el-button>
             </a>

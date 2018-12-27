@@ -90,6 +90,20 @@ export default {
       }
     );
     this.onNewReleaseCheck();
+    this.$trap.bind("space", () => {
+      let playType = this.getPlayType();
+      if (playType) {
+        // 재생 중
+        this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
+        this.$store.commit("setPlayType", false);
+        this.$eventBus.$emit('playerPause')
+      } else {
+        // 일시 정지
+        this.$ipcRenderer.send("win2Player", ["playVideo"]);
+        this.$store.commit("setPlayType", true);
+        this.$eventBus.$emit('playerPlay')
+      }
+    });
   },
   methods: {
     docs() {
@@ -260,11 +274,11 @@ export default {
       this.$db
         .get("adfe10ffbd1f206762f478326800a5b6")
         .then(doc => {
-          console.log('doc => ', doc)
+          console.log("doc => ", doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
-          console.log('live => ', live_version)
-          console.log('local => ', local_version)
+          console.log("live => ", live_version);
+          console.log("local => ", local_version);
           // new version.
           if (live_version != local_version) {
             this.isCheck = true;
