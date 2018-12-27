@@ -16,18 +16,28 @@
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
         <el-dropdown-item class="bold" command="A2" :disabled="user === null">
+          <i class="el-icon-share"></i> Social Share
+        </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A3" :disabled="user === null">
           <i class="el-icon-delete"></i> Remove
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+
+    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
   </div>
 </template>
 
 <script>
 import StoreMixin from "@/components/Mixin/index";
+import SocialShareModal from "@/components/Context/modal/SocialShareModal"
+
 export default {
   name: "MyContextMenu",
   mixins: [StoreMixin],
+  components: {
+    SocialShareModal
+  },
   props: {
     id: String,
     videoId: String,
@@ -36,16 +46,22 @@ export default {
   },
   data() {
     return {
-      user: null
+      user: null,
+      isShare: false
     };
   },
   mounted() {
     this.user = this.getUserId();
   },
   methods: {
+    closeModal() {
+      this.isShare = false
+    },
     menuEvent(ev) {
       if (ev === "A1") {
         this.watchYoutube();
+      } else if (ev === "A2") {
+        this.isShare = true
       } else {
         let musicInfo = this.getMusicInfos();
         if (musicInfo) {
