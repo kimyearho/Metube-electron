@@ -3,21 +3,8 @@ import { googleLogin, getOauth2Client } from "../auth/auth";
 import { exec } from "child_process";
 import request from "request";
 
-const playerPath = "http://sharepod.kr";
-// const playerPath = "http://localhost:7070";
-
 // https connect true
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== "development") {
-  global.__static = require("path")
-    .join(__dirname, "/static")
-    .replace(/\\/g, "\\\\");
-}
 
 let player;
 let mainWindow;
@@ -37,6 +24,13 @@ if (process.env.NODE_ENV != "development") {
   if (shouldQuit) {
     app.quit();
   }
+}
+
+const playerPath;
+if (process.env.NODE_ENV === "development") {
+  playerPath = "http://localhost:7070";
+} else {
+  playerPath = "http://sharepod.kr";
 }
 
 // Create Main Window
