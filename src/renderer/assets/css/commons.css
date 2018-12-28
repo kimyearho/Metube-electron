@@ -93,12 +93,6 @@
   padding-top: 5px;
 }
 
-.active {
-  color: #28b1ff !important;
-  font-weight: 700;
-  background-color: rgb(17, 17, 17);
-}
-
 .label_live {
   color: #fd4545;
   font-size: 11px;
@@ -206,4 +200,17 @@
 
 .autoSearch::-webkit-scrollbar-thumb {
   background-color: #df0505;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition-property: opacity;
+	transition-duration: 0.3s;
+}
+.fade-enter-active {
+	transition-delay: 0.3s;
+}
+.fade-enter,
+.fade-leave-active {
+	opacity: 0;
 }
