@@ -58,7 +58,7 @@ Vue.prototype.$lodash = lodash;
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.config.productionTip = false;
 
-Vue.prototype.$version = require("electron").remote.app.getVersion();
+Vue.prototype.$version = require("../../package.json").version;
 Vue.prototype.$locale = require("electron").remote.app.getLocale();
 Vue.prototype.$trap = mousetrap;
 

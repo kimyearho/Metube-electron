@@ -303,49 +303,18 @@ export default {
   }
 };
 </script>
-<style src="./assets/css/zaudio.css"></style>
-<style src="./assets/css/commons.css"></style>
-<style src="./assets/css/tooltip.css"></style>
-<style src="./assets/css/animate.css"></style>
-<style src="./assets/css/collection.css"></style>
+
+
 <style scope>
+
+/* @import "./assets/css/zaudio-1.css"; */
+@import "./assets/css/commons.css";
+@import "./assets/css/collection.css";
+
 i {
   padding-right: 5px;
 }
-.bdright {
-  border-right: 1px solid #1b1b1b;
-}
-/* Place the navbar at the bottom of the page, and make it stick */
-.navbar {
-  background-color: #111;
-  border-top: 1px solid #1b1b1b;
-  overflow: hidden;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  z-index: 1000;
-}
-/* Style the links inside the navigation bar */
-.navbar a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 15px 19.4px;
-  text-decoration: none;
-  font-size: 11px;
-  font-weight: 700;
-}
-/* Change the color of links on hover */
-.navbar a:hover {
-  background-color: #ffffff;
-  color: black;
-}
-/* Add a color to the active/current link */
-.navbar a.active {
-  background-color: #4caf50;
-  color: white;
-}
+
 .position {
   position: absolute;
   bottom: 29px;

@@ -216,6 +216,7 @@ export default {
       }
     },
     onChangeEventSnow(event) {
+      this.$eventBus.$emit('test')
       if (event.value) {
         this.$eventBus.$emit('showSnow', true)
         this.$store.commit('setSnow', true)

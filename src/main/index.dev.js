@@ -5,10 +5,7 @@
  *  environment.
  */
 
-/* eslint-disable */
-
 // Set environment for development
-process.env.NODE_ENV = "development";
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 process.setMaxListeners(0);
 
