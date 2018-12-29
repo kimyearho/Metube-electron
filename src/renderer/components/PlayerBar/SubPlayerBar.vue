@@ -191,7 +191,7 @@ export default {
 .zaudio_player {
   width: 369px;
   height: 48px;
-  top: 515px;
+  top: 514px;
   background-color: #3e3e3e;
   position: absolute;
   z-index: 200;
@@ -208,7 +208,7 @@ export default {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .zaudio_player:hover {
@@ -230,7 +230,7 @@ export default {
 
 .miniImage {
   width: 50px;
-  height: 44px;
+  height: 48px;
   padding-bottom: 5px;
 }
 

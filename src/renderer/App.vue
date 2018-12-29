@@ -330,7 +330,7 @@ i {
 
 .tab-navi {
   background-color: #1d232f;
-  border-top: 1px solid #1b1b1b;
+  border-top: 1px solid #000000;
   overflow: hidden;
   position: fixed;
   bottom: 0px;

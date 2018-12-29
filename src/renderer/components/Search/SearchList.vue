@@ -77,7 +77,7 @@
           </el-carousel-item>
         </el-carousel>
 
-        <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
+        <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
           <md-list-item
             :id="`item${index}`"
             v-for="(item, index) in searchList"

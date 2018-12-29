@@ -49,19 +49,27 @@
 
         <!-- 재생목록 드래그 지점 -->
         <draggable
-          element="ul"
+          element="md-list"
           id="list"
-          class="zaudio_playlist"
+          class="searchList"
           :class="{ dynamicHeight: isMini }"
           :options="{animation:150}"
           :list="playlist"
           @end="endDrag"
         >
-          <li :id="`item${index}`" v-for="(item, index) in playlist" :key="index">
-            <img class="thumbnails" :src="item.thumbnails">
-            <span class="music-title cursor" @click="route(item, index)">{{ item.title }}</span>
-            <span style="flex-grow:1"></span>
-            <span class="label_video" v-if="item.videoId">{{ item.duration }}</span>
+          <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+            <md-avatar style="margin-right: 0;">
+              <img :src="item.thumbnails" alt="People">
+            </md-avatar>
+            <span
+              class="md-list-item-text music-title cursor"
+              @click="route(item, index)"
+            >{{ item.title }}</span>
+            <span
+              class="label_video"
+              v-if="item.videoId && item.isLive != 'live'"
+            >{{ item.duration }}</span>
+            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
             <my-context-menu
               :id="id"
               :index="index"
@@ -69,11 +77,27 @@
               :data="item"
               @is-success="feachData"
             />
-          </li>
-          <!-- 개발자 가이드라인  -->
+          </md-list-item>
+
+          <md-list-item v-if="isNext">
+            <span v-if="!isMore" class="loadMoreCenter">
+              <a class="cursor" @click="nextPageLoad">
+                <i class="el-icon-refresh"></i>
+                {{ $t('COMMONS.MORE') }}
+              </a>
+            </span>
+            <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+          </md-list-item>
+          <md-list-item v-else>
+            <span class="playlistEnd">
+              <i class="el-icon-check"></i>
+              {{ $t('COMMONS.END') }}
+            </span>
+          </md-list-item>
           <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
           </div>
+
         </draggable>
         <!-- // END 재생목록 드래그 지점 -->
       </div>

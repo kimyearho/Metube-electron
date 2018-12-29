@@ -41,55 +41,60 @@
 
         <!-- 목록 영역 -->
         <draggable
-          element="ul"
+          element="md-list"
           id="myMusicList"
-          class="zaudio_playlist"
+          class="musicPlayList"
           :class="{ dynamicHeight: isMini }"
           :options="{animation:150}"
           v-model="playlist"
           @end="endDrag"
         >
-          <li
-            :id="`item${index}`"
-            v-for="(item, index) in playlist"
-            :key="index"
-            :class="selectedIndex === index ? active : ''"
-          >
-            <!-- 썸네일 -->
-            <img class="thumbnails" :src="item.thumbnails">
 
-            <!-- 비디오 제목 -->
-            <span class="music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-
-            <!-- 비디오 라벨 -->
-            <span style="flex-grow:1"></span>
+        <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag" :class="selectedIndex === index ? active : ''">
+            <md-avatar style="margin-right: 0;">
+              <img :src="item.thumbnails">
+            </md-avatar>
+            <span
+              class="md-list-item-text music-title cursor"
+              @click="playItem(item)"
+            >{{ item.title }}</span>
             <span
               class="label_video"
-              v-if="item.videoId && item.isLive !== 'live'"
+              v-if="item.videoId && item.isLive != 'live'"
             >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive === 'live' ">LIVE</span>
+            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
-            <!-- My Context Menu -->
             <my-context-menu
               :id="id"
               :index="index"
               :videoId="item.videoId"
               :data="item"
-              @is-success="removeCallback"
+              @is-success="feachData"
             />
-          </li>
-          <!-- 더 보기 -->
-          <li>
-            <span class="end">
-              <i class="el-icon-check load_more"></i>
+
+          </md-list-item>
+
+          <md-list-item v-if="isNext">
+            <span v-if="!isMore" class="loadMoreCenter">
+              <a class="cursor" @click="nextPageLoad">
+                <i class="el-icon-refresh"></i>
+                {{ $t('COMMONS.MORE') }}
+              </a>
+            </span>
+            <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+          </md-list-item>
+          <md-list-item v-else>
+            <span class="playlistEnd">
+              <i class="el-icon-check"></i>
               {{ $t('COMMONS.END') }}
             </span>
-          </li>
-          <!-- 개발자 가이드라인  -->
+          </md-list-item>
           <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
           </div>
+         
         </draggable>
+        
         <!-- 메인 재생바 컴포넌트 -->
         <main-player-bar
           @previousVideoTrack="previousPlayItem"
