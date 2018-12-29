@@ -7,7 +7,7 @@
 
 <template>
   <!-- root div -->
-  <div>
+  <div style="margin-top: 3px;">
     <div class="zaudio_player">
       <div class="zaudio_playercontrols">
         <!-- 프로그레스바 영역 -->

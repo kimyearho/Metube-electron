@@ -277,8 +277,8 @@ export default {
 }
 
 .label_v {
-  padding: 4px 10px;
-  font-size: 13px;
+  padding: 4px 7px;
+  font-size: 12px;
   font-weight: 700;
 }
 </style>
