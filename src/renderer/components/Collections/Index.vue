@@ -25,7 +25,7 @@
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img width="20" src="@/assets/images/svg/collection.svg">
+              <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>
@@ -43,14 +43,7 @@
                 <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>
             </label>
-            <a>
-              <el-button
-                type="success"
-                size="mini"
-                style="padding: 3px 10px;float: right;"
-                @click="collectionAdd"
-              >add</el-button>
-            </a>
+            <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button>
           </div>
         </el-col>
 
@@ -62,7 +55,7 @@
         <el-col v-else class="cols" v-for="item in myCollections" :key="item._id" :span="12">
           <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img class="thumbnail" :src="item.thumbnails" width="158" height="100">
+              <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="myCollectionLabel">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
@@ -106,7 +99,7 @@
         <el-col v-else class="cols" v-for="item in playlists" :key="item._id" :span="12">
           <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img class="thumbnail" :src="item.thumbnails" width="158" height="100">
+              <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper">
                 <div class="overlayMenu">
                   <a class="cursor" @click="showMusicList(item)" title="Play">
@@ -340,10 +333,18 @@ export default {
 </script>
 
 <style scoped>
-.btn{
+.btn {
   color: #ffffff;
   background: #448aff;
   width: 140px;
+}
+
+.c-add {
+  float: right;
+  color: #ffffff;
+  min-width: 40px;
+  height: 20px;
+  margin-bottom: 0;
 }
 
 .dynamicHeight {
@@ -358,5 +359,4 @@ export default {
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
-
 </style>

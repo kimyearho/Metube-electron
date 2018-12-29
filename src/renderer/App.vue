@@ -16,30 +16,6 @@
       <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
       <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
     </md-tabs>
-    <!-- <div class="navbar">
-      <a class="cursor bdright" @click="route('search')">
-        <font-awesome-icon size="sm" icon="search"/>
-        {{ $t('MAIN.MENU.SEARCH') }}
-      </a>
-      <a class="cursor bdright" @click="route('collection')">
-        <font-awesome-icon size="sm" icon="headphones-alt"/>
-        {{ $t('MAIN.MENU.COLLECTION') }}
-      </a>
-      <a class="cursor bdright" @click="route('login')">
-        <font-awesome-icon size="sm" icon="sign-in-alt"/>
-        {{ $t('MAIN.MENU.SIGN') }}
-      </a>
-      <a class="cursor bdright" @click="route('setting')">
-        <font-awesome-icon size="sm" icon="cog"/>
-        <el-badge
-          is-dot
-          class="item"
-          style="right:-2px;"
-          v-if="isCheck"
-        >{{ $t('MAIN.MENU.SETTING') }}</el-badge>
-        <span v-else>{{ $t('MAIN.MENU.SETTING') }}</span>
-      </a>
-    </div>-->
     <Snow
       v-if="isSnow"
       :active="true"
@@ -51,6 +27,7 @@
     />
 
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
+
   </div>
 </template>
 
@@ -69,6 +46,7 @@ export default {
       isShow: false,
       isSnow: true,
       isSpinShow: false,
+      showNavigation: false,
       isCheck: false,
       state: "",
       status: []

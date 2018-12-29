@@ -7,98 +7,85 @@
 
 <template>
   <div>
-    <div id="player">
-      <!-- 타이틀바 컴포넌트 -->
-      <top-header @reloadMusicList="reload"/>
+    <!-- 타이틀바 컴포넌트 -->
+    <top-header @reloadMusicList="reload"/>
 
-      <div class="zaudio_wrapper">
-        <!-- 커버 영역 -->
-        <div class="zaudio_container">
-          <div class="side_menu">
-            <a class="cursor" @click="goBack">
-              <img src="@/assets/images/svg/menu-back.svg" title="Back">
-            </a>
-            <!-- 컬렉션 등록 -->
-            <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
-              <collection-register
-                ref="likes"
-                :isLikeToggle="isLikeToggle"
-                :data="data"
-                :playType="playType"
-                @toggle="toggleChange"
-              />
-            </a>
-          </div>
-          <div class>
-            <img class="cover" :src="cover">
-            <div class="zaudio_trackinfo trackinfo">
-              <span
-                class="label_channel label_v"
-                v-if="playType === 'channel'"
-              >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-              <span
-                class="label_playlist label_v"
-                v-if="playType === 'play'"
-              >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-              <span
-                class="label_related label_v"
-                v-if="playType === 'related'"
-              >{{ $t('COMMONS.LABEL.RELATED') }}</span>
-              <br>
-              <br>
-              <div class="titleflow">
-                <span class="zaudio_songtitle">{{ coverTitle.substring(0, 32) }}</span>
-                <br>
-                <span class="zaudio_songartist">{{ channelTitle }}</span>
-                <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
-              </div>
-            </div>
-          </div>
-          <div class="overay"></div>
+    <!-- 커버 영역 -->
+    <div class="side_menu">
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      </a>
+      <!-- 컬렉션 등록 -->
+      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+        <collection-register
+          ref="likes"
+          :isLikeToggle="isLikeToggle"
+          :data="data"
+          :playType="playType"
+          @toggle="toggleChange"
+        />
+      </a>
+    </div>
+    <div class>
+      <img class="playlistCover" :src="cover">
+      <div class="playlistTrackinfo">
+        <span
+          class="label_channel label_v"
+          v-if="playType === 'channel'"
+        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span
+          class="label_playlist label_v"
+          v-if="playType === 'play'"
+        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span
+          class="label_related label_v"
+          v-if="playType === 'related'"
+        >{{ $t('COMMONS.LABEL.RELATED') }}</span>
+        <br>
+        <br>
+        <div class="titleflow">
+          <span class="zaudio_songtitle">{{ coverTitle.substring(0, 32) }}</span>
+          <br>
+          <span class="zaudio_songartist">{{ channelTitle }}</span>
+          <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
         </div>
-
-        <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
-          <md-list-item
-            :id="`item${index}`"
-            v-for="(item, index) in playlist"
-            :key="item.etag"
-          >
-            <md-avatar style="margin-right: 0;">
-              <img :src="item.imageInfo" alt="People">
-            </md-avatar>
-
-            <span class="md-list-item-text music-title cursor" @click="route(item, index)">{{ item.title }}</span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive != 'live'"
-            >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-            <context-menu :videoId="item.videoId" :data="item"/>
-          </md-list-item>
-          <md-list-item v-if="isNext">
-            <span v-if="!isMore" class="loadMoreCenter">
-              <a class="cursor" @click="nextPageLoad">
-                <i class="el-icon-refresh"></i>
-                {{ $t('COMMONS.MORE') }}
-              </a>
-            </span>
-            <span v-else class="loadMoreCenter loadMoreLoading">
-              LOADING ...
-            </span>
-          </md-list-item>
-          <md-list-item v-else>
-            <span class="playlistEnd">
-              <i class="el-icon-check"></i>
-              {{ $t('COMMONS.END') }}
-            </span>
-          </md-list-item>
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </md-list>
-       
       </div>
     </div>
+    <div class="overay"></div>
+
+    <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+        <md-avatar style="margin-right: 0;">
+          <img :src="item.imageInfo" alt="People">
+        </md-avatar>
+
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="route(item, index)"
+        >{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <context-menu :videoId="item.videoId" :data="item"/>
+      </md-list-item>
+      <md-list-item v-if="isNext">
+        <span v-if="!isMore" class="loadMoreCenter">
+          <a class="cursor" @click="nextPageLoad">
+            <i class="el-icon-refresh"></i>
+            {{ $t('COMMONS.MORE') }}
+          </a>
+        </span>
+        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+      </md-list-item>
+      <md-list-item v-else>
+        <span class="playlistEnd">
+          <i class="el-icon-check"></i>
+          {{ $t('COMMONS.END') }}
+        </span>
+      </md-list-item>
+      <div class="bottom">
+        <img src="@/assets/images/youtube/dev.png">
+      </div>
+    </md-list>
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">

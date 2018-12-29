@@ -250,7 +250,7 @@ export default {
 }
 
 .menu1 {
-  margin: 25px 10px 0px 10px;
+  margin: 21px 10px 0px 10px;
 }
 
 .wh {

@@ -7,102 +7,83 @@
 
 <template>
   <div>
-    <div id="player">
-      <!-- 타이틀바 컴포넌트 -->
-      <top-header @reloadMusicList="feachData"/>
+    <!-- 타이틀바 컴포넌트 -->
+    <top-header @reloadMusicList="feachData"/>
 
-      <div class="zaudio_wrapper">
-        <!-- 커버 영역 -->
-        <div class="zaudio_container">
-          <div class="side_menu">
-            <a class="cursor" @click="goBack">
-              <img src="@/assets/images/svg/menu-back.svg" title="Back">
-            </a>
-          </div>
-          <div class>
-            <img class="cover" :src="cover">
-            <div class="zaudio_trackinfo trackinfo">
-              <span class="label_related label_v">{{ category }}</span>
-              <br>
-              <br>
-              <div class="titleflow">
-                <marquee-text
-                  class="zaudio_songtitle"
-                  :key="coverTitle"
-                  :duration="coverTitle.length / 2"
-                >&nbsp; {{ coverTitle }}</marquee-text>
-                <span class="zaudio_songartist">{{ channelTitle }}</span>
-                <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
-              </div>
-            </div>
-          </div>
-          <div class="overay"></div>
+    <!-- 커버 영역 -->
+    <div class="side_menu">
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      </a>
+    </div>
+    <div class>
+      <img class="playlistCover" :src="cover">
+      <div class="playlistTrackinfo">
+        <span class="label_related label_v">{{ category }}</span>
+        <br>
+        <br>
+        <div class="titleflow">
+          <marquee-text
+            class="zaudio_songtitle"
+            :key="coverTitle"
+            :duration="coverTitle.length / 2"
+          >&nbsp; {{ coverTitle }}</marquee-text>
+          <span class="zaudio_songartist">{{ channelTitle }}</span>
+          <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
         </div>
-
-        <!-- 목록 영역 -->
-        <draggable
-          element="md-list"
-          id="myMusicList"
-          class="musicPlayList"
-          :class="{ dynamicHeight: isMini }"
-          :options="{animation:150}"
-          v-model="playlist"
-          @end="endDrag"
-        >
-
-        <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag" :class="selectedIndex === index ? active : ''">
-            <md-avatar style="margin-right: 0;">
-              <img :src="item.thumbnails">
-            </md-avatar>
-            <span
-              class="md-list-item-text music-title cursor"
-              @click="playItem(item)"
-            >{{ item.title }}</span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive != 'live'"
-            >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-
-            <my-context-menu
-              :id="id"
-              :index="index"
-              :videoId="item.videoId"
-              :data="item"
-              @is-success="feachData"
-            />
-
-          </md-list-item>
-
-          <md-list-item v-if="isNext">
-            <span v-if="!isMore" class="loadMoreCenter">
-              <a class="cursor" @click="nextPageLoad">
-                <i class="el-icon-refresh"></i>
-                {{ $t('COMMONS.MORE') }}
-              </a>
-            </span>
-            <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
-          </md-list-item>
-          <md-list-item v-else>
-            <span class="playlistEnd">
-              <i class="el-icon-check"></i>
-              {{ $t('COMMONS.END') }}
-            </span>
-          </md-list-item>
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-         
-        </draggable>
-        
-        <!-- 메인 재생바 컴포넌트 -->
-        <main-player-bar
-          @previousVideoTrack="previousPlayItem"
-          @nextVideoTrack="nextPlayItem"
-          @jump="nextTrackScroll(500)"
-        />
       </div>
     </div>
+    <div class="overay"></div>
+
+    <!-- 목록 영역 -->
+    <draggable
+      element="md-list"
+      id="myMusicList"
+      class="musicPlayList"
+      :class="{ dynamicHeight: isMini }"
+      :options="{animation:150}"
+      v-model="playlist"
+      @end="endDrag"
+    >
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+        :class="selectedIndex === index ? active : ''"
+      >
+        <md-avatar style="margin-right: 0;">
+          <img :src="item.thumbnails">
+        </md-avatar>
+        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+
+        <my-context-menu
+          :id="id"
+          :index="index"
+          :videoId="item.videoId"
+          :data="item"
+          @is-success="feachData"
+        />
+      </md-list-item>
+
+      <md-list-item>
+        <span class="playlistEnd">
+          <i class="el-icon-check"></i>
+          {{ $t('COMMONS.END') }}
+        </span>
+      </md-list-item>
+      <div class="bottom">
+        <img src="@/assets/images/youtube/dev.png">
+      </div>
+    </draggable>
+
+    <!-- 메인 재생바 컴포넌트 -->
+    <main-player-bar
+      @previousVideoTrack="previousPlayItem"
+      @nextVideoTrack="nextPlayItem"
+      @jump="nextTrackScroll(500)"
+    />
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
@@ -435,32 +416,13 @@ export default {
 </script>
 
 <style scoped>
-.zaudio_wrapper {
-  min-height: 516px;
+.playlistEnd {
+  color: #ffffff;
+  margin-left: 125px;
 }
-
-.zaudio_playlist {
-  max-height: 265px;
-  z-index: 100;
-}
-
-.cover {
-  width: 100%;
-  background-position: center;
-  max-height: 178px;
-  filter: brightness(1.1);
-}
-
-.end {
-  margin-left: 115px;
-}
-
-.contextMenu {
-  width: 15px;
-  height: 15px;
-}
-
-.none {
-  display: none;
+.label_v {
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
 }
 </style>

@@ -41,7 +41,7 @@
             >{{ item }}</el-button>
           </div>
           <md-button
-            class="md-raised md-primary SearchKeywords"
+            class="md-raised md-primary searchKeywords"
             @click="showTag"
           >Recent search terms</md-button>
         </div>
@@ -58,7 +58,7 @@
         <el-carousel
           v-loading="loading"
           element-loading-background="rgba(0, 0, 0, 0.8)"
-          :interval="300000"
+          :interval="5000"
           type="card"
           indicator-position="none"
           height="100px"

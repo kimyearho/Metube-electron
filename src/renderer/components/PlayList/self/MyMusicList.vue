@@ -5,104 +5,84 @@
 
 <template>
   <div>
-    <div id="player">
-      <!-- 타이틀바 컴포넌트 -->
-      <top-header @reloadMusicList="feachData"/>
+    <!-- 타이틀바 컴포넌트 -->
+    <top-header @reloadMusicList="feachData"/>
 
-      <div class="zaudio_wrapper">
-        <!-- 커버 영역 -->
-        <div class="zaudio_container">
-          <div class="side_menu">
-            <a class="cursor" @click="goBack">
-              <img src="@/assets/images/svg/menu-back.svg" title="Back">
+    <!-- 커버 영역 -->
+    <div class="side_menu">
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      </a>
+    </div>
+    <div class>
+      <img class="playlistCover" :src="cover">
+      <div class="playlistTrackinfo">
+        <span class="label_related label_v">{{ category }}</span>
+        <br>
+        <br>
+        <div class="titleflow">
+          <span class="zaudio_songtitle">{{ coverTitle }}</span>
+          <br>
+          <span class="zaudio_songartist">{{ channelTitle }}</span>
+          <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+          <div class="sideMenu">
+            <a
+              class="cursor"
+              title="Collection edit"
+              style="margin-right:10px;"
+              @click="collectionEdit"
+            >
+              <font-awesome-icon class="f20" icon="edit"/>
+            </a>
+            <a class="cursor" title="Cover change" @click="collectionCoverChange">
+              <font-awesome-icon class="f20" icon="images"/>
             </a>
           </div>
-          <div class>
-            <img class="cover" :src="cover">
-            <div class="zaudio_trackinfo trackinfo">
-              <span class="label_related label_v">{{ category }}</span>
-              <br>
-              <br>
-              <div class="titleflow">
-                <span class="zaudio_songtitle">{{ coverTitle }}</span>
-                <br>
-                <span class="zaudio_songartist">{{ channelTitle }}</span>
-                <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
-                <div class="sideMenu">
-                  <a
-                    class="cursor"
-                    title="Collection edit"
-                    style="margin-right:10px;"
-                    @click="collectionEdit"
-                  >
-                    <font-awesome-icon class="f20" icon="edit"/>
-                  </a>
-                  <a class="cursor" title="Cover change" @click="collectionCoverChange">
-                    <font-awesome-icon class="f20" icon="images"/>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="overay"></div>
         </div>
-
-        <!-- 재생목록 드래그 지점 -->
-        <draggable
-          element="md-list"
-          id="list"
-          class="searchList"
-          :class="{ dynamicHeight: isMini }"
-          :options="{animation:150}"
-          :list="playlist"
-          @end="endDrag"
-        >
-          <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
-            <md-avatar style="margin-right: 0;">
-              <img :src="item.thumbnails" alt="People">
-            </md-avatar>
-            <span
-              class="md-list-item-text music-title cursor"
-              @click="route(item, index)"
-            >{{ item.title }}</span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive != 'live'"
-            >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-            <my-context-menu
-              :id="id"
-              :index="index"
-              :videoId="item.videoId"
-              :data="item"
-              @is-success="feachData"
-            />
-          </md-list-item>
-
-          <md-list-item v-if="isNext">
-            <span v-if="!isMore" class="loadMoreCenter">
-              <a class="cursor" @click="nextPageLoad">
-                <i class="el-icon-refresh"></i>
-                {{ $t('COMMONS.MORE') }}
-              </a>
-            </span>
-            <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
-          </md-list-item>
-          <md-list-item v-else>
-            <span class="playlistEnd">
-              <i class="el-icon-check"></i>
-              {{ $t('COMMONS.END') }}
-            </span>
-          </md-list-item>
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-
-        </draggable>
-        <!-- // END 재생목록 드래그 지점 -->
       </div>
     </div>
+    <div class="overay"></div>
 
+    <!-- 재생목록 드래그 지점 -->
+    <draggable
+      element="md-list"
+      id="list"
+      class="searchList"
+      :class="{ dynamicHeight: isMini }"
+      :options="{animation:150}"
+      :list="playlist"
+      @end="endDrag"
+    >
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+        <md-avatar style="margin-right: 0;">
+          <img :src="item.thumbnails" alt="People">
+        </md-avatar>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="route(item, index)"
+        >{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <my-context-menu
+          :id="id"
+          :index="index"
+          :videoId="item.videoId"
+          :data="item"
+          @is-success="feachData"
+        />
+      </md-list-item>
+
+      <md-list-item>
+        <span class="playlistEnd">
+          <i class="el-icon-check"></i>
+          {{ $t('COMMONS.END') }}
+        </span>
+      </md-list-item>
+      <div class="bottom">
+        <img src="@/assets/images/youtube/dev.png">
+      </div>
+    </draggable>
+    <!-- // END 재생목록 드래그 지점 -->
     <!-- 컬렉션 수정 -->
     <collection-modify-form
       :id="id"
@@ -287,42 +267,18 @@ export default {
 </script>
 
 <style scoped>
-.zaudio_wrapper {
-  min-height: 516px;
-}
-
-.zaudio_playlist {
-  max-height: 352px;
-  overflow-x: hidden;
-  z-index: 100;
-}
-
-.cover {
-  width: 100%;
-  background-position: center;
-  max-height: 178px;
-  filter: brightness(1.1);
-}
-
 .dynamicHeight {
   max-height: 300px;
 }
 
-.end {
-  margin-left: 115px;
+.playlistEnd {
+  color: #ffffff;
+  margin-left: 125px;
 }
 
-.contextMenu {
-  width: 15px;
-  height: 15px;
-}
-
-.none {
-  display: none;
-}
-
-.thumbnails {
-  height: 44px;
-  width: 44px;
+.label_v {
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
 }
 </style>

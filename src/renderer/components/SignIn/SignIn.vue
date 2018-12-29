@@ -21,11 +21,15 @@
           </div>
         </div>
         <div class="signin" :class="{ signout: isSignin }">
-          <md-button v-if="!isSignin" class="cursor md-raised b-primary" 
-            @click="signin">{{ $t('SIGN.SIGN_IN') }}</md-button>
-          
-          <md-button v-else class="cursor md-raised b-danger" 
-            @click="signout">{{ $t('SIGN.SIGN_OUT') }}</md-button>
+          <md-button v-if="!isSignin" class="cursor md-raised b-primary" @click="signin">
+            <md-icon>touch_app</md-icon>
+            {{ $t('SIGN.SIGN_IN') }}
+          </md-button>
+
+          <md-button v-else class="cursor md-raised b-danger" @click="signout">
+            <md-icon>how_to_reg</md-icon>
+            {{ $t('SIGN.SIGN_OUT') }}
+          </md-button>
         </div>
         <div class="menu1">
           <label class="gr">
@@ -45,99 +49,99 @@
 </template>
 
 <script>
-import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import StoreMixin from '@/components/Mixin/index'
-import CommonMixin from '@/components/Mixin/common'
+import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import StoreMixin from "@/components/Mixin/index";
+import CommonMixin from "@/components/Mixin/common";
 
 export default {
-  name: 'SignInPage',
+  name: "SignInPage",
   mixins: [StoreMixin, CommonMixin],
   components: {
     SubPlayerBar
   },
-  data () {
+  data() {
     return {
       isSignin: false,
       isMini: false,
       profileData: null,
       playlistCount: 0,
       channelCount: 0
-    }
+    };
   },
-  created () {
-    let musicInfo = this.getMusicInfos()
+  created() {
+    let musicInfo = this.getMusicInfos();
     if (musicInfo) {
-      this.isMini = true
+      this.isMini = true;
     }
-    this.$ipcRenderer.on('render:googleAuth', (e, args) => {
+    this.$ipcRenderer.on("render:googleAuth", (e, args) => {
       if (args.resultCode === 200) {
-        this.$store.commit('setGoogleProfile', JSON.parse(args.body))
-        this.success()
+        this.$store.commit("setGoogleProfile", JSON.parse(args.body));
+        this.success();
       }
-    })
+    });
   },
-  mounted () {
+  mounted() {
     if (this.getUserId()) {
-      this.isSignin = true
-      this.profileData = this.getProfile()
+      this.isSignin = true;
+      this.profileData = this.getProfile();
     }
   },
   methods: {
-    signin () {
-      this.$ipcRenderer.send('main:googleAuth', null)
+    signin() {
+      this.$ipcRenderer.send("main:googleAuth", null);
     },
-    signout () {
-      this.isSignin = false
-      this.$store.commit('setGoogleProfile', null)
+    signout() {
+      this.isSignin = false;
+      this.$store.commit("setGoogleProfile", null);
     },
-    success () {
-      this.isSignin = true
-      this.profileData = this.getProfile()
+    success() {
+      this.isSignin = true;
+      this.profileData = this.getProfile();
       if (this.profileData) {
         // 프로필 정보를 받았으면 로그인정보로 프로필이 등록되어있는지 조회한다.
         this.$local
           .find({
             selector: {
-              type: 'profile',
+              type: "profile",
               userId: this.getUserId()
             },
-            fields: ['_id', 'collections']
+            fields: ["_id", "collections"]
           })
           .then(result => {
             // Documents
-            let docs = result.docs[0]
+            let docs = result.docs[0];
 
             // 프로필이 없으면 새로 프로필을 등록한다
             if (!docs) {
               let data = {
                 _id: this.getProfileKey(),
-                type: 'profile',
+                type: "profile",
                 userId: this.getUserId(),
                 history: [],
                 playlists: [],
                 setting: [],
                 collections: [],
                 keywords: []
-              }
+              };
               this.$local
                 .post(data)
                 .then(res => {
                   // this.getCollectionCount()
                 })
                 .catch(err => {
-                  console.log(err)
-                })
+                  console.log(err);
+                });
             } else {
               // this.getCollectionCount()
             }
           })
           .catch(err => {
-            console.log(err)
-          })
+            console.log(err);
+          });
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

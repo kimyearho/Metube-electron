@@ -43,7 +43,17 @@ import VueClipboard from "vue-clipboard2";
 /* mousetrap */
 import mousetrap from "mousetrap";
 
-import VueMaterial from "vue-material";
+// import VueMaterial from "vue-material";
+import {
+  MdButton,
+  MdList,
+  MdImage,
+  MdTabs,
+  MdAvatar,
+  // MdDrawer,
+  // MdToolbar,
+  MdIcon
+} from "vue-material/dist/components";
 import "vue-material/dist/vue-material.min.css";
 
 import "./assets/css/search.css";
@@ -56,7 +66,14 @@ Vue.use(VModal, { dialog: true });
 Vue.use(VueScrollTo);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
-Vue.use(VueMaterial);
+Vue.use(MdAvatar);
+Vue.use(MdButton);
+// Vue.use(MdDrawer);
+Vue.use(MdList);
+Vue.use(MdImage);
+Vue.use(MdIcon);
+Vue.use(MdTabs);
+// Vue.use(MdToolbar);
 Vue.prototype.$http = axios;
 Vue.prototype.$moment = moment;
 Vue.prototype.$lodash = lodash;
