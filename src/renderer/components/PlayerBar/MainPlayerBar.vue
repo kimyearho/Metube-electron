@@ -12,17 +12,18 @@
       <div class="zaudio_playercontrols">
         <!-- 프로그레스바 영역 -->
         <div class="zaudio_seekbar">
+          <!-- <md-progress-bar md-mode="determinate" :md-value="range"></md-progress-bar> -->
           <progress class="cursor" @click="seekTo" :value="range" min="0" :max="maxTime"/>
           <span class="playingLive" v-if="isLive">L I V E - P L A Y I N G</span>
           <span class="zaudio_tracktime">{{ totalTime }}</span>
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div class="zaudio_buttonwrapper" style="margin-top: 10px; margin-bottom:10px;">
+        <div class="zaudio_buttonwrapper" style="margin-top: 2px; margin-bottom:10px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               width="35"
               height="15"
               src="@/assets/images/svg/play-previous-button.svg"
@@ -31,7 +32,7 @@
 
             <!-- 재생 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               width="35"
               v-if="!isPlay"
               src="@/assets/images/svg/main-play-button.svg"
@@ -40,7 +41,7 @@
 
             <!-- 일시정지 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               width="35"
               v-else
               src="@/assets/images/svg/main-pause-button.svg"
@@ -49,7 +50,7 @@
 
             <!-- 다음 재생 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               width="35"
               height="15"
               src="@/assets/images/svg/play-next-button.svg"
@@ -58,7 +59,7 @@
 
             <!-- 반복 재생 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               v-if="!isRepeat"
               width="35"
               height="15"
@@ -68,7 +69,7 @@
             >
             
             <img
-              class="cursor"
+              class="cursor md-image"
               v-else
               width="35"
               height="15"
@@ -79,7 +80,7 @@
 
             <!-- 볼륨 -->
             <img
-              class="cursor"
+              class="cursor md-image"
               v-if="!isVolume"
               width="35"
               height="15"
@@ -89,7 +90,7 @@
             >
             
             <img
-              class="cursor"
+              class="cursor md-image"
               v-else
               width="35"
               height="15"

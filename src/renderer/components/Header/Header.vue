@@ -131,7 +131,7 @@ export default {
 
 <style scoped>
 .logo {
-  padding-left: 40px !important;
+  padding-left: 30px !important;
 }
 
 .dyLogo {

@@ -10,6 +10,12 @@
     <transition name="fade">
       <router-view></router-view>
     </transition>
+    <md-tabs class="tab-navi">
+      <md-tab id="tab-home" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tab-pages" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
+      <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
+    </md-tabs>
     <!-- <div class="navbar">
       <a class="cursor bdright" @click="route('search')">
         <font-awesome-icon size="sm" icon="search"/>
@@ -33,7 +39,7 @@
         >{{ $t('MAIN.MENU.SETTING') }}</el-badge>
         <span v-else>{{ $t('MAIN.MENU.SETTING') }}</span>
       </a>
-    </div> -->
+    </div>-->
     <Snow
       v-if="isSnow"
       :active="true"
@@ -319,5 +325,34 @@ i {
   right: 9px;
   width: 14px;
   z-index: 99999;
+}
+
+.tab-navi {
+  background-color: #1d232f;
+  border-top: 1px solid #1b1b1b;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.md-list-item {
+  border-bottom: 1px solid #171e2d;
+}
+
+.md-tabs-navigation .md-button  {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 15px 19.4px;
+  text-decoration: none;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.md-tabs-navigation .md-button {
+  font-size: 11px !important;
 }
 </style>

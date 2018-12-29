@@ -40,12 +40,10 @@
               :key="item"
             >{{ item }}</el-button>
           </div>
-          <el-button
-            type="primary"
-            class="keywords"
-            icon="el-icon-d-caret"
+          <md-button
+            class="md-raised md-primary SearchKeywords"
             @click="showTag"
-          >Recent search terms</el-button>
+          >Recent search terms</md-button>
         </div>
 
         <!-- 자동검색 영역  -->
@@ -60,19 +58,19 @@
         <el-carousel
           v-loading="loading"
           element-loading-background="rgba(0, 0, 0, 0.8)"
-          :interval="3000"
+          :interval="300000"
           type="card"
           indicator-position="none"
           height="100px"
           style="margin:10px;"
         >
           <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
-            <img width="174" height="100" :src="item.image" @click="route(item)">
+            <img class="md-image" style="border: 1px solid #606266;" width="174" height="100" :src="item.image" @click="route(item)">
             <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
           </el-carousel-item>
         </el-carousel>
 
-        <md-list id="list"  :class="{ dynamicHeight: isMini }">
+        <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
           <md-list-item
             :id="`item${index}`"
             v-for="(item, index) in searchList"
@@ -80,12 +78,12 @@
             class="cursor"
             @click="route(item)"
           >
-            <md-avatar>
+            <md-avatar style="margin-right: 0;">
               <img :src="item.imageInfo" alt="People">
             </md-avatar>
 
             <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
-
+            
             <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
             <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
             <span
@@ -96,8 +94,19 @@
               class="label_live"
               v-if="item.videoId && item.isLive === 'live'"
             >{{ $t('COMMONS.LABEL.LIVE') }}</span>
-
           </md-list-item>
+          <md-list-item>
+            <span class="loadMore center cursor" v-if="!isMore">
+              <i class="el-icon-refresh load_more"></i>
+              {{ $t('COMMONS.MORE') }}
+            </span>
+            <span class="center" v-if="isMore">
+              <i class="el-icon-refresh load_more"></i> LOADING ...
+            </span>
+          </md-list-item>
+          <div class="bottom">
+            <img src="@/assets/images/youtube/dev.png">
+          </div>
         </md-list>
 
         <!-- 검색목록  -->
@@ -122,10 +131,9 @@
               class="label_live"
               v-if="item.videoId && item.isLive === 'live'"
             >{{ $t('COMMONS.LABEL.LIVE') }}</span>
-          </li> -->
-
-          <!-- 다음 페이지 버튼 -->
-          <!-- <li v-on:click="nextPageLoad">
+        </li>-->
+        <!-- 다음 페이지 버튼 -->
+        <!-- <li v-on:click="nextPageLoad">
             <span class="loadMore center cursor" v-if="!isMore">
               <i class="el-icon-refresh load_more"></i>
               {{ $t('COMMONS.MORE') }}
@@ -133,12 +141,11 @@
             <span class="center" v-if="isMore">
               <i class="el-icon-refresh load_more"></i> LOADING ...
             </span>
-          </li> -->
-
-          <!-- 개발자 가이드라인  -->
-          <!-- <div class="bottom">
+        </li>-->
+        <!-- 개발자 가이드라인  -->
+        <!-- <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
-          </div> -->
+        </div>-->
         <!-- </ul> -->
       </div>
     </div>
@@ -529,6 +536,14 @@ export default {
   right: 10px;
 }
 
+.SearchKeywords {
+  color: #ffffff;
+  background: #448aff;
+  width: 100%;
+  margin: 0;
+  height: 30px;
+}
+
 .keywords {
   width: 100%;
   border-radius: 0px;
@@ -561,6 +576,10 @@ export default {
 
 .autoList li:hover {
   background: #a3a3a3;
+}
+
+.loadMore {
+  color: #ffffff;
 }
 
 .search {
@@ -636,6 +655,12 @@ export default {
   border-radius: 20px;
 }
 
+.searchList {
+  overflow-y: scroll;
+  max-height: 337px;
+  border-top: 1px solid rgba(23, 30, 45, 0.48);
+}
+
 .music-title {
   width: 170px;
   font-size: 11px;
@@ -643,6 +668,8 @@ export default {
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-right: 10px;
+  color: #ffffff;
 }
 
 .dynamicHeight {
@@ -654,4 +681,31 @@ export default {
   font-weight: 700;
   font-size: 15px;
 }
+
+.searchList span {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.searchList span.music-title:hover {
+  color: #28b1ff;
+}
+
+.searchList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.searchList::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.searchList::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+
+/* Handle on hover */
+.searchList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 </style>

@@ -153,21 +153,22 @@
 }
 .label_playlist {
   color: #e0cf3b;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: 2px solid;
   border-radius: 5px;
+  padding: 2px;
 }
 .label_channel {
   color: rgb(3, 169, 244);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: 2px solid;
   border-radius: 5px;
 }
 .label_related {
   color: #5df114;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: 2px solid;
   border-radius: 5px;
@@ -175,7 +176,7 @@
 .label_live {
   color: #fd4545;
   margin-right: 5px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: 2px solid;
   border-radius: 5px;

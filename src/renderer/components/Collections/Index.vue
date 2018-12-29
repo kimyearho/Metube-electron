@@ -13,7 +13,10 @@
       <el-row v-if="!isLogin">
         <el-col class="infos">{{ $t('COLLECTION.NO_LOGIN') }}</el-col>
         <el-col class="link">
-          <el-button type="primary" @click="signLink">{{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}</el-button>
+          <md-button
+            class="md-raised md-primary btn"
+            @click="signLink"
+          >{{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}</md-button>
         </el-col>
       </el-row>
 
@@ -337,6 +340,12 @@ export default {
 </script>
 
 <style scoped>
+.btn {
+  color: #ffffff;
+  background: #448aff;
+  width: 140px;
+}
+
 .dynamicHeight {
   height: 410px !important;
 }
@@ -349,4 +358,5 @@ export default {
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
+
 </style>

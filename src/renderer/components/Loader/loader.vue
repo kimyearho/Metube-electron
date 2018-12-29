@@ -35,8 +35,8 @@ export default {
 <style scoped>
 .loading {
   position: absolute;
-  background: #d83543;
-  height: 88%;
+  background: #181e2b;
+  height: 87%;
   top: 32px;
   left: -15px;
   right: 0;
