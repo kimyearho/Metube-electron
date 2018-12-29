@@ -36,8 +36,8 @@ export default {
 .loading {
   position: absolute;
   background: #181e2b;
-  height: 87%;
-  top: 32px;
+  height: 88%;
+  top: 31px;
   left: -15px;
   right: 0;
   z-index: 2222;
