@@ -34,12 +34,7 @@
               <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
             </label>
             <a v-if="playType === 'my-collection'">
-              <el-button
-                type="success"
-                size="mini"
-                style="padding: 3px 16px;float: right;"
-                @click="quickAdd"
-              >add</el-button>
+              <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button>
             </a>
           </div>
         </el-col>
@@ -55,7 +50,7 @@
           <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
               <img
-                class="thumbnail"
+                class="md-image thumbnail"
                 :src="item.thumbnails"
                 :class="{ channelThumb: playType === 'channel' }"
                 width="158"
@@ -163,7 +158,7 @@ export default {
       this.playType = this.$route.params.playType
     },
 
-    quickAdd () {
+    collectionAdd () {
       this.isCreate = true
     },
 
@@ -241,6 +236,14 @@ export default {
 <style scoped>
 .dynamicHeight {
   height: 410px !important;
+}
+
+.c-add {
+  float: right;
+  color: #ffffff;
+  min-width: 40px;
+  height: 20px;
+  margin-bottom: 0;
 }
 
 .el-card {

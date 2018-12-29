@@ -7,120 +7,101 @@
 
 <template>
   <div>
-    <div id="player">
-      <!-- 타이틀바 컴포넌트 -->
-      <top-header :data="{ playType: 'list' }" :isShow="false" @scrollTop="endScrollTop"/>
+    <!-- 타이틀바 컴포넌트 -->
+    <top-header :data="{ playType: 'list' }" :isShow="false" @scrollTop="endScrollTop"/>
 
-      <div class="zaudio_wrapper">
-        <!-- 커버 영역 -->
-        <div class="zaudio_container">
-          <div class="side_menu">
-            <a class="cursor" @click="route">
-              <img src="@/assets/images/svg/menu-back.svg" title="Back">
-            </a>
-            <!-- 컬렉션 등록 -->
-            <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
-              <collection-register
-                ref="likes"
-                :isLikeToggle="isLikeToggle"
-                :data="data"
-                :playType="playType"
-                @toggle="toggleChange"
-              />
-            </a>
-          </div>
-          <div class>
-            <img class="cover" :src="cover">
-            <div class="zaudio_trackinfo trackinfo">
-              <span
-                class="label_channel label_v"
-                v-if="playType === 'channel'"
-              >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-              <span
-                class="label_playlist label_v"
-                v-if="playType === 'play'"
-              >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-              <span
-                class="label_related label_v"
-                v-if="playType === 'related'"
-              >{{ $t('COMMONS.LABEL.RELATED') }}</span>
-              <br>
-              <br>
-              <div class="titleflow">
-                <marquee-text
-                  class="zaudio_songtitle"
-                  :key="coverTitle"
-                  :duration="coverTitle.length / 2"
-                >&nbsp; {{ coverTitle }}</marquee-text>
-                <div style="margin-top:5px;">
-                  <span class="zaudio_songartist">{{ channelTitle }}</span>
-                  <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="overay"></div>
-        </div>
-
-        <!-- 목록 영역 -->
-        <ul id="muiscList" class="zaudio_playlist">
-          <li
-            :id="`item${index}`"
-            v-for="(item, index) in playlist"
-            :key="item.id"
-            :class="selectedIndex === index ? active : ''"
-          >
-            <!-- 썸네일 -->
-            <img class="thumbnails" :src="item.imageInfo">
-
-            <!-- 비디오 제목 -->
-            <span
-              class="music-title cursor"
-              @click="playItem(index)"
-            >{{ item.title.substring(0, 40) }}</span>
-
-            <!-- 비디오 라벨 -->
-            <span style="flex-grow:1;"></span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive !== 'live' "
-            >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive === 'live' ">LIVE</span>
-
-            <!-- 확장메뉴 컴포넌트 -->
-            <context-menu :videoId="item.videoId" :data="item"/>
-          </li>
-
-          <!-- 더 보기 -->
-          <li v-if="isNext" @click="nextPageLoad">
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
-            </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
-            </span>
-          </li>
-          <!-- 더 보기 끝 -->
-          <li v-else>
-            <span class="end">
-              <i class="el-icon-check load_more"></i>
-              {{ $t('COMMONS.END') }}
-            </span>
-          </li>
-          <!-- 개발자 가이드라인  -->
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </ul>
-        <!-- 메인 재생바 컴포넌트 -->
-        <main-player-bar
-          @previousVideoTrack="previousPlayItem"
-          @nextVideoTrack="nextPlayItem"
-          @jump="nextTrackScroll(500)"
+    <!-- 커버 영역 -->
+    <div class="side_menu">
+      <a class="cursor" @click="route">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      </a>
+      <!-- 컬렉션 등록 -->
+      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+        <collection-register
+          ref="likes"
+          :isLikeToggle="isLikeToggle"
+          :data="data"
+          :playType="playType"
+          @toggle="toggleChange"
         />
+      </a>
+    </div>
+    <div class>
+      <img class="playlistCover" :src="cover">
+      <div class="playlistTrackinfo">
+        <span
+          class="label_channel label_v"
+          v-if="playType === 'channel'"
+        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span
+          class="label_playlist label_v"
+          v-if="playType === 'play'"
+        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span
+          class="label_related label_v"
+          v-if="playType === 'related'"
+        >{{ $t('COMMONS.LABEL.RELATED') }}</span>
+        <br>
+        <br>
+        <div class="titleflow">
+          <marquee-text
+            class="zaudio_songtitle"
+            :key="coverTitle"
+            :duration="coverTitle.length / 2"
+          >&nbsp; {{ coverTitle }}</marquee-text>
+          <div style="margin-top:5px;">
+            <span class="zaudio_songartist">{{ channelTitle }}</span>
+            <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="overay"></div>
+
+    <md-list id="list" class="musicPlayList">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.id"
+        :class="selectedIndex === index ? active : ''"
+      >
+        <md-avatar style="margin-right: 0;">
+          <img :src="item.imageInfo">
+        </md-avatar>
+
+        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
+        <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
+
+        <!-- 확장메뉴 -->
+        <context-menu :videoId="item.videoId" :data="item"/>
+      </md-list-item>
+      <md-list-item v-if="isNext">
+        <span v-if="!isMore" class="loadMoreCenter">
+          <a class="cursor" @click="nextPageLoad">
+            <i class="el-icon-refresh"></i>
+            {{ $t('COMMONS.MORE') }}
+          </a>
+        </span>
+        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+      </md-list-item>
+      <md-list-item v-else>
+        <span class="playlistEnd">
+          <i class="el-icon-check"></i>
+          {{ $t('COMMONS.END') }}
+        </span>
+      </md-list-item>
+      <div class="bottom">
+        <img src="@/assets/images/youtube/dev.png">
+      </div>
+    </md-list>
+
+    <!-- 메인 재생바 컴포넌트 -->
+    <main-player-bar
+      @previousVideoTrack="previousPlayItem"
+      @nextVideoTrack="nextPlayItem"
+      @jump="nextTrackScroll(500)"
+    />
 
     <!-- 로딩 컴포넌트 -->
     <loading v-show="!load"/>
@@ -140,7 +121,7 @@ import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
 import MarqueeText from "vue-marquee-text-component";
 import Loading from "@/components/Loader/Loader";
 
-const options = { container: "#muiscList", offset: -80 };
+const options = { container: "#list", offset: -80 };
 
 export default {
   name: "MusicPlayList",
@@ -150,7 +131,7 @@ export default {
     ContextMenu,
     MainPlayerBar,
     MarqueeText,
-    Loading,
+    Loading
   },
   data() {
     return {
@@ -256,11 +237,10 @@ export default {
      */
     feachData() {
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
-      let self = this;
       setTimeout(() => {
-        let id = "#item" + self.$route.params.start;
-        self.$scrollTo(id, -1, options);
-      }, 500);
+        let id = "#item" + this.$route.params.start;
+        this.$scrollTo(id, -1, options);
+      }, 450);
 
       let playlistName = null;
       let playlistId = this.$route.params.id;
@@ -700,32 +680,9 @@ export default {
 };
 </script>
 
-<style scoped>
-.zaudio_wrapper {
-  min-height: 516px;
-}
-
-.zaudio_playlist {
-  max-height: 265px;
-  z-index: 100;
-}
-
-.cover {
-  width: 100%;
-  background-position: center;
-  filter: brightness(1.1);
-}
-
-.end {
-  margin-left: 115px;
-}
-
-.contextMenu {
-  width: 15px;
-  height: 15px;
-}
-
-.none {
-  display: none;
+<style scope>
+.loadMoreCenter {
+  color: #ffffff;
+  margin-left: 100px;
 }
 </style>

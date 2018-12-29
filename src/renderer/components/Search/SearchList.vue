@@ -7,113 +7,104 @@
 
 <template>
   <div>
-    <div id="player">
-      <div class="zaudio_wrapper">
-        <!-- 타이틀바 컴포넌트 -->
-        <top-header :data="{ playType: 'list' }" @scrollTop="searchTop"/>
+    <!-- 타이틀바 컴포넌트 -->
+    <top-header :data="{ playType: 'list' }" @scrollTop="searchTop"/>
 
-        <!-- 검색어 영역 -->
-        <div class="zaudio_container">
-          <div class="search">
-            <input
-              type="text"
-              v-model="searchText"
-              @keyup="autoComplateSearch"
-              @keyup.enter="submit(searchText)"
-              placeholder=" Search Youtube"
-            >
-            <a class="searchCancel cursor" @click="searchReset">
-              <img width="20" src="../../assets/images/svg/cancel.svg">
-            </a>
-          </div>
-          <div class="tag" v-show="isTag">
-            <span v-if="searchKeywords.length === 0" class="no_keyword">
-              <i class="el-icon-warning"></i>
-              {{ $t('COMMONS.NO_KEYWORD') }}
-            </span>
-            <el-button
-              size="mini"
-              type="info"
-              v-for="item in searchKeywords"
-              class="cursor tagSize"
-              @click="submit(item, 'tag')"
-              :key="item"
-            >{{ item }}</el-button>
-          </div>
-          <el-button
-            type="primary"
-            class="keywords"
-            icon="el-icon-d-caret"
-            @click="showTag"
-          >Recent search terms</el-button>
-        </div>
-
-        <!-- 자동검색 영역  -->
-        <div class="autoSearch" v-show="isAppend">
-          <ul class="autoList">
-            <li v-for="(item, index) in autoSearchList" :key="index" @click="itemSelected(item)">
-              <span>{{ item }}</span>
-            </li>
-          </ul>
-        </div>
-
-        <el-carousel 
-          v-loading="loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          :interval="3000"
-          type="card"
-          indicator-position="none"
-          height="100px"
-          style="margin:10px;"
-        >
-          <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
-            <img width="174" height="100" :src="item.image" @click="route(item)">
-            <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
-          </el-carousel-item>
-        </el-carousel>
-
-        <!-- 검색목록  -->
-        <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
-          <li
-            :id="`item${index}`"
-            v-for="(item, index) in searchList"
-            :key="item.etag"
-            class="cursor"
-            @click="route(item)"
-          >
-            <img class="thumbnails" :src="item.imageInfo">
-            <span class="music-title">{{ item.title.substring(0, 60) }}</span>
-            <span style="flex-grow:1;"></span>
-            <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-            <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive === 'none'"
-            >{{ item.duration }}</span>
-            <span
-              class="label_live"
-              v-if="item.videoId && item.isLive === 'live'"
-            >{{ $t('COMMONS.LABEL.LIVE') }}</span>
-          </li>
-
-          <!-- 다음 페이지 버튼 -->
-          <li v-on:click="nextPageLoad">
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
-            </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
-            </span>
-          </li>
-
-          <!-- 개발자 가이드라인  -->
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </ul>
-      </div>
+    <!-- 검색어 영역 -->
+    <div class="search">
+      <input
+        type="text"
+        v-model="searchText"
+        @keyup="autoComplateSearch"
+        @keyup.enter="submit(searchText)"
+        placeholder=" Search Youtube"
+      >
+      <a class="searchCancel cursor" @click="searchReset">
+        <img width="20" src="../../assets/images/svg/cancel.svg">
+      </a>
     </div>
+    <div class="tag" v-show="isTag">
+      <span v-if="searchKeywords.length === 0" class="no_keyword">
+        <i class="el-icon-warning"></i>
+        {{ $t('COMMONS.NO_KEYWORD') }}
+      </span>
+      <el-button
+        size="mini"
+        type="info"
+        v-for="item in searchKeywords"
+        class="cursor tagSize"
+        @click="submit(item, 'tag')"
+        :key="item"
+      >{{ item }}</el-button>
+    </div>
+    <md-button class="md-raised md-primary searchKeywords" @click="showTag">Recent search terms</md-button>
+
+    <!-- 자동검색 영역  -->
+    <div class="autoSearch" v-show="isAppend">
+      <ul class="autoList">
+        <li v-for="(item, index) in autoSearchList" :key="index" @click="itemSelected(item)">
+          <span>{{ item }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <el-carousel
+      v-loading="loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      :interval="5000"
+      type="card"
+      indicator-position="none"
+      height="100px"
+      style="margin:10px;"
+    >
+      <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
+        <img
+          class="md-image"
+          style="border: 1px solid #606266;"
+          width="174"
+          height="100"
+          :src="item.image"
+          @click="route(item)"
+        >
+        <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
+      </el-carousel-item>
+    </el-carousel>
+
+    <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in searchList"
+        :key="item.etag"
+        class="cursor"
+        @click="route(item)"
+      >
+        <md-avatar style="margin-right: 0;">
+          <img :src="item.imageInfo" alt="People">
+        </md-avatar>
+
+        <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
+        
+        <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive === 'none'">{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive === 'live'"
+        >{{ $t('COMMONS.LABEL.LIVE') }}</span>
+      </md-list-item>
+      <md-list-item>
+        <span v-if="!isMore" @click="nextPageLoad" class="loadMoreCenter">
+          <a class="cursor">
+            <i class="el-icon-refresh"></i>
+            {{ $t('COMMONS.MORE') }}
+          </a>
+        </span>
+        <span v-if="isMore" class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+      </md-list-item>
+      <div class="bottom">
+        <img src="@/assets/images/youtube/dev.png">
+      </div>
+    </md-list>
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
@@ -152,8 +143,7 @@ export default {
       isTag: false,
       loading: false,
       load: false,
-      timer: 0,
-      state: 0
+      timer: 0
     };
   },
   created() {
@@ -180,7 +170,7 @@ export default {
   },
   methods: {
     recommandTrack() {
-      this.loading = true
+      this.loading = true;
       let request1, request2, request3;
       if (this.$locale === "ko") {
         request1 = $commons.youtubePlaylistSearch("Melon 100");
@@ -196,13 +186,13 @@ export default {
           let data1 = data[0].data.items;
           let data2 = data[1].data.items;
           // let data3 = data[2].data.items;
-          let results = this.$lodash.concat(data1, data2)
+          let results = this.$lodash.concat(data1, data2);
           let arr = [];
           this.$lodash.forEach(results, (items, index) => {
             let obj = {};
-            if(items.snippet.thumbnails) {
+            if (items.snippet.thumbnails) {
               obj.playlistId = items.id.playlistId;
-              obj.title = items.snippet.title.substring(0, 40)
+              obj.title = items.snippet.title.substring(0, 40);
               obj.image = items.snippet.thumbnails.medium.url;
               arr.push(obj);
             }
@@ -212,7 +202,7 @@ export default {
                 .uniqWith(this.$lodash.isEqual)
                 .shuffle()
                 .value();
-              this.loading = false
+              this.loading = false;
             }
           });
         })
@@ -494,136 +484,10 @@ export default {
 };
 </script>
 
-<style scoped>
-.searchCancel {
-  position: absolute;
-  top: 43px;
-  right: 10px;
-}
-
-.keywords {
-  width: 100%;
-  border-radius: 0px;
-  padding: 5px;
-}
-
-.autoSearch {
-  border-top: 1px solid rgb(17, 17, 17);
-  position: absolute;
-  background: #3e3e3e;
+<style scope>
+.loadMoreCenter {
   color: #ffffff;
-  top: 76px;
-  width: 100%;
-  z-index: 5000;
-}
-
-.autoList {
-  list-style: none;
-  padding: 0px;
-  margin-left: 5px;
-  margin-right: 5px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.autoList li {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.autoList li:hover {
-  background: #a3a3a3;
-}
-
-.search {
-  width: 100%;
-  height: 40px;
-}
-
-.tag {
-  width: 100%;
-  padding: 18px;
-}
-
-.tagSize {
-  padding: 5px;
-  margin-left: 10px;
-  margin-bottom: 5px;
-}
-
-.icon-search {
-  position: absolute;
-  top: 35px;
-  bottom: 0;
-  color: #ffffff;
-  left: 0px;
-  background: #3e3e3e;
-  padding: 11px 3px 0px 8px;
-  height: 31px;
-}
-
-.search input {
-  width: 100%;
-  height: 100%;
-  background: #3e3e3e;
-  border: none;
-  color: #ffffff;
-  font-size: 17px;
-  font-weight: 700;
-  padding-left: 5px;
-  outline: none;
-}
-
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
-}
-
-.recommandMusic {
-  z-index: 9999;
-  position: absolute;
-  color: rgb(255, 255, 255);
-  top: 63px;
-  font-size: 11px;
-  padding-left: 5px;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.zaudio_playlist {
-  max-height: 350px;
-  margin-top: 3px;
-}
-
-.thumbnails {
-  border-radius: 20px;
-}
-
-.music-title {
-  width: 170px;
-  font-size: 11px;
-  padding-left: 15px;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dynamicHeight {
-  max-height: 300px;
-}
-
-.no_keyword {
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
+  margin-left: 90px;
+  padding: 0;
 }
 </style>

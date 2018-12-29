@@ -1,0 +1,183 @@
+.searchCancel {
+  position: absolute;
+  top: 42px;
+  right: 10px;
+}
+
+.search {
+  width: 100%;
+  height: 40px;
+}
+
+.search input {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  padding-left: 5px;
+  outline: none;
+}
+
+.searchKeywords {
+  color: #ffffff;
+  background: #448aff;
+  width: 100%;
+  margin: 0;
+  height: 25px;
+}
+
+.keywords {
+  width: 100%;
+  border-radius: 0px;
+  padding: 5px;
+}
+
+.autoSearch {
+  border-top: 1px solid 1px solid rgba(0, 0, 0, 0.38);
+  position: absolute;
+  background: #1d232f;
+  color: #ffffff;
+  top: 71px;
+  width: 100%;
+  z-index: 5000;
+}
+
+.autoList {
+  list-style: none;
+  padding: 0px;
+  margin-left: 5px;
+  margin-right: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.autoList li {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.autoList li:hover {
+  color: #000000;
+  background: #ffffff;
+}
+
+.loadMoreLoading {
+  margin-left: 126px;
+}
+
+.search {
+  width: 100%;
+  height: 40px;
+}
+
+.tag {
+  width: 100%;
+  padding: 18px;
+}
+
+.tagSize {
+  padding: 5px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
+.icon-search {
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  color: #ffffff;
+  left: 0px;
+  background: #3e3e3e;
+  padding: 11px 3px 0px 8px;
+  height: 31px;
+}
+
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.recommandMusic {
+  z-index: 9999;
+  position: absolute;
+  color: rgb(255, 255, 255);
+  top: 63px;
+  font-size: 11px;
+  padding-left: 5px;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+
+.zaudio_playlist {
+  max-height: 350px;
+  margin-top: 3px;
+}
+
+.thumbnails {
+  border-radius: 20px;
+}
+
+.searchList {
+  overflow-y: scroll;
+  max-height: 337px;
+  border-top: 1px solid rgba(23, 30, 45, 0.48);
+}
+
+.music-title {
+  width: 170px;
+  font-size: 11px;
+  padding-left: 15px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+  color: #ffffff;
+}
+
+.subHightAuto {
+  max-height: 295px;
+}
+
+.no_keyword {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.searchList span {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.searchList span.music-title:hover {
+  color: #28b1ff;
+}
+
+.searchList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.searchList::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.searchList::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+
+/* Handle on hover */
+.searchList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

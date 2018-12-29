@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 html {
-  background: #171e2d;
+  background: #242d40;
   font-family: "sans-serif", sans-serif;
 }
 
@@ -124,7 +124,7 @@ body {
 .active {
   color: #28b1ff !important;
   font-weight: 700;
-  background-color: rgba(6, 19, 47, 0.75);
+  background-color: rgba(53, 61, 78, 0.75);
 }
 
 .zaudio_playlist {
@@ -302,7 +302,7 @@ body {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .zaudio_icons {
@@ -322,7 +322,7 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background-color: #242f44 !important;
+  background-color: #20293a !important;
 }
 
 .zaudio_spinner {

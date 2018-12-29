@@ -10,31 +10,12 @@
     <transition name="fade">
       <router-view></router-view>
     </transition>
-    <div class="navbar">
-      <a class="cursor bdright" @click="route('search')">
-        <font-awesome-icon size="sm" icon="search"/>
-        {{ $t('MAIN.MENU.SEARCH') }}
-      </a>
-      <a class="cursor bdright" @click="route('collection')">
-        <font-awesome-icon size="sm" icon="headphones-alt"/>
-        {{ $t('MAIN.MENU.COLLECTION') }}
-      </a>
-      <a class="cursor bdright" @click="route('login')">
-        <font-awesome-icon size="sm" icon="sign-in-alt"/>
-        {{ $t('MAIN.MENU.SIGN') }}
-      </a>
-      <a class="cursor bdright" @click="route('setting')">
-        <font-awesome-icon size="sm" icon="cog"/>
-        <el-badge
-          is-dot
-          class="item"
-          style="right:-2px;"
-          v-if="isCheck"
-        >{{ $t('MAIN.MENU.SETTING') }}</el-badge>
-        <span v-else>{{ $t('MAIN.MENU.SETTING') }}</span>
-      </a>
-    </div>
-
+    <md-tabs class="tab-navi">
+      <md-tab id="tab-home" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tab-pages" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
+      <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
+    </md-tabs>
     <Snow
       v-if="isSnow"
       :active="true"
@@ -46,6 +27,7 @@
     />
 
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
+
   </div>
 </template>
 
@@ -64,6 +46,7 @@ export default {
       isShow: false,
       isSnow: true,
       isSpinShow: false,
+      showNavigation: false,
       isCheck: false,
       state: "",
       status: []
@@ -96,12 +79,12 @@ export default {
         // 재생 중
         this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
         this.$store.commit("setPlayType", false);
-        this.$eventBus.$emit('playerPause')
+        this.$eventBus.$emit("playerPause");
       } else {
         // 일시 정지
         this.$ipcRenderer.send("win2Player", ["playVideo"]);
         this.$store.commit("setPlayType", true);
-        this.$eventBus.$emit('playerPlay')
+        this.$eventBus.$emit("playerPlay");
       }
     });
   },
@@ -306,8 +289,8 @@ export default {
 
 
 <style scope>
-
-/* @import "./assets/css/zaudio-1.css"; */
+@import "./assets/css/zaudio-1.css";
+@import "./assets/css/playlist.css";
 @import "./assets/css/commons.css";
 @import "./assets/css/collection.css";
 
@@ -321,5 +304,34 @@ i {
   right: 9px;
   width: 14px;
   z-index: 99999;
+}
+
+.tab-navi {
+  background-color: #1d232f;
+  border-top: 1px solid #000000;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.md-list-item {
+  border-bottom: 1px solid #171e2d;
+}
+
+.md-tabs-navigation .md-button  {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 15px 19.4px;
+  text-decoration: none;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.md-tabs-navigation .md-button {
+  font-size: 11px !important;
 }
 </style>

@@ -26,7 +26,7 @@ if (process.env.NODE_ENV != "development") {
   }
 }
 
-const playerPath;
+let playerPath;
 if (process.env.NODE_ENV === "development") {
   playerPath = "http://localhost:7070";
 } else {

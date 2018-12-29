@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <el-dropdown trigger="click" @command="menuEvent">
+    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
       <a class="cursor">
         <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
       </a>
