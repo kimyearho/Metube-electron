@@ -10,7 +10,7 @@
     <transition name="fade">
       <router-view></router-view>
     </transition>
-    <div class="navbar">
+    <!-- <div class="navbar">
       <a class="cursor bdright" @click="route('search')">
         <font-awesome-icon size="sm" icon="search"/>
         {{ $t('MAIN.MENU.SEARCH') }}
@@ -33,8 +33,7 @@
         >{{ $t('MAIN.MENU.SETTING') }}</el-badge>
         <span v-else>{{ $t('MAIN.MENU.SETTING') }}</span>
       </a>
-    </div>
-
+    </div> -->
     <Snow
       v-if="isSnow"
       :active="true"
@@ -96,12 +95,12 @@ export default {
         // 재생 중
         this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
         this.$store.commit("setPlayType", false);
-        this.$eventBus.$emit('playerPause')
+        this.$eventBus.$emit("playerPause");
       } else {
         // 일시 정지
         this.$ipcRenderer.send("win2Player", ["playVideo"]);
         this.$store.commit("setPlayType", true);
-        this.$eventBus.$emit('playerPlay')
+        this.$eventBus.$emit("playerPlay");
       }
     });
   },
@@ -306,7 +305,6 @@ export default {
 
 
 <style scope>
-
 /* @import "./assets/css/zaudio-1.css"; */
 @import "./assets/css/commons.css";
 @import "./assets/css/collection.css";

@@ -43,6 +43,9 @@ import VueClipboard from "vue-clipboard2";
 /* mousetrap */
 import mousetrap from "mousetrap";
 
+import VueMaterial from "vue-material";
+import "vue-material/dist/vue-material.min.css";
+
 library.add(fas);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("top-header", topHeader);
@@ -51,6 +54,7 @@ Vue.use(VModal, { dialog: true });
 Vue.use(VueScrollTo);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
+Vue.use(VueMaterial);
 Vue.prototype.$http = axios;
 Vue.prototype.$moment = moment;
 Vue.prototype.$lodash = lodash;

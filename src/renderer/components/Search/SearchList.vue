@@ -57,7 +57,7 @@
           </ul>
         </div>
 
-        <el-carousel 
+        <el-carousel
           v-loading="loading"
           element-loading-background="rgba(0, 0, 0, 0.8)"
           :interval="3000"
@@ -72,8 +72,36 @@
           </el-carousel-item>
         </el-carousel>
 
+        <md-list id="list"  :class="{ dynamicHeight: isMini }">
+          <md-list-item
+            :id="`item${index}`"
+            v-for="(item, index) in searchList"
+            :key="item.etag"
+            class="cursor"
+            @click="route(item)"
+          >
+            <md-avatar>
+              <img :src="item.imageInfo" alt="People">
+            </md-avatar>
+
+            <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
+
+            <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+            <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+            <span
+              class="label_video"
+              v-if="item.videoId && item.isLive === 'none'"
+            >{{ item.duration }}</span>
+            <span
+              class="label_live"
+              v-if="item.videoId && item.isLive === 'live'"
+            >{{ $t('COMMONS.LABEL.LIVE') }}</span>
+
+          </md-list-item>
+        </md-list>
+
         <!-- 검색목록  -->
-        <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
+        <!-- <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
           <li
             :id="`item${index}`"
             v-for="(item, index) in searchList"
@@ -94,10 +122,10 @@
               class="label_live"
               v-if="item.videoId && item.isLive === 'live'"
             >{{ $t('COMMONS.LABEL.LIVE') }}</span>
-          </li>
+          </li> -->
 
           <!-- 다음 페이지 버튼 -->
-          <li v-on:click="nextPageLoad">
+          <!-- <li v-on:click="nextPageLoad">
             <span class="loadMore center cursor" v-if="!isMore">
               <i class="el-icon-refresh load_more"></i>
               {{ $t('COMMONS.MORE') }}
@@ -105,13 +133,13 @@
             <span class="center" v-if="isMore">
               <i class="el-icon-refresh load_more"></i> LOADING ...
             </span>
-          </li>
+          </li> -->
 
           <!-- 개발자 가이드라인  -->
-          <div class="bottom">
+          <!-- <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </ul>
+          </div> -->
+        <!-- </ul> -->
       </div>
     </div>
 
@@ -180,7 +208,7 @@ export default {
   },
   methods: {
     recommandTrack() {
-      this.loading = true
+      this.loading = true;
       let request1, request2, request3;
       if (this.$locale === "ko") {
         request1 = $commons.youtubePlaylistSearch("Melon 100");
@@ -196,13 +224,13 @@ export default {
           let data1 = data[0].data.items;
           let data2 = data[1].data.items;
           // let data3 = data[2].data.items;
-          let results = this.$lodash.concat(data1, data2)
+          let results = this.$lodash.concat(data1, data2);
           let arr = [];
           this.$lodash.forEach(results, (items, index) => {
             let obj = {};
-            if(items.snippet.thumbnails) {
+            if (items.snippet.thumbnails) {
               obj.playlistId = items.id.playlistId;
-              obj.title = items.snippet.title.substring(0, 40)
+              obj.title = items.snippet.title.substring(0, 40);
               obj.image = items.snippet.thumbnails.medium.url;
               arr.push(obj);
             }
@@ -212,7 +240,7 @@ export default {
                 .uniqWith(this.$lodash.isEqual)
                 .shuffle()
                 .value();
-              this.loading = false
+              this.loading = false;
             }
           });
         })

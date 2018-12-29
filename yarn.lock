@@ -8702,6 +8702,11 @@ vue-marquee-text-component@^1.1.1:
   dependencies:
     vue "^2.5.17"
 
+vue-material@^1.0.0-beta-10.2:
+  version "1.0.0-beta-10.2"
+  resolved "https://registry.yarnpkg.com/vue-material/-/vue-material-1.0.0-beta-10.2.tgz#c3effea97e0c5a0c696b0051d5ef9c6e6cf2a5ed"
+  integrity sha512-DXOUXm6M8zbeJ6LPvP1h/0EhXmCkxNGz2dM/0q4w+lsT9uTaos+YDrwQvJBJcxil3fEw6oHCfhG/peWks+8v7Q==
+
 vue-niege@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/vue-niege/-/vue-niege-0.1.1.tgz#fa5358e503ba8cd831da0ae1a1f99497e61a4f70"
