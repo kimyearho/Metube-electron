@@ -56,18 +56,6 @@ I use PouchDB as my local database. Please refer to the PouchDB documentation fo
 To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
 <https://pouchdb.com/>
 
-### Open source module used for Metube
-- vue (vuex, router)
-- vue-i18n
-- vue-marquee-text-component
-- vue-niege
-- vue-scrollto
-- vuedraggable
-- element-ui
-- pouchdb
-- nprogress
-- moment
-- lodash
 ***
 
 ### Trello (for korean)
