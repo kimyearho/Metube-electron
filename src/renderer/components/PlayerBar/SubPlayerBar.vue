@@ -191,7 +191,7 @@ export default {
 .zaudio_player {
   width: 369px;
   height: 48px;
-  top: 514px;
+  top: 520px;
   background-color: #3e3e3e;
   position: absolute;
   z-index: 200;

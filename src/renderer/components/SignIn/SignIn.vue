@@ -21,12 +21,12 @@
           </div>
         </div>
         <div class="signin" :class="{ signout: isSignin }">
-          <md-button v-if="!isSignin" class="cursor md-raised b-primary" @click="signin">
+          <md-button v-if="!isSignin" class="cursor md-raised b-primary" style="width: 120px;" @click="signin">
             <md-icon>touch_app</md-icon>
             {{ $t('SIGN.SIGN_IN') }}
           </md-button>
 
-          <md-button v-else class="cursor md-raised b-danger" @click="signout">
+          <md-button v-else class="cursor md-raised b-danger" style="width: 120px;" @click="signout">
             <md-icon>how_to_reg</md-icon>
             {{ $t('SIGN.SIGN_OUT') }}
           </md-button>

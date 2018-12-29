@@ -16,6 +16,7 @@
       <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
       <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
     </md-tabs>
+    <span v-show="isCheck" class="badge"></span>
     <Snow
       v-if="isSnow"
       :active="true"
@@ -27,7 +28,6 @@
     />
 
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
-
   </div>
 </template>
 
@@ -46,7 +46,6 @@ export default {
       isShow: false,
       isSnow: true,
       isSpinShow: false,
-      showNavigation: false,
       isCheck: false,
       state: "",
       status: []
@@ -320,18 +319,39 @@ i {
   border-bottom: 1px solid #171e2d;
 }
 
-.md-tabs-navigation .md-button  {
+.md-tabs-navigation .md-button {
   float: left;
   display: block;
   color: #f2f2f2;
   text-align: center;
   padding: 15px 19.4px;
   text-decoration: none;
-  font-size: 9px;
+  height: 42px !important;
+  font-size: 11px !important;
   font-weight: 700;
 }
 
-.md-tabs-navigation .md-button {
-  font-size: 11px !important;
+/* .md-active {
+  color: #000000 !important;
+  background: #ffffff !important;
+} */
+
+.badge {
+  width: 10px;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 13px;
+  bottom: 27px;
+  background: #f94848;
+  border-radius: 100%;
+  color: #fff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  z-index: 10000;
 }
 </style>

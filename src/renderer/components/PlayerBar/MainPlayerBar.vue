@@ -19,7 +19,7 @@
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div class="zaudio_buttonwrapper" style="margin-top: 2px; margin-bottom:10px;">
+        <div class="zaudio_buttonwrapper" style="margin-top: 9px; margin-bottom:10px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
@@ -365,7 +365,6 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  margin-top: 14px;
 }
 
 .el-message {

@@ -50,6 +50,7 @@ import {
   MdImage,
   MdTabs,
   MdAvatar,
+  MdBadge,
   // MdDrawer,
   // MdToolbar,
   MdIcon
@@ -68,6 +69,7 @@ Vue.use(ElementUI);
 Vue.use(VueClipboard);
 Vue.use(MdAvatar);
 Vue.use(MdButton);
+Vue.use(MdBadge);
 // Vue.use(MdDrawer);
 Vue.use(MdList);
 Vue.use(MdImage);
