@@ -19,7 +19,7 @@
         @keyup.enter="submit(searchText)"
         placeholder=" Search Youtube"
       >
-      <a class="searchCancel cursor" @click="searchReset">
+      <a class="searchCancel cursor" v-show="searchText.length > 0" @click="searchReset">
         <img width="20" src="../../assets/images/svg/cancel.svg">
       </a>
     </div>
