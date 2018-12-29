@@ -1,6 +1,6 @@
 .searchCancel {
   position: absolute;
-  top: 43px;
+  top: 42px;
   right: 10px;
 }
 
@@ -36,11 +36,11 @@
 }
 
 .autoSearch {
-  border-top: 1px solid rgb(17, 17, 17);
+  border-top: 1px solid 1px solid rgba(0, 0, 0, 0.38);
   position: absolute;
-  background: #3e3e3e;
+  background: #1d232f;
   color: #ffffff;
-  top: 76px;
+  top: 71px;
   width: 100%;
   z-index: 5000;
 }
@@ -60,7 +60,8 @@
 }
 
 .autoList li:hover {
-  background: #a3a3a3;
+  color: #000000;
+  background: #ffffff;
 }
 
 .loadMoreLoading {
