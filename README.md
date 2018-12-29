@@ -1,10 +1,7 @@
-# [2018-12-27] v1.3.4 UPDATE
+# [2018-12-30] v1.4 UPDATE
 
-![Imgur](https://i.imgur.com/nSqfCJr.png)
-![Imgur](https://i.imgur.com/7WT3pmy.png)
-![Imgur](https://i.imgur.com/M0DOrwX.png)
-![Imgur](https://i.imgur.com/mcUENWj.png)
-
+![Imgur](https://i.imgur.com/WXVuLN6.png)
+![Imgur](https://i.imgur.com/Iw9H9X9.png)
 ***
 
 ![Img](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
