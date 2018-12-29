@@ -240,7 +240,7 @@ export default {
       setTimeout(() => {
         let id = "#item" + this.$route.params.start;
         this.$scrollTo(id, -1, options);
-      }, 500);
+      }, 450);
 
       let playlistName = null;
       let playlistId = this.$route.params.id;
