@@ -4,15 +4,6 @@ import { ipcRenderer } from "electron";
 Vue.ipcRenderer = Vue.prototype.$ipcRenderer = ipcRenderer;
 Vue.event = Vue.prototype.$eventBus = new Vue();
 
-let theme1 = "zaudio-1.css";
-let theme2 = "zaudio.css";
-
-require(`@/assets/css/${theme1}`);
-
-Vue.ipcRenderer.on("test", (e, data) => {
-  require(`@/assets/css/${theme2}`);
-});
-
 Vue.ipcRenderer.on("player2Win", (e, data) => {
   let event_key = data[0];
   let event_value = data[1];

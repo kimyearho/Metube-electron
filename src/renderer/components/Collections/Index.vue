@@ -340,7 +340,7 @@ export default {
 </script>
 
 <style scoped>
-.btn {
+.btn{
   color: #ffffff;
   background: #448aff;
   width: 140px;

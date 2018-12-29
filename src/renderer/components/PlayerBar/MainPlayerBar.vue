@@ -278,7 +278,7 @@ export default {
     buttonDelay() {
       this.$message({
         showClose: true,
-        message: this.$t('PLAYERBAR.BUTTON_DELAY'),
+        message: this.$t("PLAYERBAR.BUTTON_DELAY"),
         type: "error"
       });
     },
@@ -359,6 +359,13 @@ input[type="range"]::-webkit-slider-thumb {
   font-weight: 700;
   color: #fd4545;
   left: 125px;
+}
+
+.zaudio_playercontrols {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  margin-top: 14px;
 }
 
 .el-message {

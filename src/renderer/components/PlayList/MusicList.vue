@@ -67,7 +67,7 @@
               <img :src="item.imageInfo" alt="People">
             </md-avatar>
 
-            <span class="md-list-item-text music-title cursor" @click="route(item)">{{ item.title }}</span>
+            <span class="md-list-item-text music-title cursor" @click="route(item, index)">{{ item.title }}</span>
             <span
               class="label_video"
               v-if="item.videoId && item.isLive != 'live'"
@@ -75,57 +75,28 @@
             <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
             <context-menu :videoId="item.videoId" :data="item"/>
           </md-list-item>
-          <md-list-item>
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
+          <md-list-item v-if="isNext">
+            <span v-if="!isMore" class="loadMoreCenter">
+              <a class="cursor" @click="nextPageLoad">
+                <i class="el-icon-refresh"></i>
+                {{ $t('COMMONS.MORE') }}
+              </a>
             </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
+            <span v-else class="loadMoreCenter loadMoreLoading">
+              LOADING ...
+            </span>
+          </md-list-item>
+          <md-list-item v-else>
+            <span class="playlistEnd">
+              <i class="el-icon-check"></i>
+              {{ $t('COMMONS.END') }}
             </span>
           </md-list-item>
           <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
           </div>
         </md-list>
-
-        <!--
-        <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
-          <li :id="`item${index}`" v-for="(item, index) in playlist" :key="index">
-            <img class="thumbnails" :src="item.imageInfo">
-            <span
-              class="music-title cursor"
-              @click="route(item, index)"
-            >{{ item.title.substring(0, 40) }}</span>
-            <span style="flex-grow:1"></span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive != 'live'"
-            >{{ item.duration }}</span>
-            <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-
-            <context-menu :videoId="item.videoId" :data="item"/>
-          </li>
-          <li v-if="isNext" @click="nextPageLoad">
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
-            </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
-            </span>
-          </li>
-          <li v-else>
-            <span class="end">
-              <i class="el-icon-check load_more"></i>
-              {{ $t('COMMONS.END') }}
-            </span>
-          </li>
-          <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-          </div>
-        </ul>
-        -->
+       
       </div>
     </div>
 

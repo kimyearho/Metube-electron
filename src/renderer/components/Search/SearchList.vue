@@ -65,7 +65,14 @@
           style="margin:10px;"
         >
           <el-carousel-item v-for="item in recommandList" :key="item.playlistId">
-            <img class="md-image" style="border: 1px solid #606266;" width="174" height="100" :src="item.image" @click="route(item)">
+            <img
+              class="md-image"
+              style="border: 1px solid #606266;"
+              width="174"
+              height="100"
+              :src="item.image"
+              @click="route(item)"
+            >
             <span class="recommandMusic" @click="route(item)">{{ item.title }}</span>
           </el-carousel-item>
         </el-carousel>
@@ -96,57 +103,18 @@
             >{{ $t('COMMONS.LABEL.LIVE') }}</span>
           </md-list-item>
           <md-list-item>
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
+            <span v-if="!isMore" @click="nextPageLoad" class="loadMoreCenter">
+              <a class="cursor">
+                <i class="el-icon-refresh"></i>
+                {{ $t('COMMONS.MORE') }}
+              </a>
             </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
-            </span>
+            <span v-if="isMore" class="loadMoreCenter loadMoreLoading">LOADING ...</span>
           </md-list-item>
           <div class="bottom">
             <img src="@/assets/images/youtube/dev.png">
           </div>
         </md-list>
-
-        <!-- 검색목록  -->
-        <!-- <ul id="list" class="zaudio_playlist" :class="{ dynamicHeight: isMini }">
-          <li
-            :id="`item${index}`"
-            v-for="(item, index) in searchList"
-            :key="item.etag"
-            class="cursor"
-            @click="route(item)"
-          >
-            <img class="thumbnails" :src="item.imageInfo">
-            <span class="music-title">{{ item.title.substring(0, 60) }}</span>
-            <span style="flex-grow:1;"></span>
-            <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-            <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-            <span
-              class="label_video"
-              v-if="item.videoId && item.isLive === 'none'"
-            >{{ item.duration }}</span>
-            <span
-              class="label_live"
-              v-if="item.videoId && item.isLive === 'live'"
-            >{{ $t('COMMONS.LABEL.LIVE') }}</span>
-        </li>-->
-        <!-- 다음 페이지 버튼 -->
-        <!-- <li v-on:click="nextPageLoad">
-            <span class="loadMore center cursor" v-if="!isMore">
-              <i class="el-icon-refresh load_more"></i>
-              {{ $t('COMMONS.MORE') }}
-            </span>
-            <span class="center" v-if="isMore">
-              <i class="el-icon-refresh load_more"></i> LOADING ...
-            </span>
-        </li>-->
-        <!-- 개발자 가이드라인  -->
-        <!-- <div class="bottom">
-            <img src="@/assets/images/youtube/dev.png">
-        </div>-->
-        <!-- </ul> -->
       </div>
     </div>
 
@@ -529,183 +497,10 @@ export default {
 };
 </script>
 
-<style scoped>
-.searchCancel {
-  position: absolute;
-  top: 43px;
-  right: 10px;
-}
-
-.SearchKeywords {
+<style scope>
+.loadMoreCenter {
   color: #ffffff;
-  background: #448aff;
-  width: 100%;
-  margin: 0;
-  height: 30px;
+  margin-left: 90px;
+  padding: 0;
 }
-
-.keywords {
-  width: 100%;
-  border-radius: 0px;
-  padding: 5px;
-}
-
-.autoSearch {
-  border-top: 1px solid rgb(17, 17, 17);
-  position: absolute;
-  background: #3e3e3e;
-  color: #ffffff;
-  top: 76px;
-  width: 100%;
-  z-index: 5000;
-}
-
-.autoList {
-  list-style: none;
-  padding: 0px;
-  margin-left: 5px;
-  margin-right: 5px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.autoList li {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.autoList li:hover {
-  background: #a3a3a3;
-}
-
-.loadMore {
-  color: #ffffff;
-}
-
-.search {
-  width: 100%;
-  height: 40px;
-}
-
-.tag {
-  width: 100%;
-  padding: 18px;
-}
-
-.tagSize {
-  padding: 5px;
-  margin-left: 10px;
-  margin-bottom: 5px;
-}
-
-.icon-search {
-  position: absolute;
-  top: 35px;
-  bottom: 0;
-  color: #ffffff;
-  left: 0px;
-  background: #3e3e3e;
-  padding: 11px 3px 0px 8px;
-  height: 31px;
-}
-
-.search input {
-  width: 100%;
-  height: 100%;
-  background: #3e3e3e;
-  border: none;
-  color: #ffffff;
-  font-size: 17px;
-  font-weight: 700;
-  padding-left: 5px;
-  outline: none;
-}
-
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
-}
-
-.recommandMusic {
-  z-index: 9999;
-  position: absolute;
-  color: rgb(255, 255, 255);
-  top: 63px;
-  font-size: 11px;
-  padding-left: 5px;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.zaudio_playlist {
-  max-height: 350px;
-  margin-top: 3px;
-}
-
-.thumbnails {
-  border-radius: 20px;
-}
-
-.searchList {
-  overflow-y: scroll;
-  max-height: 337px;
-  border-top: 1px solid rgba(23, 30, 45, 0.48);
-}
-
-.music-title {
-  width: 170px;
-  font-size: 11px;
-  padding-left: 15px;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 10px;
-  color: #ffffff;
-}
-
-.dynamicHeight {
-  max-height: 300px;
-}
-
-.no_keyword {
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.searchList span {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-.searchList span.music-title:hover {
-  color: #28b1ff;
-}
-
-.searchList::-webkit-scrollbar {
-  width: 10px;
-}
-
-.searchList::-webkit-scrollbar-track {
-  background: #1d232f;
-}
-
-.searchList::-webkit-scrollbar-thumb {
-  background: #ffffff;
-}
-
-/* Handle on hover */
-.searchList::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 </style>

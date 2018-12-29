@@ -46,6 +46,8 @@ import mousetrap from "mousetrap";
 import VueMaterial from "vue-material";
 import "vue-material/dist/vue-material.min.css";
 
+import "./assets/css/search.css";
+
 library.add(fas);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("top-header", topHeader);

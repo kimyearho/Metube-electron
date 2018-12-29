@@ -21,20 +21,11 @@
           </div>
         </div>
         <div class="signin" :class="{ signout: isSignin }">
-          <el-button
-            v-if="!isSignin"
-            class="cursor"
-            type="primary"
-            icon="el-icon-sort"
-            @click="signin"
-          >{{ $t('SIGN.SIGN_IN') }}</el-button>
-          <el-button
-            v-else
-            class="cursor"
-            type="warning"
-            icon="el-icon-check"
-            @click="signout"
-          >{{ $t('SIGN.SIGN_OUT') }}</el-button>
+          <md-button v-if="!isSignin" class="cursor md-raised b-primary" 
+            @click="signin">{{ $t('SIGN.SIGN_IN') }}</md-button>
+          
+          <md-button v-else class="cursor md-raised b-danger" 
+            @click="signout">{{ $t('SIGN.SIGN_OUT') }}</md-button>
         </div>
         <div class="menu1">
           <label class="gr">

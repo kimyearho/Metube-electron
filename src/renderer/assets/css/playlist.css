@@ -1,0 +1,60 @@
+.musicPlayList {
+  overflow-y: scroll;
+  max-height: 257px;
+  border-top: 1px solid rgba(23, 30, 45, 0.48);
+  padding: 1px 0 0 0 !important;
+}
+
+.playlistCover {
+  width: 100%;
+  max-height: 180px;
+  background-position: center;
+  filter: brightness(1.1);
+}
+
+.playlistTrackinfo {
+  width: 347px;
+  position: absolute;
+  top: 125px;
+  left: 10px;
+  z-index: 100;
+}
+
+.loadMoreLoading {
+  margin-left: 126px;
+}
+
+.playlistEnd {
+  color: #ffffff;
+  margin-left: 115px;
+}
+
+.contextMenu {
+  width: 15px;
+  height: 15px;
+}
+
+.none {
+  display: none;
+}
+
+.musicPlayList span.music-title:hover {
+  color: #28b1ff;
+}
+
+.musicPlayList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.musicPlayList::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.musicPlayList::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+
+/* Handle on hover */
+.musicPlayList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

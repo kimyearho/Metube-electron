@@ -311,7 +311,8 @@ export default {
 
 
 <style scope>
-/* @import "./assets/css/zaudio-1.css"; */
+@import "./assets/css/zaudio-1.css";
+@import "./assets/css/playlist.css";
 @import "./assets/css/commons.css";
 @import "./assets/css/collection.css";
 

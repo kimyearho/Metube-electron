@@ -135,7 +135,7 @@ export default {
 }
 
 .dyLogo {
-  padding-left: 60px !important;
+  padding-left: 50px !important;
 }
 
 .titlebar {
