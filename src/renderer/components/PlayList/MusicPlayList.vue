@@ -175,12 +175,6 @@ export default {
     this.$eventBus.$on("playlist-nextLoad", this.nextPlaylistAutoPageLoad);
   },
   mounted() {
-    // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
-    let self = this;
-    setTimeout(() => {
-      let id = "#item" + self.$route.params.start;
-      self.$scrollTo(id, -1, options);
-    }, 350);
     this.feachData();
   },
   methods: {
@@ -242,6 +236,12 @@ export default {
      * 인스턴스 초기화 시 조회되는 재생목록
      */
     feachData() {
+      // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
+      setTimeout(() => {
+        let id = "#item" + this.$route.params.start;
+        this.$scrollTo(id, -1, options);
+      }, 500);
+
       let playlistName = null;
       let playlistId = this.$route.params.id;
       this.playType = this.$route.params.playType;
