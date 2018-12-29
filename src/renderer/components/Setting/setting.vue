@@ -6,7 +6,7 @@
 <template>
   <div>
     <top-header />
-    <div class="wrapper">
+    <div class="wrapper" :class="{ updateHeight: isCheck }">
       <form>
         <div class="menu1">
           <label class="wh">
@@ -238,6 +238,11 @@ export default {
 .wrapper {
   margin: 5px;
   height: 510px;
+}
+
+.updateHeight {
+  height: 480px;
+  overflow-y: scroll;
 }
 
 .header {

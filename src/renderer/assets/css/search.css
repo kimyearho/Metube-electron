@@ -131,7 +131,7 @@
 
 .searchList {
   overflow-y: scroll;
-  max-height: 337px;
+  max-height: 352px;
   border-top: 1px solid rgba(23, 30, 45, 0.48);
 }
 
@@ -147,7 +147,7 @@
 }
 
 .subHightAuto {
-  max-height: 295px;
+  max-height: 302px;
 }
 
 .no_keyword {
