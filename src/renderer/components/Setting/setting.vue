@@ -6,7 +6,10 @@
 <template>
   <div>
     <top-header />
-    <div class="wrapper" :class="{ updateHeight: isCheck }">
+    <div
+      class="wrapper"
+      :class="{ updateHeight: isCheck }"
+    >
       <form>
         <div class="menu1">
           <label class="wh">
@@ -43,24 +46,6 @@
         </div>
         <div class="menu1_tip">
           <strong class="tr">{{ $t('SETTING.ALWAYS_TOP') }}</strong>
-        </div>
-        <div class="menu1">
-          <label class="wh">
-            <strong>Snow</strong>
-          </label>
-          <toggle-button
-            v-model="snow_state"
-            :width="60"
-            :height="20"
-            :sync="true"
-            style="float:right;"
-            color="#82C7EB"
-            :labels="{checked: 'On', unchecked: 'Off'}"
-            @change="onChangeEventSnow"
-          />
-        </div>
-        <div class="menu1_tip">
-          <strong class="tr">Snow theme for winter</strong>
         </div>
         <div class="menu1">
           <label class="wh">
@@ -213,16 +198,6 @@ export default {
       } else {
         this.$store.commit('setAlwaysTopOption', false)
         this.$ipcRenderer.send('option:alwaystop', false)
-      }
-    },
-    onChangeEventSnow(event) {
-      this.$eventBus.$emit('test')
-      if (event.value) {
-        this.$eventBus.$emit('showSnow', true)
-        this.$store.commit('setSnow', true)
-      } else {
-        this.$eventBus.$emit('showSnow', false)
-        this.$store.commit('setSnow', false)
       }
     },
     onNewReleaseCheck() {

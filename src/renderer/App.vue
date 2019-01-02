@@ -11,40 +11,71 @@
       <router-view></router-view>
     </transition>
     <md-tabs class="tab-navi">
-      <md-tab id="tab-home" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
-      <md-tab id="tab-pages" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
-      <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
-      <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
+      <md-tab
+        id="tab-home"
+        class="md-tab"
+        md-label="Search"
+        @click="route('search')"
+      ></md-tab>
+      <md-tab
+        id="tab-pages"
+        class="md-tab"
+        md-label="Collections"
+        @click="route('collection')"
+      ></md-tab>
+      <md-tab
+        id="tab-posts"
+        class="md-tab"
+        md-label="Sign"
+        @click="route('login')"
+      ></md-tab>
+      <md-tab
+        id="tab-favorites"
+        class="md-tab"
+        md-label="Setting"
+        @click="route('setting')"
+      ></md-tab>
     </md-tabs>
-    <span v-show="isCheck" class="badge"></span>
-    <Snow
-      v-if="isSnow"
-      :active="true"
-      zIndex="3000"
-      :wind="1"
-      :swing="0"
-      speed="l"
-      color="#ffffff"
+    <span
+      v-show="isCheck"
+      class="badge"
+    ></span>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
     />
+    <md-speed-dial
+      class="md-bottom-right"
+      md-direction="top"
+    >
+      <md-speed-dial-target class="md-primary b-primary">
+        <md-icon>my_location</md-icon>
+      </md-speed-dial-target>
 
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+      <md-speed-dial-content>
+        <md-button class="md-icon-button b-danger">
+          <md-icon>directions</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button b-danger">
+          <md-icon>streetview</md-icon>
+        </md-button>
+      </md-speed-dial-content>
+    </md-speed-dial>
+
   </div>
 </template>
 
 <script>
-import Snow from "vue-niege";
 import StoreMixin from "@/components/Mixin/index";
 
 export default {
   name: "App",
   mixins: [StoreMixin],
-  components: {
-    Snow
-  },
   data() {
     return {
       isShow: false,
-      isSnow: true,
       isSpinShow: false,
       isCheck: false,
       state: "",
@@ -52,9 +83,6 @@ export default {
     };
   },
   created() {
-    // 눈 테마
-    this.$eventBus.$on("showSnow", this.showSnow);
-
     // 비디오 상태 체크 이벤트 수신
     this.$eventBus.$off("statusCheck");
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);
@@ -91,9 +119,6 @@ export default {
     docs() {
       get(this);
     },
-    showSnow(v) {
-      this.$set(this, "isSnow", v);
-    },
     route(path) {
       if (path == "search") {
         this.$router.push({
@@ -113,6 +138,14 @@ export default {
         });
       }
     },
+
+    clickItem(idx) {
+      console.log('idx: ' + idx)
+    },
+    clickMainBtn() {
+      console.log('clickMainBtn')
+    },
+
     playerStatusCheck(value) {
       this.state = value;
       // 버퍼링 or 일시중지
@@ -288,10 +321,21 @@ export default {
 
 
 <style scope>
-@import "./assets/css/zaudio-1.css";
-@import "./assets/css/playlist.css";
-@import "./assets/css/commons.css";
-@import "./assets/css/collection.css";
+.md-fab {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.md-speed-dial.md-bottom-left,
+.md-speed-dial.md-bottom-right {
+  position: absolute;
+  z-index: 1000;
+  bottom: 103px !important;
+}
+
+.md-ripple .md-button-content {
+  padding-left: 5px;
+}
 
 i {
   padding-right: 5px;
@@ -327,7 +371,7 @@ i {
   padding: 15px 19.4px;
   text-decoration: none;
   height: 42px !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-weight: 700;
 }
 

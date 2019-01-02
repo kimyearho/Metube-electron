@@ -51,12 +51,18 @@ import {
   MdTabs,
   MdAvatar,
   MdBadge,
+  MdSpeedDial,
   // MdDrawer,
   // MdToolbar,
   MdIcon
 } from "vue-material/dist/components";
 import "vue-material/dist/vue-material.min.css";
+// import "vue-material/dist/theme/default.css";
 
+import "./assets/css/zaudio-1.css";
+import "./assets/css/commons.css";
+import "./assets/css/playlist.css";
+import "./assets/css/collection.css";
 import "./assets/css/search.css";
 
 library.add(fas);
@@ -70,12 +76,11 @@ Vue.use(VueClipboard);
 Vue.use(MdAvatar);
 Vue.use(MdButton);
 Vue.use(MdBadge);
-// Vue.use(MdDrawer);
 Vue.use(MdList);
 Vue.use(MdImage);
 Vue.use(MdIcon);
 Vue.use(MdTabs);
-// Vue.use(MdToolbar);
+Vue.use(MdSpeedDial)
 Vue.prototype.$http = axios;
 Vue.prototype.$moment = moment;
 Vue.prototype.$lodash = lodash;
