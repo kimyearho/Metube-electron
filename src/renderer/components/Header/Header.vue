@@ -1,16 +1,6 @@
 <template>
   <div class="titlebar">
-    <span class="notiButton">
-      <!-- 페이지 검색 -->
-      <img
-        v-if="isShow"
-        @click="showPageSearch"
-        class="cursor"
-        width="20"
-        src="@/assets/images/svg/youtube-play-button.svg"
-      >
-    </span>
-    <span class="logo" :class="{ dyLogo : !isShow }">M e T u b e</span>
+    <span class="logo">M e T u b e</span>
     <span class="topButton">
       <div class="minimize cursor" @click="minimize" style="margin-right: 5px;" title="minimize"></div>
       <div class="close cursor" @click="close" title="exit"></div>
@@ -34,35 +24,26 @@
         </el-form-item>
       </el-form>
     </modal>
+    
+    <!-- fab -->
+    <md-speed-dial
+      v-if="isShow"
+      class="md-bottom-right"
+      md-direction="top"
+    >
+      <md-speed-dial-target class="md-primary b-primary">
+        <md-icon>my_location</md-icon>
+      </md-speed-dial-target>
 
-    <!-- 
-    <md-drawer :md-active.sync="showNavigation" style="background: #242d40; width: 190px; z-index:300;">
-      <md-toolbar class="md-transparent" md-elevation="0">
-        <span class="md-title">My App name</span>
-      </md-toolbar>
-      <md-list>
-        <md-list-item>
-          <md-icon>move_to_inbox</md-icon>
-          <span class="md-list-item-text">Inbox</span>
-        </md-list-item>
-
-        <md-list-item>
-          <md-icon>send</md-icon>
-          <span class="md-list-item-text">Sent Mail</span>
-        </md-list-item>
-
-        <md-list-item>
-          <md-icon>delete</md-icon>
-          <span class="md-list-item-text">Trash</span>
-        </md-list-item>
-
-        <md-list-item>
-          <md-icon>error</md-icon>
-          <span class="md-list-item-text">Spam</span>
-        </md-list-item>
-      </md-list>
-    </md-drawer>
-    -->
+      <md-speed-dial-content>
+        <md-button class="md-icon-button b-danger" title="PlayList Search" @click="showPageSearch">
+          <md-icon>search</md-icon>
+        </md-button>
+        <md-button class="md-icon-button b-success" title="Create Collection">
+          <md-icon>add</md-icon>
+        </md-button>
+      </md-speed-dial-content>
+    </md-speed-dial>
     
   </div>
 </template>
@@ -162,10 +143,6 @@ export default {
 
 <style scoped>
 .logo {
-  padding-left: 30px !important;
-}
-
-.dyLogo {
   padding-left: 50px !important;
 }
 

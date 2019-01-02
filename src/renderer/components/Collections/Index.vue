@@ -43,7 +43,7 @@
                 <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>
             </label>
-            <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button>
+            <!-- <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button> -->
           </div>
         </el-col>
 

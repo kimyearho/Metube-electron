@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :data="{ playType: 'list' }"/>
+    <top-header :isShow="false" :data="{ playType: 'list' }"/>
     <div class="wrapper">
       <div class="contents">
         <div class="cover">

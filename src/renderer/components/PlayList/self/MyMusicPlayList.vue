@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header @reloadMusicList="feachData"/>
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">

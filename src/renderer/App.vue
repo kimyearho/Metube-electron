@@ -45,24 +45,6 @@
       :height="300"
       :clickToClose="false"
     />
-    <md-speed-dial
-      class="md-bottom-right"
-      md-direction="top"
-    >
-      <md-speed-dial-target class="md-primary b-primary">
-        <md-icon>my_location</md-icon>
-      </md-speed-dial-target>
-
-      <md-speed-dial-content>
-        <md-button class="md-icon-button b-danger">
-          <md-icon>directions</md-icon>
-        </md-button>
-
-        <md-button class="md-icon-button b-danger">
-          <md-icon>streetview</md-icon>
-        </md-button>
-      </md-speed-dial-content>
-    </md-speed-dial>
 
   </div>
 </template>

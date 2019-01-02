@@ -5,7 +5,7 @@
 
 <template>
   <div>
-    <top-header />
+    <top-header :isShow="false" />
     <div
       class="wrapper"
       :class="{ updateHeight: isCheck }"
