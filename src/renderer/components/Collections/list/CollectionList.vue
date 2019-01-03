@@ -33,9 +33,6 @@
             <label class="wh" v-else>
               <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
             </label>
-            <a v-if="playType === 'my-collection'">
-              <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button>
-            </a>
           </div>
         </el-col>
 
@@ -99,9 +96,6 @@
                         :data="selectedData" 
                         @is-success="saveCover"/>
 
-    <create-from :isOpen="isCreate" 
-                 @is-success="myCollectionSync" 
-                 @is-close="closeModal"/>
   </div>
 </template>
 
@@ -112,7 +106,6 @@ import MyQueryMixin from '@/components/Mixin/mycollection'
 import CoverChangeModal from '@/components/Collections/cover/CollectionCoverChange'
 import StoreMixin from '@/components/Mixin/index'
 import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import CreateFrom from '@/components/MyCollection/create/MyCollectionCreate'
 import Loading from '@/components/Loader/Loader'
 
 export default {
@@ -125,13 +118,11 @@ export default {
   components: {
     CoverChangeModal,
     SubPlayerBar,
-    CreateFrom,
     Loading
   },
   data () {
     return {
       isSub: false,
-      isCreate: false,
       load: false,
       playlists: [],
       data: null,
@@ -156,19 +147,6 @@ export default {
         this.isLogin = true
       }
       this.playType = this.$route.params.playType
-    },
-
-    collectionAdd () {
-      this.isCreate = true
-    },
-
-    myCollectionSync () {
-      this.isCreate = false
-      this.getMyCollectionList()
-    },
-
-    closeModal () {
-      this.isCreate = false
     },
 
     showRemove (data) {

@@ -1,9 +1,29 @@
 <template>
   <div class="titlebar">
-    <span class="logo">M e T u b e</span>
+
+    <!-- 제목 바 -->
+    <span class="notiButton">
+      <md-button
+        v-show="isMenu"
+        class="md-icon-button mdc-icon-button"
+        @click="showNavigation = true"
+      >
+        <md-icon>menu</md-icon>
+      </md-button>
+    </span>
+    <span class="logo" :class="{ noMenu: !isMenu }">M e t u b e</span>
     <span class="topButton">
-      <div class="minimize cursor" @click="minimize" style="margin-right: 5px;" title="minimize"></div>
-      <div class="close cursor" @click="close" title="exit"></div>
+      <div
+        class="minimize cursor"
+        @click="minimize"
+        style="margin-right: 5px;"
+        title="minimize"
+      ></div>
+      <div
+        class="close cursor"
+        @click="close"
+        title="exit"
+      ></div>
     </span>
 
     <!-- 유튜브 재생목록 링크 팝업 -->
@@ -14,17 +34,34 @@
       :clickToClose="false"
       :adaptive="true"
     >
-      <el-form ref="form" style="margin:5px;">
-        <el-form-item label="Youtbue Playlist" class="linkform">
-          <el-input v-model="linkForm" :autofocus="true" placeholder="Add a YouTube Playlist URL"/>
+      <el-form
+        ref="form"
+        style="margin:5px;"
+      >
+        <el-form-item
+          label="Youtbue Playlist"
+          class="linkform"
+        >
+          <el-input
+            v-model="linkForm"
+            :autofocus="true"
+            placeholder="Add a YouTube Playlist URL"
+          />
         </el-form-item>
         <el-form-item class="buttonform">
-          <el-button type="primary" size="small" @click="apply">Apply</el-button>
-          <el-button size="small" @click="closeModal">Close</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="apply"
+          >Apply</el-button>
+          <el-button
+            size="small"
+            @click="closeModal"
+          >Close</el-button>
         </el-form-item>
       </el-form>
     </modal>
-    
+
     <!-- fab -->
     <md-speed-dial
       v-if="isShow"
@@ -36,26 +73,95 @@
       </md-speed-dial-target>
 
       <md-speed-dial-content>
-        <md-button class="md-icon-button b-danger" title="PlayList Search" @click="showPageSearch">
+        <md-button
+          class="md-icon-button b-danger"
+          title="PlayList Search"
+          @click="showPageSearch"
+        >
           <md-icon>search</md-icon>
         </md-button>
-        <md-button class="md-icon-button b-success" title="Create Collection">
+        <md-button
+          v-show="isUser"
+          class="md-icon-button b-success"
+          title="Create Collection"
+          @click="isCreate = true"
+        >
           <md-icon>add</md-icon>
         </md-button>
       </md-speed-dial-content>
     </md-speed-dial>
-    
+
+    <!-- Side Menu -->
+    <md-drawer
+      :md-active.sync="showNavigation"
+      style="background: #242d40; width: 190px; z-index:300;"
+    >
+      <md-toolbar
+        class="md-transparent"
+        md-elevation="0"
+      >
+        <span
+          class="md-title"
+          v-if="isUser"
+        >
+          <md-avatar>
+            <img :src="profileData.googlePicture">
+          </md-avatar>
+          <div class="md-title">{{ profileData.googleName }}</div>
+        </span>
+        <span
+          class="md-title"
+          v-else
+        >
+          <md-avatar>
+            <img src="@/assets/logo.png">
+          </md-avatar>
+          <div class="md-title">
+            Wellcome
+          </div>
+        </span>
+      </md-toolbar>
+      <md-list>
+        <md-list-item style="border-top: 1px solid #171e2d;">
+          <md-icon>move_to_inbox</md-icon>
+          <span class="md-list-item-text">
+            <a
+              class="cursor"
+              @click="route('login')"
+            >Sign in</a>
+          </span>
+        </md-list-item>
+      </md-list>
+    </md-drawer>
+
+    <!-- 신규 컬렉션 등록 -->
+    <create-from
+      :isOpen="isCreate"
+      @is-success="myCollectionSync"
+      @is-close="closeCreateModal"
+    />
+
   </div>
 </template>
 
 <script>
 import * as query from 'querystring'
+import StoreMixin from "@/components/Mixin/index";
+import MyQueryMixin from "@/components/Mixin/mycollection";
+import CreateFrom from "@/components/MyCollection/create/MyCollectionCreate";
 
 export default {
   name: 'Header',
-  data () {
+  mixins: [StoreMixin, MyQueryMixin],
+  components: {
+    CreateFrom
+  },
+  data() {
     return {
       isCheck: false,
+      isCreate: false,
+      isUser: false,
+      profileData: '',
       playType: null,
       linkForm: null,
       showNavigation: false
@@ -65,29 +171,26 @@ export default {
     data: {
       type: Object
     },
+    isMenu: {
+      type: Boolean,
+      default: true
+    },
     isShow: {
       type: Boolean,
       default: true
     }
   },
-  mounted () {
+  mounted() {
+    this.isUser = this.getUserId()
+    if (this.isUser) {
+      this.profileData = this.getProfile();
+    }
     if (this.data) {
       this.playType = this.data.playType
     }
   },
   methods: {
-    topScroll () {
-      if (this.playType) {
-        this.$emit('scrollTop')
-      }
-    },
-    showPageSearch () {
-      this.$modal.show('input-focus-modal')
-    },
-    closeModal () {
-      this.$modal.hide('input-focus-modal')
-    },
-    apply () {
+    apply() {
       let parseURL
       let url = this.linkForm
       if (url) {
@@ -120,13 +223,40 @@ export default {
         this.errorDialog()
       }
     },
-    minimize () {
-      this.$ipcRenderer.send('button:minimize', null)
+    route(name) {
+      if (name === 'login') {
+        this.$router.push({
+          name: "login"
+        });
+      }
     },
-    close () {
+    close() {
       this.$ipcRenderer.send('button:close', null)
     },
-    errorDialog () {
+    closeModal() {
+      this.$modal.hide('input-focus-modal')
+    },
+    closeCreateModal(v) {
+      this.isCreate = v;
+    },
+    showPageSearch() {
+      this.$modal.show('input-focus-modal')
+    },
+    myCollectionSync() {
+      this.isCreate = false;
+      // 컬렉션 목록이나, 내 컬렉션 목록에서만 싱크 실행
+      if (this.$route.name === 'collection') {
+        /** @overide */
+        this.getMyCollection();
+      } else if(this.$route.name === 'COLLECTION-LIST') {
+        /** @overide */
+        this.getMyCollectionList()
+      }
+    },
+    minimize() {
+      this.$ipcRenderer.send('button:minimize', null)
+    },
+    errorDialog() {
       this.$modal.show('dialog', {
         title: 'Error',
         text: 'The URL you entered is invalid.',
@@ -143,7 +273,47 @@ export default {
 
 <style scoped>
 .logo {
+  padding-left: 20px !important;
+}
+
+.noMenu {
   padding-left: 50px !important;
+}
+
+.md-title {
+  display: inline-block;
+  max-width: 190px;
+  font-size: 12px;
+  margin-top: 8px !important;
+  margin-left: 15px !important;
+}
+
+.md-fab {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.md-speed-dial.md-bottom-left,
+.md-speed-dial.md-bottom-right {
+  position: absolute;
+  z-index: 1000;
+  bottom: 106px !important;
+}
+
+.md-list-item-text a:hover {
+  color: #28b1ff;
+}
+
+.mdc-icon-button {
+  width: 20px;
+  min-width: 20px;
+  height: 20px !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+.md-ripple {
+  border-radius: 0% !important;
 }
 
 .titlebar {

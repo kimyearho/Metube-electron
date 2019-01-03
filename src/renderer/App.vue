@@ -26,7 +26,7 @@
       <md-tab
         id="tab-posts"
         class="md-tab"
-        md-label="Sign"
+        md-label="History"
         @click="route('login')"
       ></md-tab>
       <md-tab
@@ -65,6 +65,11 @@ export default {
     };
   },
   created() {
+
+    if (process.env.NODE_ENV !== 'development') {
+      this.onNewReleaseCheck();
+    }
+
     // 비디오 상태 체크 이벤트 수신
     this.$eventBus.$off("statusCheck");
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);
@@ -81,7 +86,6 @@ export default {
         this.status.push(newVal);
       }
     );
-    this.onNewReleaseCheck();
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
@@ -303,18 +307,6 @@ export default {
 
 
 <style scope>
-.md-fab {
-  width: 50px !important;
-  height: 50px !important;
-}
-
-.md-speed-dial.md-bottom-left,
-.md-speed-dial.md-bottom-right {
-  position: absolute;
-  z-index: 1000;
-  bottom: 103px !important;
-}
-
 .md-ripple .md-button-content {
   padding-left: 5px;
 }

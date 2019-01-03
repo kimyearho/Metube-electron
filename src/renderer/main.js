@@ -52,8 +52,8 @@ import {
   MdAvatar,
   MdBadge,
   MdSpeedDial,
-  // MdDrawer,
-  // MdToolbar,
+  MdDrawer,
+  MdToolbar,
   MdIcon
 } from "vue-material/dist/components";
 import "vue-material/dist/vue-material.min.css";
@@ -76,10 +76,12 @@ Vue.use(VueClipboard);
 Vue.use(MdAvatar);
 Vue.use(MdButton);
 Vue.use(MdBadge);
+Vue.use(MdDrawer);
 Vue.use(MdList);
 Vue.use(MdImage);
 Vue.use(MdIcon);
 Vue.use(MdTabs);
+Vue.use(MdToolbar);
 Vue.use(MdSpeedDial)
 Vue.prototype.$http = axios;
 Vue.prototype.$moment = moment;
