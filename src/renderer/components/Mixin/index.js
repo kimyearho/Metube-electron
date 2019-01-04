@@ -57,6 +57,70 @@ export default {
     },
     getSnow () {
       return this.$store.getters.getSnow
+    },
+    getLog(message, data) {
+      if(process.env.NODE_ENV !== 'production') {
+        console.log(message, data)
+      }
+    },
+    insertVideoHistory(data) {
+
+
+      this.$local
+        .find({
+          selector: {
+            type: "profile",
+            userId: this.getUserId()
+          },
+          fields: ['_id', 'history']
+        }).then(result => {
+          let docs = result.docs[0]
+          if(docs) {
+            let item = this.$lodash.find(docs.history, { videoId: data.videoId })
+            if(!item) {
+              this.insertHistoryCallback(data)
+            } else {
+              this.getLog('exists item: ', item);
+            }
+          }
+        })
+      
+    },
+    insertHistoryCallback(data) {
+
+      let postData = {
+        videoId: data.videoId,
+        title: data.title,
+        isLive: data.isLive,
+        image: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
+        duration_code: data.duration_code,
+        duration_time: data.duration_time,
+        duration: data.duration,
+        creates: this.$moment().format('YYYYMMDDkkmmss'),
+        created: this.$moment().format('YYYY-MM-DD kk:mm:ss')
+      }
+
+      this.$local
+        .find({
+          selector: {
+            type: "profile",
+            userId: this.getUserId()
+          }
+        })
+        .then(result => {
+          let docs = result.docs[0]
+          if (docs) {
+            docs.history.push(postData)
+            this.$local.put(docs).then(res => {
+              if (res.ok) {
+                this.getLog('put success', null);
+              }
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 }

@@ -1,8 +1,12 @@
 export default {
   MAIN: {
+    HISTORY: {
+      INDEX: "List of recently viewed videos but, The same video will not be registered."
+    },
     MENU: {
       SEARCH: "Search",
       COLLECTION: "Collections",
+      HISTORY: "History",
       SIGN: "Sign",
       SETTING: "Setting"
     }

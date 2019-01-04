@@ -11,7 +11,10 @@
         <md-icon>menu</md-icon>
       </md-button>
     </span>
-    <span class="logo" :class="{ noMenu: !isMenu }">M e t u b e</span>
+    <span
+      class="logo"
+      :class="{ noMenu: !isMenu }"
+    >M e t u b e</span>
     <span class="topButton">
       <div
         class="minimize cursor"
@@ -39,7 +42,7 @@
         style="margin:5px;"
       >
         <el-form-item
-          label="Youtbue Playlist"
+          label="Search Playlist"
           class="linkform"
         >
           <el-input
@@ -246,11 +249,10 @@ export default {
       this.isCreate = false;
       // 컬렉션 목록이나, 내 컬렉션 목록에서만 싱크 실행
       if (this.$route.name === 'collection') {
+        this.$emit('my-sync')
+      } else if (this.$route.name === 'COLLECTION-LIST') {
         /** @overide */
-        this.getMyCollection();
-      } else if(this.$route.name === 'COLLECTION-LIST') {
-        /** @overide */
-        this.getMyCollectionList()
+        this.$emit('my-sync-list')
       }
     },
     minimize() {

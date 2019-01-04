@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <top-header />
+    <top-header @my-sync="getMyCollection" />
     <div class="wrapper">
       <!-- 비로그인 상태 -->
       <el-row v-if="!isLogin">

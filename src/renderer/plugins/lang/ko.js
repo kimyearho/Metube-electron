@@ -1,8 +1,12 @@
 export default {
   MAIN: {
+    HISTORY: {
+      INDEX: "최근 감상한 비디오 목록"
+    },
     MENU: {
       SEARCH: "Search",
       COLLECTION: "Collections",
+      HISTORY: "History",
       SIGN: "Sign",
       SETTING: "Setting"
     }

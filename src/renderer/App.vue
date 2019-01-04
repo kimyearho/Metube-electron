@@ -27,7 +27,7 @@
         id="tab-posts"
         class="md-tab"
         md-label="History"
-        @click="route('login')"
+        @click="route('history')"
       ></md-tab>
       <md-tab
         id="tab-favorites"
@@ -114,9 +114,9 @@ export default {
         this.$router.push({
           name: "collection"
         });
-      } else if (path == "login") {
+      } else if (path == "history") {
         this.$router.push({
-          name: "login"
+          name: "VIDEO-HISTORY"
         });
       } else if (path == "setting") {
         this.$router.push({
