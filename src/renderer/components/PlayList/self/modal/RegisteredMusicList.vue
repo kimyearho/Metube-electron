@@ -19,7 +19,10 @@
     >
       <div class="wrapper">
         <ul>
-          <li v-for="(item, index) in listData" :key="index">
+          <li
+            v-for="(item, index) in listData"
+            :key="index"
+          >
             <div>{{ item.title }}</div>
             <div class="selected">
               <el-button
@@ -48,13 +51,13 @@ export default {
     },
     data: Object
   },
-  data () {
+  data() {
     return {
       listData: []
     }
   },
   methods: {
-    addItem (listData) {
+    addItem(listData) {
       this.$local
         .find({
           selector: {
@@ -82,7 +85,7 @@ export default {
               title: this.data.title,
               duration: this.data.duration,
               duration_time: this.data.duration_time,
-              thumbnails: this.data.imageInfo,
+              thumbnails: this.data.imageInfo !== undefined ? this.data.imageInfo : this.data.image,
               creates: this.$moment().format('YYYYMMDDkkmmss'),
               created: this.$moment().format('YYYY-MM-DD kk:mm:ss')
             }
@@ -95,7 +98,7 @@ export default {
           }
         })
     },
-    getPlaylist () {
+    getPlaylist() {
       this.$local
         .find({
           selector: {
@@ -119,7 +122,7 @@ export default {
           }
         })
     },
-    closeModal () {
+    closeModal() {
       this.$emit('closeModal', false)
     }
   }

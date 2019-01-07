@@ -63,9 +63,10 @@ export default {
         console.log(message, data)
       }
     },
+    closeFab() {
+      this.$refs.fab.MdSpeedDial.active = false
+    },
     insertVideoHistory(data) {
-
-
       this.$local
         .find({
           selector: {
@@ -87,7 +88,6 @@ export default {
       
     },
     insertHistoryCallback(data) {
-
       let postData = {
         videoId: data.videoId,
         title: data.title,
@@ -113,13 +113,13 @@ export default {
             docs.history.push(postData)
             this.$local.put(docs).then(res => {
               if (res.ok) {
-                this.getLog('put success', null);
+                // this.getLog('put success', null);
               }
             })
           }
         })
         .catch(err => {
-          console.log(err);
+          this.getLog('[insertHistoryCallback] error => ', err);
         });
     }
   }

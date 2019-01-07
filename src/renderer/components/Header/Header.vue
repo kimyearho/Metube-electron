@@ -67,8 +67,10 @@
 
     <!-- fab -->
     <md-speed-dial
-      v-if="isShow"
+      v-if="isFab"
+      ref="fab"
       class="md-bottom-right"
+      md-event="click"
       md-direction="top"
     >
       <md-speed-dial-target class="md-primary b-primary">
@@ -87,7 +89,7 @@
           v-show="isUser"
           class="md-icon-button b-success"
           title="Create Collection"
-          @click="isCreate = true"
+          @click="showCreateMyCollection"
         >
           <md-icon>add</md-icon>
         </md-button>
@@ -163,6 +165,7 @@ export default {
     return {
       isCheck: false,
       isCreate: false,
+      isFab: true,
       isUser: false,
       profileData: '',
       playType: null,
@@ -183,6 +186,9 @@ export default {
       default: true
     }
   },
+  created() {
+    this.isFab = this.isShow
+  },
   mounted() {
     this.isUser = this.getUserId()
     if (this.isUser) {
@@ -190,6 +196,9 @@ export default {
     }
     if (this.data) {
       this.playType = this.data.playType
+    }
+    if (this.$route.name === 'collection' && !this.isUser) {
+      this.isFab = false
     }
   },
   methods: {
@@ -242,7 +251,14 @@ export default {
     closeCreateModal(v) {
       this.isCreate = v;
     },
+    showCreateMyCollection() {
+      /** @overaide fab 닫기  */
+      this.closeFab()
+      this.isCreate = true
+    },
     showPageSearch() {
+      /** @overaide fab 닫기  */
+      this.closeFab()
       this.$modal.show('input-focus-modal')
     },
     myCollectionSync() {

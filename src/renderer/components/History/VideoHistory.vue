@@ -24,6 +24,7 @@
       </el-row>
 
       <md-list
+        v-if="isLogin"
         id="list"
         class="historyList"
         :class="{ staticHeight: isMini }"
@@ -55,7 +56,22 @@
           <img src="@/assets/images/youtube/dev.png">
         </div>
       </md-list>
-
+      <el-row v-else>
+        <el-col>
+          <p class="notLogin">{{ $t('HISTORY.NO_LOGIN') }}</p>
+        </el-col>
+        <el-col
+          class="link"
+          style="margin-top:10px;"
+        >
+          <md-button
+            class="md-raised md-primary btn"
+            @click="signLink"
+          >
+            {{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}
+          </md-button>
+        </el-col>
+      </el-row>
     </div>
 
     <!-- 서브 플레이어 -->
@@ -107,6 +123,11 @@ export default {
             }
           }
         })
+    },
+    signLink() {
+      this.$router.push({
+        name: "login"
+      });
     }
   }
 }
@@ -118,27 +139,15 @@ export default {
   max-height: 455px;
   border-top: 1px solid rgba(23, 30, 45, 0.48);
 }
+.notLogin {
+  margin-top: 200px;
+}
 .staticHeight {
   max-height: 400px;
 }
-.historyList span.music-title:hover {
-  color: #28b1ff;
-}
-
-.historyList::-webkit-scrollbar {
-  width: 10px;
-}
-
-.historyList::-webkit-scrollbar-track {
-  background: #1d232f;
-}
-
-.historyList::-webkit-scrollbar-thumb {
-  background: #ffffff;
-}
-
-/* Handle on hover */
-.historyList::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.btn {
+  color: #ffffff;
+  background: #448aff;
+  width: 140px;
 }
 </style>

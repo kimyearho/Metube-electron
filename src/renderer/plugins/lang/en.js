@@ -59,7 +59,7 @@ export default {
     SIGN_OUT: "Sign out",
     NOTICE: "Notice",
     NO_LOGIN_NOTICE:
-      "When you sign in to MeTube, videos you watch on MeTube are synced to YouTube and you can manage your collection.",
+      "When you sign in to MeTube, videos you watch on MeTube can sync to YouTube and manage your collection. Sign in to use all other features in MeTube",
     YES_LOGIN_NOTICE:
       "Thank you for using MeTube. Users who are logged in can use the History and Collections functions"
   },
@@ -71,10 +71,14 @@ export default {
     NO_CHANNEL: "You do not have any Channel registered.",
     NO_PLAYLIST: "There are no playlists registered",
     REMOVE_ALBUM: "Are you sure you want to delete this collection?",
+    REMOVE_VIDEO: "Are you sure you want to delete the selected video ?",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "PLAY LIST",
       CHANNEL: "CHANNEL"
     }
+  },
+  HISTORY: {
+    NO_LOGIN: "Please try again after logging in"
   }
 };

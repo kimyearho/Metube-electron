@@ -209,7 +209,7 @@ export default {
      */
     feachData() {
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
-      var self = this;
+      let self = this;
       setTimeout(() => {
         let id = "#item" + self.$route.params.start;
         self.$scrollTo(id, -1, options);
@@ -390,6 +390,8 @@ export default {
         "loadVideoById",
         playingItem.videoId
       ]);
+
+      this.$store.commit('setPlayType', true)
       this.$eventBus.$emit("statusCheck");
 
       /** @overade 히스토리 등록 */
@@ -415,7 +417,7 @@ export default {
         setTimeout(() => {
           console.log("cancel Scroll");
           cancelScroll();
-        }, 3000);
+        }, 1500);
       }
     },
 

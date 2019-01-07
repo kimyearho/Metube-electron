@@ -11,7 +11,7 @@
     <div class="wrapper">
       <!-- 비로그인 상태 -->
       <el-row v-if="!isLogin">
-        <el-col class="infos">{{ $t('COLLECTION.NO_LOGIN') }}</el-col>
+        <el-col class="notLogin">{{ $t('COLLECTION.NO_LOGIN') }}</el-col>
         <el-col class="link">
           <md-button
             class="md-raised md-primary btn"

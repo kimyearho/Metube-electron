@@ -7,27 +7,53 @@
 
 <template>
   <div>
-    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
+    <el-dropdown
+      trigger="click"
+      @command="menuEvent"
+      style="padding-left:5px;"
+    >
       <a class="cursor">
-        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        <img
+          class="contextMenu"
+          src="@/assets/images/svg/context-menu.svg"
+        >
       </a>
-      <el-dropdown-menu slot="dropdown" v-if="videoId === data.videoId">
-        <el-dropdown-item class="bold" command="A1" :disabled="user === null">
+      <el-dropdown-menu
+        slot="dropdown"
+        v-if="videoId === data.videoId"
+      >
+        <el-dropdown-item
+          class="bold"
+          command="A1"
+          :disabled="user === null"
+        >
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A2" :disabled="user === null">
+        <!-- <el-dropdown-item class="bold" command="A2" :disabled="user === null">
           <i class="el-icon-share"></i> Social Share
-        </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A3" :disabled="user === null">
+        </el-dropdown-item> -->
+        <el-dropdown-item
+          class="bold"
+          command="A3"
+          :disabled="user === null"
+        >
           <i class="el-icon-star-on"></i> Link Copy
         </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A4" :disabled="user === null">
+        <el-dropdown-item
+          class="bold"
+          command="A4"
+          :disabled="user === null"
+        >
           <i class="el-icon-delete"></i> Remove
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
 
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
+    <social-share-modal
+      :isOpen="isShare"
+      :videoId="videoId"
+      @closeModal="closeModal"
+    />
   </div>
 </template>
 
@@ -69,7 +95,7 @@ export default {
         let link = `https://www.youtube.com/watch?v=${this.videoId}`;
         let self = this
         this.$copyText(link).then(
-          function(e) {
+          function (e) {
             self.$modal.show("dialog", {
               title: "Success",
               text: "😁 The link has been saved to the clipboard.",
@@ -80,7 +106,7 @@ export default {
               ]
             });
           },
-          function(e) {
+          function (e) {
             self.$modal.show("dialog", {
               title: "Error",
               text: "😥 Failed to copy link to clipboard.",
@@ -106,10 +132,10 @@ export default {
               ]
             });
           } else {
-            this.delete();
+            this.deleteDialog()
           }
         } else {
-          this.delete();
+          this.deleteDialog()
         }
       }
     },
@@ -120,6 +146,23 @@ export default {
           `https://www.youtube.com/watch?v=${this.videoId}`
         );
       }
+    },
+    deleteDialog() {
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: this.$t("COLLECTION.REMOVE_VIDEO"),
+        buttons: [
+          {
+            title: "Yes",
+            handler: () => {
+              this.delete();
+            }
+          },
+          {
+            title: "Close"
+          }
+        ]
+      });
     },
     delete() {
       this.$local

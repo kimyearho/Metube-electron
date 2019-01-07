@@ -205,6 +205,26 @@
   background-color: #ffffff;
 }
 
+.historyList span.music-title:hover {
+  color: #28b1ff;
+}
+
+.historyList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.historyList::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.historyList::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+/* Handle on hover */
+.historyList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition-property: opacity;

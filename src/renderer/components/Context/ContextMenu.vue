@@ -5,27 +5,55 @@
 
 <template>
   <div>
-    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
+    <el-dropdown
+      trigger="click"
+      @command="menuEvent"
+      style="padding-left:5px;"
+    >
       <a class="cursor">
-        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        <img
+          class="contextMenu"
+          src="@/assets/images/svg/context-menu.svg"
+        >
       </a>
-      <el-dropdown-menu slot="dropdown" v-show="videoId === data.videoId">
-        <el-dropdown-item class="bold" command="A1">
+      <el-dropdown-menu
+        slot="dropdown"
+        v-show="videoId === data.videoId"
+      >
+        <el-dropdown-item
+          class="bold"
+          command="A1"
+        >
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A2" :disabled="isCheck || isSign === null">
+        <el-dropdown-item
+          class="bold"
+          command="A2"
+          :disabled="isCheck || isSign === null"
+        >
           <i class="el-icon-plus"></i> Add to Collection
         </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A3">
+        <!-- <el-dropdown-item class="bold" command="A3">
           <i class="el-icon-share"></i> Social Share
-        </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A4">
+        </el-dropdown-item> -->
+        <el-dropdown-item
+          class="bold"
+          command="A4"
+        >
           <i class="el-icon-star-on"></i> Link Copy
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
+    <registered-music-list
+      :isOpen="registerOpen"
+      :data="data"
+      @closeModal="closeModal"
+    />
+    <social-share-modal
+      :isOpen="isShare"
+      :videoId="videoId"
+      @closeModal="closeModal"
+    />
   </div>
 </template>
 
@@ -44,7 +72,7 @@ export default {
     videoId: String,
     data: Object
   },
-  data () {
+  data() {
     return {
       registerOpen: false,
       isSign: null,
@@ -52,22 +80,22 @@ export default {
       isShare: false
     }
   },
-  mounted () {
+  mounted() {
     this.isSign = this.getUserId()
   },
   methods: {
-    menuEvent (ev) {
+    menuEvent(ev) {
       if (ev === 'A1') {
         this.watchYoutube()
-      } else if(ev === 'A2') {
+      } else if (ev === 'A2') {
         this.addCollection()
-      } else if(ev === 'A3') {
+      } else if (ev === 'A3') {
         this.isShare = true
       } else {
         let link = `https://www.youtube.com/watch?v=${this.videoId}`;
         let self = this
         this.$copyText(link).then(
-          function(e) {
+          function (e) {
             self.$modal.show("dialog", {
               title: "Success",
               text: "😁 The link has been saved to the clipboard.",
@@ -78,7 +106,7 @@ export default {
               ]
             });
           },
-          function(e) {
+          function (e) {
             self.$modal.show("dialog", {
               title: "Error",
               text: "😥 Failed to copy link to clipboard.",
@@ -92,7 +120,7 @@ export default {
         );
       }
     },
-    watchYoutube () {
+    watchYoutube() {
       if (this.videoId) {
         this.$ipcRenderer.send(
           'button:watchYoutubePopup',
@@ -100,10 +128,10 @@ export default {
         )
       }
     },
-    addCollection () {
+    addCollection() {
       this.registerOpen = true
     },
-    closeModal (is) {
+    closeModal(is) {
       this.registerOpen = is
       this.isShare = false
     }

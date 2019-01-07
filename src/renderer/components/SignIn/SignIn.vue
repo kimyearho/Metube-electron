@@ -42,7 +42,6 @@
             style="width: 120px;"
             @click="signin"
           >
-            <md-icon>touch_app</md-icon>
             {{ $t('SIGN.SIGN_IN') }}
           </md-button>
 
@@ -52,7 +51,6 @@
             style="width: 120px;"
             @click="signout"
           >
-            <md-icon>how_to_reg</md-icon>
             {{ $t('SIGN.SIGN_OUT') }}
           </md-button>
         </div>

@@ -7,9 +7,13 @@
 
 <template>
   <div id="app">
+
+    <!-- 루트 라우터 뷰 -->
     <transition name="fade">
       <router-view></router-view>
     </transition>
+
+    <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
       <md-tab
         id="tab-home"
@@ -65,13 +69,15 @@ export default {
     };
   },
   created() {
-
+    // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== 'development') {
       this.onNewReleaseCheck();
     }
 
-    // 비디오 상태 체크 이벤트 수신
+    // 비디오 상태 체크 이벤트 종료
     this.$eventBus.$off("statusCheck");
+
+    // 비디오 상태 체크 이벤트 수신
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);
 
     // 재생 플레이어 상태 체크 이벤트 수신
@@ -92,12 +98,12 @@ export default {
         // 재생 중
         this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
         this.$store.commit("setPlayType", false);
-        this.$eventBus.$emit("playerPause");
+        this.$eventBus.$emit("playTypeControl", { playType: false });
       } else {
         // 일시 정지
         this.$ipcRenderer.send("win2Player", ["playVideo"]);
         this.$store.commit("setPlayType", true);
-        this.$eventBus.$emit("playerPlay");
+        this.$eventBus.$emit("playTypeControl", { playType: true });
       }
     });
   },
@@ -137,10 +143,10 @@ export default {
       // 버퍼링 or 일시중지
       if (this.state === 2) {
         // 재생모양 아이콘으로 변경
-        this.$eventBus.$emit("playerPlay");
+        this.$eventBus.$emit("playTypeControl", { playType: false });
       } else if (this.state === 1) {
         // 일시정지 아이콘으로 변경 (현재 재생 중)
-        this.$eventBus.$emit("playerPause");
+        this.$eventBus.$emit("playTypeControl", { playType: true });
       } else if (this.state === 0) {
         // 종료일 경우
         // 재생중인 음악정보
@@ -278,8 +284,6 @@ export default {
           console.log("doc => ", doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
-          console.log("live => ", live_version);
-          console.log("local => ", local_version);
           // new version.
           if (live_version != local_version) {
             this.isCheck = true;

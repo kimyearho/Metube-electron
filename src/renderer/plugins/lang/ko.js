@@ -71,10 +71,14 @@ export default {
     NO_PLAYLIST: "등록된 재생목록이 없습니다. 재생목록을 등록하세요.",
     NO_CHANNEL: "등록된 채널이 없습니다. 채널을 등록하세요.",
     REMOVE_ALBUM: "이 앨범을 삭제 하시겠습니까?",
+    REMOVE_VIDEO: "선택한 비디오를 삭제 하시겠습니까?",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "재생 목록",
       CHANNEL: "채널"
     }
+  },
+  HISTORY: {
+    NO_LOGIN: "로그인 후 이용하실 수 있습니다."
   }
 };
