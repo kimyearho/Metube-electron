@@ -432,7 +432,7 @@ export default {
         setTimeout(() => {
           console.log("cancel Scroll2");
           cancelScroll();
-        }, 3000);
+        }, 1500);
       }
     },
 

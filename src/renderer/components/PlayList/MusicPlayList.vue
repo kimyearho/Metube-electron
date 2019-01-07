@@ -512,7 +512,7 @@ export default {
       let cancelScroll = this.$scrollTo("#item0", -1, options);
       setTimeout(() => {
         cancelScroll();
-      }, 3000);
+      }, 1500);
     },
 
     /**
@@ -530,7 +530,7 @@ export default {
       );
       setTimeout(() => {
         cancelScroll();
-      }, 3000);
+      }, 1500);
     },
 
     /**
