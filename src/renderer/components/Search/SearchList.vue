@@ -32,7 +32,7 @@
         size="mini"
         type="info"
         v-for="item in searchKeywords"
-        class="cursor tagSize"
+        class="cursor taginfo tagSize"
         @click="submit(item, 'tag')"
         :key="item"
       >{{ item }}</el-button>
@@ -489,5 +489,10 @@ export default {
   color: #ffffff;
   margin-left: 90px;
   padding: 0;
+}
+.taginfo {
+  overflow-x: hidden;
+  max-width: 220px;
+  text-overflow: ellipsis;
 }
 </style>

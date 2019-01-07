@@ -28,7 +28,11 @@ if (process.env.NODE_ENV != "development") {
 
 let playerPath;
 if (process.env.NODE_ENV === "development") {
-  playerPath = "http://localhost:7070";
+  if(process.platform !== 'darwin') {
+    playerPath = "http://localhost:7070";
+  } else {
+    playerPath = "http://sharepod.kr";    
+  }
 } else {
   playerPath = "http://sharepod.kr";
 }
@@ -67,7 +71,11 @@ function createWindow() {
       height: 280,
       title: "Player"
     });
-    player.setMenu(null);
+    if(process.platform !== 'darwin') {
+      player.setMenu(null);
+    } else {
+      app.dock.hide()
+    }
     player.loadURL(playerPath);
     player.on("close", e => {
       if (mainWindow) {
@@ -88,8 +96,10 @@ function createWindow() {
 // App start
 app.on("ready", () => {
   // local player server
-  if (process.env.NODE_ENV != "production") {
-    exec(".\\node_modules\\.bin\\http-server ./player -p 7070");
+  if (process.env.NODE_ENV !== "production") {
+    if(process.platform !== 'darwin') {
+      exec("./node_modules/.bin/http-server ./player -p 7070");
+    }
   }
   createWindow();
 });
