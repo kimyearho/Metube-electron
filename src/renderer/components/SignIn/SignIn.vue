@@ -101,10 +101,7 @@ export default {
     };
   },
   created() {
-    let musicInfo = this.getMusicInfos();
-    if (musicInfo) {
-      this.isMini = true;
-    }
+    this.isMini = this.getMusicInfos() ? true : false
     this.$ipcRenderer.on("render:googleAuth", (e, args) => {
       if (args.resultCode === 200) {
         this.$store.commit("setGoogleProfile", JSON.parse(args.body));

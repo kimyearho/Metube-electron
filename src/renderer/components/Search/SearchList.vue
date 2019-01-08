@@ -304,10 +304,7 @@ export default {
       this.$scrollTo("#item0", 0, options);
     },
     init(text) {
-      let musicInfo = this.getMusicInfos();
-      if (musicInfo) {
-        this.isMini = !this.isMini;
-      }
+      this.isMini = this.getMusicInfos() ? true : false
       let totalSearchList = this.getNextSearchList();
       if (this.$lodash.size(totalSearchList) === 0) {
         if (text === null) {

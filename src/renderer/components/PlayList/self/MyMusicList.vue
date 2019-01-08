@@ -240,10 +240,7 @@ export default {
     feachData() {
       this.playType = this.$route.params.playType;
       this.id = this.$route.params.id;
-      let musicInfo = this.getMusicInfos();
-      if (musicInfo) {
-        this.isMini = true;
-      }
+      this.isMini = this.getMusicInfos() ? true : false
       let user_id = this.getUserId();
       if (user_id) {
         this.$local
