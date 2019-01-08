@@ -79,7 +79,7 @@
 
       <md-speed-dial-content>
         <md-button
-          class="md-icon-button b-danger"
+          class="md-icon-button md-accent"
           title="PlayList Search"
           @click="showPageSearch"
         >
@@ -340,6 +340,7 @@ export default {
 .md-speed-dial.md-bottom-right {
   position: absolute;
   z-index: 1000;
+  padding-right: 3px;
   bottom: 106px !important;
 }
 
