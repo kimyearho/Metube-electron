@@ -14,7 +14,7 @@
     <span
       class="logo"
       :class="{ noMenu: !isMenu }"
-    >M e t u b e</span>
+    >{{ $t('MAIN.APP_NAME') }}</span>
     <span class="topButton">
       <div
         class="minimize cursor"
@@ -109,6 +109,25 @@
       </md-toolbar>
 
       <md-list>
+
+        <!-- Menu1 -->
+        <md-list-item @click="route('search')">
+          <md-icon>search</md-icon>
+          <span class="md-list-item-text">Search</span>
+        </md-list-item>
+
+        <!-- Menu1 -->
+        <md-list-item @click="route('collection')">
+          <md-icon>collections_bookmark</md-icon>
+          <span class="md-list-item-text">Collections</span>
+        </md-list-item>
+
+        <!-- Menu1 -->
+        <md-list-item @click="route('history')">
+          <md-icon>playlist_play</md-icon>
+          <span class="md-list-item-text">History</span>
+        </md-list-item>
+
         <!-- Menu1 -->
         <md-list-item @click="route('login')">
           <md-icon>vertical_align_bottom</md-icon>
@@ -120,6 +139,7 @@
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">Setting</span>
         </md-list-item>
+
       </md-list>
     </md-drawer>
 
@@ -220,12 +240,24 @@ export default {
       }
     },
     route(name) {
-      if (name === 'login') {
+
+      if (name == "search") {
+        this.$router.push({
+          name: "play-search"
+        });
+      } else if (name == "collection") {
+        this.$router.push({
+          name: "collection"
+        });
+      } else if (name == "history") {
+        this.$router.push({
+          name: "VIDEO-HISTORY"
+        });
+      } else if (name === 'login') {
         this.$router.push({
           name: "login"
         });
-      }
-      else if (name == "setting") {
+      } else if (name == "setting") {
         this.$router.push({
           name: "setting"
         });

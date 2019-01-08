@@ -1,5 +1,6 @@
 export default {
   MAIN: {
+    APP_NAME: "M e t u b e",
     HISTORY: {
       INDEX: "List of recently viewed videos but, The same video will not be registered."
     },

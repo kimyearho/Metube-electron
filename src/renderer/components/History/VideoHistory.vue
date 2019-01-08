@@ -101,6 +101,8 @@ export default {
     }
   },
   created() {
+    // menu event send
+    this.$eventBus.$emit('setActiveMenu', { menu: 'tabHistory' })
     this.isLogin = this.getUserId() ? true : false
     this.isMini = this.getMusicInfos() ? true : false
     this.getHistory()

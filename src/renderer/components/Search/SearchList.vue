@@ -201,6 +201,8 @@ export default {
     };
   },
   created() {
+    // menu event send
+    this.$eventBus.$emit('setActiveMenu', { menu: 'tabSearch' })
     this.searchText = this.getSearchKeyword();
     this.recommandTrack();
     this.init(this.searchText);

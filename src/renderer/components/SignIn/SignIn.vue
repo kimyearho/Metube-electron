@@ -9,7 +9,7 @@
   <div>
     <!-- 타이틀바 컴포넌트 -->
     <top-header
-      :isMenu="false"
+      :isMenu="true"
       :isShow="false"
       :data="{ playType: 'list' }"
     />
@@ -47,7 +47,7 @@
 
           <md-button
             v-else
-            class="cursor md-raised md-danger"
+            class="cursor md-raised md-accent"
             style="width: 120px;"
             @click="signout"
           >

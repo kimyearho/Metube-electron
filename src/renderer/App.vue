@@ -14,37 +14,28 @@
     </transition>
 
     <!-- 하단 네비게이션 -->
-    <md-tabs class="tab-navi">
+    <md-tabs
+      class="tab-navi"
+      :md-active-tab="isSelected"
+    >
       <md-tab
-        id="tab-home"
+        id="tabSearch"
         class="md-tab"
         md-label="Search"
         @click="route('search')"
       ></md-tab>
       <md-tab
-        id="tab-pages"
+        id="tabCollection"
         class="md-tab"
         md-label="Collections"
         @click="route('collection')"
       ></md-tab>
       <md-tab
-        id="tab-posts"
+        id="tabHistory"
         class="md-tab"
         md-label="History"
         @click="route('history')"
       ></md-tab>
-      <!-- <md-tab
-        id="tab-login"
-        class="md-tab"
-        md-label="Sign"
-        @click="route('login')"
-      ></md-tab>
-      <md-tab
-        id="tab-favorites"
-        class="md-tab"
-        md-label="Setting"
-        @click="route('setting')"
-      ></md-tab> -->
     </md-tabs>
     <span
       v-show="isCheck"
@@ -69,6 +60,7 @@ export default {
       isShow: false,
       isSpinShow: false,
       isCheck: false,
+      isSelected: 'tabSearch',
       state: "",
       status: []
     };
@@ -87,6 +79,9 @@ export default {
 
     // 재생 플레이어 상태 체크 이벤트 수신
     this.$eventBus.$on("playerState", this.playerStatusCheck);
+
+    // 현재 텝 이벤트 수신
+    this.$eventBus.$on('setActiveMenu', this.setActiveMenu)
   },
   mounted() {
     this.$watch(
@@ -130,6 +125,10 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
+    },
+
+    setActiveMenu(data) {
+      this.$set(this, "isSelected", data.menu)
     },
 
     clickItem(idx) {

@@ -1,5 +1,6 @@
 export default {
   MAIN: {
+    APP_NAME: "M e t u b e",
     HISTORY: {
       INDEX: "최근 감상한 비디오 목록"
     },
