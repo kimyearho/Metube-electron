@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, shell } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, shell } from "electron";
 import { googleLogin, getOauth2Client } from "../auth/auth";
 import { exec } from "child_process";
 import request from "request";
@@ -9,6 +9,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 let player;
 let mainWindow;
 let popupWindow;
+let willQuitApp = false
 const winURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080`
@@ -74,25 +75,43 @@ function createWindow() {
     if(process.platform !== 'darwin') {
       player.setMenu(null);
     } else {
-      app.dock.hide()
+      player.setMenu(null);
+      //app.dock.hide()
     }
     player.loadURL(playerPath);
     player.on("close", e => {
-      if (mainWindow) {
+      if (!willQuitApp) {
+        dialog.showErrorBox('Oops! 🤕', 'Sorry, player window cannot be closed. You can only minimize it.');
         e.preventDefault();
       }
     });
   });
 
   mainWindow.on("close", e => {
-    if (process.platform != "darwin") {
-      exec("taskkill /f /im MeTube.exe");
+    if (willQuitApp) {
+      // the user tried to quit the app
+      player = null;
+      mainWindow = null;
     } else {
-      mainWindow.hide();
+      // the user only tried to close the win
+      if (process.platform !== "darwin") {
+        exec("taskkill /f /im MeTube.exe");
+      } else {
+        e.preventDefault();
+        mainWindow.hide();
+      }
     }
   });
+
+  mainWindow.on('restore', (e) => {
+    e.preventDefault();
+    mainWindow.show();
+  });
+
 }
 
+app.on("activate", () => {mainWindow.show()});
+app.on('before-quit', () => { willQuitApp = true; });
 // App start
 app.on("ready", () => {
   // local player server
@@ -108,16 +127,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-});
-
-app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
-
-app.on("browser-window-created", (e, window) => {
-  window.setMenu(null);
 });
 
 // Google Auth Youtube API Get AccessToken
@@ -167,6 +176,8 @@ ipcMain.on("event:social", (e, args) => {
 ipcMain.on("button:close", () => {
   if (process.platform !== "darwin") {
     exec("taskkill /f /im MeTube.exe");
+    app.quit();
+  } else {
     app.quit();
   }
 });
