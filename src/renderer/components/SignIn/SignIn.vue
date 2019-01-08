@@ -38,7 +38,7 @@
         >
           <md-button
             v-if="!isSignin"
-            class="cursor md-raised b-primary"
+            class="cursor md-raised md-primary"
             style="width: 120px;"
             @click="signin"
           >
@@ -47,7 +47,7 @@
 
           <md-button
             v-else
-            class="cursor md-raised b-danger"
+            class="cursor md-raised md-danger"
             style="width: 120px;"
             @click="signout"
           >

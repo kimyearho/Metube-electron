@@ -103,38 +103,22 @@
     >
       <md-toolbar
         class="md-transparent"
-        md-elevation="0"
+        style="background: #03A9F4"
       >
-        <span
-          class="md-title"
-          v-if="isUser"
-        >
-          <md-avatar>
-            <img :src="profileData.googlePicture">
-          </md-avatar>
-          <div class="md-title">{{ profileData.googleName }}</div>
-        </span>
-        <span
-          class="md-title"
-          v-else
-        >
-          <md-avatar>
-            <img src="@/assets/logo.png">
-          </md-avatar>
-          <div class="md-title">
-            Wellcome
-          </div>
-        </span>
+        <span class="md-title"></span>
       </md-toolbar>
+
       <md-list>
-        <md-list-item style="border-top: 1px solid #171e2d;">
-          <md-icon>move_to_inbox</md-icon>
-          <span class="md-list-item-text">
-            <a
-              class="cursor"
-              @click="route('login')"
-            >Sign in</a>
-          </span>
+        <!-- Menu1 -->
+        <md-list-item @click="route('login')">
+          <md-icon>vertical_align_bottom</md-icon>
+          <span class="md-list-item-text">Sign in</span>
+        </md-list-item>
+
+        <!-- Menu2 -->
+        <md-list-item @click="route('setting')">
+          <md-icon>settings</md-icon>
+          <span class="md-list-item-text">Setting</span>
         </md-list-item>
       </md-list>
     </md-drawer>
@@ -241,6 +225,11 @@ export default {
           name: "login"
         });
       }
+      else if (name == "setting") {
+        this.$router.push({
+          name: "setting"
+        });
+      }
     },
     close() {
       this.$ipcRenderer.send('button:close', null)
@@ -298,6 +287,10 @@ export default {
   padding-left: 50px !important;
 }
 
+.md-icon.md-theme-default.md-icon-font {
+  color: #ffffff !important;
+}
+
 .md-title {
   display: inline-block;
   max-width: 190px;
@@ -318,7 +311,10 @@ export default {
   bottom: 106px !important;
 }
 
-.md-list-item-text a:hover {
+.md-list-item-text {
+  color: #ffffff;
+}
+.md-list-item-text:hover {
   color: #28b1ff;
 }
 

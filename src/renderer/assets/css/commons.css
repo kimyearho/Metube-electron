@@ -5,19 +5,9 @@
 
 /* =========================== Button Color =========================== */
 
-.b-primary {
-  color: #ffffff;
-  background: #448aff !important;
-}
-
 .b-success {
   color: #ffffff;
   background: #67c23a !important;
-}
-
-.b-danger {
-  color: #ffffff;
-  background: #ff5252 !important;
 }
 
 .loadMoreCenter a:hover {

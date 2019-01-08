@@ -33,12 +33,18 @@
         md-label="History"
         @click="route('history')"
       ></md-tab>
+      <!-- <md-tab
+        id="tab-login"
+        class="md-tab"
+        md-label="Sign"
+        @click="route('login')"
+      ></md-tab>
       <md-tab
         id="tab-favorites"
         class="md-tab"
         md-label="Setting"
         @click="route('setting')"
-      ></md-tab>
+      ></md-tab> -->
     </md-tabs>
     <span
       v-show="isCheck"
@@ -49,7 +55,6 @@
       :height="300"
       :clickToClose="false"
     />
-
   </div>
 </template>
 
@@ -123,10 +128,6 @@ export default {
       } else if (path == "history") {
         this.$router.push({
           name: "VIDEO-HISTORY"
-        });
-      } else if (path == "setting") {
-        this.$router.push({
-          name: "setting"
         });
       }
     },
@@ -348,12 +349,13 @@ i {
 .md-tabs-navigation .md-button {
   float: left;
   display: block;
+  width: 100%;
   color: #f2f2f2 !important;
   text-align: center;
   padding: 15px 19.4px;
   text-decoration: none;
   height: 42px !important;
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 700;
 }
 
