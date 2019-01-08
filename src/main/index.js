@@ -117,7 +117,7 @@ app.on("ready", () => {
   // local player server
   if (process.env.NODE_ENV !== "production") {
     if(process.platform !== 'darwin') {
-      exec("./node_modules/.bin/http-server ./player -p 7070");
+      exec(".\\node_modules\\.bin\\http-server ./player -p 7070");
     }
   }
   createWindow();

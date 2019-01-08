@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 html {
-  background: #242d40;
+  background: #242d40 !important;
   font-family: "sans-serif", sans-serif;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 /* Place the navbar at the bottom of the page, and make it stick */
 .navbar {
-  background-color: #171e2d;
+  background-color: #171e2d !important;
   border-top: 1px solid #1b1b1b;
   overflow: hidden;
   position: fixed;

@@ -328,7 +328,7 @@ i {
 }
 
 .tab-navi {
-  background-color: #1d232f;
+  background-color: #1d232f !important;
   border-top: 1px solid #000000;
   overflow: hidden;
   position: fixed;
@@ -341,10 +341,14 @@ i {
   border-bottom: 1px solid #171e2d;
 }
 
+.md-tabs-navigation {
+  background-color: #1d232f !important;
+}
+
 .md-tabs-navigation .md-button {
   float: left;
   display: block;
-  color: #f2f2f2;
+  color: #f2f2f2 !important;
   text-align: center;
   padding: 15px 19.4px;
   text-decoration: none;
