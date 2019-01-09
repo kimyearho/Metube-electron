@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "author": "kstory8715 <kstory8715@gmail.com>",
   "description": "An electron-vue project",
-  "license": "GPL3.0",
+  "license": "GPL-3.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",

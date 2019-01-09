@@ -34,10 +34,6 @@
         @click="route('history')"
       ></md-tab>
     </md-tabs>
-    <span
-      v-show="isCheck"
-      class="badge"
-    ></span>
     <v-dialog
       :width="300"
       :height="300"
@@ -56,7 +52,6 @@ export default {
     return {
       isShow: false,
       isSpinShow: false,
-      isCheck: false,
       state: "",
       status: []
     };
@@ -66,6 +61,8 @@ export default {
     if (process.env.NODE_ENV !== 'development') {
       this.onNewReleaseCheck();
     }
+
+    this.onNewReleaseCheck();
 
     // 비디오 상태 체크 이벤트 종료
     this.$eventBus.$off("statusCheck");
@@ -120,13 +117,6 @@ export default {
       }
     },
 
-    clickItem(idx) {
-      console.log('idx: ' + idx)
-    },
-    clickMainBtn() {
-      console.log('clickMainBtn')
-    },
-
     playerStatusCheck(value) {
       this.state = value;
       // 버퍼링 or 일시중지
@@ -141,7 +131,6 @@ export default {
         // 재생중인 음악정보
         let musicData = this.getMusicInfos();
         let isRepeat = this.getRepeat();
-
         // 반복여부
         if (isRepeat) {
           this.$ipcRenderer.send("win2Player", [
@@ -270,29 +259,30 @@ export default {
       this.$db
         .get("adfe10ffbd1f206762f478326800a5b6")
         .then(doc => {
-          console.log("doc => ", doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
-          // new version.
           if (live_version != local_version) {
-            this.isCheck = true;
-            this.$store.commit("setVersionCheck", true);
+            this.$modal.show("dialog", {
+              title: "Info",
+              text: this.$t("SETTING.NEW_RELEASE"),
+              buttons: [
+                {
+                  title: "Yes",
+                  handler: () => {
+                    this.$ipcRenderer.send('showGit', null)
+                    this.$modal.hide("dialog")
+                  }
+                },
+                {
+                  title: "Close"
+                }
+              ]
+            });
           }
         })
         .catch(err => {
           console.log(err);
         });
-    },
-    test() {
-      this.$modal.show("dialog", {
-        title: "알림",
-        text: "Development in progress ...",
-        buttons: [
-          {
-            title: "Close"
-          }
-        ]
-      });
     }
   }
 };

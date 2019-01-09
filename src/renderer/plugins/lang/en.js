@@ -46,7 +46,7 @@ export default {
     LOCALE: "Set the client language.",
     RELEASE: "The current client is the latest version.",
     NEW_RELEASE:
-      "There is a new version. Download from the repository and install.",
+      "New version released. Would you like to download it? (This message will only show now and will show up when you restart the app)",
     MENU: {
       PLAYER_HIDE: "PLAYER HIDE",
       ALWAYS_TOP: "ALWAYS TOP",
