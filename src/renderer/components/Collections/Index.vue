@@ -349,9 +349,6 @@ export default {
     };
   },
   created() {
-    // menu event send
-    this.$eventBus.$emit('setActiveMenu', { menu: 'tabCollection' })
-
     // login user
     this.isLogin = this.getUserId() ? true : false
 

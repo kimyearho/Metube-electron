@@ -14,10 +14,7 @@
     </transition>
 
     <!-- 하단 네비게이션 -->
-    <md-tabs
-      class="tab-navi"
-      :md-active-tab="isSelected"
-    >
+    <md-tabs class="tab-navi">
       <md-tab
         id="tabSearch"
         class="md-tab"
@@ -60,7 +57,6 @@ export default {
       isShow: false,
       isSpinShow: false,
       isCheck: false,
-      isSelected: 'tabSearch',
       state: "",
       status: []
     };
@@ -79,9 +75,6 @@ export default {
 
     // 재생 플레이어 상태 체크 이벤트 수신
     this.$eventBus.$on("playerState", this.playerStatusCheck);
-
-    // 현재 텝 이벤트 수신
-    this.$eventBus.$on('setActiveMenu', this.setActiveMenu)
   },
   mounted() {
     this.$watch(
@@ -125,10 +118,6 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
-    },
-
-    setActiveMenu(data) {
-      this.$set(this, "isSelected", data.menu)
     },
 
     clickItem(idx) {
@@ -311,14 +300,6 @@ export default {
 
 
 <style scope>
-.md-ripple .md-button-content {
-  padding-left: 5px;
-}
-
-i {
-  padding-right: 5px;
-}
-
 .position {
   position: absolute;
   bottom: 29px;
@@ -328,9 +309,7 @@ i {
 }
 
 .tab-navi {
-  background-color: #1d232f !important;
   border-top: 1px solid #000000;
-  overflow: hidden;
   position: fixed;
   bottom: 0px;
   width: 100%;
@@ -356,29 +335,5 @@ i {
   height: 42px !important;
   font-size: 11px !important;
   font-weight: 700;
-}
-
-/* .md-active {
-  color: #000000 !important;
-  background: #ffffff !important;
-} */
-
-.badge {
-  width: 10px;
-  height: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 13px;
-  bottom: 27px;
-  background: #f94848;
-  border-radius: 100%;
-  color: #fff;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 600;
-  letter-spacing: -0.05em;
-  z-index: 10000;
 }
 </style>

@@ -156,6 +156,7 @@ export default {
             title: "Yes",
             handler: () => {
               this.delete();
+              this.$modal.hide("dialog")
             }
           },
           {
@@ -204,6 +205,7 @@ export default {
                     let playIndex = musicInfos.index;
                     if (playIndex > this.index) {
                       musicInfos.index = this.index;
+
                       // // 재생정보 세팅
                       this.$store.commit("setPlayingMusicInfo", musicInfos);
 

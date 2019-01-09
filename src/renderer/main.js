@@ -73,8 +73,8 @@ import {
   MdSwitch
 } from "vue-material/dist/components";
 import "vue-material/dist/vue-material.min.css";
-import "vue-material/dist/theme/default.css";
 
+import "./assets/css/default.css";
 import "./assets/css/zaudio-1.css";
 import "./assets/css/commons.css";
 import "./assets/css/playlist.css";

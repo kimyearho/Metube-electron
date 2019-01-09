@@ -52,7 +52,10 @@
             :data="item"
           />
         </md-list-item>
-        <div class="bottom">
+        <div
+          class="bottom"
+          v-if="playlist.length > 0"
+        >
           <img src="@/assets/images/youtube/dev.png">
         </div>
       </md-list>
@@ -101,8 +104,6 @@ export default {
     }
   },
   created() {
-    // menu event send
-    this.$eventBus.$emit('setActiveMenu', { menu: 'tabHistory' })
     this.isLogin = this.getUserId() ? true : false
     this.isMini = this.getMusicInfos() ? true : false
     this.getHistory()
