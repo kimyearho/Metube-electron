@@ -6,7 +6,10 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header @reloadMusicList="feachData" />
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
@@ -38,7 +41,7 @@
             <a
               class="cursor"
               title="Collection edit"
-              style="margin-right:10px;"
+              style="margin-right:10px; color:#fff;"
               @click="collectionEdit"
             >
               <font-awesome-icon
@@ -49,6 +52,7 @@
             <a
               class="cursor"
               title="Cover change"
+              style="color:#fff;"
               @click="collectionCoverChange"
             >
               <font-awesome-icon
