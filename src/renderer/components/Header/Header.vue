@@ -340,7 +340,8 @@ export default {
 .md-speed-dial.md-bottom-right {
   position: absolute;
   z-index: 1000;
-  padding-right: 3px;
+  padding-right: 1px;
+  padding-bottom: 40px;
   bottom: 106px !important;
 }
 

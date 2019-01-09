@@ -10,7 +10,6 @@
     <!-- 타이틀바 컴포넌트 -->
     <top-header
       :data="{ playType: 'list' }"
-      :isShow="false"
       @scrollTop="endScrollTop"
     />
 
