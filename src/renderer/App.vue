@@ -62,8 +62,6 @@ export default {
       this.onNewReleaseCheck();
     }
 
-    this.onNewReleaseCheck();
-
     // 비디오 상태 체크 이벤트 종료
     this.$eventBus.$off("statusCheck");
 

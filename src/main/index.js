@@ -72,12 +72,7 @@ function createWindow() {
       height: 280,
       title: "Player"
     });
-    if(process.platform !== 'darwin') {
-      player.setMenu(null);
-    } else {
-      player.setMenu(null);
-      //app.dock.hide()
-    }
+    player.setMenu(null);
     player.loadURL(playerPath);
     player.on("close", e => {
       if (!willQuitApp) {
