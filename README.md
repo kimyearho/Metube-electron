@@ -4,7 +4,6 @@
   <img src="https://i.imgur.com/4TF9sR3.png" />
   <img src="https://i.imgur.com/dz31Wvy.png" />
 </p>
-***
 
 <p align="center">
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
