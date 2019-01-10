@@ -8,15 +8,29 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :data="{ playType: 'list' }" :isShow="false" @scrollTop="endScrollTop"/>
+    <top-header
+      :isShow="false"
+      :data="{ playType: 'list' }"
+      @scrollTop="endScrollTop"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="route">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="route"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -27,7 +41,10 @@
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -58,7 +75,10 @@
     </div>
     <div class="overay"></div>
 
-    <md-list id="list" class="musicPlayList">
+    <md-list
+      id="list"
+      class="musicPlayList"
+    >
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in playlist"
@@ -69,21 +89,42 @@
           <img :src="item.imageInfo">
         </md-avatar>
 
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
-        <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          v-if="item.videoId && item.isLive != 'live'"
+          class="label_video"
+        >{{ item.duration }}</span>
+        <span
+          v-if="item.videoId && item.isLive == 'live'"
+          class="label_live"
+        >LIVE</span>
 
         <!-- 확장메뉴 -->
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <context-menu
+          :videoId="item.videoId"
+          :data="item"
+        />
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
+        <span
+          v-if="!isMore"
+          class="loadMoreCenter"
+        >
+          <a
+            class="cursor"
+            @click="nextPageLoad"
+          >
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+        <span
+          v-else
+          class="loadMoreCenter loadMoreLoading"
+        >LOADING ...</span>
       </md-list-item>
       <md-list-item v-else>
         <span class="playlistEnd">
@@ -104,10 +145,14 @@
     />
 
     <!-- 로딩 컴포넌트 -->
-    <loading v-show="!load"/>
+    <loading v-show="!load" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -236,11 +281,12 @@ export default {
      * 인스턴스 초기화 시 조회되는 재생목록
      */
     feachData() {
+
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
       setTimeout(() => {
         let id = "#item" + this.$route.params.start;
         this.$scrollTo(id, -1, options);
-      }, 450);
+      }, 350);
 
       let playlistName = null;
       let playlistId = this.$route.params.id;
@@ -448,8 +494,12 @@ export default {
       let videoId = playingItem.videoId;
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$eventBus.$emit("playMusicSetting");
-      this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
       this.$eventBus.$emit("statusCheck");
+      this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
+
+      /** @overade 히스토리 등록 */
+      this.insertVideoHistory(playingItem)
+
       this.load = true;
     },
 
@@ -462,7 +512,7 @@ export default {
       let cancelScroll = this.$scrollTo("#item0", -1, options);
       setTimeout(() => {
         cancelScroll();
-      }, 3000);
+      }, 1500);
     },
 
     /**
@@ -480,7 +530,7 @@ export default {
       );
       setTimeout(() => {
         cancelScroll();
-      }, 3000);
+      }, 1500);
     },
 
     /**
@@ -683,6 +733,6 @@ export default {
 <style scope>
 .loadMoreCenter {
   color: #ffffff;
-  margin-left: 100px;
+  margin-left: 110px;
 }
 </style>

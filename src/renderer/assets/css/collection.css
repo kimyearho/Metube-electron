@@ -122,7 +122,7 @@
 }
 
 .el-row::-webkit-scrollbar-track {
-  background-color: #000000;
+  background-color: #1d232f;
 }
 
 .el-row::-webkit-scrollbar-thumb {
@@ -140,9 +140,9 @@
   padding-left: 5px;
 }
 
-.el-scorll {
+.el-scroll {
   overflow-y: scroll;
-  height: 450px;
+  height: 460px;
 }
 
 .header {
@@ -155,11 +155,12 @@
   margin-top: 10px;
 }
 
-.infos {
+.notLogin {
   color: #ffffff;
-  font-weight: 700;
   text-align: center;
-  margin-top: 190px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 200px;
 }
 
 .link {

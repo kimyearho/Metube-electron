@@ -5,22 +5,19 @@
 
 <template>
   <div>
-    <top-header />
-    <div class="wrapper" :class="{ updateHeight: isCheck }">
+    <top-header :isShow="false" />
+    <div
+      class="wrapper"
+      :class="{ updateHeight: isCheck }"
+    >
       <form>
         <div class="menu1">
           <label class="wh">
             <strong v-html="$tc('SETTING.MENU.PLAYER_HIDE')"></strong>
           </label>
-          <toggle-button
+          <md-switch
             v-model="state"
-            :width="60"
-            :height="20"
-            :sync="true"
-            style="float:right;"
-            color="#82C7EB"
-            :labels="{checked: 'On', unchecked: 'Off'}"
-            @change="onChangeEventPlayerHide"
+            class="switchStyle"
           />
         </div>
         <div class="menu1_tip">
@@ -30,37 +27,13 @@
           <label class="wh">
             <strong>{{ $t('SETTING.MENU.ALWAYS_TOP') }}</strong>
           </label>
-          <toggle-button
-            v-model="top_state"
-            :width="60"
-            :height="20"
-            :sync="true"
-            style="float:right;"
-            color="#82C7EB"
-            :labels="{checked: 'On', unchecked: 'Off'}"
-            @change="onChangeEventTop"
+          <md-switch
+            v-model="topState"
+            class="switchStyle md-primary"
           />
         </div>
         <div class="menu1_tip">
           <strong class="tr">{{ $t('SETTING.ALWAYS_TOP') }}</strong>
-        </div>
-        <div class="menu1">
-          <label class="wh">
-            <strong>Snow</strong>
-          </label>
-          <toggle-button
-            v-model="snow_state"
-            :width="60"
-            :height="20"
-            :sync="true"
-            style="float:right;"
-            color="#82C7EB"
-            :labels="{checked: 'On', unchecked: 'Off'}"
-            @change="onChangeEventSnow"
-          />
-        </div>
-        <div class="menu1_tip">
-          <strong class="tr">Snow theme for winter</strong>
         </div>
         <div class="menu1">
           <label class="wh">
@@ -98,28 +71,6 @@
             <br>
           </strong>
         </div>
-        <div class="menu1">
-          <label class="wh">
-            <strong>{{ $t('SETTING.MENU.RELEASE') }}</strong>
-          </label>
-        </div>
-        <div class="menu1_tip">
-          <strong
-            class="tr"
-            :class="{ gr: isCheck }"
-          >{{ releaseMessage }}</strong>
-          <div
-            style="margin-top: 10px;"
-            v-if="isCheck"
-          >
-            <el-button
-              type="primary"
-              icon="el-icon-download"
-              size="mini"
-              @click="openGit"
-            >Download</el-button>
-          </div>
-        </div>
       </form>
     </div>
     <sub-player-bar
@@ -142,12 +93,12 @@ export default {
   data() {
     return {
       state: false,
-      top_state: false,
+      topState: false,
       selected: false,
-      snow_state: false,
       isMini: false,
       isCheck: false,
       locale: null,
+      novalue: null,
       localeOptions: [
         {
           value: 'en',
@@ -162,72 +113,41 @@ export default {
     }
   },
   created() {
+    this.isMini = this.getMusicInfos() ? true : false
+
     // 플레이어 숨김 상태 옵션
     this.state = this.getState()
 
     // 항상 위 상태 옵션
-    this.top_state = this.getAlwaysTop()
+    this.topState = this.getAlwaysTop()
 
     // 언어 설정 옵션
     this.locale = this.getLocale()
 
     // 버전 체크
     this.isCheck = this.getVersionCheck()
-
-    this.snow_state = this.getSnow()
-
-    if (this.isCheck) {
-      this.releaseMessage = this.$t('SETTING.NEW_RELEASE')
-    } else {
-      this.releaseMessage = this.$t('SETTING.RELEASE')
-    }
-    let musicInfo = this.getMusicInfos()
-    if (musicInfo) {
-      this.isMini = true
-    }
   },
   watch: {
     locale(v) {
       this.$store.commit('setLocale', v)
       this.$i18n.locale = v
-      // this.releaseMessage = this.$t("SETTING.RELEASE");
+    },
+    state(v) {
+      this.$store.commit('setPlayerHideOption', v)
+      this.$ipcRenderer.send('isPlayer', v)
+    },
+    topState(v) {
+      this.$store.commit('setAlwaysTopOption', v)
+      this.$ipcRenderer.send('option:alwaystop', v)
     }
   },
   methods: {
     openGit() {
       this.$ipcRenderer.send('showGit', {})
     },
-    onChangeEventPlayerHide(event) {
-      if (event.value) {
-        this.$store.commit('setPlayerHideOption', true)
-        this.$ipcRenderer.send('isPlayer', true)
-      } else {
-        this.$store.commit('setPlayerHideOption', false)
-        this.$ipcRenderer.send('isPlayer', false)
-      }
-    },
-    onChangeEventTop(event) {
-      if (event.value) {
-        this.$store.commit('setAlwaysTopOption', true)
-        this.$ipcRenderer.send('option:alwaystop', true)
-      } else {
-        this.$store.commit('setAlwaysTopOption', false)
-        this.$ipcRenderer.send('option:alwaystop', false)
-      }
-    },
-    onChangeEventSnow(event) {
-      this.$eventBus.$emit('test')
-      if (event.value) {
-        this.$eventBus.$emit('showSnow', true)
-        this.$store.commit('setSnow', true)
-      } else {
-        this.$eventBus.$emit('showSnow', false)
-        this.$store.commit('setSnow', false)
-      }
-    },
     onNewReleaseCheck() {
       if (this.isCheck) {
-        this.releaseMessage = this.$t('SETTING.NEW_RELEASE')
+
       }
     }
   }
@@ -248,6 +168,11 @@ export default {
 .header {
   margin-left: 10px;
   margin-bottom: 30px;
+}
+
+.switchStyle {
+  float: right;
+  margin: 0;
 }
 
 .menuName {

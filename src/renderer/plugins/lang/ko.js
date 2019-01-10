@@ -1,8 +1,13 @@
 export default {
   MAIN: {
+    APP_NAME: "M e t u b e",
+    HISTORY: {
+      INDEX: "최근 감상한 비디오 목록"
+    },
     MENU: {
       SEARCH: "Search",
       COLLECTION: "Collections",
+      HISTORY: "History",
       SIGN: "Sign",
       SETTING: "Setting"
     }
@@ -41,7 +46,7 @@ export default {
     LOCALE: "클라이언트 언어를 설정합니다.",
     RELEASE: "현재 클라이언트는 최신 버전 입니다.",
     NEW_RELEASE:
-      "새 버전이 확인 되었습니다. 저장소에서 새 버전을 다운로드 받아주세요.",
+      "새 버전이 출시되었습니다. 다운로드 하시겠습니까? (이 메시지는 지금 만 표시되며 앱을 다시 시작하면 표시됩니다.)",
     MENU: {
       PLAYER_HIDE: "플레이어 숨김",
       ALWAYS_TOP: "항상 위",
@@ -67,10 +72,15 @@ export default {
     NO_PLAYLIST: "등록된 재생목록이 없습니다. 재생목록을 등록하세요.",
     NO_CHANNEL: "등록된 채널이 없습니다. 채널을 등록하세요.",
     REMOVE_ALBUM: "이 앨범을 삭제 하시겠습니까?",
+    REMOVE_VIDEO: "선택한 비디오를 삭제 하시겠습니까?",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "재생 목록",
       CHANNEL: "채널"
-    }
+    },
+    ADD_VIDEO_LABEL: "추가"
+  },
+  HISTORY: {
+    NO_LOGIN: "로그인 후 이용하실 수 있습니다."
   }
 };

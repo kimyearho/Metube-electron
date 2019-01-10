@@ -15,12 +15,31 @@
       :append-to-body="true"
       width="300px"
     >
-      <el-form :model="form" ref="form" label-position="top" :rules="rules">
-        <el-form-item label="Collection name" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-form
+        :model="form"
+        ref="form"
+        label-position="top"
+        :rules="rules"
+      >
+        <el-form-item
+          label="Collection name"
+          :label-width="formLabelWidth"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="Category" :label-width="formLabelWidth" prop="category">
-          <el-select v-model="form.category" placeholder="Please select a category">
+        <el-form-item
+          label="Category"
+          :label-width="formLabelWidth"
+          prop="category"
+        >
+          <el-select
+            v-model="form.category"
+            placeholder="Please select a category"
+          >
             <el-option
               v-for="item in form.categories"
               :key="item.label"
@@ -30,9 +49,19 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="closeModal">Cancel</el-button>
-        <el-button type="primary" size="mini" @click="save">Confirm</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          @click="closeModal"
+        >Cancel</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="save"
+        >Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -50,7 +79,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       formLabelWidth: '120px',
       rules: {
@@ -98,7 +127,7 @@ export default {
     }
   },
   methods: {
-    save () {
+    save() {
       this.$refs.form.validate(valid => {
         if (valid) {
           const myCollection = {
@@ -121,19 +150,24 @@ export default {
             .then(result => {
               let docs = result.docs[0]
               if (docs) {
-                docs.playlists.push(myCollection)
-                this.$local.put(docs).then(res => {
-                  if (res.ok) {
-                    this.$refs.form.resetFields()
-                    this.$emit('is-success', true)
-                  }
-                })
+                // collection max
+                if (docs.playlists.length >= 7) {
+                  alert("You can not create more than the maximum number of collections.\nCurrently, the maximum number is 7")
+                } else {
+                  docs.playlists.push(myCollection)
+                  this.$local.put(docs).then(res => {
+                    if (res.ok) {
+                      this.$refs.form.resetFields()
+                      this.$emit('is-success', true)
+                    }
+                  })
+                }
               }
             })
         }
       })
     },
-    closeModal () {
+    closeModal() {
       this.$refs.form.resetFields()
       this.form.category = ''
       this.$emit('is-close', false)

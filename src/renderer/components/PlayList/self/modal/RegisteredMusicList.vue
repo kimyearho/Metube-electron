@@ -9,7 +9,7 @@
   <div>
     <el-dialog
       style="z-index:998 !important;"
-      title="My Collections"
+      title="MyCollectionsList"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
@@ -19,15 +19,17 @@
     >
       <div class="wrapper">
         <ul>
-          <li v-for="(item, index) in listData" :key="index">
+          <li
+            v-for="(item, index) in listData"
+            :key="index"
+          >
             <div>{{ item.title }}</div>
             <div class="selected">
-              <el-button
-                type="primary"
-                size="mini"
+              <md-button
+                class="md-raised md-primary"
                 :disabled="item.isExists"
                 @click="addItem(item)"
-              >Add</el-button>
+              >{{ $t('COLLECTION.ADD_VIDEO_LABEL') }}</md-button>
             </div>
           </li>
         </ul>
@@ -48,13 +50,13 @@ export default {
     },
     data: Object
   },
-  data () {
+  data() {
     return {
       listData: []
     }
   },
   methods: {
-    addItem (listData) {
+    addItem(listData) {
       this.$local
         .find({
           selector: {
@@ -82,7 +84,7 @@ export default {
               title: this.data.title,
               duration: this.data.duration,
               duration_time: this.data.duration_time,
-              thumbnails: this.data.imageInfo,
+              thumbnails: this.data.imageInfo !== undefined ? this.data.imageInfo : this.data.image,
               creates: this.$moment().format('YYYYMMDDkkmmss'),
               created: this.$moment().format('YYYY-MM-DD kk:mm:ss')
             }
@@ -95,7 +97,7 @@ export default {
           }
         })
     },
-    getPlaylist () {
+    getPlaylist() {
       this.$local
         .find({
           selector: {
@@ -119,7 +121,7 @@ export default {
           }
         })
     },
-    closeModal () {
+    closeModal() {
       this.$emit('closeModal', false)
     }
   }
@@ -146,8 +148,8 @@ ul li div {
   float: right;
 }
 
-.el-dialog,
-.el-dialog__header {
-  border-bottom: 1px solid #f1efef;
+.md-button {
+  min-width: 0px !important;
+  height: 21px !important;
 }
 </style>

@@ -1,8 +1,13 @@
 export default {
   MAIN: {
+    APP_NAME: "M e t u b e",
+    HISTORY: {
+      INDEX: "List of recently viewed videos but, The same video will not be registered."
+    },
     MENU: {
       SEARCH: "Search",
       COLLECTION: "Collections",
+      HISTORY: "History",
       SIGN: "Sign",
       SETTING: "Setting"
     }
@@ -41,7 +46,7 @@ export default {
     LOCALE: "Set the client language.",
     RELEASE: "The current client is the latest version.",
     NEW_RELEASE:
-      "There is a new version. Download from the repository and install.",
+      "New version released. Would you like to download it? (This message will only show now and will show up when you restart the app)",
     MENU: {
       PLAYER_HIDE: "PLAYER HIDE",
       ALWAYS_TOP: "ALWAYS TOP",
@@ -55,7 +60,7 @@ export default {
     SIGN_OUT: "Sign out",
     NOTICE: "Notice",
     NO_LOGIN_NOTICE:
-      "When you sign in to MeTube, videos you watch on MeTube are synced to YouTube and you can manage your collection.",
+      "When you sign in to MeTube, videos you watch on MeTube can sync to YouTube and manage your collection. Sign in to use all other features in MeTube",
     YES_LOGIN_NOTICE:
       "Thank you for using MeTube. Users who are logged in can use the History and Collections functions"
   },
@@ -67,10 +72,15 @@ export default {
     NO_CHANNEL: "You do not have any Channel registered.",
     NO_PLAYLIST: "There are no playlists registered",
     REMOVE_ALBUM: "Are you sure you want to delete this collection?",
+    REMOVE_VIDEO: "Are you sure you want to delete the selected video ?",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "PLAY LIST",
       CHANNEL: "CHANNEL"
-    }
+    },
+    ADD_VIDEO_LABEL: "add"
+  },
+  HISTORY: {
+    NO_LOGIN: "Please try again after logging in"
   }
 };

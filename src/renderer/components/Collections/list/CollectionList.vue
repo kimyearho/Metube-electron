@@ -5,37 +5,52 @@
 
 <template>
   <div>
-    <top-header/>
+    <top-header @my-sync-list="getMyCollectionList" />
     <div class="wrapper">
       <!-- 로그인 상태 -->
       <el-row>
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img width="20" src="@/assets/images/svg/collection.svg">
+              <img
+                width="20"
+                src="@/assets/images/svg/collection.svg"
+              >
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
             </div>
-            <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
+            <strong
+              class="tr"
+              style="font-size:11px;"
+            >{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
           </div>
         </el-col>
       </el-row>
       <!-- 로그인 상태 -->
-      <el-row class="el-scorll" :class="{ dynamicHeight: isSub }">
+      <el-row
+        class="el-scroll"
+        :class="{ dynamicHeight: isSub }"
+      >
         <!-- 재생목록 -->
         <el-col>
           <div class="menu1">
-            <label class="wh" v-if="playType === 'play'">
+            <label
+              class="wh"
+              v-if="playType === 'play'"
+            >
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.PLAY_LIST') }}</strong>
             </label>
-            <label class="wh" v-else-if="playType === 'channel'">
+            <label
+              class="wh"
+              v-else-if="playType === 'channel'"
+            >
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
             </label>
-            <label class="wh" v-else>
+            <label
+              class="wh"
+              v-else
+            >
               <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
             </label>
-            <a v-if="playType === 'my-collection'">
-              <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button>
-            </a>
           </div>
         </el-col>
 
@@ -46,8 +61,17 @@
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
         <!-- PLAY LIST -->
-        <el-col v-else class="cols" v-for="item in playlists" :key="item._id" :span="12">
-          <el-card class="thumb" :body-style="{ padding: '0px' }">
+        <el-col
+          v-else
+          class="cols"
+          v-for="item in playlists"
+          :key="item._id"
+          :span="12"
+        >
+          <el-card
+            class="thumb"
+            :body-style="{ padding: '0px' }"
+          >
             <div class="overlay">
               <img
                 class="md-image thumbnail"
@@ -56,16 +80,39 @@
                 width="158"
                 height="100"
               >
-              <div class="myCollectionLabel" v-if="playType === 'my-collection'">
+              <div
+                class="myCollectionLabel"
+                v-if="playType === 'my-collection'"
+              >
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
-              <div class="playWrapper" :class="{ channelWrapper: playType === 'channel' }">
-                <div class="overlayMenu" :class="{ channelMenu: playType === 'channel' }">
-                  <a class="cursor" @click="showMusicList(item)" title="Play">
-                    <font-awesome-icon class="f25 fa" icon="play"/>
+              <div
+                class="playWrapper"
+                :class="{ channelWrapper: playType === 'channel' }"
+              >
+                <div
+                  class="overlayMenu"
+                  :class="{ channelMenu: playType === 'channel' }"
+                >
+                  <a
+                    class="cursor"
+                    @click="showMusicList(item)"
+                    title="Play"
+                  >
+                    <font-awesome-icon
+                      class="f25 fa"
+                      icon="play"
+                    />
                   </a>
-                  <a class="cursor" @click="showRemove(item)" title="Remove">
-                    <font-awesome-icon class="f25 fa" icon="times"/>
+                  <a
+                    class="cursor"
+                    @click="showRemove(item)"
+                    title="Remove"
+                  >
+                    <font-awesome-icon
+                      class="f25 fa"
+                      icon="times"
+                    />
                   </a>
                   <a
                     class="cursor"
@@ -73,7 +120,10 @@
                     title="Cover change"
                     v-if="playType !== 'channel'"
                   >
-                    <font-awesome-icon class="f25 fa" icon="images"/>
+                    <font-awesome-icon
+                      class="f25 fa"
+                      icon="images"
+                    />
                   </a>
                 </div>
               </div>
@@ -89,19 +139,18 @@
       </el-row>
     </div>
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isSub"/>
+    <sub-player-bar v-show="isSub" />
 
     <!-- 로딩 컴포넌트 -->
     <loading v-show="!load"></loading>
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal ref="coverModal" 
-                        :data="selectedData" 
-                        @is-success="saveCover"/>
+    <cover-change-modal
+      ref="coverModal"
+      :data="selectedData"
+      @is-success="saveCover"
+    />
 
-    <create-from :isOpen="isCreate" 
-                 @is-success="myCollectionSync" 
-                 @is-close="closeModal"/>
   </div>
 </template>
 
@@ -112,26 +161,23 @@ import MyQueryMixin from '@/components/Mixin/mycollection'
 import CoverChangeModal from '@/components/Collections/cover/CollectionCoverChange'
 import StoreMixin from '@/components/Mixin/index'
 import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import CreateFrom from '@/components/MyCollection/create/MyCollectionCreate'
 import Loading from '@/components/Loader/Loader'
 
 export default {
   name: 'CollectionList',
   mixins: [
-    StoreMixin, 
-    CollectionQueryMixin, 
+    StoreMixin,
+    CollectionQueryMixin,
     MyQueryMixin
   ],
   components: {
     CoverChangeModal,
     SubPlayerBar,
-    CreateFrom,
     Loading
   },
-  data () {
+  data() {
     return {
       isSub: false,
-      isCreate: false,
       load: false,
       playlists: [],
       data: null,
@@ -140,10 +186,10 @@ export default {
       isLogin: false
     }
   },
-  created () {
+  created() {
     this.init()
   },
-  mounted () {
+  mounted() {
     if (this.playType === 'my-collection') {
       this.getMyCollectionList()
     } else {
@@ -151,27 +197,14 @@ export default {
     }
   },
   methods: {
-    init () {
+    init() {
       if (this.getUserId()) {
         this.isLogin = true
       }
       this.playType = this.$route.params.playType
     },
 
-    collectionAdd () {
-      this.isCreate = true
-    },
-
-    myCollectionSync () {
-      this.isCreate = false
-      this.getMyCollectionList()
-    },
-
-    closeModal () {
-      this.isCreate = false
-    },
-
-    showRemove (data) {
+    showRemove(data) {
       this.$modal.show('dialog', {
         title: 'Info',
         text: this.$t('COLLECTION.REMOVE_ALBUM'),
@@ -194,7 +227,7 @@ export default {
         ]
       })
     },
-    showMusicList (item) {
+    showMusicList(item) {
       this.$store.commit('setPath', this.$route.path)
       if (item.category) {
         this.$router.push({
@@ -214,11 +247,11 @@ export default {
         })
       }
     },
-    showCoverModal (item) {
+    showCoverModal(item) {
       this.$refs.coverModal.showModal()
       this.$set(this, 'selectedData', item)
     },
-    saveCover (data) {
+    saveCover(data) {
       if (data) {
         if (data.playType === 'play') {
           this.getCollectionList()

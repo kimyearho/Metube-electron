@@ -7,56 +7,65 @@
 
 <template>
   <div id="app">
+
+    <!-- 루트 라우터 뷰 -->
     <transition name="fade">
       <router-view></router-view>
     </transition>
-    <md-tabs class="tab-navi">
-      <md-tab id="tab-home" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
-      <md-tab id="tab-pages" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
-      <md-tab id="tab-posts" class="md-tab" md-label="Sign" @click="route('login')"></md-tab>
-      <md-tab id="tab-favorites" class="md-tab" md-label="Setting" @click="route('setting')"></md-tab>
-    </md-tabs>
-    <span v-show="isCheck" class="badge"></span>
-    <Snow
-      v-if="isSnow"
-      :active="true"
-      zIndex="3000"
-      :wind="1"
-      :swing="0"
-      speed="l"
-      color="#ffffff"
-    />
 
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <!-- 하단 네비게이션 -->
+    <md-tabs class="tab-navi">
+      <md-tab
+        id="tabSearch"
+        class="md-tab"
+        md-label="Search"
+        @click="route('search')"
+      ></md-tab>
+      <md-tab
+        id="tabCollection"
+        class="md-tab"
+        md-label="Collections"
+        @click="route('collection')"
+      ></md-tab>
+      <md-tab
+        id="tabHistory"
+        class="md-tab"
+        md-label="History"
+        @click="route('history')"
+      ></md-tab>
+    </md-tabs>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
 <script>
-import Snow from "vue-niege";
 import StoreMixin from "@/components/Mixin/index";
 
 export default {
   name: "App",
   mixins: [StoreMixin],
-  components: {
-    Snow
-  },
   data() {
     return {
       isShow: false,
-      isSnow: true,
       isSpinShow: false,
-      isCheck: false,
       state: "",
       status: []
     };
   },
   created() {
-    // 눈 테마
-    this.$eventBus.$on("showSnow", this.showSnow);
+    // 프로덕션 환경에서만 버전체크 실행
+    if (process.env.NODE_ENV !== 'development') {
+      this.onNewReleaseCheck();
+    }
+
+    // 비디오 상태 체크 이벤트 종료
+    this.$eventBus.$off("statusCheck");
 
     // 비디오 상태 체크 이벤트 수신
-    this.$eventBus.$off("statusCheck");
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);
 
     // 재생 플레이어 상태 체크 이벤트 수신
@@ -71,28 +80,24 @@ export default {
         this.status.push(newVal);
       }
     );
-    this.onNewReleaseCheck();
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
         // 재생 중
         this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
         this.$store.commit("setPlayType", false);
-        this.$eventBus.$emit("playerPause");
+        this.$eventBus.$emit("playTypeControl", { playType: false });
       } else {
         // 일시 정지
         this.$ipcRenderer.send("win2Player", ["playVideo"]);
         this.$store.commit("setPlayType", true);
-        this.$eventBus.$emit("playerPlay");
+        this.$eventBus.$emit("playTypeControl", { playType: true });
       }
     });
   },
   methods: {
     docs() {
       get(this);
-    },
-    showSnow(v) {
-      this.$set(this, "isSnow", v);
     },
     route(path) {
       if (path == "search") {
@@ -103,31 +108,27 @@ export default {
         this.$router.push({
           name: "collection"
         });
-      } else if (path == "login") {
+      } else if (path == "history") {
         this.$router.push({
-          name: "login"
-        });
-      } else if (path == "setting") {
-        this.$router.push({
-          name: "setting"
+          name: "VIDEO-HISTORY"
         });
       }
     },
+
     playerStatusCheck(value) {
       this.state = value;
       // 버퍼링 or 일시중지
       if (this.state === 2) {
         // 재생모양 아이콘으로 변경
-        this.$eventBus.$emit("playerPlay");
+        this.$eventBus.$emit("playTypeControl", { playType: false });
       } else if (this.state === 1) {
         // 일시정지 아이콘으로 변경 (현재 재생 중)
-        this.$eventBus.$emit("playerPause");
+        this.$eventBus.$emit("playTypeControl", { playType: true });
       } else if (this.state === 0) {
         // 종료일 경우
         // 재생중인 음악정보
         let musicData = this.getMusicInfos();
         let isRepeat = this.getRepeat();
-
         // 반복여부
         if (isRepeat) {
           this.$ipcRenderer.send("win2Player", [
@@ -256,31 +257,30 @@ export default {
       this.$db
         .get("adfe10ffbd1f206762f478326800a5b6")
         .then(doc => {
-          console.log("doc => ", doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
-          console.log("live => ", live_version);
-          console.log("local => ", local_version);
-          // new version.
           if (live_version != local_version) {
-            this.isCheck = true;
-            this.$store.commit("setVersionCheck", true);
+            this.$modal.show("dialog", {
+              title: "Info",
+              text: this.$t("SETTING.NEW_RELEASE"),
+              buttons: [
+                {
+                  title: "Yes",
+                  handler: () => {
+                    this.$ipcRenderer.send('showGit', null)
+                    this.$modal.hide("dialog")
+                  }
+                },
+                {
+                  title: "Close"
+                }
+              ]
+            });
           }
         })
         .catch(err => {
           console.log(err);
         });
-    },
-    test() {
-      this.$modal.show("dialog", {
-        title: "알림",
-        text: "Development in progress ...",
-        buttons: [
-          {
-            title: "Close"
-          }
-        ]
-      });
     }
   }
 };
@@ -288,15 +288,6 @@ export default {
 
 
 <style scope>
-@import "./assets/css/zaudio-1.css";
-@import "./assets/css/playlist.css";
-@import "./assets/css/commons.css";
-@import "./assets/css/collection.css";
-
-i {
-  padding-right: 5px;
-}
-
 .position {
   position: absolute;
   bottom: 29px;
@@ -306,9 +297,7 @@ i {
 }
 
 .tab-navi {
-  background-color: #1d232f;
   border-top: 1px solid #000000;
-  overflow: hidden;
   position: fixed;
   bottom: 0px;
   width: 100%;
@@ -319,39 +308,20 @@ i {
   border-bottom: 1px solid #171e2d;
 }
 
+.md-tabs-navigation {
+  background-color: #1d232f !important;
+}
+
 .md-tabs-navigation .md-button {
   float: left;
   display: block;
-  color: #f2f2f2;
+  width: 100%;
+  color: #f2f2f2 !important;
   text-align: center;
   padding: 15px 19.4px;
   text-decoration: none;
   height: 42px !important;
   font-size: 11px !important;
   font-weight: 700;
-}
-
-/* .md-active {
-  color: #000000 !important;
-  background: #ffffff !important;
-} */
-
-.badge {
-  width: 10px;
-  height: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 13px;
-  bottom: 27px;
-  background: #f94848;
-  border-radius: 100%;
-  color: #fff;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 600;
-  letter-spacing: -0.05em;
-  z-index: 10000;
 }
 </style>

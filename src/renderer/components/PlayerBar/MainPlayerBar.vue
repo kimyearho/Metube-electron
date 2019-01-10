@@ -7,19 +7,31 @@
 
 <template>
   <!-- root div -->
-  <div style="margin-top: 3px;">
+  <div>
     <div class="zaudio_player">
       <div class="zaudio_playercontrols">
         <!-- 프로그레스바 영역 -->
         <div class="zaudio_seekbar">
           <!-- <md-progress-bar md-mode="determinate" :md-value="range"></md-progress-bar> -->
-          <progress class="cursor" @click="seekTo" :value="range" min="0" :max="maxTime"/>
-          <span class="playingLive" v-if="isLive">L I V E - P L A Y I N G</span>
+          <progress
+            class="cursor"
+            @click="seekTo"
+            :value="range"
+            min="0"
+            :max="maxTime"
+          />
+          <span
+            class="playingLive"
+            v-if="isLive"
+          >L I V E - P L A Y I N G</span>
           <span class="zaudio_tracktime">{{ totalTime }}</span>
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div class="zaudio_buttonwrapper" style="margin-top: 9px; margin-bottom:10px;">
+        <div
+          class="zaudio_buttonwrapper"
+          style="margin-top: 9px; margin-bottom:10px;"
+        >
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
@@ -67,7 +79,7 @@
               :title="$t('PLAYERBAR.REPEAT_OFF')"
               @click="repeatOn"
             >
-            
+
             <img
               class="cursor md-image"
               v-else
@@ -88,7 +100,7 @@
               :title="$t('PLAYERBAR.VOLUME_OFF')"
               @click="volumeOn"
             >
-            
+
             <img
               class="cursor md-image"
               v-else
@@ -100,7 +112,14 @@
             >
           </div>
           <div style="max-width:20%;padding-right:10px;">
-            <input type="range" ref="volumeSlider" v-model="volume" step="1" min="0" max="100">
+            <input
+              type="range"
+              ref="volumeSlider"
+              v-model="volume"
+              step="1"
+              min="0"
+              max="100"
+            >
           </div>
         </div>
       </div>
@@ -138,11 +157,8 @@ export default {
     // 재생음악의 정보 수신
     this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
 
-    // 영상을 클릭했을때 수신
-    this.$eventBus.$on("playerPause", this.playerPause);
-
-    // 영상을 클릭했을때 수신
-    this.$eventBus.$on("playerPlay", this.playerPlay);
+    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
+    this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   watch: {
     // 볼륨 감시
@@ -207,14 +223,9 @@ export default {
       this.range = this.second($event);
     },
 
-    // 일시정지
-    playerPause() {
-      this.isPlay = true;
-    },
-
     // 재생
-    playerPlay() {
-      this.isPlay = false;
+    playTypeControl(event) {
+      this.isPlay = event.playType;
     },
 
     // 일시정지 -> 재생으로 전환
@@ -228,7 +239,7 @@ export default {
     previousVideo() {
       this.isDelay = true;
       let self = this;
-      setTimeout(function() {
+      setTimeout(function () {
         self.isDelay = false;
       }, 3000);
       this.$emit("previousVideoTrack");
@@ -269,7 +280,7 @@ export default {
     nextVideo() {
       this.isDelay = true;
       let self = this;
-      setTimeout(function() {
+      setTimeout(function () {
         self.isDelay = false;
       }, 3000);
       this.$emit("nextVideoTrack");

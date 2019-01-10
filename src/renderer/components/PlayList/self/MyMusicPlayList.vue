@@ -8,16 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -54,9 +66,18 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -87,11 +108,15 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -184,7 +209,7 @@ export default {
      */
     feachData() {
       // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
-      var self = this;
+      let self = this;
       setTimeout(() => {
         let id = "#item" + self.$route.params.start;
         self.$scrollTo(id, -1, options);
@@ -365,7 +390,13 @@ export default {
         "loadVideoById",
         playingItem.videoId
       ]);
+
+      this.$store.commit('setPlayType', true)
       this.$eventBus.$emit("statusCheck");
+
+      /** @overade 히스토리 등록 */
+      this.insertVideoHistory(playingItem)
+
       this.load = true;
     },
 
@@ -386,7 +417,7 @@ export default {
         setTimeout(() => {
           console.log("cancel Scroll");
           cancelScroll();
-        }, 3000);
+        }, 1500);
       }
     },
 
@@ -401,7 +432,7 @@ export default {
         setTimeout(() => {
           console.log("cancel Scroll2");
           cancelScroll();
-        }, 3000);
+        }, 1500);
       }
     },
 

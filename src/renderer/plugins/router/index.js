@@ -53,6 +53,11 @@ export default new VueRouter({
       path: "/:playType/:id/:start",
       name: "PLAYING-PLAYLIST",
       component: require("@/components/PlayList/MusicPlayList").default
-    }
+    },
+    {
+      path: "/history",
+      name: "VIDEO-HISTORY",
+      component: require("@/components/history/VideoHistory").default
+    },
   ]
 });

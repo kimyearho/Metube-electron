@@ -9,14 +9,25 @@
   <!-- root div -->
   <div>
     <div class="zaudio_player">
-      <progress :value="range" min="0" :max="maxTime"/>
+      <progress
+        :value="range"
+        min="0"
+        :max="maxTime"
+      />
       <div class="zaudio_playercontrols">
         <div class="zaudio_buttonwrapper">
           <div>
-            <img class="miniImage" width="30" :src="image">
+            <img
+              class="miniImage"
+              width="30"
+              :src="image"
+            >
           </div>
           <div class="zaudio_playercontrolbuttons">
-            <div class="cover channelInfo cursor" @click="showPlaylist">
+            <div
+              class="cover channelInfo cursor"
+              @click="showPlaylist"
+            >
               <div>{{ coverTitle }}</div>
               <div class="channel">{{ channelTitle }}</div>
             </div>
@@ -68,11 +79,8 @@ export default {
     // 재생음악의 정보 수신
     this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
 
-    // 영상을 클릭했을때 수신
-    this.$eventBus.$on("playerPause", this.playerPause);
-
-    // 영상을 클릭했을때 수신
-    this.$eventBus.$on("playerPlay", this.playerPlay);
+    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
+    this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   mounted() {
     this.fetchData();
@@ -106,14 +114,9 @@ export default {
       this.range = this.second($event);
     },
 
-    // 일시정지
-    playerPause() {
-      this.isPlay = true;
-    },
-
     // 재생
-    playerPlay() {
-      this.isPlay = false;
+    playTypeControl(event) {
+      this.isPlay = event.playType;
     },
 
     // 재생정보를 기반으로 해당 실제 재생목록으로 이동
@@ -166,14 +169,14 @@ export default {
     play() {
       this.isPlay = false;
       this.$ipcRenderer.send("win2Player", ["pauseVideo"]);
-      this.$store.commit("setPlayType", this.isPlay);
+      this.$store.commit("setPlayType", false);
     },
 
     // 일시정지 -> 재생
     pause() {
       this.isPlay = true;
       this.$ipcRenderer.send("win2Player", ["playVideo"]);
-      this.$store.commit("setPlayType", this.isPlay);
+      this.$store.commit("setPlayType", true);
     },
 
     second(n) {

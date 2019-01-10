@@ -15,18 +15,11 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 /* topHeader */
 import topHeader from "./components/Header/Header";
 
-/* vue-toggle */
-import ToggleButton from "vue-js-toggle-button";
-
 /* vue-modal */
 import VModal from "vue-js-modal";
 
 /* vue-scroll */
 import VueScrollTo from "vue-scrollto";
-
-/* ElementUI */
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
 
 /* axios or jsonp */
 import axios from "./plugins/http";
@@ -43,7 +36,29 @@ import VueClipboard from "vue-clipboard2";
 /* mousetrap */
 import mousetrap from "mousetrap";
 
-// import VueMaterial from "vue-material";
+/* ElementUI */
+import {
+  Dialog,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Input,
+  Select,
+  Option,
+  Button,
+  Form,
+  FormItem,
+  Row,
+  Col,
+  Card,
+  Carousel,
+  CarouselItem,
+  Loading,
+  Message,
+} from 'element-ui';
+import "element-ui/lib/theme-chalk/index.css";
+
+// Vue Material
 import {
   MdButton,
   MdList,
@@ -51,41 +66,75 @@ import {
   MdTabs,
   MdAvatar,
   MdBadge,
-  // MdDrawer,
-  // MdToolbar,
-  MdIcon
+  MdSpeedDial,
+  MdDrawer,
+  MdToolbar,
+  MdIcon,
+  MdSwitch
 } from "vue-material/dist/components";
 import "vue-material/dist/vue-material.min.css";
 
+import "./assets/css/default.css";
+import "./assets/css/zaudio-1.css";
+import "./assets/css/commons.css";
+import "./assets/css/playlist.css";
+import "./assets/css/collection.css";
 import "./assets/css/search.css";
 
 library.add(fas);
-Vue.component("font-awesome-icon", FontAwesomeIcon);
-Vue.component("top-header", topHeader);
-Vue.use(ToggleButton);
-Vue.use(VModal, { dialog: true });
-Vue.use(VueScrollTo);
-Vue.use(ElementUI);
-Vue.use(VueClipboard);
-Vue.use(MdAvatar);
-Vue.use(MdButton);
-Vue.use(MdBadge);
-// Vue.use(MdDrawer);
-Vue.use(MdList);
-Vue.use(MdImage);
-Vue.use(MdIcon);
-Vue.use(MdTabs);
-// Vue.use(MdToolbar);
-Vue.prototype.$http = axios;
-Vue.prototype.$moment = moment;
-Vue.prototype.$lodash = lodash;
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.config.productionTip = false;
 
+/* global component */
+Vue.component("font-awesome-icon", FontAwesomeIcon);
+Vue.component("top-header", topHeader);
+
+/* side lib */
+Vue.use(VModal, { dialog: true });
+Vue.use(VueScrollTo);
+Vue.use(VueClipboard);
+
+/* vue element-ui  */
+Vue.use(Dialog);
+Vue.use(Dropdown);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
+Vue.use(Input);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Button);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(Card);
+Vue.use(Carousel);
+Vue.use(CarouselItem);
+Vue.use(Loading.directive);
+
+/* vue material  */
+Vue.use(MdAvatar);
+Vue.use(MdButton);
+Vue.use(MdBadge);
+Vue.use(MdDrawer);
+Vue.use(MdList);
+Vue.use(MdImage);
+Vue.use(MdIcon);
+Vue.use(MdTabs);
+Vue.use(MdToolbar);
+Vue.use(MdSpeedDial)
+Vue.use(MdSwitch);
+
+/* vue prototype */
+Vue.prototype.$http = axios;
+Vue.prototype.$moment = moment;
+Vue.prototype.$lodash = lodash;
+Vue.prototype.$trap = mousetrap;
+Vue.prototype.$loading = Loading.service;
+Vue.prototype.$message = Message;
 Vue.prototype.$version = require("../../package.json").version;
 Vue.prototype.$locale = require("electron").remote.app.getLocale();
-Vue.prototype.$trap = mousetrap;
 
 /* eslint-disable no-new */
 new Vue({
