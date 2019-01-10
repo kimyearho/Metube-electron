@@ -37,21 +37,6 @@ If you like the program, please click on the star! It will help developers a lot
 > yarn run build
 ```
 
-### Require
-Private keys are not included. Get your private key directly.
-```js
-# src/analiytics/analiytics.js
-const analytics = new Analytics.default("[[ KEY ID HERE ]]")
-
-# src/auth/auth.js (Google OAuth)
-const CLIENT_ID = "[[ CLIENT ID HERE ]]"
-const CLIENT_SECRET = "[[ CLIENT SECRET HERE ]]"
-
-# src/renderer/plugins/pouchdb/index.js
-Vue.prototype.$local = new PouchDB("[[ DB NAME HERE ]]");
-
-# src/renderer/service/common-service.js
-const API_KEY = "[[ YOUTUBE V3 API KEY ]]";
 ```
 
 ### Local Database
