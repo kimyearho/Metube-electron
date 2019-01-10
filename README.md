@@ -1,7 +1,7 @@
 # [2019-01-10] v1.4.1 UPDATE
 
-![Imgur](https://i.imgur.com/WXVuLN6.png)
-![Imgur](https://i.imgur.com/Iw9H9X9.png)
+![Imgur](https://i.imgur.com/4TF9sR3.png)
+![Imgur](https://i.imgur.com/F2twPi7.png)
 ***
 
 ![Img](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
