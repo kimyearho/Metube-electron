@@ -1,7 +1,4 @@
-# [2019-01-10] v1.4.1 UPDATE
-
-![Imgur](https://i.imgur.com/4TF9sR3.png)
-![Imgur](https://i.imgur.com/dz31Wvy.png)
+# [2019-01-10] v1.4.1 UPDATE!
 
 <p align="center">
   <img src="https://i.imgur.com/4TF9sR3.png" />
@@ -12,8 +9,6 @@
 <p align="center">
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
-
-![Img](https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png)
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
