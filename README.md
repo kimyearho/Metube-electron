@@ -1,4 +1,4 @@
-# [2019-01-10] v1.4.1 UPDATE!
+# [2019-01-10] v1.4.1 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/4TF9sR3.png" />
@@ -35,8 +35,6 @@ If you like the program, please click on the star! It will help developers a lot
 
 # build
 > yarn run build
-```
-
 ```
 
 ### Local Database
