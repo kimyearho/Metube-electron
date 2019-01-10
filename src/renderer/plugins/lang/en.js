@@ -77,7 +77,8 @@ export default {
       COLLECTION: "Collections",
       PLAY_LIST: "PLAY LIST",
       CHANNEL: "CHANNEL"
-    }
+    },
+    ADD_VIDEO_LABEL: "add"
   },
   HISTORY: {
     NO_LOGIN: "Please try again after logging in"

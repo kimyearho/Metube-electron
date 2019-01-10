@@ -42,7 +42,7 @@
 
       <el-row
         v-if="isLogin"
-        class="el-scorll"
+        class="el-scroll"
         :class="{ dynamicHeight: isSub }"
       >
         <!-- 상위4개 재생목록 -->

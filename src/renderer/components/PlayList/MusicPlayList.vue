@@ -9,6 +9,7 @@
   <div>
     <!-- 타이틀바 컴포넌트 -->
     <top-header
+      :isShow="false"
       :data="{ playType: 'list' }"
       @scrollTop="endScrollTop"
     />
@@ -732,6 +733,6 @@ export default {
 <style scope>
 .loadMoreCenter {
   color: #ffffff;
-  margin-left: 100px;
+  margin-left: 110px;
 }
 </style>

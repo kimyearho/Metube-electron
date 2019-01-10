@@ -77,7 +77,8 @@ export default {
       COLLECTION: "Collections",
       PLAY_LIST: "재생 목록",
       CHANNEL: "채널"
-    }
+    },
+    ADD_VIDEO_LABEL: "추가"
   },
   HISTORY: {
     NO_LOGIN: "로그인 후 이용하실 수 있습니다."

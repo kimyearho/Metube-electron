@@ -3,13 +3,13 @@
 
     <!-- 제목 바 -->
     <span class="notiButton">
-      <md-button
+      <img
         v-show="isMenu"
-        class="md-icon-button mdc-icon-button"
         @click="showNavigation = true"
+        width="18"
+        class="cursor"
+        src="@/assets/images/svg/menu.svg"
       >
-        <md-icon>menu</md-icon>
-      </md-button>
     </span>
     <span
       class="logo"
@@ -73,8 +73,9 @@
       md-event="click"
       md-direction="top"
     >
-      <md-speed-dial-target class="md-primary b-primary">
-        <md-icon>my_location</md-icon>
+      <md-speed-dial-target class="md-primary">
+        <md-icon class="md-morph-initial">add</md-icon>
+        <md-icon class="md-morph-final">close</md-icon>
       </md-speed-dial-target>
 
       <md-speed-dial-content>
@@ -342,7 +343,7 @@ export default {
   z-index: 1000;
   padding-right: 1px;
   padding-bottom: 40px;
-  bottom: 106px !important;
+  bottom: 66px !important;
 }
 
 .md-list-item-text {
@@ -358,10 +359,6 @@ export default {
   height: 20px !important;
   color: #ffffff !important;
   border-radius: 0 !important;
-}
-
-.md-ripple {
-  border-radius: 0% !important;
 }
 
 .titlebar {

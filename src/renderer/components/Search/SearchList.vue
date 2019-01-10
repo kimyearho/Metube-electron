@@ -540,9 +540,11 @@ export default {
   background-color: #242d40 !important;
 }
 .loadMoreCenter {
-  color: #ffffff;
   margin-left: 90px;
   padding: 0;
+}
+.loadMoreCenter a {
+  color: #ffffff !important;
 }
 .taginfo {
   overflow-x: hidden;

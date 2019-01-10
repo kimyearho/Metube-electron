@@ -27,7 +27,7 @@
       </el-row>
       <!-- 로그인 상태 -->
       <el-row
-        class="el-scorll"
+        class="el-scroll"
         :class="{ dynamicHeight: isSub }"
       >
         <!-- 재생목록 -->

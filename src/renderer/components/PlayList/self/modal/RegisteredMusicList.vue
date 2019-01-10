@@ -9,7 +9,7 @@
   <div>
     <el-dialog
       style="z-index:998 !important;"
-      title="My Collections"
+      title="MyCollectionsList"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
@@ -25,12 +25,11 @@
           >
             <div>{{ item.title }}</div>
             <div class="selected">
-              <el-button
-                type="primary"
-                size="mini"
+              <md-button
+                class="md-raised md-primary"
                 :disabled="item.isExists"
                 @click="addItem(item)"
-              >Add</el-button>
+              >{{ $t('COLLECTION.ADD_VIDEO_LABEL') }}</md-button>
             </div>
           </li>
         </ul>
@@ -149,8 +148,8 @@ ul li div {
   float: right;
 }
 
-.el-dialog,
-.el-dialog__header {
-  border-bottom: 1px solid #f1efef;
+.md-button {
+  min-width: 0px !important;
+  height: 21px !important;
 }
 </style>
