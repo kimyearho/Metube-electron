@@ -167,7 +167,7 @@ export default {
               this.playlists = this.$lodash
                 .chain(collections)
                 .orderBy(["creates"], ["desc"])
-                .take(10)
+                .take(7)
                 .value()
             }
             this.load = true

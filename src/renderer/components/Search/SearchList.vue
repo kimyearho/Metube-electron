@@ -176,11 +176,12 @@ export default {
         let data = result.recommand;
         this.recommandList = this.$lodash
           .chain(data)
-          .shuffle()
+          .orderBy(["creates"], ["desc"])
           .take(50)
+          .shuffle()
           .value();
-        this.loading = false;
       });
+      this.loading = false;
     },
     /*
     recommandTrack() {

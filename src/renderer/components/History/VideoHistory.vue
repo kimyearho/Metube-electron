@@ -93,25 +93,36 @@ export default {
   methods: {
     getHistory() {
       this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["_id", "history"]
+        .createIndex({
+          index: {
+            fields: ["history.videoId"]
+          }
         })
         .then(result => {
-          let docs = result.docs[0];
-          if (docs) {
-            if (docs.history.length > 0) {
-              this.playlist = this.$lodash
-                .chain(docs.history)
-                .orderBy(["creates"], ["desc"])
-                .take(20)
-                .value();
+          return this.$local
+            .find({
+              selector: {
+                type: "profile",
+                userId: this.getUserId()
+              },
+              fields: ["_id", "history"]
+            })
+            .then(result => {
+              let docs = result.docs[0];
+              if (docs) {
+                if (docs.history.length > 0) {
+                  this.playlist = this.$lodash
+                    .chain(docs.history)
+                    .orderBy(["creates"], ["desc"])
+                    .take(20)
+                    .value();
+                }
+              }
               this.load = true;
-            }
-          }
+            });
+        })
+        .catch(err => {
+          console.log(err);
         });
     },
     signLink() {

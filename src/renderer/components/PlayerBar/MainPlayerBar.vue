@@ -347,7 +347,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 .playingLive {
   position: absolute;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #fd4545;
   left: 125px;
