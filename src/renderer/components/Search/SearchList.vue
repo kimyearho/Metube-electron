@@ -8,10 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :data="{ playType: 'list' }"
-      @scrollTop="searchTop"
-    />
+    <top-header :data="{ playType: 'list' }" @scrollTop="searchTop"/>
 
     <!-- 검색어 영역 -->
     <div class="search">
@@ -22,24 +19,12 @@
         @keyup.enter="submit(searchText)"
         placeholder=" Search Youtube"
       >
-      <a
-        class="searchCancel cursor"
-        @click="searchReset"
-      >
-        <img
-          width="20"
-          src="../../assets/images/svg/cancel.svg"
-        >
+      <a class="searchCancel cursor" @click="searchReset">
+        <img width="20" src="../../assets/images/svg/cancel.svg">
       </a>
     </div>
-    <div
-      class="tag"
-      v-show="isTag"
-    >
-      <span
-        v-if="searchKeywords.length === 0"
-        class="no_keyword"
-      >
+    <div class="tag" v-show="isTag">
+      <span v-if="searchKeywords.length === 0" class="no_keyword">
         <i class="el-icon-warning"></i>
         {{ $t('COMMONS.NO_KEYWORD') }}
       </span>
@@ -52,22 +37,12 @@
         :key="item"
       >{{ item }}</el-button>
     </div>
-    <md-button
-      class="md-raised md-primary searchKeywords"
-      @click="showTag"
-    >Recent search terms</md-button>
+    <md-button class="md-raised md-primary searchKeywords" @click="showTag">Recent search terms</md-button>
 
     <!-- 자동검색 영역  -->
-    <div
-      class="autoSearch"
-      v-show="isAppend"
-    >
+    <div class="autoSearch" v-show="isAppend">
       <ul class="autoList">
-        <li
-          v-for="(item, index) in autoSearchList"
-          :key="index"
-          @click="itemSelected(item)"
-        >
+        <li v-for="(item, index) in autoSearchList" :key="index" @click="itemSelected(item)">
           <span>{{ item }}</span>
         </li>
       </ul>
@@ -82,30 +57,20 @@
       height="100px"
       style="margin:10px;"
     >
-      <el-carousel-item
-        v-for="item in recommandList"
-        :key="item.playlistId"
-      >
+      <el-carousel-item v-for="item in recommandList" :key="item.videoId">
         <img
           class="md-image"
           style="border: 1px solid #606266;"
           width="174"
           height="100"
-          :src="item.image"
+          :src="item.thumbnail"
           @click="route(item)"
         >
-        <span
-          class="recommandMusic"
-          @click="route(item)"
-        >{{ item.title }}</span>
+        <span class="recommandMusic" @click="route(item)">{{ item.title.substring(0, 30) }} ..</span>
       </el-carousel-item>
     </el-carousel>
 
-    <md-list
-      id="list"
-      class="searchList"
-      :class="{ subHightAuto: isMini }"
-    >
+    <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in searchList"
@@ -114,46 +79,27 @@
         @click="route(item)"
       >
         <md-avatar style="margin-right: 0;">
-          <img
-            :src="item.imageInfo"
-            alt="People"
-          >
+          <img :src="item.imageInfo" alt="People">
         </md-avatar>
 
         <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
-
-        <span
-          class="label_channel"
-          v-if="item.otherChannelId"
-        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-        <span
-          class="label_playlist"
-          v-if="item.playlistId"
-        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive === 'none'"
-        >{{ item.duration }}</span>
+        
+        <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive === 'none'">{{ item.duration }}</span>
         <span
           class="label_live"
           v-if="item.videoId && item.isLive === 'live'"
         >{{ $t('COMMONS.LABEL.LIVE') }}</span>
       </md-list-item>
       <md-list-item>
-        <span
-          v-if="!isMore"
-          @click="nextPageLoad"
-          class="loadMoreCenter"
-        >
+        <span v-if="!isMore" @click="nextPageLoad" class="loadMoreCenter">
           <a class="cursor">
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span
-          v-if="isMore"
-          class="loadMoreCenter loadMoreLoading"
-        >LOADING ...</span>
+        <span v-if="isMore" class="loadMoreCenter loadMoreLoading">LOADING ...</span>
       </md-list-item>
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
@@ -162,11 +108,11 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
   </div>
 </template>
 
@@ -225,6 +171,20 @@ export default {
   methods: {
     recommandTrack() {
       this.loading = true;
+      let urlId = "adfe10ffbd1f206762f478326809539e";
+      this.$db.get(urlId).then(result => {
+        let data = result.recommand;
+        this.recommandList = this.$lodash
+          .chain(data)
+          .shuffle()
+          .take(50)
+          .value();
+        this.loading = false;
+      });
+    },
+    /*
+    recommandTrack() {
+      this.loading = true;
       let request1, request2, request3;
       if (this.$locale === "ko") {
         request1 = $commons.youtubePlaylistSearch("2018 Billboard Charts");
@@ -264,6 +224,7 @@ export default {
           console.log(err);
         });
     },
+    */
     handleScroll() {
       let pos = this.$el.querySelector("#list").scrollTop;
       this.$store.commit("setScrollPos", pos);
@@ -302,7 +263,7 @@ export default {
       this.$scrollTo("#item0", 0, options);
     },
     init(text) {
-      this.isMini = this.getMusicInfos() ? true : false
+      this.isMini = this.getMusicInfos() ? true : false;
       let totalSearchList = this.getNextSearchList();
       if (this.$lodash.size(totalSearchList) === 0) {
         if (text === null) {

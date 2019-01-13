@@ -3,63 +3,63 @@
  *  You can not delete this comment when you deploy an application.
  *-------------------------------------------------------------------------------------------- */
 
-'use strict'
+"use strict"
 
 export default {
   methods: {
-    getProfile () {
+    getProfile() {
       return this.$store.getters.getGoogleProfile
     },
-    getUserId () {
+    getUserId() {
       return this.$store.getters.getGoogleProfile.googleId
     },
-    getMusicInfos () {
+    getMusicInfos() {
       return this.$store.getters.getPlayingMusicInfo
     },
-    getAllPlayList () {
+    getAllPlayList() {
       return this.$store.getters.getPlayList
     },
-    getSearchKeyword () {
+    getSearchKeyword() {
       return this.$store.getters.getSearchText
     },
-    getNextSearchList () {
+    getNextSearchList() {
       return this.$store.getters.getNextSearchList
     },
-    getNextPageToken () {
+    getNextPageToken() {
       return this.$store.getters.getNextPageToekn
     },
-    getRepeat () {
+    getRepeat() {
       return this.$store.getters.getRepeat
     },
-    getPlayType () {
+    getPlayType() {
       return this.$store.getters.getPlayType
     },
-    getVolume () {
+    getVolume() {
       return this.$store.getters.getVolume
     },
-    getState () {
+    getState() {
       return this.$store.getters.getPlayerOption
     },
-    getAlwaysTop () {
+    getAlwaysTop() {
       return this.$store.getters.getAlwaysTopOption
     },
-    getLocale () {
+    getLocale() {
       return this.$store.getters.getLocale
     },
-    getVersionCheck () {
+    getVersionCheck() {
       return this.$store.getters.getVersionCheck
     },
-    getScrollPos () {
+    getScrollPos() {
       return this.$store.getters.getScrollPos
     },
-    getRemoveTrackIndex () {
+    getRemoveTrackIndex() {
       return this.$store.getters.getRemoveTrackIndex
     },
-    getSnow () {
+    getSnow() {
       return this.$store.getters.getSnow
     },
     getLog(message, data) {
-      if(process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log(message, data)
       }
     },
@@ -73,19 +73,58 @@ export default {
             type: "profile",
             userId: this.getUserId()
           },
-          fields: ['_id', 'history']
-        }).then(result => {
+          fields: ["_id", "history"]
+        })
+        .then(result => {
           let docs = result.docs[0]
-          if(docs) {
-            let item = this.$lodash.find(docs.history, { videoId: data.videoId })
-            if(!item) {
+          if (docs) {
+            let item = this.$lodash.find(docs.history, {
+              videoId: data.videoId
+            })
+            if (!item) {
               this.insertHistoryCallback(data)
             } else {
-              this.getLog('exists item: ', item);
+              this.getLog("exists item: ", item)
             }
           }
         })
-      
+    },
+    insertUserRecommand(data) {
+      this.$db.get("adfe10ffbd1f206762f478326809539e").then(result => {
+        let recommand = result.recommand
+        if (recommand) {
+          let item = this.$lodash.find(recommand, {
+            videoId: data.videoId
+          })
+          if (!item) {
+            this.insertUserRecommandCallback(data)
+          } else {
+            this.getLog("exists item: ", item)
+          }
+        }
+      })
+    },
+    insertUserRecommandCallback(data) {
+      let postData = {
+        videoId: data.videoId,
+        title: data.title,
+        thumbnail: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
+        creates: this.$moment().format("YYYYMMDDkkmmss"),
+        created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+      }
+      this.$db.get("adfe10ffbd1f206762f478326809539e").then(result => {
+        let recommand = result.recommand
+        if (recommand) {
+          recommand.push(postData)
+          return this.$db.put(result).then(res => {
+            if (res.ok) {
+              this.getLog("success item: ", data.videoId)
+            } else {
+              console.error("error")
+            }
+          })
+        }
+      })
     },
     insertHistoryCallback(data) {
       let postData = {
@@ -96,8 +135,8 @@ export default {
         duration_code: data.duration_code,
         duration_time: data.duration_time,
         duration: data.duration,
-        creates: this.$moment().format('YYYYMMDDkkmmss'),
-        created: this.$moment().format('YYYY-MM-DD kk:mm:ss')
+        creates: this.$moment().format("YYYYMMDDkkmmss"),
+        created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
       }
 
       this.$local
@@ -119,8 +158,8 @@ export default {
           }
         })
         .catch(err => {
-          this.getLog('[insertHistoryCallback] error => ', err);
-        });
+          this.getLog("[insertHistoryCallback] error => ", err)
+        })
     }
   }
 }

@@ -1,6 +1,6 @@
-import _ from 'lodash'
-import axios from 'axios'
-import * as $commons from '../../../service/commons-service'
+import _ from "lodash"
+import axios from "axios"
+import * as $commons from "../../../service/commons-service"
 
 const state = {
   volume: 0,
@@ -16,44 +16,44 @@ const state = {
 }
 
 const getters = {
-  getVolume () {
+  getVolume() {
     return state.volume
   },
-  getPlayType () {
+  getPlayType() {
     return state.isPlay
   },
-  getRepeat () {
+  getRepeat() {
     return state.isRepeat
   },
-  getNextSearchList () {
+  getNextSearchList() {
     return state.videoList
   },
-  getPlayList () {
+  getPlayList() {
     return state.playlist
   },
-  getTrafficOption () {
+  getTrafficOption() {
     return state.minTraffic
   }
 }
 
 // 동기
 const mutations = {
-  setLessTrafficOption (state, value) {
+  setLessTrafficOption(state, value) {
     state.minTraffic = value
   },
-  setVolume (state, value) {
+  setVolume(state, value) {
     state.volume = value
   },
-  setPlayType (state, value) {
+  setPlayType(state, value) {
     state.isPlay = value
   },
-  setRepeat (state, value) {
+  setRepeat(state, value) {
     state.isRepeat = value
   },
-  setNextSearchList (state, data) {
+  setNextSearchList(state, data) {
     state.videoList = data
   },
-  setRelatedList (state, data) {
+  setRelatedList(state, data) {
     state.relatedList = []
     _.forEach(data, item => {
       let trackInfo = {}
@@ -78,17 +78,17 @@ const mutations = {
           trackInfo.imageInfo = item.snippet.thumbnails.medium.url
         }
       } else {
-        trackInfo.imageInfo = ''
+        trackInfo.imageInfo = ""
       }
       state.relatedList.push(trackInfo)
       if (_.size(state.relatedList) > 0) {
         state.relatedList = _.filter(state.relatedList, obj => {
-          return obj.title != 'Private video' && obj.title != 'Deleted video'
+          return obj.title != "Private video" && obj.title != "Deleted video"
         })
       }
     })
   },
-  setSearchList (state, data) {
+  setSearchList(state, data) {
     state.searchList = []
     _.forEach(data, item => {
       let trackInfo = {}
@@ -113,17 +113,17 @@ const mutations = {
           trackInfo.imageInfo = item.snippet.thumbnails.medium.url
         }
       } else {
-        trackInfo.imageInfo = ''
+        trackInfo.imageInfo = ""
       }
       state.searchList.push(trackInfo)
       if (_.size(state.searchList) > 0) {
         state.searchList = _.filter(state.searchList, obj => {
-          return obj.title != 'Private video' && obj.title != 'Deleted video'
+          return obj.title != "Private video" && obj.title != "Deleted video"
         })
       }
     })
   },
-  setMusicList (state, data) {
+  setMusicList(state, data) {
     state.musicList = []
     _.forEach(data, item => {
       let trackInfo = {}
@@ -140,17 +140,17 @@ const mutations = {
           trackInfo.imageInfo = item.snippet.thumbnails.medium.url
         }
       } else {
-        trackInfo.imageInfo = ''
+        trackInfo.imageInfo = ""
       }
       state.musicList.push(trackInfo)
     })
     if (_.size(state.musicList) > 0) {
       state.musicList = _.filter(state.musicList, obj => {
-        return obj.title != 'Private video' && obj.title != 'Deleted video'
+        return obj.title != "Private video" && obj.title != "Deleted video"
       })
     }
   },
-  setPlayList (state, payload) {
+  setPlayList(state, payload) {
     let playData = {}
     playData.playlistId = payload.playlistName
     if (payload.playlistId2) {
@@ -161,7 +161,7 @@ const mutations = {
     playData.list = payload.list
     state.playlist.push(playData)
   },
-  setPageAppendList (state, payload) {
+  setPageAppendList(state, payload) {
     _.forEach(state.playlist, item => {
       if (item.playlistId === payload.playlistId) {
         item.list = []
@@ -174,9 +174,9 @@ const mutations = {
 
 // 비동기
 const actions = {
-  setSearchDuration (context) {
+  setSearchDuration(context) {
     state.videoList = []
-    let videoIds = _.map(state.searchList, 'videoId')
+    let videoIds = _.map(state.searchList, "videoId")
     return new Promise((resolve, reject) => {
       axios.get($commons.youtubeVideoDuration(videoIds)).then(res => {
         _.forEach(state.searchList, search_list => {
@@ -187,9 +187,7 @@ const actions = {
               search_list.duration_time = $commons.convertToSeconds(
                 videoId_list.contentDetails.duration
               )
-              search_list.duration = $commons.secondFormat(
-                search_list.duration_time
-              )
+              search_list.duration = $commons.secondFormat(search_list.duration_time)
             }
           })
           state.videoList.push(search_list)
@@ -198,9 +196,9 @@ const actions = {
       })
     })
   },
-  setRelatedDuration (context) {
+  setRelatedDuration(context) {
     state.relatedVideoList = []
-    let videoIds = _.map(state.relatedList, 'videoId')
+    let videoIds = _.map(state.relatedList, "videoId")
     return new Promise((resolve, reject) => {
       axios.get($commons.youtubeVideoDuration(videoIds)).then(res => {
         _.forEach(state.relatedList, search_list => {
@@ -211,9 +209,7 @@ const actions = {
               search_list.duration_time = $commons.convertToSeconds(
                 videoId_list.contentDetails.duration
               )
-              search_list.duration = $commons.secondFormat(
-                search_list.duration_time
-              )
+              search_list.duration = $commons.secondFormat(search_list.duration_time)
             }
           })
           state.relatedVideoList.push(search_list)
@@ -222,15 +218,14 @@ const actions = {
       })
     })
   },
-  setDuration (context) {
-    let videoIds = _.map(state.musicList, 'videoId')
+  setDuration(context) {
+    let videoIds = _.map(state.musicList, "videoId")
     return new Promise((resolve, reject) => {
       axios.get($commons.youtubeVideoDuration(videoIds)).then(res => {
         _.forEach(res.data.items, (item, index) => {
           if (state.musicList[index].videoId == item.id) {
-            if (state.musicList[index].imageInfo != '') {
-              state.musicList[index].duration_code =
-                item.contentDetails.duration
+            if (state.musicList[index].imageInfo != "") {
+              state.musicList[index].duration_code = item.contentDetails.duration
               state.musicList[index].duration_time = $commons.convertToSeconds(
                 item.contentDetails.duration
               )

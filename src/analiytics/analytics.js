@@ -1,8 +1,8 @@
-const { ipcMain } = require("electron");
-const Analytics = require("electron-google-analytics");
-const analytics = new Analytics.default("UA-128591940-1");
-const uuidV4 = require("uuid/v4");
-const uuid = uuidV4();
+const { ipcMain } = require("electron")
+const Analytics = require("electron-google-analytics")
+const analytics = new Analytics.default("UA-128591940-1")
+const uuidV4 = require("uuid/v4")
+const uuid = uuidV4()
 
 module.exports = function(app) {
   // app start
@@ -10,10 +10,10 @@ module.exports = function(app) {
     return analytics
       .screen(`Metube`, `${app.getVersion()}`, "None", "None", "main", uuid)
       .then(response => {
-        return response;
+        return response
       })
       .catch(err => {
-        return err;
-      });
-  });
-};
+        return err
+      })
+  })
+}

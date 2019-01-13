@@ -8,28 +8,15 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="reload"
-    />
+    <top-header :isShow="false" @reloadMusicList="reload"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
       <!-- 컬렉션 등록 -->
-      <a
-        class="cursor"
-        v-if="playType !== 'related'"
-        @click="addCollection"
-      >
+      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -40,10 +27,7 @@
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -69,57 +53,28 @@
     </div>
     <div class="overay"></div>
 
-    <md-list
-      id="list"
-      class="searchList"
-      :class="{ dynamicHeight: isMini }"
-    >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+    <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
-          <img
-            :src="item.imageInfo"
-            alt="People"
-          >
+          <img :src="item.imageInfo" alt="People">
         </md-avatar>
 
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
-        <context-menu
-          :videoId="item.videoId"
-          :data="item"
-        />
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <context-menu :videoId="item.videoId" :data="item"/>
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span
-          v-if="!isMore"
-          class="loadMoreCenter"
-        >
-          <a
-            class="cursor"
-            @click="nextPageLoad"
-          >
+        <span v-if="!isMore" class="loadMoreCenter">
+          <a class="cursor" @click="nextPageLoad">
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span
-          v-else
-          class="loadMoreCenter loadMoreLoading"
-        >LOADING ...</span>
+        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
       </md-list-item>
       <md-list-item v-else>
         <span class="playlistEnd">
@@ -134,18 +89,14 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 

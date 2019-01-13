@@ -15,21 +15,21 @@
 
 <script>
 export default {
-  name: 'Loader',
-  data () {
+  name: "Loader",
+  data() {
     return {
       show: false
-    }
+    };
   },
-  created () {
-    this.$eventBus.$on('showLoader', data => {
-      this.show = true
-    })
-    this.$eventBus.$on('hideLoader', data => {
-      this.show = false
-    })
+  created() {
+    this.$eventBus.$on("showLoader", data => {
+      this.show = true;
+    });
+    this.$eventBus.$on("hideLoader", data => {
+      this.show = false;
+    });
   }
-}
+};
 </script>
 
 <style scoped>

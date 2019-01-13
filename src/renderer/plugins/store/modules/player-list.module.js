@@ -4,20 +4,20 @@ const state = {
 }
 
 const getters = {
-  getPlayingMusicInfo () {
+  getPlayingMusicInfo() {
     return state.playingInfo
   },
-  getRemoveTrackIndex () {
+  getRemoveTrackIndex() {
     return state.removeTrackIndex
   }
 }
 
 // 동기
 const mutations = {
-  setPlayingMusicInfo (state, payload) {
+  setPlayingMusicInfo(state, payload) {
     state.playingInfo = payload
   },
-  setRemoveTrackIndex (state, payload) {
+  setRemoveTrackIndex(state, payload) {
     state.removeTrackIndex = payload
   }
 }

@@ -1,41 +1,41 @@
-import { app, BrowserWindow, ipcMain, dialog, shell } from "electron";
-import { googleLogin, getOauth2Client } from "../auth/auth";
-import { exec } from "child_process";
-import request from "request";
+import { app, BrowserWindow, ipcMain, dialog, shell } from "electron"
+import { googleLogin, getOauth2Client } from "../auth/auth"
+import { exec } from "child_process"
+import request from "request"
 
 // https connect true
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-let player;
-let mainWindow;
-let popupWindow;
+let player
+let mainWindow
+let popupWindow
 let willQuitApp = false
 const winURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080`
-    : `file://${__dirname}/index.html`;
+    : `file://${__dirname}/index.html`
 
 if (process.env.NODE_ENV != "development") {
   let shouldQuit = app.makeSingleInstance(() => {
     if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
     }
-  });
+  })
   if (shouldQuit) {
-    app.quit();
+    app.quit()
   }
 }
 
-let playerPath;
+let playerPath
 if (process.env.NODE_ENV === "development") {
-  if(process.platform !== 'darwin') {
-    playerPath = "http://localhost:7070";
+  if (process.platform !== "darwin") {
+    playerPath = "http://localhost:7070"
   } else {
-    playerPath = "http://sharepod.kr";    
+    playerPath = "http://sharepod.kr"
   }
 } else {
-  playerPath = "http://sharepod.kr";
+  playerPath = "http://sharepod.kr"
 }
 
 // Create Main Window
@@ -51,82 +51,88 @@ function createWindow() {
     webPreferences: {
       backgroundThrottling: false
     }
-  });
+  })
 
-  mainWindow.setMenu(null);
-  mainWindow.loadURL(winURL);
+  mainWindow.setMenu(null)
+  mainWindow.loadURL(winURL)
 
   if (process.env.NODE_ENV === "development") {
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools()
   }
 
   mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
+    mainWindow = null
+  })
 
   // Main Window on Ready
   mainWindow.webContents.on("did-finish-load", () => {
-    if (player) return;
+    if (player) return
     player = new BrowserWindow({
       width: 420,
       height: 280,
       title: "Player"
-    });
-    player.setMenu(null);
-    player.loadURL(playerPath);
+    })
+    player.setMenu(null)
+    player.loadURL(playerPath)
     player.on("close", e => {
       if (!willQuitApp) {
-        dialog.showErrorBox('Oops! 🤕', 'Sorry, player window cannot be closed. You can only minimize it.');
-        e.preventDefault();
+        dialog.showErrorBox(
+          "Oops! 🤕",
+          "Sorry, player window cannot be closed. You can only minimize it."
+        )
+        e.preventDefault()
       }
-    });
-  });
+    })
+  })
 
   mainWindow.on("close", e => {
     if (willQuitApp) {
       // the user tried to quit the app
-      player = null;
-      mainWindow = null;
+      player = null
+      mainWindow = null
     } else {
       // the user only tried to close the win
       if (process.platform !== "darwin") {
-        exec("taskkill /f /im MeTube.exe");
+        exec("taskkill /f /im MeTube.exe")
       } else {
-        e.preventDefault();
-        mainWindow.hide();
+        e.preventDefault()
+        mainWindow.hide()
       }
     }
-  });
+  })
 
-  mainWindow.on('restore', (e) => {
-    e.preventDefault();
-    mainWindow.show();
-  });
-
+  mainWindow.on("restore", e => {
+    e.preventDefault()
+    mainWindow.show()
+  })
 }
 
-app.on("activate", () => {mainWindow.show()});
-app.on('before-quit', () => { willQuitApp = true; });
+app.on("activate", () => {
+  mainWindow.show()
+})
+app.on("before-quit", () => {
+  willQuitApp = true
+})
 // App start
 app.on("ready", () => {
   // local player server
   if (process.env.NODE_ENV !== "production") {
-    if(process.platform !== 'darwin') {
-      exec(".\\node_modules\\.bin\\http-server ./player -p 7070");
+    if (process.platform !== "darwin") {
+      exec(".\\node_modules\\.bin\\http-server ./player -p 7070")
     }
   }
-  createWindow();
-});
+  createWindow()
+})
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit();
+    app.quit()
   }
-});
+})
 
 // Google Auth Youtube API Get AccessToken
 ipcMain.on("main:googleAuth", () => {
-  console.log("Google Youtube Oauth2.0 Start");
+  console.log("Google Youtube Oauth2.0 Start")
   googleLogin(mainWindow).then(code => {
     getOauth2Client()
       .getToken(code)
@@ -134,53 +140,53 @@ ipcMain.on("main:googleAuth", () => {
         if (res.tokens.access_token) {
           let requestURL = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${
             res.tokens.access_token
-          }`;
+          }`
           request.get(requestURL, (error, response, body) => {
             if (response.statusCode === 200) {
               mainWindow.webContents.send("render:googleAuth", {
                 resultCode: 200,
                 resultMsg: "success",
                 body: body
-              });
+              })
             }
-          });
+          })
         } else {
           mainWindow.webContents.send("render:googleAuth", {
             resultCode: -1,
             resultMsg: "error"
-          });
+          })
         }
-      });
-  });
-});
+      })
+  })
+})
 
 ipcMain.on("event:social", (e, args) => {
   popupWindow = new BrowserWindow({
     width: 800,
     height: 600
-  });
-  console.log(args);
-  popupWindow.loadURL(args.socialUrl);
+  })
+  console.log(args)
+  popupWindow.loadURL(args.socialUrl)
   popupWindow.on("close", e => {
-    popupWindow.hide();
-    popupWindow = null;
-  });
-});
+    popupWindow.hide()
+    popupWindow = null
+  })
+})
 
 // Window Close
 ipcMain.on("button:close", () => {
   if (process.platform !== "darwin") {
-    exec("taskkill /f /im MeTube.exe");
-    app.quit();
+    exec("taskkill /f /im MeTube.exe")
+    app.quit()
   } else {
-    app.quit();
+    app.quit()
   }
-});
+})
 
 // Window minimal
 ipcMain.on("button:minimize", () => {
-  mainWindow.minimize();
-});
+  mainWindow.minimize()
+})
 
 // Youtube Watch
 ipcMain.on("button:watchYoutubePopup", (e, url) => {
@@ -188,59 +194,59 @@ ipcMain.on("button:watchYoutubePopup", (e, url) => {
     width: 1200,
     height: 720,
     title: "MeTube - Watch Youtube"
-  });
-  popupWindow.loadURL(url);
+  })
+  popupWindow.loadURL(url)
   popupWindow.on("close", e => {
-    popupWindow.hide();
-    popupWindow = null;
-  });
-});
+    popupWindow.hide()
+    popupWindow = null
+  })
+})
 
 // Setting - AlwaysStop
 ipcMain.on("option:alwaystop", (e, args) => {
   if (args) {
-    mainWindow.setAlwaysOnTop(true);
+    mainWindow.setAlwaysOnTop(true)
   } else {
-    mainWindow.setAlwaysOnTop(false);
+    mainWindow.setAlwaysOnTop(false)
   }
-});
+})
 
 // Setting - Player Hide / Show
 ipcMain.on("isPlayer", (e, args) => {
   if (args) {
-    player.hide();
+    player.hide()
   } else {
-    player.show();
+    player.show()
   }
-});
+})
 
 // Setting - New Releases Download
 ipcMain.on("showGit", (e, args) => {
-  shell.openExternal("https://github.com/kimyearho/MeTube/releases");
-});
+  shell.openExternal("https://github.com/kimyearho/MeTube/releases")
+})
 
 // Window to Player Events
 ipcMain.on("win2Player", (e, args) => {
   try {
     if (process.env.NODE_ENV === "development") {
-      console.log("main -> " + args);
+      console.log("main -> " + args)
     }
-    player.webContents.send("win2Player", args);
+    player.webContents.send("win2Player", args)
   } catch (err) {
     /* window already closed */
   }
-});
+})
 
 // Player to Window Events
 ipcMain.on("player2Win", (e, args) => {
   try {
     if (process.env.NODE_ENV === "development") {
-      console.log("sub -> " + args);
+      console.log("sub -> " + args)
     }
-    mainWindow.webContents.send("player2Win", args);
+    mainWindow.webContents.send("player2Win", args)
   } catch (err) {
     /* window already closed */
   }
-});
+})
 
-require("../analiytics/analytics")(app);
+require("../analiytics/analytics")(app)

@@ -1,6 +1,6 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-Vue.use(VueRouter);
+import Vue from "vue"
+import VueRouter from "vue-router"
+Vue.use(VueRouter)
 
 export default new VueRouter({
   saveScrollPosition: true,
@@ -58,6 +58,6 @@ export default new VueRouter({
       path: "/history",
       name: "VIDEO-HISTORY",
       component: require("@/components/history/VideoHistory").default
-    },
+    }
   ]
-});
+})

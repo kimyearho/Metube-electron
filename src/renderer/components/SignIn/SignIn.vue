@@ -8,51 +8,32 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isMenu="true"
-      :isShow="false"
-      :data="{ playType: 'list' }"
-    />
+    <top-header :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
     <div class="wrapper">
       <div class="contents">
         <div class="cover">
-          <img
-            width="350"
-            v-if="!isSignin"
-            src="@/assets/images/youtube/dev.png"
-          >
+          <img width="350" v-if="!isSignin" src="@/assets/images/youtube/dev.png">
           <div v-if="isSignin">
             <div class="picture">
-              <img
-                class="userPicture"
-                width="100"
-                :src="profileData.googlePicture"
-              >
+              <img class="userPicture" width="100" :src="profileData.googlePicture">
             </div>
             <div class="userName">{{ profileData.googleName }}</div>
           </div>
         </div>
-        <div
-          class="signin"
-          :class="{ signout: isSignin }"
-        >
+        <div class="signin" :class="{ signout: isSignin }">
           <md-button
             v-if="!isSignin"
             class="cursor md-raised md-primary"
             style="width: 120px;"
             @click="signin"
-          >
-            {{ $t('SIGN.SIGN_IN') }}
-          </md-button>
+          >{{ $t('SIGN.SIGN_IN') }}</md-button>
 
           <md-button
             v-else
             class="cursor md-raised md-accent"
             style="width: 120px;"
             @click="signout"
-          >
-            {{ $t('SIGN.SIGN_OUT') }}
-          </md-button>
+          >{{ $t('SIGN.SIGN_OUT') }}</md-button>
         </div>
         <div class="menu1">
           <label class="gr">
@@ -61,22 +42,13 @@
           </label>
         </div>
         <div class="description">
-          <strong
-            class="gr"
-            v-if="!isSignin"
-          >{{ $t('SIGN.NO_LOGIN_NOTICE') }}</strong>
-          <strong
-            class="gr"
-            v-if="isSignin"
-          >{{ $t('SIGN.YES_LOGIN_NOTICE') }}</strong>
+          <strong class="gr" v-if="!isSignin">{{ $t('SIGN.NO_LOGIN_NOTICE') }}</strong>
+          <strong class="gr" v-if="isSignin">{{ $t('SIGN.YES_LOGIN_NOTICE') }}</strong>
         </div>
       </div>
     </div>
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar
-      class="md-top-61"
-      v-show="isMini"
-    />
+    <sub-player-bar class="md-top-61" v-show="isMini"/>
   </div>
 </template>
 
@@ -101,7 +73,7 @@ export default {
     };
   },
   created() {
-    this.isMini = this.getMusicInfos() ? true : false
+    this.isMini = this.getMusicInfos() ? true : false;
     this.$ipcRenderer.on("render:googleAuth", (e, args) => {
       if (args.resultCode === 200) {
         this.$store.commit("setGoogleProfile", JSON.parse(args.body));

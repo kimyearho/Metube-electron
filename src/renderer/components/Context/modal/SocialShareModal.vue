@@ -1,9 +1,8 @@
-/*---------------------------------------------------------------------------------------------
- *  Licensed under the GPL-3.0 License. See License.txt in the project root for license information.
- *  You can not delete this comment when you deploy an application.
- *--------------------------------------------------------------------------------------------*/
-
-'use strict';
+/*--------------------------------------------------------------------------------------------- *
+Licensed under the GPL-3.0 License. See License.txt in the project root for license information. *
+You can not delete this comment when you deploy an application.
+*--------------------------------------------------------------------------------------------*/ 'use
+strict';
 
 <template>
   <div>
@@ -28,8 +27,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import { Facebook, Twitter, Telegram, Reddit, Google } from "vue-socialmedia-share";
+import StoreMixin from "@/components/Mixin/index"
+import { Facebook, Twitter, Telegram, Reddit, Google } from "vue-socialmedia-share"
 export default {
   name: "SocialShareModal",
   mixins: [StoreMixin],
@@ -50,14 +49,14 @@ export default {
   data() {
     return {
       url: `https://www.youtube.com/watch?v=${this.videoId}`
-    };
+    }
   },
   methods: {
     closeModal() {
-      this.$emit("closeModal", false);
+      this.$emit("closeModal", false)
     }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -16,31 +16,12 @@
       width="300px"
       @open="get"
     >
-      <el-form
-        :model="form"
-        ref="form"
-        label-position="top"
-        :rules="rules"
-      >
-        <el-form-item
-          label="Collection name"
-          :label-width="formLabelWidth"
-          prop="name"
-        >
-          <el-input
-            v-model="form.name"
-            autocomplete="off"
-          ></el-input>
+      <el-form :model="form" ref="form" label-position="top" :rules="rules">
+        <el-form-item label="Collection name" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="Category"
-          :label-width="formLabelWidth"
-          prop="category"
-        >
-          <el-select
-            v-model="form.category"
-            placeholder="Please select a category"
-          >
+        <el-form-item label="Category" :label-width="formLabelWidth" prop="category">
+          <el-select v-model="form.category" placeholder="Please select a category">
             <el-option
               v-for="item in form.categories"
               :key="item.label"
@@ -50,29 +31,19 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          size="mini"
-          @click="closeModal"
-        >Cancel</el-button>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="save"
-        >Confirm</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="closeModal">Cancel</el-button>
+        <el-button type="primary" size="mini" @click="save">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import StoreMixin from '@/components/Mixin/index'
-import CommonMixin from '@/components/Mixin/common'
+import StoreMixin from "@/components/Mixin/index";
+import CommonMixin from "@/components/Mixin/common";
 export default {
-  name: 'MyCollectionModify',
+  name: "MyCollectionModify",
   mixins: [StoreMixin, CommonMixin],
   props: {
     id: String,
@@ -83,54 +54,54 @@ export default {
   },
   data() {
     return {
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       rules: {
         name: [
           {
             required: true,
-            message: 'Please enter a collection name.',
-            trigger: 'change'
+            message: "Please enter a collection name.",
+            trigger: "change"
           }
         ],
         category: [
           {
             required: true,
-            message: 'Please select a collection category.',
-            trigger: 'change'
+            message: "Please select a collection category.",
+            trigger: "change"
           }
         ]
       },
       form: {
-        name: '',
-        category: '',
+        name: "",
+        category: "",
         categories: [
-          { label: 'Film', value: 'Film' },
-          { label: 'Vehicles', value: 'Vehicles' },
-          { label: 'Music', value: 'Music' },
-          { label: 'Radio', value: 'Radio' },
-          { label: 'Rock', value: 'Rock' },
-          { label: 'Anime', value: 'Anime' },
-          { label: 'Gaming', value: 'Gaming' },
-          { label: 'Classics', value: 'Classics' },
-          { label: 'Electronic', value: 'Electronic' },
-          { label: 'Movie', value: 'Movie' },
-          { label: 'Piano', value: 'Piano' },
-          { label: 'Sleep', value: 'Sleep' },
-          { label: 'Epic', value: 'Epic' },
-          { label: 'Pets', value: 'Pets' },
-          { label: 'Entertainment', value: 'Entertainment' },
-          { label: 'Travel', value: 'Travel' },
-          { label: 'Comedy', value: 'Comedy' },
-          { label: 'Trailers', value: 'Trailers' },
-          { label: 'Shorts', value: 'Shorts' },
-          { label: 'Action', value: 'Action' }
+          { label: "Film", value: "Film" },
+          { label: "Vehicles", value: "Vehicles" },
+          { label: "Music", value: "Music" },
+          { label: "Radio", value: "Radio" },
+          { label: "Rock", value: "Rock" },
+          { label: "Anime", value: "Anime" },
+          { label: "Gaming", value: "Gaming" },
+          { label: "Classics", value: "Classics" },
+          { label: "Electronic", value: "Electronic" },
+          { label: "Movie", value: "Movie" },
+          { label: "Piano", value: "Piano" },
+          { label: "Sleep", value: "Sleep" },
+          { label: "Epic", value: "Epic" },
+          { label: "Pets", value: "Pets" },
+          { label: "Entertainment", value: "Entertainment" },
+          { label: "Travel", value: "Travel" },
+          { label: "Comedy", value: "Comedy" },
+          { label: "Trailers", value: "Trailers" },
+          { label: "Shorts", value: "Shorts" },
+          { label: "Action", value: "Action" }
         ]
       }
-    }
+    };
   },
   methods: {
     get() {
-      let user = this.getUserId()
+      let user = this.getUserId();
       if (user) {
         this.$local
           .find({
@@ -138,14 +109,15 @@ export default {
               type: "profile",
               userId: user
             }
-          }).then(result => {
-            let docs = result.docs[0]
-            if (docs) {
-              let data = this.$lodash.find(docs.playlists, { _key: this.id })
-              this.form.name = data.title;
-              this.form.category = data.category
-            }
           })
+          .then(result => {
+            let docs = result.docs[0];
+            if (docs) {
+              let data = this.$lodash.find(docs.playlists, { _key: this.id });
+              this.form.name = data.title;
+              this.form.category = data.category;
+            }
+          });
       } else {
         // no login
       }
@@ -153,7 +125,7 @@ export default {
     save() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          let user = this.getUserId()
+          let user = this.getUserId();
           if (user) {
             this.$local
               .find({
@@ -161,31 +133,34 @@ export default {
                   type: "profile",
                   userId: user
                 }
-              }).then(result => {
-                let docs = result.docs[0]
+              })
+              .then(result => {
+                let docs = result.docs[0];
                 if (docs) {
                   // 인덱스 찾음
-                  let trackIndex = this.$lodash.findIndex(docs.playlists, { _key: this.id })
-                  docs.playlists[trackIndex].title = this.form.name
-                  docs.playlists[trackIndex].category = this.form.category
+                  let trackIndex = this.$lodash.findIndex(docs.playlists, {
+                    _key: this.id
+                  });
+                  docs.playlists[trackIndex].title = this.form.name;
+                  docs.playlists[trackIndex].category = this.form.category;
                   this.$local.put(docs).then(res => {
                     if (res.ok) {
-                      this.$emit('is-success', true);
+                      this.$emit("is-success", true);
                     }
-                  })
+                  });
                 }
-              })
+              });
           }
         }
-      })
+      });
     },
     closeModal() {
-      this.$refs.form.resetFields()
-      this.form.category = ''
-      this.$emit('is-close', false)
+      this.$refs.form.resetFields();
+      this.form.category = "";
+      this.$emit("is-close", false);
     }
   }
-}
+};
 </script>
 
 <style scoped>

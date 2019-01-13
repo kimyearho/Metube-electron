@@ -1,7 +1,7 @@
-const API_URL = "https://www.googleapis.com/youtube/v3";
-const API_KEY = "AIzaSyDTveVmzb3_2z1TSO-2fWfKX46Kf7dm0HI";
+const API_URL = "https://www.googleapis.com/youtube/v3"
+const API_KEY = "AIzaSyDTveVmzb3_2z1TSO-2fWfKX46Kf7dm0HI"
 
-export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`;
+export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`
 
 /**
  * Youtube 음악검색
@@ -11,9 +11,7 @@ export const googleSearchPath = `https://suggestqueries.google.com/complete/sear
 export function youtubeSearch(text) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&q=${text}`)
-    .concat(
-      `&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${API_KEY}`
-    );
+    .concat(`&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${API_KEY}`)
 }
 
 /**
@@ -24,7 +22,7 @@ export function youtubeSearch(text) {
 export function youtubePlaylistSearch(text) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&q=${text}`)
-    .concat(`&type=playlist&maxResults=30&safeSearch=strict&key=${API_KEY}`);
+    .concat(`&type=playlist&maxResults=30&safeSearch=strict&key=${API_KEY}`)
 }
 
 /**
@@ -37,7 +35,7 @@ export function youtubePagingSearch(text, nextToken) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&q=${text}`)
     .concat(`&type=video,playlist,channel&pageToken=${nextToken}`)
-    .concat(`&maxResults=40&safeSearch=strict&key=${API_KEY}`);
+    .concat(`&maxResults=40&safeSearch=strict&key=${API_KEY}`)
 }
 
 /**
@@ -48,7 +46,7 @@ export function youtubePagingSearch(text, nextToken) {
 export function youtubeRelatedSearch(videoId) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&relatedToVideoId=${videoId}`)
-    .concat(`&type=video&maxResults=30&key=${API_KEY}`);
+    .concat(`&type=video&maxResults=30&key=${API_KEY}`)
 }
 
 /**
@@ -60,7 +58,7 @@ export function youtubePagingRelatedSearch(videoId, nextToken) {
   return API_URL.concat("/search?")
     .concat(`part=snippet&relatedToVideoId=${videoId}`)
     .concat(`&pageToken=${nextToken}`)
-    .concat(`&type=video&maxResults=30&key=${API_KEY}`);
+    .concat(`&type=video&maxResults=30&key=${API_KEY}`)
 }
 
 /**
@@ -71,7 +69,7 @@ export function youtubePagingRelatedSearch(videoId, nextToken) {
 export function youtubeChannelSearch(channelId) {
   return API_URL.concat("/channels?")
     .concat(`part=snippet,contentDetails&fields=items&id=${channelId}`)
-    .concat(`&maxResults=30&key=${API_KEY}`);
+    .concat(`&maxResults=30&key=${API_KEY}`)
 }
 
 /**
@@ -85,7 +83,7 @@ export function youtubePlaylistItem(playlistId) {
     .concat(playlistId)
     .concat("&maxResults=30")
     .concat("&key=")
-    .concat(API_KEY);
+    .concat(API_KEY)
 }
 
 /**
@@ -99,7 +97,7 @@ export function youtubePagingPlaylistItem(playlistId, nextToken) {
     .concat(`part=snippet&playlistId=${playlistId}`)
     .concat(`&pageToken=${nextToken}`)
     .concat("&maxResults=30")
-    .concat(`&key=${API_KEY}`);
+    .concat(`&key=${API_KEY}`)
 }
 
 /**
@@ -110,7 +108,7 @@ export function youtubePagingPlaylistItem(playlistId, nextToken) {
 export function youtubeVideoResult(videoId) {
   return API_URL.concat("/videos?")
     .concat(`part=snippet&id=${videoId}`)
-    .concat(`&key=${API_KEY}`);
+    .concat(`&key=${API_KEY}`)
 }
 
 /**
@@ -120,10 +118,8 @@ export function youtubeVideoResult(videoId) {
  */
 export function youtubeVideoDuration(videoId) {
   return API_URL.concat("/videos?")
-    .concat(
-      `part=contentDetails,snippet&fields=items(id,contentDetails(duration))&id=${videoId}`
-    )
-    .concat(`&key=${API_KEY}`);
+    .concat(`part=contentDetails,snippet&fields=items(id,contentDetails(duration))&id=${videoId}`)
+    .concat(`&key=${API_KEY}`)
 }
 
 /**
@@ -134,7 +130,7 @@ export function youtubeVideoDuration(videoId) {
 export function youtubePlaylistInfo(playlistId) {
   return API_URL.concat("/playlists?")
     .concat(`part=snippet&id=${playlistId}`)
-    .concat(`&key=${API_KEY}`);
+    .concat(`&key=${API_KEY}`)
 }
 
 /**
@@ -143,22 +139,22 @@ export function youtubePlaylistInfo(playlistId) {
  * @param {*} n - ISO String
  */
 export function convertToSeconds(n) {
-  let reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-  let hours = 0;
+  let reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/
+  let hours = 0
 
-  let minutes = 0;
+  let minutes = 0
 
-  let seconds = 0;
+  let seconds = 0
 
-  let totalseconds;
+  let totalseconds
   if (reptms.test(n)) {
-    let matches = reptms.exec(n);
-    if (matches[1]) hours = Number(matches[1]);
-    if (matches[2]) minutes = Number(matches[2]);
-    if (matches[3]) seconds = Number(matches[3]);
-    totalseconds = hours * 3600 + minutes * 60 + seconds;
+    let matches = reptms.exec(n)
+    if (matches[1]) hours = Number(matches[1])
+    if (matches[2]) minutes = Number(matches[2])
+    if (matches[3]) seconds = Number(matches[3])
+    totalseconds = hours * 3600 + minutes * 60 + seconds
   }
-  return totalseconds;
+  return totalseconds
 }
 
 /**
@@ -167,15 +163,9 @@ export function convertToSeconds(n) {
  * @param {*} sec_num - 재생시간(단위:초)
  */
 export function secondFormat(sec_num) {
-  var d = Number(sec_num);
-  var h = Math.floor(d / 3600);
-  var m = Math.floor((d % 3600) / 60);
-  var s = Math.floor((d % 3600) % 60);
-  return (
-    (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") +
-    m +
-    ":" +
-    (s < 10 ? "0" : "") +
-    s
-  );
+  var d = Number(sec_num)
+  var h = Math.floor(d / 3600)
+  var m = Math.floor((d % 3600) / 60)
+  var s = Math.floor((d % 3600) % 60)
+  return (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s
 }

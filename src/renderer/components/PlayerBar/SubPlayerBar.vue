@@ -9,25 +9,14 @@
   <!-- root div -->
   <div>
     <div class="zaudio_player">
-      <progress
-        :value="range"
-        min="0"
-        :max="maxTime"
-      />
+      <progress :value="range" min="0" :max="maxTime"/>
       <div class="zaudio_playercontrols">
         <div class="zaudio_buttonwrapper">
           <div>
-            <img
-              class="miniImage"
-              width="30"
-              :src="image"
-            >
+            <img class="miniImage" width="30" :src="image">
           </div>
           <div class="zaudio_playercontrolbuttons">
-            <div
-              class="cover channelInfo cursor"
-              @click="showPlaylist"
-            >
+            <div class="cover channelInfo cursor" @click="showPlaylist">
               <div>{{ coverTitle }}</div>
               <div class="channel">{{ channelTitle }}</div>
             </div>
@@ -98,9 +87,12 @@ export default {
         this.image = musicInfo.imageInfo
           ? musicInfo.imageInfo
           : musicInfo.thumbnails;
-        this.coverTitle = musicInfo.title.substring(0, 38);
-        if (this.$lodash.size(musicInfo.title) > 38) {
-          this.coverTitle = this.coverTitle.concat("...");
+
+        let titleLength = this.countUtf8Bytes(musicInfo.title);
+        if (titleLength > 35) {
+          this.coverTitle = musicInfo.title.substring(0, 35).concat("...");
+        } else {
+          this.coverTitle = musicInfo.title;
         }
         this.channelTitle = musicInfo.channelTitle;
         this.maxTime = musicInfo.duration_time;
@@ -185,6 +177,14 @@ export default {
       } else {
         return 0;
       }
+    },
+
+    countUtf8Bytes(s) {
+      var b = 0,
+        i = 0,
+        c;
+      for (; (c = s.charCodeAt(i++)); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
+      return b;
     }
   }
 };
@@ -226,7 +226,7 @@ export default {
 }
 
 .channel {
-  padding-top: 4px;
+  /* padding-top: 4px; */
   font-size: 10px;
   color: #ddd;
 }

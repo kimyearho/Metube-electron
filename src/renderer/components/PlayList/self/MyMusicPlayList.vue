@@ -8,28 +8,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -66,18 +54,9 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span
-          class="md-list-item-text music-title cursor"
-          @click="playItem(index)"
-        >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -108,15 +87,11 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -204,17 +179,20 @@ export default {
       this.playItem(index, "sync");
     },
 
-    /**
-     * 인스턴스 초기화 시 조회되는 재생목록
-     */
-    feachData() {
-      // DOM이 마운트 되고 시작 음악의 위치로 스크롤 되도록 처리
+    videoActive(ms) {
       let self = this;
       setTimeout(() => {
         let id = "#item" + self.$route.params.start;
         self.$scrollTo(id, -1, options);
-      }, 350);
+        self.load = true;
+      }, ms);
+    },
 
+    /**
+     * 인스턴스 초기화 시 조회되는 재생목록
+     */
+    feachData() {
+      this.load = false;
       this.startIndex = this.$route.params.start;
       this.playType = this.$route.params.playType;
       this.id = this.$route.params.id;
@@ -261,7 +239,7 @@ export default {
                     this.coverTitle = musicInfo.title;
                     this.channelTitle = musicInfo.channelTitle;
                     this.selectedIndex = musicInfo.index;
-                    this.load = true;
+                    this.videoActive(500);
                   } else {
                     // 인덱스가 서로 다르므로 새로 시작
                     this.autoStart();
@@ -270,9 +248,9 @@ export default {
               } else {
                 this.autoStart();
               }
+
               // 총 트랙 수
               this.totalTracks = data.tracks.length;
-              this.load = true;
             }
           });
       }
@@ -294,6 +272,7 @@ export default {
       playingItem.index = startTrack;
       playingItem.name = this.id;
       this.playSetting(playingItem);
+      this.videoActive(200);
     },
 
     /**
@@ -391,13 +370,14 @@ export default {
         playingItem.videoId
       ]);
 
-      this.$store.commit('setPlayType', true)
+      this.$store.commit("setPlayType", true);
       this.$eventBus.$emit("statusCheck");
 
       /** @overade 히스토리 등록 */
-      this.insertVideoHistory(playingItem)
+      this.insertVideoHistory(playingItem);
 
-      this.load = true;
+      /** @overade 사용자 재생 등록 */
+      this.insertUserRecommand(playingItem);
     },
 
     /**

@@ -7,7 +7,6 @@
 
 <template>
   <div id="app">
-
     <!-- 루트 라우터 뷰 -->
     <transition name="fade">
       <router-view></router-view>
@@ -15,30 +14,11 @@
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab
-        id="tabSearch"
-        class="md-tab"
-        md-label="Search"
-        @click="route('search')"
-      ></md-tab>
-      <md-tab
-        id="tabCollection"
-        class="md-tab"
-        md-label="Collections"
-        @click="route('collection')"
-      ></md-tab>
-      <md-tab
-        id="tabHistory"
-        class="md-tab"
-        md-label="History"
-        @click="route('history')"
-      ></md-tab>
+      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
     </md-tabs>
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -58,7 +38,7 @@ export default {
   },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
     }
 
@@ -267,8 +247,8 @@ export default {
                 {
                   title: "Yes",
                   handler: () => {
-                    this.$ipcRenderer.send('showGit', null)
-                    this.$modal.hide("dialog")
+                    this.$ipcRenderer.send("showGit", null);
+                    this.$modal.hide("dialog");
                   }
                 },
                 {

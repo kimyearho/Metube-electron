@@ -1,8 +1,8 @@
-import axios from 'axios-jsonp-pro'
+import axios from "axios-jsonp-pro"
 
 /* global loading */
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+import NProgress from "nprogress"
+import "nprogress/nprogress.css"
 NProgress.configure({ showSpinner: false })
 
 const service = axios.create({
@@ -11,22 +11,22 @@ const service = axios.create({
 
 /* Request interceptors */
 service.interceptors.request.use(
-  function (config) {
+  function(config) {
     NProgress.start()
     return config
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error)
   }
 )
 
 /* Response interceptors */
 service.interceptors.response.use(
-  function (response) {
+  function(response) {
     NProgress.done()
     return response
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error)
   }
 )
