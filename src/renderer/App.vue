@@ -235,7 +235,7 @@ export default {
     },
     onNewReleaseCheck() {
       this.$db
-        .get("adfe10ffbd1f206762f478326800a5b6")
+        .get("17901f376f4ff226c03adecee0004104")
         .then(doc => {
           let live_version = `${doc.version}`;
           let local_version = this.$version;

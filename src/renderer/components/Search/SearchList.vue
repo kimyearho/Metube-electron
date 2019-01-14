@@ -171,7 +171,7 @@ export default {
   methods: {
     recommandTrack() {
       this.loading = true;
-      let urlId = "adfe10ffbd1f206762f478326809539e";
+      let urlId = "17901f376f4ff226c03adecee00013d5";
       this.$db.get(urlId).then(result => {
         let data = result.recommand;
         this.recommandList = this.$lodash

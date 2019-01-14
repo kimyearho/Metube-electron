@@ -199,61 +199,53 @@ export default {
       let user_id = this.getUserId();
       if (user_id) {
         this.$local
-          .createIndex({
-            index: {
-              fields: ["playlists.tracks.videoId"]
-            }
+          .find({
+            selector: {
+              type: "profile",
+              userId: user_id
+            },
+            fields: ["playlists"]
           })
           .then(result => {
-            return this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: user_id
-                },
-                fields: ["playlists"]
-              })
-              .then(result => {
-                let docs = result.docs[0];
-                let playlists = docs.playlists;
-                if (playlists) {
-                  // 재생목록
-                  let data = this.$lodash.find(playlists, {
-                    _key: this.id
-                  });
-                  this.playlist = data.tracks;
-                  this.category = data.category;
-                  let musicInfo = this.getMusicInfos();
-                  // 현재 재생중인 재생정보가 있는지?
-                  if (musicInfo) {
-                    // name -> 재생정보에 포함 된 재생목록의 key값
-                    // id -> 이 재생목록의 key값
-                    // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
-                    if (musicInfo.name != this.id) {
-                      this.autoStart();
-                    } else {
-                      // 현재 재생중인정보가 이 재생목록과 같은경우.
-                      // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
-                      if (musicInfo.index === this.startIndex) {
-                        // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
-                        this.cover = musicInfo.thumbnails;
-                        this.coverTitle = musicInfo.title;
-                        this.channelTitle = musicInfo.channelTitle;
-                        this.selectedIndex = musicInfo.index;
-                        this.videoActive(400);
-                      } else {
-                        // 인덱스가 서로 다르므로 새로 시작
-                        this.autoStart();
-                      }
-                    }
+            let docs = result.docs[0];
+            let playlists = docs.playlists;
+            if (playlists) {
+              // 재생목록
+              let data = this.$lodash.find(playlists, {
+                _key: this.id
+              });
+              this.playlist = data.tracks;
+              this.category = data.category;
+              let musicInfo = this.getMusicInfos();
+              // 현재 재생중인 재생정보가 있는지?
+              if (musicInfo) {
+                // name -> 재생정보에 포함 된 재생목록의 key값
+                // id -> 이 재생목록의 key값
+                // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
+                if (musicInfo.name != this.id) {
+                  this.autoStart();
+                } else {
+                  // 현재 재생중인정보가 이 재생목록과 같은경우.
+                  // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
+                  if (musicInfo.index === this.startIndex) {
+                    // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
+                    this.cover = musicInfo.thumbnails;
+                    this.coverTitle = musicInfo.title;
+                    this.channelTitle = musicInfo.channelTitle;
+                    this.selectedIndex = musicInfo.index;
+                    this.videoActive(400);
                   } else {
+                    // 인덱스가 서로 다르므로 새로 시작
                     this.autoStart();
                   }
-
-                  // 총 트랙 수
-                  this.totalTracks = data.tracks.length;
                 }
-              });
+              } else {
+                this.autoStart();
+              }
+
+              // 총 트랙 수
+              this.totalTracks = data.tracks.length;
+            }
           });
       }
     },

@@ -90,7 +90,7 @@ export default {
         })
     },
     insertUserRecommand(data) {
-      this.$db.get("adfe10ffbd1f206762f478326809539e").then(result => {
+      this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
         let recommand = result.recommand
         if (recommand) {
           let item = this.$lodash.find(recommand, {
@@ -112,7 +112,7 @@ export default {
         creates: this.$moment().format("YYYYMMDDkkmmss"),
         created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
       }
-      this.$db.get("adfe10ffbd1f206762f478326809539e").then(result => {
+      this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
         let recommand = result.recommand
         if (recommand) {
           recommand.push(postData)
