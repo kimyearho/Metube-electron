@@ -36,7 +36,6 @@ Notice the changes to the next build in advance.
 I was constantly monitoring for suggested music that I showed as a slide at the top of the search page. However, I believe that this function is not a function that will be greatly helpful, and I intend to improve the function for other purposes. Currently, the new method is to display music recently played by other users. It does not indicate who listened to what music. It is intended to naturally share music that other users  heard with other users.
 
 2. Survey by region
-
 Metube has a separate player server.
 There is a player server in Asia. As a result, all users are connected to the Asian server.
 Metube is developing as a global service, but I do not know much about the rest of Asia. Therefore, many users are currently accessing "Poland" and "Colombia". You need feedback on the ping issue when using the application in your country. If there is a problem with network pinging, I am considering adding a server.
