@@ -96,17 +96,18 @@ export default {
             type: "profile",
             userId: this.getUserId()
           },
-          fields: ["_id", "history"],
+          fields: ["history"],
           limit: 20
         })
         .then(result => {
+          console.log(result);
           let docs = result.docs[0];
           if (docs) {
             if (docs.history.length > 0) {
               this.playlist = this.$lodash
                 .chain(docs.history)
                 .orderBy(["creates"], ["desc"])
-                .take(20)
+                .take(30)
                 .value();
             }
           }

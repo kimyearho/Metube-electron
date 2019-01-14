@@ -1,5 +1,5 @@
 const API_URL = "https://www.googleapis.com/youtube/v3"
-const API_KEY = "AIzaSyDTveVmzb3_2z1TSO-2fWfKX46Kf7dm0HI"
+const API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
 
 export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`
 

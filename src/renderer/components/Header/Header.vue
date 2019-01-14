@@ -149,6 +149,11 @@ export default {
   },
   created() {
     this.isFab = this.isShow;
+
+    let self = this;
+    setInterval(() => {
+      self.batchDelete();
+    }, 30000);
   },
   mounted() {
     this.isUser = this.getUserId();
@@ -163,6 +168,46 @@ export default {
     }
   },
   methods: {
+    batchDelete() {
+      if (this.getUserId()) {
+        this.$local
+          .find({
+            selector: {
+              type: "profile",
+              userId: this.getUserId()
+            }
+          })
+          .then(result => {
+            let docs = result.docs[0];
+            if (docs) {
+              // 목록을 오름차순으로 정렬
+              let list = this.$lodash.orderBy(
+                docs.history,
+                ["creates"],
+                ["asc"]
+              );
+              // 총 개수
+              let size = this.$lodash.size(docs.history);
+              // 기본 개수
+              const defaultNum = 20;
+              // 결과 = 총 개수 - 기본 개수
+              let result = size - defaultNum;
+              // 결과 개수가 기본 개수보다 크면,
+              if (result > defaultNum) {
+                // 0부터 결과개수-1 만큼 삭제 후 갱신
+                docs.history.splice(0, result - 1);
+                this.$local.put(docs).then(res => {
+                  if (res.ok) {
+                    console.log("success remove!");
+                  }
+                });
+              } else {
+                console.log("Non Removing. history size: " + size);
+              }
+            }
+          });
+      }
+    },
     apply() {
       let parseURL;
       let url = this.linkForm;
