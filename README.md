@@ -29,6 +29,10 @@ In the meantime, I am studying and learning a lot.
 I like music and I like YouTube.
 We are still very scarce, but we are always trying to provide better quality and better service. I use apps 24 hours a day, bugs, improvements, and new developments, but it's not easy to do it all by yourself. Therefore, your feedback and feedback are always welcome.
 
+### Roadmap
+Notice the changes to the next build in advance.
+I was constantly monitoring for suggested music that I showed as a slide at the top of the search page. However, I believe that this function is not a function that will be greatly helpful, and I intend to improve the function for other purposes. Currently, the new method is to display music recently played by other users. It does not indicate who listened to what music. It is intended to naturally share music that other users  heard with other users.
+
 ***
 
 ### Installation
