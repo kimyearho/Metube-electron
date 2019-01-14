@@ -134,8 +134,8 @@ export default {
         channelId: item.channelId ? item.channelId : null,
         videoId: item.videoId,
         title: item.title,
-        creates: this.$moment().format("YYYYMMDDkkmmss"),
-        created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+        creates: this.$moment().format("YYYYMMDDHHmmss"),
+        created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
       };
       if (this.playType === "play") {
         data.thumbnails = item.imageInfo;

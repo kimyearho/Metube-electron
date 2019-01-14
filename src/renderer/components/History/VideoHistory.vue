@@ -9,9 +9,7 @@
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/playlist.svg">
               <span class="collections">Play History</span>
             </div>
-            <strong class="tr" style="font-size:11px;">A list of recently played videos.
-              <br>However, the same video will not be registered.
-            </strong>
+            <strong class="tr" style="font-size:11px;">A list of 20 videos you recently watched.</strong>
           </div>
         </el-col>
       </el-row>
@@ -98,7 +96,8 @@ export default {
             type: "profile",
             userId: this.getUserId()
           },
-          fields: ["_id", "history"]
+          fields: ["_id", "history"],
+          limit: 20
         })
         .then(result => {
           let docs = result.docs[0];

@@ -172,16 +172,21 @@ export default {
     recommandTrack() {
       this.loading = true;
       let urlId = "17901f376f4ff226c03adecee00013d5";
-      this.$db.get(urlId).then(result => {
-        let data = result.recommand;
-        this.recommandList = this.$lodash
-          .chain(data)
-          .orderBy(["creates"], ["desc"])
-          .take(50)
-          .shuffle()
-          .value();
-      });
-      this.loading = false;
+      this.$db
+        .get(urlId)
+        .then(result => {
+          let data = result.recommand;
+          this.recommandList = this.$lodash
+            .chain(data)
+            .orderBy(["creates"], ["desc"])
+            .take(50)
+            .shuffle()
+            .value();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
     },
     /*
     recommandTrack() {
@@ -369,7 +374,7 @@ export default {
             let docs = result.docs[0];
             docs.keywords.push({
               searchKey: k,
-              created: this.$moment().format("YYYYMMDDkkmmss")
+              created: this.$moment().format("YYYYMMDDHHmmss")
             });
             this.$local.put(docs).then(() => {
               this.getKeyword();

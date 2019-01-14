@@ -7,6 +7,9 @@
 
 export default {
   methods: {
+    getId() {
+      return this.$store.getters.getId
+    },
     getProfile() {
       return this.$store.getters.getGoogleProfile
     },
@@ -109,8 +112,8 @@ export default {
         videoId: data.videoId,
         title: data.title,
         thumbnail: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
-        creates: this.$moment().format("YYYYMMDDkkmmss"),
-        created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+        creates: this.$moment().format("YYYYMMDDHHmmss"),
+        created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
       }
       this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
         let recommand = result.recommand

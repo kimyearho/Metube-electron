@@ -107,8 +107,8 @@ export default {
             category: this.form.category,
             thumbnails:
               "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
-            creates: this.$moment().format("YYYYMMDDkkmmss"),
-            created: this.$moment().format("YYYY-MM-DD kk:mm:ss"),
+            creates: this.$moment().format("YYYYMMDDHHmmss"),
+            created: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
             tracks: []
           };
           this.$local

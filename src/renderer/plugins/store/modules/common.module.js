@@ -1,4 +1,5 @@
 const state = {
+  _id: null,
   path: "",
   indexPath: "",
   isTop: false,
@@ -49,6 +50,9 @@ const getters = {
   },
   getSnow() {
     return state.isSnow
+  },
+  getId() {
+    return state._id
   }
 }
 
@@ -92,6 +96,9 @@ const mutations = {
   },
   setSnow(state, value) {
     state.isSnow = value
+  },
+  setId(state, value) {
+    state._id = value
   }
 }
 

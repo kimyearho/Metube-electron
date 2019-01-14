@@ -85,8 +85,8 @@ export default {
                 this.data.imageInfo !== undefined
                   ? this.data.imageInfo
                   : this.data.image,
-              creates: this.$moment().format("YYYYMMDDkkmmss"),
-              created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+              creates: this.$moment().format("YYYYMMDDHHmmss"),
+              created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
             };
             resultTracks.push(insertTrackData);
             this.$local.put(docs).then(res => {

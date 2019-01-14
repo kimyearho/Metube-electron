@@ -109,6 +109,7 @@ export default {
             fields: ["_id", "collections"]
           })
           .then(result => {
+            console.log(result);
             // Documents
             let docs = result.docs[0];
 
@@ -127,13 +128,14 @@ export default {
               this.$local
                 .post(data)
                 .then(res => {
-                  // this.getCollectionCount()
+                  this.$store.commit("setId", _id);
                 })
                 .catch(err => {
                   console.log(err);
                 });
             } else {
-              // this.getCollectionCount()
+              let docs = result.docs[0];
+              this.$store.commit("setId", docs._id);
             }
           })
           .catch(err => {
