@@ -23,6 +23,12 @@ If you like the program, please click on the star! It will help developers a lot
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
+### Review
+Six months have passed since the project started.
+In the meantime, I am studying and learning a lot.
+I like music and I like YouTube.
+We are still very scarce, but we are always trying to provide better quality and better service. I use apps 24 hours a day, bugs, improvements, and new developments, but it's not easy to do it all by yourself. Therefore, your feedback and feedback are always welcome.
+
 ***
 
 ### Installation
@@ -34,13 +40,9 @@ If you like the program, please click on the star! It will help developers a lot
 > yarn run dev
 
 # build
+> project root create 'static' folder (require)
 > yarn run build
 ```
-
-### Local Database
-I use PouchDB as my local database. Please refer to the PouchDB documentation for usage and related information. <br/>
-To manipulate a seamless database, use Couchdb Fauxton or Pouchdb-Server. <br/>
-<https://pouchdb.com/>
 
 ***
 
