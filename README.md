@@ -42,6 +42,7 @@ I was constantly monitoring for suggested music that I showed as a slide at the 
 
 # run
 > yarn run dev
+> (Default Player Port: 7070)
 
 # build
 > project root create 'static' folder (require)
