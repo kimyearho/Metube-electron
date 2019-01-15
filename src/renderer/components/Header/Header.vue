@@ -10,10 +10,22 @@
         src="@/assets/images/svg/menu.svg"
       >
     </span>
-    <span class="logo" :class="{ noMenu: !isMenu }">{{ $t('MAIN.APP_NAME') }}</span>
+    <span
+      class="logo"
+      :class="{ noMenu: !isMenu }"
+    >{{ $t('MAIN.APP_NAME') }}</span>
     <span class="topButton">
-      <div class="minimize cursor" @click="minimize" style="margin-right: 5px;" title="minimize"></div>
-      <div class="close cursor" @click="close" title="exit"></div>
+      <div
+        class="minimize cursor"
+        @click="minimize"
+        style="margin-right: 5px;"
+        title="minimize"
+      ></div>
+      <div
+        class="close cursor"
+        @click="close"
+        title="exit"
+      ></div>
     </span>
 
     <!-- 유튜브 재생목록 링크 팝업 -->
@@ -24,13 +36,30 @@
       :clickToClose="false"
       :adaptive="true"
     >
-      <el-form ref="form" style="margin:5px;">
-        <el-form-item label="Search Playlist" class="linkform">
-          <el-input v-model="linkForm" :autofocus="true" placeholder="Add a YouTube Playlist URL"/>
+      <el-form
+        ref="form"
+        style="margin:5px;"
+      >
+        <el-form-item
+          label="Search Playlist"
+          class="linkform"
+        >
+          <el-input
+            v-model="linkForm"
+            :autofocus="true"
+            placeholder="Add a YouTube Playlist URL"
+          />
         </el-form-item>
         <el-form-item class="buttonform">
-          <el-button type="primary" size="small" @click="apply">Apply</el-button>
-          <el-button size="small" @click="closeModal">Close</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="apply"
+          >Apply</el-button>
+          <el-button
+            size="small"
+            @click="closeModal"
+          >Close</el-button>
         </el-form-item>
       </el-form>
     </modal>
@@ -49,7 +78,11 @@
       </md-speed-dial-target>
 
       <md-speed-dial-content>
-        <md-button class="md-icon-button md-accent" title="PlayList Search" @click="showPageSearch">
+        <md-button
+          class="md-icon-button md-accent"
+          title="PlayList Search"
+          @click="showPageSearch"
+        >
           <md-icon>search</md-icon>
         </md-button>
         <md-button
@@ -68,7 +101,10 @@
       :md-active.sync="showNavigation"
       style="background: #242d40; width: 190px; z-index:300;"
     >
-      <md-toolbar class="md-transparent" style="background: #03A9F4">
+      <md-toolbar
+        class="md-transparent"
+        style="background: #03A9F4"
+      >
         <span class="md-title"></span>
       </md-toolbar>
 
@@ -106,7 +142,11 @@
     </md-drawer>
 
     <!-- 신규 컬렉션 등록 -->
-    <create-from :isOpen="isCreate" @is-success="myCollectionSync" @is-close="closeCreateModal"/>
+    <create-from
+      :isOpen="isCreate"
+      @is-success="myCollectionSync"
+      @is-close="closeCreateModal"
+    />
   </div>
 </template>
 
@@ -153,7 +193,7 @@ export default {
     let self = this;
     setInterval(() => {
       self.batchDelete();
-    }, 30000);
+    }, 10 * 180000);
   },
   mounted() {
     this.isUser = this.getUserId();

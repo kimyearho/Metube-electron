@@ -14,11 +14,30 @@
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
-      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
-      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
+      <md-tab
+        id="tabSearch"
+        class="md-tab"
+        md-label="Search"
+        @click="route('search')"
+      ></md-tab>
+      <md-tab
+        id="tabCollection"
+        class="md-tab"
+        md-label="Collections"
+        @click="route('collection')"
+      ></md-tab>
+      <md-tab
+        id="tabHistory"
+        class="md-tab"
+        md-label="History"
+        @click="route('history')"
+      ></md-tab>
     </md-tabs>
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
