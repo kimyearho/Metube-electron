@@ -232,9 +232,13 @@ export default {
       }
     },
 
-    videoActive() {
-      let id = "#item" + this.$route.params.start;
-      this.$scrollTo(id, -1, options);
+    videoActive(ms) {
+      let self = this;
+      setTimeout(() => {
+        let id = "#item" + self.$route.params.start;
+        self.$scrollTo(id, -1, options);
+        self.load = true;
+      }, ms);
     },
 
     /**
@@ -299,7 +303,7 @@ export default {
             this.channelTitle = musicInfo.channelTitle;
             this.cover = musicInfo.imageInfo;
             this.selectedIndex = musicInfo.index;
-            this.load = true;
+            this.videoActive(500);
           } else {
             // 재생중인게 있고 페이지 시작 인덱스가 달라서 시작 인덱스로 새로 시작
             this.autoStart();
@@ -314,7 +318,6 @@ export default {
         }
         this.autoStart();
       }
-      this.videoActive();
     },
     autoStart() {
       // 재생목록 아이디
@@ -348,6 +351,8 @@ export default {
 
       // 재생세팅
       this.playSetting(playingItem);
+
+      this.videoActive(500);
     },
 
     /**
@@ -456,8 +461,6 @@ export default {
 
       /** @overade 사용자 재생 등록 */
       this.insertUserRecommand(playingItem);
-
-      this.load = true;
     },
 
     /**
