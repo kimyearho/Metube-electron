@@ -16,6 +16,5 @@ Vue.prototype.$local = new PouchDB("http://localhost:5984/metube")
 // Vue.prototype.$local = new PouchDB("metubev3")
 
 // 서비스
-// pouchdb-server or couchdb
 // App.vue -> onNewReleaseCheck()
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
