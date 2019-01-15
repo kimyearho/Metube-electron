@@ -13,25 +13,13 @@
         <!-- 프로그레스바 영역 -->
         <div class="zaudio_seekbar">
           <!-- <md-progress-bar md-mode="determinate" :md-value="range"></md-progress-bar> -->
-          <progress
-            class="cursor"
-            @click="seekTo"
-            :value="range"
-            min="0"
-            :max="maxTime"
-          />
-          <span
-            class="playingLive"
-            v-if="isLive"
-          >L I V E - P L A Y I N G</span>
+          <progress class="cursor" @click="seekTo" :value="range" min="0" :max="maxTime"/>
+          <span class="playingLive" v-if="isLive">L I V E - P L A Y I N G</span>
           <span class="zaudio_tracktime">{{ totalTime }}</span>
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div
-          class="zaudio_buttonwrapper"
-          style="margin-top: 9px; margin-bottom:10px;"
-        >
+        <div class="zaudio_buttonwrapper" style="margin-top: 9px; margin-bottom:10px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
@@ -79,7 +67,7 @@
               :title="$t('PLAYERBAR.REPEAT_OFF')"
               @click="repeatOn"
             >
-
+            
             <img
               class="cursor md-image"
               v-else
@@ -100,7 +88,7 @@
               :title="$t('PLAYERBAR.VOLUME_OFF')"
               @click="volumeOn"
             >
-
+            
             <img
               class="cursor md-image"
               v-else
@@ -112,14 +100,7 @@
             >
           </div>
           <div style="max-width:20%;padding-right:10px;">
-            <input
-              type="range"
-              ref="volumeSlider"
-              v-model="volume"
-              step="1"
-              min="0"
-              max="100"
-            >
+            <input type="range" ref="volumeSlider" v-model="volume" step="1" min="0" max="100">
           </div>
         </div>
       </div>
@@ -239,7 +220,7 @@ export default {
     previousVideo() {
       this.isDelay = true;
       let self = this;
-      setTimeout(function () {
+      setTimeout(function() {
         self.isDelay = false;
       }, 3000);
       this.$emit("previousVideoTrack");
@@ -280,7 +261,7 @@ export default {
     nextVideo() {
       this.isDelay = true;
       let self = this;
-      setTimeout(function () {
+      setTimeout(function() {
         self.isDelay = false;
       }, 3000);
       this.$emit("nextVideoTrack");
@@ -366,7 +347,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 .playingLive {
   position: absolute;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #fd4545;
   left: 125px;

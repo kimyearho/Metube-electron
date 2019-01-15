@@ -1,6 +1,7 @@
 const state = {
-  path: '',
-  indexPath: '',
+  _id: null,
+  path: "",
+  indexPath: "",
   isTop: false,
   isPlayer: false,
   isTimer: false,
@@ -10,88 +11,94 @@ const state = {
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
-  locale: 'en'
+  locale: "en"
 }
 
 const getters = {
-  getIndexPath () {
+  getIndexPath() {
     return state.indexPath
   },
-  getCurrentPath () {
+  getCurrentPath() {
     return state.path
   },
-  getPlayerOption () {
+  getPlayerOption() {
     return state.isPlayer
   },
-  getSearchText () {
+  getSearchText() {
     return state.searchText
   },
-  getNextPageToekn () {
+  getNextPageToekn() {
     return state.nextPageToken
   },
-  getAlwaysTopOption () {
+  getAlwaysTopOption() {
     return state.isTop
   },
-  getTimer () {
+  getTimer() {
     return state.isTimer
   },
-  getTime () {
+  getTime() {
     return state.isTime
   },
-  getVersionCheck () {
+  getVersionCheck() {
     return state.isVersion
   },
-  getLocale () {
+  getLocale() {
     return state.locale
   },
-  getScrollPos () {
+  getScrollPos() {
     return state.scrollPos
   },
-  getSnow () {
+  getSnow() {
     return state.isSnow
+  },
+  getId() {
+    return state._id
   }
 }
 
 // 동기
 const mutations = {
-  setPath (state, value) {
+  setPath(state, value) {
     state.path = value
   },
-  setIndexPath (state, value) {
+  setIndexPath(state, value) {
     state.indexPath = value
   },
-  setPlayerHideOption (state, value) {
+  setPlayerHideOption(state, value) {
     state.isPlayer = value
   },
-  setLessTrafficOption (state, value) {
+  setLessTrafficOption(state, value) {
     state.minTraffic = value
   },
-  setAlwaysTopOption (state, value) {
+  setAlwaysTopOption(state, value) {
     state.isTop = value
   },
-  setSearchText (state, value) {
+  setSearchText(state, value) {
     state.searchText = value
   },
-  setNextPageToken (state, value) {
+  setNextPageToken(state, value) {
     state.nextPageToken = value
   },
-  setTimer (state, value) {
+  setTimer(state, value) {
     state.isTimer = value
   },
-  setTime (state, value) {
+  setTime(state, value) {
     state.isTime = value
   },
-  setVersionCheck (state, value) {
+  setVersionCheck(state, value) {
     state.isVersion = value
   },
-  setLocale (state, value) {
+  setLocale(state, value) {
     state.locale = value
   },
-  setScrollPos (state, value) {
+  setScrollPos(state, value) {
     state.scrollPos = value
   },
-  setSnow (state, value) {
+  setSnow(state, value) {
     state.isSnow = value
+  },
+  setId(state, value) {
+    state._id = value
   }
 }
 

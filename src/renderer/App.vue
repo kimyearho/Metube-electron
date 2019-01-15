@@ -7,7 +7,6 @@
 
 <template>
   <div id="app">
-
     <!-- 루트 라우터 뷰 -->
     <transition name="fade">
       <router-view></router-view>
@@ -58,7 +57,7 @@ export default {
   },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
     }
 
@@ -255,7 +254,7 @@ export default {
     },
     onNewReleaseCheck() {
       this.$db
-        .get("adfe10ffbd1f206762f478326800a5b6")
+        .get("17901f376f4ff226c03adecee0004104")
         .then(doc => {
           let live_version = `${doc.version}`;
           let local_version = this.$version;
@@ -267,8 +266,8 @@ export default {
                 {
                   title: "Yes",
                   handler: () => {
-                    this.$ipcRenderer.send('showGit', null)
-                    this.$modal.hide("dialog")
+                    this.$ipcRenderer.send("showGit", null);
+                    this.$modal.hide("dialog");
                   }
                 },
                 {

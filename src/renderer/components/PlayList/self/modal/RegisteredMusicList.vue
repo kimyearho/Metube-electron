@@ -19,10 +19,7 @@
     >
       <div class="wrapper">
         <ul>
-          <li
-            v-for="(item, index) in listData"
-            :key="index"
-          >
+          <li v-for="(item, index) in listData" :key="index">
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -39,9 +36,9 @@
 </template>
 
 <script>
-import StoreMixin from '@/components/Mixin/index'
+import StoreMixin from "@/components/Mixin/index";
 export default {
-  name: 'RegisteredMusicList',
+  name: "RegisteredMusicList",
   mixins: [StoreMixin],
   props: {
     isOpen: {
@@ -53,79 +50,82 @@ export default {
   data() {
     return {
       listData: []
-    }
+    };
   },
   methods: {
     addItem(listData) {
       this.$local
         .find({
           selector: {
-            type: 'profile',
+            type: "profile",
             userId: this.getUserId()
           }
         })
         .then(result => {
-          let docs = result.docs[0]
-          let selectedPlaylistKey = listData._key
+          let docs = result.docs[0];
+          let selectedPlaylistKey = listData._key;
           let resultTracks = this.$lodash
             .chain(docs.playlists)
             .find({ _key: selectedPlaylistKey })
-            .value().tracks
+            .value().tracks;
           let flag = this.$lodash.find(resultTracks, {
             videoId: this.data.videoId
-          })
+          });
           if (!flag) {
             let insertTrackData = {
               videoId: this.data.videoId,
               channelId: this.data.channelId,
               channelTitle: this.data.channelTitle,
-              type: 'MY-COLLECTION',
-              isLive: this.data.isLive ? this.data.isLive : 'none',
+              type: "MY-COLLECTION",
+              isLive: this.data.isLive ? this.data.isLive : "none",
               title: this.data.title,
               duration: this.data.duration,
               duration_time: this.data.duration_time,
-              thumbnails: this.data.imageInfo !== undefined ? this.data.imageInfo : this.data.image,
-              creates: this.$moment().format('YYYYMMDDkkmmss'),
-              created: this.$moment().format('YYYY-MM-DD kk:mm:ss')
-            }
-            resultTracks.push(insertTrackData)
+              thumbnails:
+                this.data.imageInfo !== undefined
+                  ? this.data.imageInfo
+                  : this.data.image,
+              creates: this.$moment().format("YYYYMMDDHHmmss"),
+              created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
+            };
+            resultTracks.push(insertTrackData);
             this.$local.put(docs).then(res => {
               if (res.ok) {
-                this.closeModal()
+                this.closeModal();
               }
-            })
+            });
           }
-        })
+        });
     },
     getPlaylist() {
       this.$local
         .find({
           selector: {
-            type: 'profile',
+            type: "profile",
             userId: this.getUserId()
           },
-          fields: ['playlists']
+          fields: ["playlists"]
         })
         .then(result => {
-          let docs = result.docs[0]
+          let docs = result.docs[0];
           if (docs) {
-            this.listData = docs.playlists
+            this.listData = docs.playlists;
             this.$lodash.forEach(docs.playlists, (item, index) => {
               let data = this.$lodash.find(item.tracks, {
                 videoId: this.data.videoId
-              })
+              });
               if (data) {
-                this.listData[index].isExists = true
+                this.listData[index].isExists = true;
               }
-            })
+            });
           }
-        })
+        });
     },
     closeModal() {
-      this.$emit('closeModal', false)
+      this.$emit("closeModal", false);
     }
   }
-}
+};
 </script>
 
 <style scoped>

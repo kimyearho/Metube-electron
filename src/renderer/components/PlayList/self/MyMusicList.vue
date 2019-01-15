@@ -6,28 +6,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -44,10 +32,7 @@
               style="margin-right:10px; color:#fff;"
               @click="collectionEdit"
             >
-              <font-awesome-icon
-                class="f20"
-                icon="edit"
-              />
+              <font-awesome-icon class="f20" icon="edit"/>
             </a>
             <a
               class="cursor"
@@ -55,10 +40,7 @@
               style="color:#fff;"
               @click="collectionCoverChange"
             >
-              <font-awesome-icon
-                class="f20"
-                icon="images"
-              />
+              <font-awesome-icon class="f20" icon="images"/>
             </a>
           </div>
         </div>
@@ -76,29 +58,16 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
-          <img
-            :src="item.thumbnails !== undefined ? item.thumbnails : item.image"
-            alt="People"
-          >
+          <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image" alt="People">
         </md-avatar>
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
         <my-context-menu
           :id="id"
           :index="index"
@@ -119,7 +88,6 @@
       </div>
     </draggable>
     <!-- // END 재생목록 드래그 지점 -->
-
     <!-- 컬렉션 수정 -->
     <collection-modify-form
       :id="id"
@@ -129,21 +97,13 @@
     />
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal
-      ref="coverModal"
-      :data="collectionData"
-      @is-success="syncCollectionCover"
-    />
+    <cover-change-modal ref="coverModal" :data="collectionData" @is-success="syncCollectionCover"/>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -244,7 +204,7 @@ export default {
     feachData() {
       this.playType = this.$route.params.playType;
       this.id = this.$route.params.id;
-      this.isMini = this.getMusicInfos() ? true : false
+      this.isMini = this.getMusicInfos() ? true : false;
       let user_id = this.getUserId();
       if (user_id) {
         this.$local

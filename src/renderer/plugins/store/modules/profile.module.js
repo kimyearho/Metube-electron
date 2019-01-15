@@ -5,7 +5,7 @@ const state = {
 }
 
 const getters = {
-  getGoogleProfile () {
+  getGoogleProfile() {
     return {
       googleId: state.googleId,
       googleName: state.googleName,
@@ -16,7 +16,7 @@ const getters = {
 
 // 동기
 const mutations = {
-  setGoogleProfile (state, payload) {
+  setGoogleProfile(state, payload) {
     if (payload) {
       state.googleId = payload.id
       state.googleName = payload.name

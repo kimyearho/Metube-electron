@@ -1,68 +1,38 @@
-/*---------------------------------------------------------------------------------------------
- *  Licensed under the GPL-3.0 License. See License.txt in the project root for license information.
- *  You can not delete this comment when you deploy an application.
- *--------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------- *
+Licensed under the GPL-3.0 License. See License.txt in the project root for license information. *
+You can not delete this comment when you deploy an application.
+*--------------------------------------------------------------------------------------------*/
 
 <template>
   <div>
-    <el-dropdown
-      trigger="click"
-      @command="menuEvent"
-      style="padding-left:5px;"
-    >
-      <a class="cursor">
-        <img
-          class="contextMenu"
-          src="@/assets/images/svg/context-menu.svg"
-        >
-      </a>
-      <el-dropdown-menu
-        slot="dropdown"
-        v-show="videoId === data.videoId"
-      >
-        <el-dropdown-item
-          class="bold"
-          command="A1"
-        >
+    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
+      <a class="cursor"> <img class="contextMenu" src="@/assets/images/svg/context-menu.svg" /> </a>
+      <el-dropdown-menu slot="dropdown" v-show="videoId === data.videoId">
+        <el-dropdown-item class="bold" command="A1">
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
-        <el-dropdown-item
-          class="bold"
-          command="A2"
-          :disabled="isCheck || isSign === null"
-        >
+        <el-dropdown-item class="bold" command="A2" :disabled="isCheck || isSign === null">
           <i class="el-icon-plus"></i> Add to Collection
         </el-dropdown-item>
         <!-- <el-dropdown-item class="bold" command="A3">
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item> -->
-        <el-dropdown-item
-          class="bold"
-          command="A4"
-        >
+        <el-dropdown-item class="bold" command="A4">
           <i class="el-icon-star-on"></i> Link Copy
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <registered-music-list
-      :isOpen="registerOpen"
-      :data="data"
-      @closeModal="closeModal"
-    />
-    <social-share-modal
-      :isOpen="isShare"
-      :videoId="videoId"
-      @closeModal="closeModal"
-    />
+    <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal" />
+    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
   </div>
 </template>
 
 <script>
-import StoreMixin from '@/components/Mixin/index'
-import RegisteredMusicList from '@/components/PlayList/self/modal/RegisteredMusicList'
+import StoreMixin from "@/components/Mixin/index"
+import RegisteredMusicList from "@/components/PlayList/self/modal/RegisteredMusicList"
 import SocialShareModal from "@/components/Context/modal/SocialShareModal"
 export default {
-  name: 'ContextMenu',
+  name: "ContextMenu",
   mixins: [StoreMixin],
   components: {
     RegisteredMusicList,
@@ -85,17 +55,17 @@ export default {
   },
   methods: {
     menuEvent(ev) {
-      if (ev === 'A1') {
+      if (ev === "A1") {
         this.watchYoutube()
-      } else if (ev === 'A2') {
+      } else if (ev === "A2") {
         this.addCollection()
-      } else if (ev === 'A3') {
+      } else if (ev === "A3") {
         this.isShare = true
       } else {
-        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
+        let link = `https://www.youtube.com/watch?v=${this.videoId}`
         let self = this
         this.$copyText(link).then(
-          function (e) {
+          function(e) {
             self.$modal.show("dialog", {
               title: "Success",
               text: "😁 The link has been saved to the clipboard.",
@@ -104,9 +74,9 @@ export default {
                   title: "Close"
                 }
               ]
-            });
+            })
           },
-          function (e) {
+          function(e) {
             self.$modal.show("dialog", {
               title: "Error",
               text: "😥 Failed to copy link to clipboard.",
@@ -115,15 +85,15 @@ export default {
                   title: "Close"
                 }
               ]
-            });
+            })
           }
-        );
+        )
       }
     },
     watchYoutube() {
       if (this.videoId) {
         this.$ipcRenderer.send(
-          'button:watchYoutubePopup',
+          "button:watchYoutubePopup",
           `https://www.youtube.com/watch?v=${this.videoId}`
         )
       }

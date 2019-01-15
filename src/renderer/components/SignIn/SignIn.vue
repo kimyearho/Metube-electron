@@ -41,18 +41,14 @@
             class="cursor md-raised md-primary"
             style="width: 120px;"
             @click="signin"
-          >
-            {{ $t('SIGN.SIGN_IN') }}
-          </md-button>
+          >{{ $t('SIGN.SIGN_IN') }}</md-button>
 
           <md-button
             v-else
             class="cursor md-raised md-accent"
             style="width: 120px;"
             @click="signout"
-          >
-            {{ $t('SIGN.SIGN_OUT') }}
-          </md-button>
+          >{{ $t('SIGN.SIGN_OUT') }}</md-button>
         </div>
         <div class="menu1">
           <label class="gr">
@@ -101,7 +97,7 @@ export default {
     };
   },
   created() {
-    this.isMini = this.getMusicInfos() ? true : false
+    this.isMini = this.getMusicInfos() ? true : false;
     this.$ipcRenderer.on("render:googleAuth", (e, args) => {
       if (args.resultCode === 200) {
         this.$store.commit("setGoogleProfile", JSON.parse(args.body));
@@ -155,13 +151,14 @@ export default {
               this.$local
                 .post(data)
                 .then(res => {
-                  // this.getCollectionCount()
+                  this.$store.commit("setId", _id);
                 })
                 .catch(err => {
                   console.log(err);
                 });
             } else {
-              // this.getCollectionCount()
+              let docs = result.docs[0];
+              this.$store.commit("setId", docs._id);
             }
           })
           .catch(err => {

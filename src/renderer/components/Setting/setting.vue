@@ -5,20 +5,14 @@
 
 <template>
   <div>
-    <top-header :isShow="false" />
-    <div
-      class="wrapper"
-      :class="{ updateHeight: isCheck }"
-    >
+    <top-header :isShow="false"/>
+    <div class="wrapper" :class="{ updateHeight: isCheck }">
       <form>
         <div class="menu1">
           <label class="wh">
             <strong v-html="$tc('SETTING.MENU.PLAYER_HIDE')"></strong>
           </label>
-          <md-switch
-            v-model="state"
-            class="switchStyle"
-          />
+          <md-switch v-model="state" class="switchStyle"/>
         </div>
         <div class="menu1_tip">
           <strong class="gr">{{ $t('SETTING.PLAYER_HIDE') }}</strong>
@@ -27,10 +21,7 @@
           <label class="wh">
             <strong>{{ $t('SETTING.MENU.ALWAYS_TOP') }}</strong>
           </label>
-          <md-switch
-            v-model="topState"
-            class="switchStyle md-primary"
-          />
+          <md-switch v-model="topState" class="switchStyle md-primary"/>
         </div>
         <div class="menu1_tip">
           <strong class="tr">{{ $t('SETTING.ALWAYS_TOP') }}</strong>
@@ -63,29 +54,23 @@
           </label>
         </div>
         <div class="menu1_tip">
-          <strong
-            class="tr"
-            style="color: #ffeb3b;"
-          >
+          <strong class="tr" style="color: #ffeb3b;">
             {{ $version }}
             <br>
           </strong>
         </div>
       </form>
     </div>
-    <sub-player-bar
-      class="md-top-61"
-      v-show="isMini"
-    />
+    <sub-player-bar class="md-top-61" v-show="isMini"/>
   </div>
 </template>
 
 <script>
-import SubPlayerBar from '@/components/PlayerBar/SubPlayerBar'
-import StoreMixin from '@/components/Mixin/index'
+import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
+import StoreMixin from "@/components/Mixin/index";
 
 export default {
-  name: 'SettingPage',
+  name: "SettingPage",
   mixins: [StoreMixin],
   components: {
     SubPlayerBar
@@ -101,57 +86,56 @@ export default {
       novalue: null,
       localeOptions: [
         {
-          value: 'en',
-          label: 'English'
+          value: "en",
+          label: "English"
         },
         {
-          value: 'ko',
-          label: '한국어'
+          value: "ko",
+          label: "한국어"
         }
       ],
-      releaseMessage: ''
-    }
+      releaseMessage: ""
+    };
   },
   created() {
-    this.isMini = this.getMusicInfos() ? true : false
+    this.isMini = this.getMusicInfos() ? true : false;
 
     // 플레이어 숨김 상태 옵션
-    this.state = this.getState()
+    this.state = this.getState();
 
     // 항상 위 상태 옵션
-    this.topState = this.getAlwaysTop()
+    this.topState = this.getAlwaysTop();
 
     // 언어 설정 옵션
-    this.locale = this.getLocale()
+    this.locale = this.getLocale();
 
     // 버전 체크
-    this.isCheck = this.getVersionCheck()
+    this.isCheck = this.getVersionCheck();
   },
   watch: {
     locale(v) {
-      this.$store.commit('setLocale', v)
-      this.$i18n.locale = v
+      this.$store.commit("setLocale", v);
+      this.$i18n.locale = v;
     },
     state(v) {
-      this.$store.commit('setPlayerHideOption', v)
-      this.$ipcRenderer.send('isPlayer', v)
+      this.$store.commit("setPlayerHideOption", v);
+      this.$ipcRenderer.send("isPlayer", v);
     },
     topState(v) {
-      this.$store.commit('setAlwaysTopOption', v)
-      this.$ipcRenderer.send('option:alwaystop', v)
+      this.$store.commit("setAlwaysTopOption", v);
+      this.$ipcRenderer.send("option:alwaystop", v);
     }
   },
   methods: {
     openGit() {
-      this.$ipcRenderer.send('showGit', {})
+      this.$ipcRenderer.send("showGit", {});
     },
     onNewReleaseCheck() {
       if (this.isCheck) {
-
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

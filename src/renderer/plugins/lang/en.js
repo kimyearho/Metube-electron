@@ -40,8 +40,7 @@ export default {
     BUTTON_DELAY: "😅 Can be used after 3 seconds."
   },
   SETTING: {
-    PLAYER_HIDE:
-      "Hides the player window. However, it will be reset when you quit the app.",
+    PLAYER_HIDE: "Hides the player window. However, it will be reset when you quit the app.",
     ALWAYS_TOP: "Always set the Metube window up.",
     LOCALE: "Set the client language.",
     RELEASE: "The current client is the latest version.",
@@ -83,4 +82,4 @@ export default {
   HISTORY: {
     NO_LOGIN: "Please try again after logging in"
   }
-};
+}

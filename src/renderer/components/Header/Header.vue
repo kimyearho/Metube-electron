@@ -1,6 +1,5 @@
 <template>
   <div class="titlebar">
-
     <!-- 제목 바 -->
     <span class="notiButton">
       <img
@@ -110,7 +109,6 @@
       </md-toolbar>
 
       <md-list>
-
         <!-- Menu1 -->
         <md-list-item @click="route('search')">
           <md-icon>search</md-icon>
@@ -140,7 +138,6 @@
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">Setting</span>
         </md-list-item>
-
       </md-list>
     </md-drawer>
 
@@ -150,18 +147,17 @@
       @is-success="myCollectionSync"
       @is-close="closeCreateModal"
     />
-
   </div>
 </template>
 
 <script>
-import * as query from 'querystring'
+import * as query from "querystring";
 import StoreMixin from "@/components/Mixin/index";
 import MyQueryMixin from "@/components/Mixin/mycollection";
 import CreateFrom from "@/components/MyCollection/create/MyCollectionCreate";
 
 export default {
-  name: 'Header',
+  name: "Header",
   mixins: [StoreMixin, MyQueryMixin],
   components: {
     CreateFrom
@@ -172,11 +168,13 @@ export default {
       isCreate: false,
       isFab: true,
       isUser: false,
-      profileData: '',
+      profileData: "",
       playType: null,
       linkForm: null,
-      showNavigation: false
-    }
+      showNavigation: false,
+      polling1: null,
+      polling2: null
+    };
   },
   props: {
     data: {
@@ -192,56 +190,55 @@ export default {
     }
   },
   created() {
-    this.isFab = this.isShow
+    this.isFab = this.isShow;
   },
   mounted() {
-    this.isUser = this.getUserId()
+    this.isUser = this.getUserId();
     if (this.isUser) {
       this.profileData = this.getProfile();
     }
     if (this.data) {
-      this.playType = this.data.playType
+      this.playType = this.data.playType;
     }
-    if (this.$route.name === 'collection' && !this.isUser) {
-      this.isFab = false
+    if (this.$route.name === "collection" && !this.isUser) {
+      this.isFab = false;
     }
   },
   methods: {
     apply() {
-      let parseURL
-      let url = this.linkForm
+      let parseURL;
+      let url = this.linkForm;
       if (url) {
         // 실제 나의 재생목록 URL일 경우
-        if (url.indexOf('playlist') > -1) {
-          parseURL = query.parse(url, '?')
+        if (url.indexOf("playlist") > -1) {
+          parseURL = query.parse(url, "?");
         } else {
-          parseURL = query.parse(url)
+          parseURL = query.parse(url);
         }
         if (parseURL) {
-          let playlistId = parseURL.list
+          let playlistId = parseURL.list;
           if (playlistId) {
             this.$router.push({
-              name: 'NOT-PLAYING-PLAYLIST',
+              name: "NOT-PLAYING-PLAYLIST",
               params: {
-                playType: 'play',
+                playType: "play",
                 id: playlistId
               }
-            })
-            if (this.$route.name === 'NOT-PLAYING-PLAYLIST') {
-              this.$emit('reloadMusicList')
+            });
+            if (this.$route.name === "NOT-PLAYING-PLAYLIST") {
+              this.$emit("reloadMusicList");
             }
-            this.linkForm = ''
-            this.closeModal()
+            this.linkForm = "";
+            this.closeModal();
           } else {
-            this.errorDialog()
+            this.errorDialog();
           }
         }
       } else {
-        this.errorDialog()
+        this.errorDialog();
       }
     },
     route(name) {
-
       if (name == "search") {
         this.$router.push({
           name: "play-search"
@@ -254,7 +251,7 @@ export default {
         this.$router.push({
           name: "VIDEO-HISTORY"
         });
-      } else if (name === 'login') {
+      } else if (name === "login") {
         this.$router.push({
           name: "login"
         });
@@ -265,55 +262,55 @@ export default {
       }
     },
     close() {
-      this.$ipcRenderer.send('button:close', null)
+      this.$ipcRenderer.send("button:close", null);
     },
     closeModal() {
-      this.$modal.hide('input-focus-modal')
+      this.$modal.hide("input-focus-modal");
     },
     closeCreateModal(v) {
       this.isCreate = v;
     },
     showCreateMyCollection() {
       /** @overaide fab 닫기  */
-      this.closeFab()
-      this.isCreate = true
+      this.closeFab();
+      this.isCreate = true;
     },
     showPageSearch() {
       /** @overaide fab 닫기  */
-      this.closeFab()
-      this.$modal.show('input-focus-modal')
+      this.closeFab();
+      this.$modal.show("input-focus-modal");
     },
     myCollectionSync() {
       this.isCreate = false;
       // 컬렉션 목록이나, 내 컬렉션 목록에서만 싱크 실행
-      if (this.$route.name === 'collection') {
-        this.$emit('my-sync')
-      } else if (this.$route.name === 'COLLECTION-LIST') {
+      if (this.$route.name === "collection") {
+        this.$emit("my-sync");
+      } else if (this.$route.name === "COLLECTION-LIST") {
         /** @overide */
-        this.$emit('my-sync-list')
+        this.$emit("my-sync-list");
       }
     },
     minimize() {
-      this.$ipcRenderer.send('button:minimize', null)
+      this.$ipcRenderer.send("button:minimize", null);
     },
     errorDialog() {
-      this.$modal.show('dialog', {
-        title: 'Error',
-        text: 'The URL you entered is invalid.',
+      this.$modal.show("dialog", {
+        title: "Error",
+        text: "The URL you entered is invalid.",
         buttons: [
           {
-            title: 'Close'
+            title: "Close"
           }
         ]
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .logo {
-  padding-left: 20px !important;
+  padding-left: 38px !important;
 }
 
 .noMenu {

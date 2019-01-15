@@ -16,9 +16,7 @@
             <strong
               class="tr"
               style="font-size:11px;"
-            >
-              A list of recently played videos. <br>However, the same video will not be registered.
-            </strong>
+            >A list of 20 videos you recently watched.</strong>
           </div>
         </el-col>
       </el-row>
@@ -70,22 +68,25 @@
           <md-button
             class="md-raised md-primary btn"
             @click="signLink"
-          >
-            {{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}
-          </md-button>
+          >{{ $t('COLLECTION.NO_LOGIN_BUTTON_LINK') }}</md-button>
         </el-col>
       </el-row>
     </div>
 
+    <!-- 로딩 컴포넌트 -->
+    <transition name="fade">
+      <loading v-show="!load" />
+    </transition>
+
     <!-- 서브 플레이어 -->
     <sub-player-bar v-show="isMini" />
-
   </div>
 </template>
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import storeMixin from "@/components/Mixin/index"
+import Loading from "@/components/Loader/loader";
+import storeMixin from "@/components/Mixin/index";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import ContextMenu from "@/components/Context/ContextMenu";
 
@@ -94,19 +95,28 @@ export default {
   mixins: [storeMixin],
   components: {
     ContextMenu,
-    SubPlayerBar
+    SubPlayerBar,
+    Loading
   },
   data() {
     return {
       isLogin: false,
       isMini: false,
-      playlist: [],
-    }
+      load: false,
+      playlist: []
+    };
+  },
+  beforeCreate() {
+    this.load = false;
   },
   created() {
-    this.isLogin = this.getUserId() ? true : false
-    this.isMini = this.getMusicInfos() ? true : false
-    this.getHistory()
+    this.isLogin = this.getUserId() ? true : false;
+    this.isMini = this.getMusicInfos() ? true : false;
+    if (this.isLogin) {
+      this.getHistory();
+    } else {
+      this.load = true;
+    }
   },
   mounted() { },
   methods: {
@@ -117,15 +127,22 @@ export default {
             type: "profile",
             userId: this.getUserId()
           },
-          fields: ["_id", "history"]
-        }).then(result => {
+          fields: ["history"],
+          limit: 20
+        })
+        .then(result => {
           let docs = result.docs[0];
           if (docs) {
             if (docs.history.length > 0) {
-              this.playlist = this.$lodash.orderBy(docs.history, ["creates"], ["desc"])
+              this.playlist = this.$lodash
+                .chain(docs.history)
+                .orderBy(["creates"], ["desc"])
+                .take(30)
+                .value();
             }
           }
-        })
+          this.load = true;
+        });
     },
     signLink() {
       this.$router.push({
@@ -133,7 +150,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -146,7 +163,7 @@ export default {
   margin-top: 200px;
 }
 .staticHeight {
-  max-height: 400px;
+  max-height: 420px;
 }
 .btn {
   color: #ffffff;

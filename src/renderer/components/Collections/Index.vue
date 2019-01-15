@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <top-header @my-sync="getMyCollection" />
+    <top-header @my-sync="getMyCollection"/>
     <div class="wrapper">
       <!-- 비로그인 상태 -->
       <el-row v-if="!isLogin">
@@ -25,39 +25,22 @@
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img
-                width="20"
-                style="margin-bottom: 10px;"
-                src="@/assets/images/svg/collection.svg"
-              >
+              <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
             </div>
-            <strong
-              class="tr"
-              style="font-size:11px;"
-            >{{ $t('COLLECTION.INDEX') }}</strong>
+            <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>
           </div>
         </el-col>
       </el-row>
 
-      <el-row
-        v-if="isLogin"
-        class="el-scroll"
-        :class="{ dynamicHeight: isSub }"
-      >
+      <el-row v-if="isLogin" class="el-scroll" :class="{ dynamicHeight: isSub }">
         <!-- 상위4개 재생목록 -->
         <el-col>
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('my-collection')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>
             </label>
             <!-- <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button> -->
@@ -69,58 +52,23 @@
           v-if="isLogin && myCollections.length === 0"
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in myCollections"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in myCollections" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="md-image thumbnail"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="myCollectionLabel">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
               <div class="playWrapper">
                 <div class="overlayMenu">
-                  <a
-                    class="cursor"
-                    @click="showMyCollectionList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMyCollectionList(item)" title="Play">
+                    <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f25 fa" icon="times"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showCoverModal(item)"
-                    title="Cover change"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="images"
-                    />
+                  <a class="cursor" @click="showCoverModal(item)" title="Cover change">
+                    <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
                 </div>
               </div>
@@ -136,14 +84,8 @@
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.PLAY_LIST') }}</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('play')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('play')">（more）</a>
               </small>
             </label>
           </div>
@@ -154,55 +96,20 @@
           v-if="isLogin && playlists.length === 0"
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in playlists"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in playlists" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="md-image thumbnail"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper">
                 <div class="overlayMenu">
-                  <a
-                    class="cursor"
-                    @click="showMusicList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                    <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f25 fa" icon="times"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showCoverModal(item)"
-                    title="Cover change"
-                  >
-                    <font-awesome-icon
-                      class="f25 fa"
-                      icon="images"
-                    />
+                  <a class="cursor" @click="showCoverModal(item)" title="Cover change">
+                    <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
                 </div>
               </div>
@@ -220,14 +127,8 @@
           <div class="menu1">
             <label class="wh">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
-              <small
-                class="more"
-                v-if="isLogin"
-              >
-                <a
-                  class="cursor"
-                  @click="showCollectionList('channel')"
-                >（more）</a>
+              <small class="more" v-if="isLogin">
+                <a class="cursor" @click="showCollectionList('channel')">（more）</a>
               </small>
             </label>
           </div>
@@ -238,45 +139,17 @@
           v-if="isLogin && channelLists.length === 0"
         >{{ $t('COLLECTION.NO_CHANNEL') }}</el-col>
 
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in channelLists"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in channelLists" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
-              <img
-                class="thumbnail channelThumb"
-                :src="item.thumbnails"
-                width="158"
-                height="100"
-              >
+              <img class="thumbnail channelThumb" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper channelWrapper">
                 <div class="overlayMenu channelMenu">
-                  <a
-                    class="cursor"
-                    @click="showMusicList(item)"
-                    title="Play"
-                  >
-                    <font-awesome-icon
-                      class="f30 fa"
-                      icon="play"
-                    />
+                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                    <font-awesome-icon class="f30 fa" icon="play"/>
                   </a>
-                  <a
-                    class="cursor"
-                    @click="showRemove(item)"
-                    title="Remove"
-                  >
-                    <font-awesome-icon
-                      class="f30 fa"
-                      icon="times"
-                    />
+                  <a class="cursor" @click="showRemove(item)" title="Remove">
+                    <font-awesome-icon class="f30 fa" icon="times"/>
                   </a>
                 </div>
               </div>
@@ -293,14 +166,10 @@
     </div>
 
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isSub" />
+    <sub-player-bar v-show="isSub"/>
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal
-      ref="coverModal"
-      :data="selectedData"
-      @is-success="saveCover"
-    />
+    <cover-change-modal ref="coverModal" :data="selectedData" @is-success="saveCover"/>
 
     <collection-register
       ref="likes"
@@ -350,7 +219,7 @@ export default {
   },
   created() {
     // login user
-    this.isLogin = this.getUserId() ? true : false
+    this.isLogin = this.getUserId() ? true : false;
 
     /** @overide */
     this.getMyCollection();
