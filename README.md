@@ -1,4 +1,4 @@
-# [2019-01-10] v1.4.1 UPDATE
+# [2019-01-16] v1.4.2 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/4TF9sR3.png" />
