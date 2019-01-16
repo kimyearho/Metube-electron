@@ -30,7 +30,8 @@ if (process.env.NODE_ENV != "development") {
 let playerPath
 if (process.env.NODE_ENV === "development") {
   if (process.platform !== "darwin") {
-    playerPath = "http://localhost:7070"
+    // playerPath = "http://localhost:7070"
+    playerPath = "http://sharepod.kr"
   } else {
     playerPath = "http://sharepod.kr"
   }
