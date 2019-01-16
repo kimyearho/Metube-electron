@@ -106,9 +106,11 @@ export default {
                 parentId: {
                   $eq: id
                 }
-              }
+              },
+              limit: 50
             })
             .then(result => {
+              // docs -> 25 rows.
               this.albumMusicList = result.docs;
             });
         });
@@ -170,6 +172,8 @@ export default {
   color: #ffffff;
   list-style: none;
   padding: 0;
+  overflow-y: scroll;
+  max-height: 240px;
 }
 .custom {
   min-width: 60px !important;
