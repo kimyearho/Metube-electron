@@ -24,11 +24,8 @@ If you like the program, please click on the star! It will help developers a lot
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
 ### Review
-Six months have passed since the project started.
-In the meantime, I am studying and learning a lot.
-I like music and I like YouTube.
-We are still very scarce, but we are always trying to provide better quality and better service. I use apps 24 hours a day, bugs, improvements, and new developments, but it's not easy to do it all by yourself. Therefore, your feedback and feedback are always welcome.
-
+I felt that using PouchDB was wrong, and I am going to fix all parts that use DB now ... 
+I think this update will improve performance a lot.
 ***
 
 ### Installation
