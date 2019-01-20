@@ -3,7 +3,7 @@
 # Warning
 I am going to initialize all the data in the next update by wrongly designing the local database. Currently I am building a new local database. I am really sorry about this problem. But I think there will be a lot of performance upgrades through this improvement. Thank you.
 
-<
+<p></p>
 
 <p align="center">
   <img src="https://i.imgur.com/Z7vRHZE.png" />
