@@ -14,30 +14,11 @@
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab
-        id="tabSearch"
-        class="md-tab"
-        md-label="Search"
-        @click="route('search')"
-      ></md-tab>
-      <md-tab
-        id="tabCollection"
-        class="md-tab"
-        md-label="Collections"
-        @click="route('collection')"
-      ></md-tab>
-      <md-tab
-        id="tabHistory"
-        class="md-tab"
-        md-label="History"
-        @click="route('history')"
-      ></md-tab>
+      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
     </md-tabs>
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -256,6 +237,7 @@ export default {
       this.$db
         .get("17901f376f4ff226c03adecee0004104")
         .then(doc => {
+          console.log(doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
           if (live_version != local_version) {
