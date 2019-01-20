@@ -88,31 +88,47 @@ export default {
      * @param {*} type - 타입
      */
     myCollectionRemove(data, type) {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
+      this.$test
+        .createIndex({
+          index: {
+            fields: ["userId", "parentId"]
           }
         })
         .then(result => {
-          let docs = result.docs[0]
-          if (docs) {
-            docs.playlists = this.$lodash
-              .chain(docs.playlists)
-              .reject({ _key: data._key })
-              .value()
-            this.$local.put(docs).then(res => {
-              if (res.ok) {
-                if (type === "index") {
-                  this.getMyCollection()
-                } else {
-                  this.getMyCollectionList()
+          this.getLog("index => ", result)
+          return this.$test
+            .find({
+              selector: {
+                userId: {
+                  $eq: this.getUserId()
+                },
+                parentId: {
+                  $eq: data._id
                 }
-              }
+              },
+              limit: 100
             })
-            this.$modal.hide("dialog")
-          }
+            .then(results => {
+              return Promise.all(
+                results.docs.map(row => {
+                  return this.$test.remove(row)
+                })
+              )
+            })
+            .then(() => {
+              this.$test.get(data._id).then(doc => {
+                return this.$test.remove(doc).then(result => {
+                  if (result.ok) {
+                    if (type === "index") {
+                      this.getMyCollection()
+                    } else {
+                      this.getMyCollectionList()
+                    }
+                  }
+                })
+              })
+              this.$modal.hide("dialog")
+            })
         })
     },
 
@@ -122,24 +138,31 @@ export default {
     getMyCollection() {
       let user_id = this.getUserId()
       if (user_id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: user_id
-            },
-            fields: ["playlists"]
+        this.$test
+          .createIndex({
+            index: {
+              fields: ["type", "userId"]
+            }
           })
           .then(result => {
-            let docs = result.docs[0]
-            let playlists = docs.playlists
-            if (playlists) {
-              this.myCollections = this.$lodash
-                .chain(playlists)
-                .orderBy(["creates"], ["desc"])
-                .take(4)
-                .value()
-            }
+            return this.$test
+              .find({
+                selector: {
+                  type: {
+                    $eq: "mycollection"
+                  },
+                  userId: {
+                    $eq: user_id
+                  }
+                },
+                limit: 4
+              })
+              .then(result => {
+                this.myCollections = result.docs
+              })
+              .catch(error => {
+                console.log(error)
+              })
           })
       }
     },

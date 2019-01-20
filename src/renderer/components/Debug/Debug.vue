@@ -175,7 +175,7 @@ export default {
     addMusic() {
       let data = {
         userId: "113388783344159291766",
-        parentId: "d33f1ff5c0ff60bfd971ae32e10b77f2",
+        parentId: "d33f1ff5c0ff60bfd971ae32e10cd8e8",
         videoId: this.$moment().format("YYYYMMDDHHmmss"),
         title: "TEST MUSIC - " + this.$moment().format("YYYYMMDDHHmmss"),
         isLive: "none",

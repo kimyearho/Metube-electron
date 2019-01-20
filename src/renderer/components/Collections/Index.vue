@@ -245,6 +245,7 @@ export default {
           {
             title: "Yes",
             handler: () => {
+              console.log(data);
               this.$set(this, "data", data);
               this.$set(this, "playType", data.playType);
               if (data.category) {

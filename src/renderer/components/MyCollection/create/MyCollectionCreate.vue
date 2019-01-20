@@ -102,41 +102,21 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           const myCollection = {
-            _key: this.getCollectionKey(),
             title: this.form.name,
+            userId: this.getUserId(),
+            type: "mycollection",
             category: this.form.category,
             thumbnails:
               "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
             creates: this.$moment().format("YYYYMMDDHHmmss"),
-            created: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
-            tracks: []
+            created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
           };
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: this.getUserId()
-              }
-            })
-            .then(result => {
-              let docs = result.docs[0];
-              if (docs) {
-                // collection max
-                if (docs.playlists.length >= 7) {
-                  alert(
-                    "You can not create more than the maximum number of collections.\nCurrently, the maximum number is 7"
-                  );
-                } else {
-                  docs.playlists.push(myCollection);
-                  this.$local.put(docs).then(res => {
-                    if (res.ok) {
-                      this.$refs.form.resetFields();
-                      this.$emit("is-success", true);
-                    }
-                  });
-                }
-              }
-            });
+          this.$test.post(myCollection).then(result => {
+            if (result.ok) {
+              this.$refs.form.resetFields();
+              this.$emit("is-success", true);
+            }
+          });
         }
       });
     },
