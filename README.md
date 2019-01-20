@@ -1,5 +1,8 @@
 # [2019-01-16] v1.4.2 UPDATE
 
+# arning
+My mistake causes the local database design to be invalid, and the next update will initialize all collections. However, this update is expected to greatly improve performance. Thank you for your understanding.
+
 <p align="center">
   <img src="https://i.imgur.com/Z7vRHZE.png" />
   <img src="https://i.imgur.com/rtkPpJh.png" />
