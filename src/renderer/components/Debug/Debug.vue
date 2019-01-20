@@ -3,8 +3,8 @@
     <top-header :isShow="false"/>
     <h2 class="hello">Hello, PouchDB Debug</h2>
     <md-button class="md-raised md-primary" @click="getAlbum">get Album</md-button>
+    <md-button class="md-raised md-primary" @click="addAlbum">add Album</md-button>
     <md-button class="md-raised md-primary" @click="addMusic">add Music</md-button>
-
     <!-- ======================= Album List ======================= -->
     <el-row>
       <el-col class="cols" v-for="item in albumList" :key="item._id" :span="12">
@@ -16,7 +16,7 @@
                 <a class="cursor" @click="getMusic(item._id)" title="Play">
                   <font-awesome-icon class="f25 fa" icon="play"/>
                 </a>
-                <a class="cursor" title="Remove">
+                <a class="cursor" title="Remove" @click="deleteAlbum(item._id)">
                   <font-awesome-icon class="f25 fa" icon="times"/>
                 </a>
                 <a class="cursor" @click="coverChange(item)" title="Cover change">
@@ -66,7 +66,7 @@ export default {
       this.$test
         .createIndex({
           index: {
-            fields: ["type"]
+            fields: ["type", "userId"]
           }
         })
         .then(result => {
@@ -74,12 +74,13 @@ export default {
             .find({
               selector: {
                 type: {
-                  $eq: "album"
+                  $eq: "mycollection"
                 },
                 userId: {
                   $eq: "113388783344159291766"
                 }
-              }
+              },
+              limit: 4
             })
             .then(result => {
               this.albumList = result.docs;
@@ -89,11 +90,67 @@ export default {
             });
         });
     },
+    addAlbum() {
+      let data = {
+        title: "TEST-COLLECTION-" + this.$moment().format("YYYYMMDDHHmmss"),
+        userId: "113388783344159291766",
+        type: "mycollection",
+        category: "Music",
+        thumbnails:
+          "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
+        creates: this.$moment().format("YYYYMMDDHHmmss"),
+        created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
+      };
+      this.$test.post(data).then(result => {
+        if (result.ok) {
+          this.getAlbum();
+        }
+      });
+    },
+    deleteAlbum(_id) {
+      this.$test
+        .createIndex({
+          index: {
+            fields: ["userId", "parentId"]
+          }
+        })
+        .then(result => {
+          return this.$test
+            .find({
+              selector: {
+                userId: {
+                  $eq: "113388783344159291766"
+                },
+                parentId: {
+                  $eq: _id
+                }
+              },
+              limit: 100
+            })
+            .then(results => {
+              return Promise.all(
+                results.docs.map(row => {
+                  return this.$test.remove(row);
+                })
+              );
+            })
+            .then(arrayToResult => {
+              this.$test.get(_id).then(doc => {
+                return this.$test.remove(doc).then(result => {
+                  if (result.ok) {
+                    this.getAlbum();
+                    this.getMusic(_id);
+                  }
+                });
+              });
+            });
+        });
+    },
     getMusic(id) {
       this.$test
         .createIndex({
           index: {
-            fields: ["videoId", "creates"]
+            fields: ["userId", "parentId"]
           }
         })
         .then(result => {
@@ -118,7 +175,7 @@ export default {
     addMusic() {
       let data = {
         userId: "113388783344159291766",
-        parentId: "d33f1ff5c0ff60bfd971ae32e102e91b",
+        parentId: "d33f1ff5c0ff60bfd971ae32e10b77f2",
         videoId: this.$moment().format("YYYYMMDDHHmmss"),
         title: "TEST MUSIC - " + this.$moment().format("YYYYMMDDHHmmss"),
         isLive: "none",
@@ -131,7 +188,7 @@ export default {
       };
       this.$test.post(data).then(result => {
         if (result.ok) {
-          alert("Insert Music Success.\nGet Album click!");
+          // alert("Insert Music Success.\nGet Album click!");
         }
       });
     },
