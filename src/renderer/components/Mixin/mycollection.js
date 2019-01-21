@@ -138,32 +138,26 @@ export default {
     getMyCollection() {
       let user_id = this.getUserId()
       if (user_id) {
-        this.$test
-          .createIndex({
-            index: {
-              fields: ["type", "userId"]
-            }
-          })
-          .then(result => {
-            return this.$test
-              .find({
-                selector: {
-                  type: {
-                    $eq: "mycollection"
-                  },
-                  userId: {
-                    $eq: user_id
-                  }
+        this.createIndex(["type", "userId"]).then(() => {
+          return this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "mycollection"
                 },
-                limit: 4
-              })
-              .then(result => {
-                this.myCollections = result.docs
-              })
-              .catch(error => {
-                console.log(error)
-              })
-          })
+                userId: {
+                  $eq: user_id
+                }
+              },
+              limit: 4
+            })
+            .then(result => {
+              this.myCollections = result.docs
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        })
       }
     },
 

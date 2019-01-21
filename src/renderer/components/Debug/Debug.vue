@@ -1,26 +1,70 @@
 <template>
   <div>
-    <top-header :isShow="false"/>
+    <top-header :isShow="false" />
     <h2 class="hello">Hello, PouchDB Debug</h2>
-    <md-button class="md-raised md-primary" @click="getAlbum">get Album</md-button>
-    <md-button class="md-raised md-primary" @click="addAlbum">add Album</md-button>
-    <md-button class="md-raised md-primary" @click="addMusic">add Music</md-button>
+    <md-button
+      class="md-raised md-primary"
+      @click="getAlbum"
+    >get Album</md-button>
+    <md-button
+      class="md-raised md-primary"
+      @click="addAlbum"
+    >add Album</md-button>
+    <md-button
+      class="md-raised md-primary"
+      @click="addMusic"
+    >add Music</md-button>
     <!-- ======================= Album List ======================= -->
     <el-row>
-      <el-col class="cols" v-for="item in albumList" :key="item._id" :span="12">
-        <el-card class="thumb" style="width: 160px;" :body-style="{ padding: '0px' }">
+      <el-col
+        class="cols"
+        v-for="item in albumList"
+        :key="item._id"
+        :span="12"
+      >
+        <el-card
+          class="thumb"
+          style="width: 160px;"
+          :body-style="{ padding: '0px' }"
+        >
           <div class="overlay">
-            <img class="md-image thumbnail cursor" :src="item.thumbnails" width="158" height="100">
+            <img
+              class="md-image thumbnail cursor"
+              :src="item.thumbnails"
+              width="158"
+              height="100"
+            >
             <div class="playWrapper">
               <div class="overlayMenu">
-                <a class="cursor" @click="getMusic(item._id)" title="Play">
-                  <font-awesome-icon class="f25 fa" icon="play"/>
+                <a
+                  class="cursor"
+                  @click="getMusic(item._id)"
+                  title="Play"
+                >
+                  <font-awesome-icon
+                    class="f25 fa"
+                    icon="play"
+                  />
                 </a>
-                <a class="cursor" title="Remove" @click="deleteAlbum(item._id)">
-                  <font-awesome-icon class="f25 fa" icon="times"/>
+                <a
+                  class="cursor"
+                  title="Remove"
+                  @click="deleteAlbum(item._id)"
+                >
+                  <font-awesome-icon
+                    class="f25 fa"
+                    icon="times"
+                  />
                 </a>
-                <a class="cursor" @click="coverChange(item)" title="Cover change">
-                  <font-awesome-icon class="f25 fa" icon="images"/>
+                <a
+                  class="cursor"
+                  @click="coverChange(item)"
+                  title="Cover change"
+                >
+                  <font-awesome-icon
+                    class="f25 fa"
+                    icon="images"
+                  />
                 </a>
               </div>
             </div>
@@ -36,10 +80,16 @@
     <hr>
     <!-- ======================= Album List and Music items ======================= -->
     <ul class="rows">
-      <li v-for="item in albumMusicList" :key="item._id">
+      <li
+        v-for="item in albumMusicList"
+        :key="item._id"
+      >
         <div style="margin:10px">
-          <span>{{ item.title.substring(0, 40) }}</span>
-          <md-button class="md-raised md-primary custom" @click="deleteMusic(item)">delete</md-button>
+          <span>{{ item.title.substring(0, 35) }}</span>
+          <md-button
+            class="md-raised md-primary custom"
+            @click="deleteMusic(item)"
+          >delete</md-button>
         </div>
       </li>
     </ul>
@@ -49,9 +99,11 @@
 
 <script>
 import ContextMenu from "@/components/Context/MyContextMenu";
+import DataUtils from "@/components/Mixin/db";
 
 export default {
   name: "DebugPage",
+  mixins: [DataUtils],
   components: {
     ContextMenu
   },
@@ -63,12 +115,7 @@ export default {
   },
   methods: {
     getAlbum() {
-      this.$test
-        .createIndex({
-          index: {
-            fields: ["type", "userId"]
-          }
-        })
+      this.createIndex(["type", "userId"])
         .then(result => {
           return this.$test
             .find({
@@ -175,8 +222,8 @@ export default {
     addMusic() {
       let data = {
         userId: "113388783344159291766",
-        parentId: "d33f1ff5c0ff60bfd971ae32e10cff28",
-        videoId: this.$moment().format("YYYYMMDDHHmmss"),
+        parentId: "a081e94a7216334ee58b8aa75d00217e",
+        videoId: "v3nLH9vF6Hg",
         title: "TEST MUSIC - " + this.$moment().format("YYYYMMDDHHmmss"),
         isLive: "none",
         image: "https://i.ytimg.com/vi/8yjJVNphHAc/mqdefault.jpg",

@@ -187,6 +187,7 @@
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import MyQueryMixin from "@/components/Mixin/mycollection";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import CoverChangeModal from "./cover/CollectionCoverChange";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
@@ -194,7 +195,7 @@ import Loading from "@/components/Loader/Loader";
 
 export default {
   name: "Collections",
-  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin, DataUtils],
   components: {
     CollectionRegister,
     CoverChangeModal,
