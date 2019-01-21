@@ -47,8 +47,5 @@ I am developing "Metube" as a global service. But I do not know the user experie
 ### Trello (for korean)
 <https://trello.com/b/qj4gO2br/metube>
 
-### Contributing
-I want to continue developing Metube. We welcome those who can help. <br/>
-
 ## License
 GNU General Public License v3.0
