@@ -25,10 +25,11 @@
 <script>
 import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 
 export default {
   name: "CollectionRegister",
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, DataUtils],
   props: {
     isLikeToggle: {
       type: Boolean,
@@ -90,36 +91,37 @@ export default {
         } else {
           if (this.data) {
             // 나의 아이디로 등록 된 콜렉션 리스트 조회
-            this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: id
-                },
-                fields: ["_id", "collections"]
-              })
-              .then(result => {
-                let docs = result.docs[0];
-                let collections = docs.collections;
-                if (this.$lodash.size(collections) > 0) {
-                  let item = this.$lodash.find(docs, {
-                    playlistId: this.data.playlistId
-                  });
-                  if (item) {
-                    // 이미 등록 된 콜렉션
-                    this.alreadyDialog();
+            this.createIndex(["type", "userId"]).then(() => {
+              return this.$test
+                .find({
+                  selector: {
+                    type: {
+                      $eq: "myplaylist"
+                    },
+                    userId: {
+                      $eq: this.getUserId()
+                    }
+                  }
+                })
+                .then(result => {
+                  const docs = result.docs;
+                  if (docs.length > 0) {
+                    const findToItem = this.$lodash.find(docs, {
+                      playlistId: this.data.playlistId
+                    });
+                    if (findToItem) {
+                      // 이미 등록 된 컬렉션
+                      this.alreadyDialog();
+                    } else {
+                      // 등록되지 않은 콜렉션이면 등록한다.
+                      this.addCollection(this.data);
+                    }
                   } else {
                     // 등록되지 않은 콜렉션이면 등록한다.
-                    this.addCollection(id, this.data);
+                    this.addCollection(this.data);
                   }
-                } else {
-                  // 나의 계정으로 등록 된 콜렉션이 전혀 없을 경우.
-                  this.addCollection(id, this.data);
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
+                });
+            });
           }
         }
       } else {
@@ -127,61 +129,54 @@ export default {
       }
     },
 
-    addCollection(id, item) {
+    addCollection(item) {
       let data = {
+        type: "myplaylist",
         playType: this.playType,
-        playlistId: item.playlistId,
+        userId: this.getUserId(),
+        playlistId: item.list[0].playlistId,
         channelId: item.channelId ? item.channelId : null,
-        videoId: item.videoId,
-        title: item.title,
+        videoId: item.videoId ? item.videoId : null,
+        title: item.playlistTitle,
         creates: this.$moment().format("YYYYMMDDHHmmss"),
         created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
       };
       if (this.playType === "play") {
-        data.thumbnails = item.imageInfo;
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: this.getUserId()
-            }
-          })
-          .then(result => {
-            let docs = result.docs[0];
-            docs.collections.push(data);
-            this.$local.put(docs).then(res => {
-              if (res.ok) {
-                this.isToggle = true;
-                this.$emit("toggle", true);
-              }
-            });
-          });
-      } else {
-        let requestURL = $commons.youtubeChannelSearch(item.channelId);
-        this.$http.get(requestURL).then(res => {
-          let items = res.data.items[0];
-          this.$http.get(requestURL).then(res => {
-            data.thumbnails = res.data.items[0].snippet.thumbnails.medium.url;
-            data.title = res.data.items[0].snippet.title;
-            this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: this.getUserId()
-                }
-              })
-              .then(result => {
-                let docs = result.docs[0];
-                docs.collections.push(data);
-                this.$local.put(docs).then(res => {
-                  if (res.ok) {
-                    this.isToggle = true;
-                    this.$emit("toggle", true);
-                  }
-                });
-              });
-          });
+        data.thumbnails = item.list[0].imageInfo;
+        this.$test.post(data).then(result => {
+          if (result.ok) {
+            this.isToggle = true;
+            this.$emit("toggle", true);
+          }
         });
+      } else {
+        console.log("channel => ", data);
+        // 채널
+        // let requestURL = $commons.youtubeChannelSearch(item.channelId);
+        // this.$http.get(requestURL).then(res => {
+        //   let items = res.data.items[0];
+        //   this.$http.get(requestURL).then(res => {
+        //     data.thumbnails = res.data.items[0].snippet.thumbnails.medium.url;
+        //     data.title = res.data.items[0].snippet.title;
+        //     this.$local
+        //       .find({
+        //         selector: {
+        //           type: "profile",
+        //           userId: this.getUserId()
+        //         }
+        //       })
+        //       .then(result => {
+        //         let docs = result.docs[0];
+        //         docs.collections.push(data);
+        //         this.$local.put(docs).then(res => {
+        //           if (res.ok) {
+        //             this.isToggle = true;
+        //             this.$emit("toggle", true);
+        //           }
+        //         });
+        //       });
+        //   });
+        // });
       }
     },
 

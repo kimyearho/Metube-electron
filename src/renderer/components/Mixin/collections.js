@@ -106,42 +106,60 @@ export default {
     },
 
     getPlaylist() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
       if (musicInfo) this.isSub = true
-
-      let id = this.getUserId()
-
+      const id = this.getUserId()
       if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
-            },
-            fields: ["collections"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.collections
-            if (collections) {
-              let items = this.$lodash.filter(collections, {
-                playType: "play"
-              })
-              if (items) {
-                this.playlists = this.$lodash
-                  .chain(items)
-                  .orderBy(["creates"], ["desc"])
-                  .take(4)
-                  .value()
-              }
-            } else {
-              this.playlists = []
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+        this.createIndex(["type", "userId", "playlistId"]).then(() => {
+          this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "myplaylist"
+                },
+                userId: {
+                  $eq: this.getUserId()
+                }
+              },
+              limit: 4
+            })
+            .then(result => {
+              this.playlists = result.docs
+            })
+        })
       }
+
+      // if (id) {
+      //   this.$local
+      //     .find({
+      //       selector: {
+      //         type: "profile",
+      //         userId: id
+      //       },
+      //       fields: ["collections"]
+      //     })
+      //     .then(result => {
+      //       let docs = result.docs[0]
+      //       let collections = docs.collections
+      //       if (collections) {
+      //         let items = this.$lodash.filter(collections, {
+      //           playType: "play"
+      //         })
+      //         if (items) {
+      //           this.playlists = this.$lodash
+      //             .chain(items)
+      //             .orderBy(["creates"], ["desc"])
+      //             .take(4)
+      //             .value()
+      //         }
+      //       } else {
+      //         this.playlists = []
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log(err)
+      //     })
+      // }
     },
 
     getChannelList() {

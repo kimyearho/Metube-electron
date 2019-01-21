@@ -230,10 +230,13 @@ export default {
         this.$http
           .get(requestURL)
           .then(res => {
+            console.log(res);
+            let plistTitle = "";
             let videoInfo = null;
             let subChannelId = null;
 
             if (this.playType === "play") {
+              plistTitle = res.data.items[0].snippet.title;
               requestURL = $commons.youtubePlaylistItem(playlistId);
             } else if (this.playType === "related") {
               videoInfo = res.data.items[0];
@@ -246,6 +249,7 @@ export default {
 
             this.$http.get(requestURL).then(res => {
               if (this.$lodash.size(res.data.items) > 0) {
+                console.log(res.data.items);
                 let pathName = null;
                 if (this.playType === "play") {
                   pathName = "setDuration";
@@ -273,6 +277,7 @@ export default {
                       ? res.data.nextPageToken
                       : null,
                     totalResults: res.data.pageInfo.totalResults,
+                    playlistTitle: plistTitle,
                     list: results
                   };
                   this.$store.commit("setPlayList", payload);
@@ -302,7 +307,7 @@ export default {
         this.isNext = !!findPlaylist.nextPageToken;
         this.load = true;
 
-        this.data = this.playlist[0];
+        this.data = findPlaylist;
 
         // Like 조회
         this.getLike();
@@ -345,7 +350,7 @@ export default {
 
       // 모든 재생목록에서 찾아온 현재 페이지 재생목록
       this.playlist = findPlaylist.list;
-      this.data = this.playlist[0];
+      this.data = findPlaylist;
 
       // 다음 페이지 토큰
       this.nextPageToken = findPlaylist.nextPageToken
