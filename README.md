@@ -14,8 +14,6 @@ I am going to initialize all the data in the next update by wrongly designing th
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
-
-### What's new ?
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
 
 ### Reference
