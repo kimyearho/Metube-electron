@@ -54,66 +54,47 @@ export default {
   },
   methods: {
     like() {
-      let id = this.getUserId();
-      if (id) {
+      const user = this.getUserId();
+      if (user) {
         if (this.isToggle) {
           if (this.data) {
+            const options = {
+              selector: {
+                type: {
+                  $eq: this.playType === 'play' ? 
+                       "myplaylist" : 
+                       "mychannel"
+                },
+                userId: {
+                  $eq: user
+                },
+                playlistId: {
+                  $eq: this.playType === 'play' ? 
+                       this.data.playlistId.split(":")[1] : 
+                       this.data.channelPlaylistId
+                }
+              }
+            }
+            this.createIndex(["type", "userId", "playlistId"])
+              .then(() => {
+                return this.$test
+                  .find(options).then(result => {
+                    const doc = result.docs[0]
+                    if (doc) {
+                      this.$test.remove(doc).then(res => {
+                        if (res.ok) {
+                          this.isToggle = false;
+                          this.$emit("toggle", this.isToggle);
+                          this.$emit("callback", true);
+                        }
+                      })
+                    }
+                  })
+              });
 
-            console.log(this.data)
-
-            // this.createIndex(["type", "userId", "playlistId"])
-            //   .then(() => {
-            //     return this.$test
-            //       .find({
-            //         selector: {
-            //           type: {
-            //             $eq: "myplaylist"
-            //           },
-            //           userId: {
-            //             $eq: id
-            //           },
-            //           plyalistId: {
-            //             $eq: ""
-            //           }
-            //         },
-            //       })
-            //   });
-
-            // this.$local
-            //   .find({
-            //     selector: {
-            //       type: "profile",
-            //       userId: id
-            //     },
-            //     fields: ["_id", "collections"]
-            //   })
-            //   .then(result => {
-            //     let docs = result.docs[0];
-            //     let key = docs._id;
-            //     if (key) {
-            //       this.$local.get(key).then(doc => {
-            //         doc.collections = this.$lodash.reject(doc.collections, {
-            //           playlistId: this.data.playlistId
-            //         });
-            //         return this.$local.put(doc).then(res => {
-            //           if (res.ok) {
-            //             this.isToggle = false;
-            //             this.$emit("toggle", this.isToggle);
-            //             this.$emit("callback", true);
-            //           }
-            //         });
-            //       });
-            //     }
-            //   })
-            //   .catch(err => {
-            //     console.log(err);
-            //   });
           }
         } else {
           if (this.data) {
-
-            console.log(this.data)
-
             let listType = "";
             if (this.playType === 'play') {
               listType = "myplaylist"
@@ -191,7 +172,6 @@ export default {
         // 채널
         let requestURL = $commons.youtubeChannelSearch(data.channelId);
         this.$http.get(requestURL).then(res => {
-          console.log(res)
           data.thumbnails = res.data.items[0].snippet.thumbnails.medium.url;
           data.title = res.data.items[0].snippet.title;
           data.type = "mychannel";
