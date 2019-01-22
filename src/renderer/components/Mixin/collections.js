@@ -8,60 +8,44 @@
 export default {
   methods: {
     getLike() {
-      let user_id = this.getUserId()
+      const user_id = this.getUserId()
       if (user_id) {
         if (this.playType === "play") {
-          let id = this.playlist[0].playlistId
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: user_id
-              },
-              fields: ["collections"]
-            })
-            .then(result => {
-              let docs = result.docs[0]
-              let collections = docs.collections
-              if (collections) {
-                let item = this.$lodash.find(collections, {
-                  playType: "play",
-                  playlistId: id
-                })
-                if (item) {
+          const playlistId = this.playlist[0].playlistId
+          this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test
+              .find({
+                selector: {
+                  type: { $eq: "myplaylist" },
+                  userId: { $eq: user_id },
+                  playlistId: { $eq: playlistId }
+                }
+              })
+              .then(result => {
+                let docs = result.docs
+                if (docs.length > 0) {
                   this.isLikeToggle = true
                 }
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
+              })
+          })
         } else if (this.playType === "channel") {
-          let id = this.playlist[0].channelId
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: user_id
-              },
-              fields: ["collections"]
-            })
-            .then(result => {
-              let docs = result.docs[0]
-              let collections = docs.collections
-              if (collections) {
-                let item = this.$lodash.find(collections, {
-                  playType: "channel",
-                  channelId: id
-                })
-                if (item) {
+          const channelId = this.playlist[0].channelId
+          this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test
+              .find({
+                selector: {
+                  type: { $eq: "mychannel" },
+                  userId: { $eq: user_id },
+                  channelId: { $eq: channelId }
+                }
+              })
+              .then(result => {
+                let docs = result.docs
+                if (docs.length > 0) {
                   this.isLikeToggle = true
                 }
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
+              })
+          })
         }
       }
     },
@@ -128,74 +112,30 @@ export default {
             })
         })
       }
-
-      // if (id) {
-      //   this.$local
-      //     .find({
-      //       selector: {
-      //         type: "profile",
-      //         userId: id
-      //       },
-      //       fields: ["collections"]
-      //     })
-      //     .then(result => {
-      //       let docs = result.docs[0]
-      //       let collections = docs.collections
-      //       if (collections) {
-      //         let items = this.$lodash.filter(collections, {
-      //           playType: "play"
-      //         })
-      //         if (items) {
-      //           this.playlists = this.$lodash
-      //             .chain(items)
-      //             .orderBy(["creates"], ["desc"])
-      //             .take(4)
-      //             .value()
-      //         }
-      //       } else {
-      //         this.playlists = []
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log(err)
-      //     })
-      // }
     },
 
     getChannelList() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
       if (musicInfo) this.isSub = true
-
-      let id = this.getUserId()
-
+      const id = this.getUserId()
       if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
-            },
-            fields: ["collections"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.collections
-            if (collections) {
-              let items = this.$lodash.filter(collections, {
-                playType: "channel"
-              })
-              if (items) {
-                this.channelLists = this.$lodash
-                  .chain(items)
-                  .orderBy(["creates"], ["desc"])
-                  .take(4)
-                  .value()
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+        this.createIndex(["type", "userId", "channelId"]).then(() => {
+          this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "mychannel"
+                },
+                userId: {
+                  $eq: id
+                }
+              },
+              limit: 4
+            })
+            .then(result => {
+              this.channelLists = result.docs
+            })
+        })
       }
     },
 

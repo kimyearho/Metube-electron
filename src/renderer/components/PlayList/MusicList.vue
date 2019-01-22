@@ -104,6 +104,7 @@
 import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import ContextMenu from "@/components/Context/ContextMenu";
 import Loading from "@/components/Loader/Loader";
@@ -111,7 +112,7 @@ import CollectionRegister from "@/components/Collections/regist/CollectionRegist
 
 export default {
   name: "MusicList",
-  mixins: [StoreMixin, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -230,7 +231,6 @@ export default {
         this.$http
           .get(requestURL)
           .then(res => {
-            console.log(res);
             let plistTitle = "";
             let videoInfo = null;
             let subChannelId = null;

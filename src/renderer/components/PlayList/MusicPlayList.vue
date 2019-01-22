@@ -114,6 +114,7 @@
 <script>
 import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import ContextMenu from "@/components/Context/ContextMenu";
@@ -125,7 +126,7 @@ const options = { container: "#list", offset: -80 };
 
 export default {
   name: "MusicPlayList",
-  mixins: [StoreMixin, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
