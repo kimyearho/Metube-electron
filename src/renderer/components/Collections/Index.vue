@@ -246,15 +246,14 @@ export default {
           {
             title: "Yes",
             handler: () => {
-              console.log(data);
               this.$set(this, "data", data);
               this.$set(this, "playType", data.playType);
               if (data.category) {
-                /** @overide */
+                /** @overide 내 콜렉션 제거 */
                 this.myCollectionRemove(data, "index");
               } else {
-                /** @overide */
-                this.albumRemoveCallback();
+                /** @overide 그외 콜렉션 제거 */
+                this.albumRemoveCallback(data);
               }
             }
           },
@@ -273,7 +272,7 @@ export default {
         name: "NOT-MY-PLAYLIST",
         params: {
           playType: "self",
-          id: item._key
+          doc: item
         }
       });
     },

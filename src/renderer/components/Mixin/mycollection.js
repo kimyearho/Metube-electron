@@ -7,12 +7,17 @@
 
 export default {
   methods: {
+
+    syncMyCollection(data) {
+      console.log(data)
+    },
+
     /**
      * 나의 컬렉션 재생목록 드래그를 통한 목록 및 재생정보 동기화
      *
      * @param {*} value - 드래그 완료시 재생목록의 배열
      */
-    syncMyCollection(value) {
+    syncMyCollection2(value) {
       if (this.getUserId()) {
         this.$local
           .find({
@@ -162,39 +167,35 @@ export default {
     },
 
     /**
-     * 내 컬렉션 목록을 가져온다.
+     * 내 컬렉션 목록을 가져온다. (최대 7개)
      */
     getMyCollectionList() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
+      const user = this.getUserId()
       if (musicInfo) this.isSub = true
-      let id = this.getUserId()
-      if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
-            },
-            fields: ["playlists"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.playlists
-            if (collections) {
-              this.playlists = this.$lodash
-                .chain(collections)
-                .orderBy(["creates"], ["desc"])
-                .take(7)
-                .value()
-            }
-            this.load = true
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        this.load = true
+      if (user) {
+        this.createIndex(["type", "userId"]).then(() => {
+          return this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "mycollection"
+                },
+                userId: {
+                  $eq: user
+                }
+              },
+              limit: 7
+            })
+            .then(result => {
+              this.playlists = result.docs
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        })
       }
+      this.load = true
     },
 
     /**

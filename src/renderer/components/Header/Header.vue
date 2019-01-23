@@ -280,7 +280,8 @@ export default {
 
 <style scoped>
 .logo {
-  padding-left: 38px !important;
+  font-size: 16px;
+  padding-left: 36px !important;
 }
 
 .noMenu {

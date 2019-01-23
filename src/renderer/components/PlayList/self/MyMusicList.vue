@@ -6,16 +6,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -29,18 +41,13 @@
             <a
               class="cursor"
               title="Collection edit"
-              style="margin-right:10px; color:#fff;"
+              style="color:#fff;"
               @click="collectionEdit"
             >
-              <font-awesome-icon class="f20" icon="edit"/>
-            </a>
-            <a
-              class="cursor"
-              title="Cover change"
-              style="color:#fff;"
-              @click="collectionCoverChange"
-            >
-              <font-awesome-icon class="f20" icon="images"/>
+              <font-awesome-icon
+                class="f20"
+                icon="edit"
+              />
             </a>
           </div>
         </div>
@@ -58,16 +65,27 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
-          <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image" alt="People">
+          <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
+        <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
           :index="index"
@@ -75,8 +93,8 @@
           :data="item"
           @is-success="feachData"
         />
+        <!-- End -->
       </md-list-item>
-
       <md-list-item>
         <span class="playlistEnd">
           <i class="el-icon-check"></i>
@@ -88,6 +106,7 @@
       </div>
     </draggable>
     <!-- // END 재생목록 드래그 지점 -->
+
     <!-- 컬렉션 수정 -->
     <collection-modify-form
       :id="id"
@@ -96,14 +115,15 @@
       @is-success="syncCollectionInfo"
     />
 
-    <!-- 커버 이미지 변경 -->
-    <cover-change-modal ref="coverModal" :data="collectionData" @is-success="syncCollectionCover"/>
-
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -112,8 +132,8 @@ import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
 import MyQueryMixin from "@/components/Mixin/mycollection";
+import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
-import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
 import CollectionModifyForm from "@/components/MyCollection/modify/MyCollectionModify";
 import MyContextMenu from "@/components/Context/MyContextMenu";
 import draggable from "vuedraggable";
@@ -121,13 +141,12 @@ import Loading from "@/components/Loader/Loader";
 
 export default {
   name: "MyMusicList",
-  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin, DataUtils],
   components: {
     SubPlayerBar,
     Loading,
     MyQueryMixin,
     MyContextMenu,
-    CoverChangeModal,
     CollectionModifyForm,
     draggable
   },
@@ -136,27 +155,39 @@ export default {
       load: false,
       isMini: false,
       isModify: false,
-      totalTracks: null,
-      selectedIndex: null,
+      totalTracks: 0,
       playType: null,
       id: null,
-      collectionData: null,
+      collectionDoc: null,
       cover: "",
       coverTitle: "",
-      channelTitle: "",
       category: "",
+      channelTitle: "MyChannel",
       playlist: []
     };
   },
   created() {
+    this.init()
     this.feachData();
   },
   methods: {
+    init() {
+      this.isMini = this.getMusicInfos() ? true : false;
+      this.playType = this.$route.params.playType;
+      this.collectionDoc = this.$route.params.doc;
+      this.category = this.collectionDoc.category;
+      this.cover = this.collectionDoc.thumbnails;
+      this.coverTitle = this.collectionDoc.title;
+    },
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        const sortPlaylist = this.playlist;
-        this.syncMyCollection(sortPlaylist);
+
+        console.log('newIndex => ', value.newIndex)
+        console.log('oldIndex => ', value.oldIndex)
+
+        // let sortPlaylist = this.playlist;
+        // this.syncMyCollection(sortPlaylist);
       }
     },
     syncCollectionInfo() {
@@ -202,43 +233,31 @@ export default {
         });
     },
     feachData() {
-      this.playType = this.$route.params.playType;
-      this.id = this.$route.params.id;
-      this.isMini = this.getMusicInfos() ? true : false;
-      let user_id = this.getUserId();
-      if (user_id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: user_id
-            },
-            fields: ["playlists"]
-          })
+      const user = this.getUserId();
+      if (user) {
+        this.createIndex(["userId", "parentId"])
           .then(result => {
-            let docs = result.docs[0];
-            let playlists = docs.playlists;
-            if (playlists) {
-              let data = this.$lodash.find(playlists, {
-                _key: this.id
+            return this.$test
+              .find({
+                selector: {
+                  userId: {
+                    $eq: user
+                  },
+                  parentId: {
+                    $eq: this.collectionDoc._id
+                  }
+                },
+                limit: 100
+              })
+              .then(result => {
+                let docs = result.docs;
+                if (docs.length > 0) {
+                  this.totalTracks = docs.length;
+                  this.playlist = docs;
+                }
               });
-
-              this.category = data.category;
-              this.cover = data.thumbnails;
-              this.coverTitle = data.title;
-              this.channelTitle = "MyChannel";
-              this.totalTracks = data.tracks.length;
-              this.playlist = data.tracks;
-
-              // option
-              this.collectionData = {};
-              this.collectionData._key = this.id;
-              this.collectionData.category = this.category;
-              // this.$set(this, 'collectionData', this.collectionData)
-
-              this.load = true;
-            }
           });
+
       }
     },
     route(items, index) {
@@ -251,9 +270,6 @@ export default {
           start: index
         }
       });
-    },
-    collectionCoverChange() {
-      this.$refs.coverModal.showModal();
     },
     collectionEdit() {
       this.isModify = true;

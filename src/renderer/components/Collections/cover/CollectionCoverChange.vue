@@ -72,7 +72,7 @@ export default {
         return this.$test.put(doc).then(result => {
           if(result.ok) {
             this.$emit('is-success', {
-              playType: this.data.type
+              playType: this.data.playType
             })
           }
           this.closeModal()
