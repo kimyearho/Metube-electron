@@ -151,29 +151,23 @@ let timer = 18 * 100000
 setInterval(() => {
   let user = vm.$store.getters.getGoogleProfile.googleId
   if (user) {
-    vm.$local
+    vm.$test
       .find({
         selector: {
-          type: "profile",
+          type: "history",
           userId: user
         }
       })
       .then(result => {
-        let docs = result.docs[0]
-        if (docs) {
-          // 오름차순 정렬
-          docs.history = vm.$lodash.orderBy(docs.history, ["creates"], ["asc"])
-          // 총 개수
-          let size = vm.$lodash.size(docs.history)
-          // 기본 개수
-          const defaultNum = 20
-          // 결과 = 총 개수 - 기본 개수
+        let docs = result.docs
+        if (docs.length > 0) {
+          let size = docs.length
+          let defaultNum = 20
           let result = size - defaultNum
-          // 결과 개수가 기본 개수보다 크면,
           if (result > defaultNum) {
             // 0부터 결과개수-1 만큼 삭제 후 갱신
-            docs.history.splice(0, result - 1)
-            vm.$local.put(docs).then(res => {
+            docs.splice(0, result - 1)
+            vm.$test.bulkDocs(docs).then(res => {
               if (res.ok) {
                 console.log("Success history Remove => ", result - 1)
               }
