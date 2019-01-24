@@ -6,28 +6,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -38,16 +26,8 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a
-              class="cursor"
-              title="Collection edit"
-              style="color:#fff;"
-              @click="collectionEdit"
-            >
-              <font-awesome-icon
-                class="f20"
-                icon="edit"
-              />
+            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
+              <font-awesome-icon class="f20" icon="edit"/>
             </a>
           </div>
         </div>
@@ -65,11 +45,7 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -77,14 +53,8 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
         <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
@@ -106,7 +76,6 @@
       </div>
     </draggable>
     <!-- // END 재생목록 드래그 지점 -->
-
     <!-- 컬렉션 수정 -->
     <collection-modify-form
       :data="collectionDoc"
@@ -116,14 +85,10 @@
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -167,7 +132,7 @@ export default {
     };
   },
   created() {
-    this.init()
+    this.init();
     this.feachData();
   },
   methods: {
@@ -182,49 +147,40 @@ export default {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-
-        console.log('newIndex => ', value.newIndex)
-        console.log('oldIndex => ', value.oldIndex)
+        console.log("newIndex => ", value.newIndex);
+        console.log("oldIndex => ", value.oldIndex);
 
         // let sortPlaylist = this.playlist;
         // this.syncMyCollection(sortPlaylist);
       }
     },
     syncCollectionInfo() {
-      this.$test
-        .get(this.collectionDoc._id)
-        .then(result => {
-          this.category = result.category;
-          this.coverTitle = result.title;
-          this.closeModal()
-        });
+      this.$test.get(this.collectionDoc._id).then(result => {
+        this.category = result.category;
+        this.coverTitle = result.title;
+        this.closeModal();
+      });
     },
     feachData() {
       const user = this.getUserId();
       if (user) {
-        this.createIndex(["userId", "parentId"])
-          .then(result => {
-            return this.$test
-              .find({
-                selector: {
-                  userId: {
-                    $eq: user
-                  },
-                  parentId: {
-                    $eq: this.collectionDoc._id
-                  }
-                },
-                limit: 100
-              })
-              .then(result => {
-                let docs = result.docs;
-                if (docs.length > 0) {
-                  this.totalTracks = docs.length;
-                  this.playlist = docs;
-                }
-              });
-          });
-
+        this.createIndex(["userId", "parentId"]).then(result => {
+          return this.$test
+            .find({
+              selector: {
+                userId: user,
+                parentId: this.collectionDoc._id
+              },
+              limit: 100
+            })
+            .then(result => {
+              let docs = result.docs;
+              if (docs.length > 0) {
+                this.totalTracks = docs.length;
+                this.playlist = docs;
+              }
+            });
+        });
       }
     },
     route(items, index) {

@@ -8,28 +8,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -66,18 +54,9 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span
-          class="md-list-item-text music-title cursor"
-          @click="playItem(index)"
-        >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -108,15 +87,11 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -226,19 +201,16 @@ export default {
       let user = this.getUserId();
       if (user) {
         const param1 = this.$test.get(this.id);
-        const param2 = this.$test
-          .find(
-            {
-              selector: {
-                userId: { $eq: user },
-                parentId: { $eq: this.id }
-              },
-              limit: 100
-            }
-          )
+        const param2 = this.$test.find({
+          selector: {
+            userId: user,
+            parentId: this.id
+          },
+          limit: 100
+        });
         Promise.all([param1, param2]).then(results => {
           this.category = results[0].category;
-          let listDocs = results[1].docs
+          let listDocs = results[1].docs;
           if (listDocs.length > 0) {
             this.totalTracks = listDocs.length;
             this.playlist = listDocs;
@@ -268,9 +240,8 @@ export default {
               this.autoStart();
             }
           }
-          this.load = true
-        })
-
+          this.load = true;
+        });
       }
     },
 
