@@ -87,12 +87,13 @@
 import * as $commons from "@/service/commons-service.js";
 import Loading from "@/components/Loader/loader";
 import storeMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import ContextMenu from "@/components/Context/ContextMenu";
 
 export default {
   name: "VideoHistory",
-  mixins: [storeMixin],
+  mixins: [storeMixin, DataUtils],
   components: {
     ContextMenu,
     SubPlayerBar,
@@ -121,28 +122,30 @@ export default {
   mounted() { },
   methods: {
     getHistory() {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["history"],
-          limit: 20
+      this.createIndex(["type", "userId", "creates"])
+        .then(() => {
+          return this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "history"
+                },
+                userId: {
+                  $eq: this.getUserId()
+                },
+                creates: {
+                  $gte: null
+                }
+              },
+              sort: [{ creates: "desc" }]
+            }).then(result => {
+              let docs = result.docs;
+              if (docs.length > 0) {
+                this.playlist = docs;
+              }
+            });
         })
-        .then(result => {
-          let docs = result.docs[0];
-          if (docs) {
-            if (docs.history.length > 0) {
-              this.playlist = this.$lodash
-                .chain(docs.history)
-                .orderBy(["creates"], ["desc"])
-                .take(30)
-                .value();
-            }
-          }
-          this.load = true;
-        });
+      this.load = true
     },
     signLink() {
       this.$router.push({

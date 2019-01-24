@@ -202,6 +202,7 @@ export default {
      * 다음 순번의 비디오 수신
      */
     subscribeNextVideo(index) {
+      console.log("subscribeNextVideo => ", index);
       this.playItem(index, "sync");
     },
 

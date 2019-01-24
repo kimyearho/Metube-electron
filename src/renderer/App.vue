@@ -209,7 +209,7 @@ export default {
       setTimeout(() => {
         this.$store.commit("setTime", 1000);
         this.statusResult();
-      }, 1000);
+      }, 10000);
     },
     statusResult() {
       this.$store.commit("setTimer", false);
