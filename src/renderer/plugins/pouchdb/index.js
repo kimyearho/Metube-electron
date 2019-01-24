@@ -20,6 +20,6 @@ Vue.prototype.$local = new PouchDB("http://localhost:5984/metube")
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
 
 // 샘플
-Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
+// Vue.prototype.$test = new PouchDB("http://localhost:5984/sample2")
 // Vue.prototype.$test = new PouchDB("http://202.182.100.137/sample")
-// Vue.prototype.$test = new PouchDB("test3")
+Vue.prototype.$test = new PouchDB("test10")

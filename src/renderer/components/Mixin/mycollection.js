@@ -142,7 +142,7 @@ export default {
     getMyCollection() {
       let user_id = this.getUserId()
       if (user_id) {
-        this.createIndex(["type", "userId"]).then(() => {
+        this.createIndex(["creates"]).then(() => {
           return this.$test
             .find({
               selector: {
@@ -151,8 +151,12 @@ export default {
                 },
                 userId: {
                   $eq: user_id
+                },
+                creates: {
+                  $gte: null
                 }
               },
+              sort: [{ creates: "desc" }],
               limit: 4
             })
             .then(result => {

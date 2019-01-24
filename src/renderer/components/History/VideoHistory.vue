@@ -90,7 +90,7 @@ export default {
   mounted() {},
   methods: {
     getHistory() {
-      this.createIndex(["type", "userId", "creates", "videoId"]).then(() => {
+      this.createIndex(["creates"]).then(() => {
         this.$test
           .find({
             selector: {
