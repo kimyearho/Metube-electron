@@ -14,20 +14,40 @@
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
-      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
-      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
+      <md-tab
+        id="tabSearch"
+        class="md-tab"
+        md-label="Search"
+        @click="route('search')"
+      ></md-tab>
+      <md-tab
+        id="tabCollection"
+        class="md-tab"
+        md-label="Collections"
+        @click="route('collection')"
+      ></md-tab>
+      <md-tab
+        id="tabHistory"
+        class="md-tab"
+        md-label="History"
+        @click="route('history')"
+      ></md-tab>
     </md-tabs>
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
 <script>
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 
 export default {
   name: "App",
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, DataUtils],
   data() {
     return {
       isShow: false,
@@ -122,27 +142,30 @@ export default {
           let nextIndex = currentIndex + 1;
 
           if (musicData.type) {
-            this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: this.getUserId()
-                },
-                fields: ["playlists"]
-              })
+            this.createIndex(["userId", "parentId"])
               .then(result => {
-                let docs = result.docs[0];
-                let playlists = docs.playlists;
-                if (playlists) {
-                  this.playlist = this.$lodash.find(playlists, {
-                    _key: musicData.name
+                return this.$test
+                  .find({
+                    selector: {
+                      userId: {
+                        $eq: this.getUserId()
+                      },
+                      parentId: {
+                        $eq: musicData.parentId
+                      }
+                    },
+                    limit: 100
+                  })
+                  .then(result => {
+                    let docs = result.docs;
+                    if (docs) {
+                      if (docs.length > nextIndex) {
+                        this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
+                      } else {
+                        this.$eventBus.$emit("playlist-nextMusicPlay", 0);
+                      }
+                    }
                   });
-                  if (this.playlist.tracks.length > nextIndex) {
-                    this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                  } else {
-                    this.$eventBus.$emit("playlist-nextMusicPlay", 0);
-                  }
-                }
               });
           } else {
             // 전체 재생 목록
@@ -171,6 +194,10 @@ export default {
         }
       }
     },
+    /**
+     * 비디오 상태 체크
+     * 재생불가능한 비디오를 감시한다
+     */
     videoStatusCheck() {
       let isTimer = this.$store.getters.getTimer;
       if (isTimer) {
@@ -182,7 +209,7 @@ export default {
       setTimeout(() => {
         this.$store.commit("setTime", 1000);
         this.statusResult();
-      }, 10000);
+      }, 1000);
     },
     statusResult() {
       this.$store.commit("setTimer", false);
@@ -193,29 +220,28 @@ export default {
           let musicData = this.getMusicInfos();
           let nextIndex = musicData.index + 1;
           if (musicData.type) {
-            let key = musicData.name;
-            this.$local
-              .find({
-                selector: {
-                  type: "profile",
-                  userId: this.getUserId()
-                },
-                fields: ["playlists"]
-              })
+            this.createIndex(["userId", "parentId"])
               .then(result => {
-                let docs = result.docs[0];
-                let playlists = docs.playlists;
-                if (playlists) {
-                  let data = this.$lodash.find(playlists, {
-                    _key: key
-                  });
-                  let playlist = data.tracks;
-                  if (playlist != undefined) {
-                    if (playlist.length > nextIndex) {
-                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
+                return this.$test
+                  .find({
+                    selector: {
+                      userId: {
+                        $eq: this.getUserId()
+                      },
+                      parentId: {
+                        $eq: musicData.parentId
+                      }
+                    },
+                    limit: 100
+                  })
+                  .then(result => {
+                    const docs = result.docs;
+                    if (docs) {
+                      if (docs.length > nextIndex) {
+                        this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
+                      }
                     }
-                  }
-                }
+                  });
               });
           } else {
             let all = this.getAllPlayList();
@@ -237,7 +263,6 @@ export default {
       this.$db
         .get("17901f376f4ff226c03adecee0004104")
         .then(doc => {
-          console.log(doc);
           let live_version = `${doc.version}`;
           let local_version = this.$version;
           if (live_version != local_version) {

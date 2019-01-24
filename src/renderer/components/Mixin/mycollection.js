@@ -7,7 +7,6 @@
 
 export default {
   methods: {
-
     syncMyCollection(data) {
       console.log(data)
     },
@@ -204,39 +203,40 @@ export default {
      * @param {*} index - 다음 곡 index
      * @param {*} musicInfo - 현재 재생정보
      */
-    getMyMusicSyncList(index, musicInfo) {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["playlists"]
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          let playlists = docs.playlists
-          if (playlists) {
-            let data = this.$lodash.find(playlists, {
-              _key: this.id
-            })
+    getMyMusicSyncList(index, musicData) {
+      this.createIndex(["userId", "parentId"]).then(() => {
+        return this.$test
+          .find({
+            selector: {
+              userId: {
+                $eq: this.getUserId()
+              },
+              parentId: {
+                $eq: musicData.parentId
+              }
+            },
+            limit: 100
+          })
+          .then(result => {
+            let docs = result.docs
+            if (docs) {
+              this.playlist = docs
 
-            this.playlist = data.tracks
+              // 재생목록에서 해당하는 트랙번호의 비디오
+              let playingItem = this.playlist[index]
+              playingItem.index = index
+              playingItem.name = musicData.name
 
-            // 재생목록에서 해당하는 트랙번호의 비디오
-            let playingItem = this.playlist[index]
-            playingItem.index = index
-            playingItem.name = musicInfo.name
-
-            this.totalTracks = this.playlist.length
-            this.playSetting(playingItem)
-            if (index === 0) {
-              this.nextTrackScroll(-1)
-            } else {
-              this.nextTrackScroll(500)
+              this.totalTracks = this.playlist.length
+              this.playSetting(playingItem)
+              if (index === 0) {
+                this.nextTrackScroll(-1)
+              } else {
+                this.nextTrackScroll(500)
+              }
             }
-          }
-        })
+          })
+      })
     },
 
     /**

@@ -233,7 +233,7 @@ export default {
         name: "MY-PLAYING-PLAYLIST",
         params: {
           playType: this.playType,
-          id: this.$route.params.id,
+          id: this.collectionDoc._id,
           start: index
         }
       });

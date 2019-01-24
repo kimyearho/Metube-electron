@@ -8,16 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -54,9 +66,18 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -87,11 +108,15 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -99,6 +124,7 @@
 import * as $commons from "@/service/commons-service.js";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import MyCollectionMixin from "@/components/Mixin/mycollection";
 import MyContextMenu from "@/components/Context/MyContextMenu";
 import Loading from "@/components/Loader/Loader";
@@ -109,7 +135,7 @@ const options = { container: "#myMusicList", offset: -80 };
 
 export default {
   name: "MyMusicPlayList",
-  mixins: [StoreMixin, MyCollectionMixin],
+  mixins: [StoreMixin, MyCollectionMixin, DataUtils],
   components: {
     Loading,
     MainPlayerBar,
@@ -156,8 +182,8 @@ export default {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        const sortPlaylist = this.playlist;
-        this.syncMyCollection(sortPlaylist);
+        // const sortPlaylist = this.playlist;
+        // this.syncMyCollection(sortPlaylist);
       }
     },
 
@@ -196,57 +222,54 @@ export default {
       this.startIndex = this.$route.params.start;
       this.playType = this.$route.params.playType;
       this.id = this.$route.params.id;
-      let user_id = this.getUserId();
-      if (user_id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: user_id
-            },
-            fields: ["playlists"]
-          })
-          .then(result => {
-            let docs = result.docs[0];
-            let playlists = docs.playlists;
-            if (playlists) {
-              // 재생목록
-              let data = this.$lodash.find(playlists, {
-                _key: this.id
-              });
-              this.playlist = data.tracks;
-              this.category = data.category;
-              let musicInfo = this.getMusicInfos();
-              // 현재 재생중인 재생정보가 있는지?
-              if (musicInfo) {
-                // name -> 재생정보에 포함 된 재생목록의 key값
-                // id -> 이 재생목록의 key값
-                // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
-                if (musicInfo.name != this.id) {
-                  this.autoStart();
-                } else {
-                  // 현재 재생중인정보가 이 재생목록과 같은경우.
-                  // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
-                  if (musicInfo.index === this.startIndex) {
-                    // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
-                    this.cover = musicInfo.thumbnails;
-                    this.coverTitle = musicInfo.title;
-                    this.channelTitle = musicInfo.channelTitle;
-                    this.selectedIndex = musicInfo.index;
-                    this.videoActive(400);
-                  } else {
-                    // 인덱스가 서로 다르므로 새로 시작
-                    this.autoStart();
-                  }
-                }
-              } else {
-                this.autoStart();
-              }
-
-              // 총 트랙 수
-              this.totalTracks = data.tracks.length;
+      let user = this.getUserId();
+      if (user) {
+        const param1 = this.$test.get(this.id);
+        const param2 = this.$test
+          .find(
+            {
+              selector: {
+                userId: { $eq: user },
+                parentId: { $eq: this.id }
+              },
+              limit: 100
             }
-          });
+          )
+        Promise.all([param1, param2]).then(results => {
+          this.category = results[0].category;
+          let listDocs = results[1].docs
+          if (listDocs.length > 0) {
+            this.totalTracks = listDocs.length;
+            this.playlist = listDocs;
+            let musicInfo = this.getMusicInfos();
+            if (musicInfo) {
+              // name -> 재생정보에 포함 된 재생목록의 key값
+              // id -> 이 재생목록의 key값
+              // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
+              if (musicInfo.name != this.id) {
+                this.autoStart();
+              } else {
+                // 현재 재생중인정보가 이 재생목록과 같은경우.
+                // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
+                if (musicInfo.index === this.startIndex) {
+                  // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
+                  this.cover = musicInfo.thumbnails;
+                  this.coverTitle = musicInfo.title;
+                  this.channelTitle = musicInfo.channelTitle;
+                  this.selectedIndex = musicInfo.index;
+                  this.videoActive(400);
+                } else {
+                  // 인덱스가 서로 다르므로 새로 시작
+                  this.autoStart();
+                }
+              }
+            } else {
+              this.autoStart();
+            }
+          }
+          this.load = true
+        })
+
       }
     },
 
