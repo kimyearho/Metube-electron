@@ -109,7 +109,7 @@
 
     <!-- 컬렉션 수정 -->
     <collection-modify-form
-      :id="id"
+      :data="collectionDoc"
       :isOpen="isModify"
       @is-close="closeModal"
       @is-success="syncCollectionInfo"
@@ -156,8 +156,8 @@ export default {
       isMini: false,
       isModify: false,
       totalTracks: 0,
-      playType: null,
       id: null,
+      playType: null,
       collectionDoc: null,
       cover: "",
       coverTitle: "",
@@ -191,45 +191,12 @@ export default {
       }
     },
     syncCollectionInfo() {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["playlists"]
-        })
+      this.$test
+        .get(this.collectionDoc._id)
         .then(result => {
-          let docs = result.docs[0];
-          let playlists = docs.playlists;
-          if (playlists) {
-            let data = this.$lodash.find(playlists, {
-              _key: this.id
-            });
-            this.category = data.category;
-            this.coverTitle = data.title;
-            this.closeModal();
-          }
-        });
-    },
-    syncCollectionCover() {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["playlists"]
-        })
-        .then(result => {
-          let docs = result.docs[0];
-          let playlists = docs.playlists;
-          if (playlists) {
-            let data = this.$lodash.find(playlists, {
-              _key: this.id
-            });
-            this.cover = data.thumbnails;
-          }
+          this.category = result.category;
+          this.coverTitle = result.title;
+          this.closeModal()
         });
     },
     feachData() {
