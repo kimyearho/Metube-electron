@@ -177,7 +177,7 @@ export default {
       const user = this.getUserId()
       if (musicInfo) this.isSub = true
       if (user) {
-        this.createIndex(["type", "userId"]).then(() => {
+        this.createIndex(["creates"]).then(() => {
           return this.$test
             .find({
               selector: {
@@ -186,9 +186,13 @@ export default {
                 },
                 userId: {
                   $eq: user
+                },
+                creates: {
+                  $gte: null
                 }
               },
-              limit: 7
+              limit: 7,
+              sort: [{ creates: "desc" }]
             })
             .then(result => {
               this.playlists = result.docs
