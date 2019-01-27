@@ -168,30 +168,28 @@ export default {
       const user = this.getUserId();
       if (user) {
         this.getRemoteProfile().then(result => {
-          if (result.collections) {
-            const list = result.collections;
-            if (list) {
-              const findData = this.$lodash.find(list, {
-                id: this.collectionDoc._id
+          const list = result.collections;
+          if (list) {
+            const findData = this.$lodash.find(list, {
+              id: this.collectionDoc._id
+            });
+            if (findData) {
+              this.getTotal().then(result => {
+                const remoteTotalCount = result.docs.length;
+                if (remoteTotalCount != findData.listCount) {
+                  console.log("========================= list sync!");
+                  this.getRemoteList();
+                } else {
+                  console.log("========================= remote store get!");
+                  this.totalTracks = findData.listCount;
+                  this.playlist = findData.list;
+                }
               });
-              if (findData) {
-                this.getTotal().then(result => {
-                  const remoteTotalCount = result.docs.length;
-                  if (remoteTotalCount != findData.listCount) {
-                    console.log("========================= list sync!");
-                    this.getRemoteList();
-                  } else {
-                    console.log("========================= remote store get!");
-                    this.totalTracks = findData.listCount;
-                    this.playlist = findData.list;
-                  }
-                });
-              } else {
-                this.getRemoteList();
-              }
             } else {
               this.getRemoteList();
             }
+          } else {
+            this.getRemoteList();
           }
         });
       }
