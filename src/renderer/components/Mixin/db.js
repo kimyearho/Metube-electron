@@ -32,6 +32,100 @@ export default {
           limit: 100
         })
       })
+    },
+
+    getRemoteProfile() {
+      return this.$test
+        .find({
+          selector: {
+            type: "profile",
+            userId: this.getUserId()
+          }
+        })
+        .then(result => {
+          return result.docs[0]
+        })
+    },
+
+    setRemoteSubsetMusicData(payload, ev) {
+      this.$test
+        .find({
+          selector: {
+            type: "profile",
+            userId: this.getUserId()
+          }
+        })
+        .then(result => {
+          if (result) {
+            // 스토어 디비 데이터셋
+            let doc = result.docs[0]
+            let collections = doc.collections
+            // 실제 db 데이터셋
+            const myMusicData = {
+              list: payload,
+              listCount: payload.length,
+              id: payload[0].parentId // 모든 데이터에는 부모 아이디가 있으므로 1개만 선택한다.
+            }
+            if (collections.length <= 0) {
+              collections.push(myMusicData)
+              this.updateProfile(doc)
+            } else {
+              const findData = this.$lodash.find(collections, { id: myMusicData.id })
+              if (!findData) {
+                collections.push(myMusicData)
+                this.updateProfile(doc)
+              } else {
+                if (findData.listCount != myMusicData.listCount) {
+                  const findDataIndex = this.$lodash.findIndex(collections, {
+                    id: myMusicData.id
+                  })
+                  collections[findDataIndex] = myMusicData
+                  this.updateProfileAndListSync(doc, ev)
+                }
+              }
+            }
+          }
+        })
+    },
+    updateProfile(doc) {
+      this.$test.put(doc).then(res => {
+        if (res.ok) {
+          console.log("put success!")
+        }
+      })
+    },
+    updateProfileAndListSync(doc, ev) {
+      this.$test.put(doc).then(res => {
+        if (res.ok) {
+          this.getRemoteProfile().then(result => {
+            if (result.collections) {
+              const list = result.collections
+              if (list) {
+                // 스토어에 저장된 재생목록을 찾는다.
+                const findData = this.$lodash.find(list, {
+                  id: this.id
+                })
+                // 찾은 목록을 랜더링한다.
+                if (findData) {
+                  this.playlist = findData.list
+                  this.totalTracks = findData.listCount
+                }
+
+                let musicInfo = this.getMusicInfos()
+                if (musicInfo) {
+                  if (ev === "p") {
+                    this.cover = musicInfo.thumbnails
+                    this.coverTitle = musicInfo.title
+                    this.channelTitle = musicInfo.channelTitle
+                    this.selectedIndex = musicInfo.index
+                    this.videoActive()
+                  }
+                }
+              }
+            }
+          })
+        }
+      })
     }
   }
 }

@@ -8,34 +8,19 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isMenu="true"
-      :isShow="false"
-      :data="{ playType: 'list' }"
-    />
+    <top-header :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
     <div class="wrapper">
       <div class="contents">
         <div class="cover">
-          <img
-            width="350"
-            v-if="!isSignin"
-            src="@/assets/images/youtube/dev.png"
-          >
+          <img width="350" v-if="!isSignin" src="@/assets/images/youtube/dev.png">
           <div v-if="isSignin">
             <div class="picture">
-              <img
-                class="userPicture"
-                width="100"
-                :src="profileData.googlePicture"
-              >
+              <img class="userPicture" width="100" :src="profileData.googlePicture">
             </div>
             <div class="userName">{{ profileData.googleName }}</div>
           </div>
         </div>
-        <div
-          class="signin"
-          :class="{ signout: isSignin }"
-        >
+        <div class="signin" :class="{ signout: isSignin }">
           <md-button
             v-if="!isSignin"
             class="cursor md-raised md-primary"
@@ -57,22 +42,13 @@
           </label>
         </div>
         <div class="description">
-          <strong
-            class="gr"
-            v-if="!isSignin"
-          >{{ $t('SIGN.NO_LOGIN_NOTICE') }}</strong>
-          <strong
-            class="gr"
-            v-if="isSignin"
-          >{{ $t('SIGN.YES_LOGIN_NOTICE') }}</strong>
+          <strong class="gr" v-if="!isSignin">{{ $t('SIGN.NO_LOGIN_NOTICE') }}</strong>
+          <strong class="gr" v-if="isSignin">{{ $t('SIGN.YES_LOGIN_NOTICE') }}</strong>
         </div>
       </div>
     </div>
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar
-      class="md-top-61"
-      v-show="isMini"
-    />
+    <sub-player-bar class="md-top-61" v-show="isMini"/>
   </div>
 </template>
 
@@ -124,7 +100,7 @@ export default {
       this.profileData = this.getProfile();
       if (this.profileData) {
         // 프로필 정보를 받았으면 로그인정보로 프로필이 등록되어있는지 조회한다.
-        this.$local
+        this.$test
           .find({
             selector: {
               type: "profile",
@@ -139,16 +115,12 @@ export default {
             // 프로필이 없으면 새로 프로필을 등록한다
             if (!docs) {
               let data = {
-                _id: this.getProfileKey(),
                 type: "profile",
                 userId: this.getUserId(),
-                history: [],
-                playlists: [],
                 setting: [],
-                collections: [],
-                keywords: []
+                collections: []
               };
-              this.$local
+              this.$test
                 .post(data)
                 .then(res => {
                   this.$store.commit("setId", _id);

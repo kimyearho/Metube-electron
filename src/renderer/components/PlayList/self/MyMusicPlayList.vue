@@ -216,25 +216,8 @@ export default {
             // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
 
             // 갱신된 DB조회 결과를 스토어에 저장한다.
-            this.$store.commit("setMyMusicList", listDocs);
-
-            // 스토어에 저장된 재생목록을 찾는다.
-            const findData = this.$lodash.find(this.getMyMusicList(), {
-              id: this.id
-            });
-
-            // 찾은 목록을 랜더링한다.
-            this.playlist = findData.list;
-            this.totalTracks = findData.listCount;
-
-            let musicInfo = this.getMusicInfos();
-            if (musicInfo) {
-              this.cover = musicInfo.thumbnails;
-              this.coverTitle = musicInfo.title;
-              this.channelTitle = musicInfo.channelTitle;
-              this.selectedIndex = musicInfo.index;
-              this.videoActive();
-            }
+            // this.$store.commit("setMyMusicList", listDocs);
+            this.setRemoteSubsetMusicData(listDocs, "p");
           }
         });
       }
@@ -257,8 +240,8 @@ export default {
             if (docs.length > 0) {
               this.totalTracks = docs.length;
               this.playlist = docs;
-              this.$store.commit("setMyMusicList", docs);
 
+              this.setRemoteSubsetMusicData(docs, "p");
               this.feachExtends();
             }
           });
@@ -290,29 +273,35 @@ export default {
       this.playType = this.$route.params.playType;
       const user = this.getUserId();
       if (user) {
-        const list = this.getMyMusicList();
-        if (list) {
-          const findData = this.$lodash.find(list, {
-            id: this.id
-          });
-          if (findData) {
-            this.getTotal().then(result => {
-              const remoteTotalCount = result.docs.length;
-              if (remoteTotalCount != findData.listCount) {
-                console.log("========================= list sync!");
-                this.getRemoteList();
-              } else {
-                console.log("========================= store get!");
-                this.totalTracks = findData.listCount;
-                this.playlist = findData.list;
+        this.getRemoteProfile().then(result => {
+          if (result.collections) {
+            const list = result.collections;
+            if (list) {
+              const findData = this.$lodash.find(list, {
+                id: this.id
+              });
+              if (findData) {
+                this.getTotal().then(result => {
+                  const remoteTotalCount = result.docs.length;
+                  if (remoteTotalCount != findData.listCount) {
+                    console.log("========================= list sync!");
+                    this.getRemoteList();
+                  } else {
+                    console.log("========================= remote store get!");
+                    this.totalTracks = findData.listCount;
+                    this.playlist = findData.list;
 
-                this.feachExtends();
+                    this.feachExtends();
+                  }
+                });
+              } else {
+                this.getRemoteList();
               }
-            });
-          } else {
-            this.getRemoteList();
+            } else {
+              this.getRemoteList();
+            }
           }
-        }
+        });
       }
     },
 

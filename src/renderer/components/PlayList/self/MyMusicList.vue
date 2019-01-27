@@ -167,27 +167,33 @@ export default {
     feachData() {
       const user = this.getUserId();
       if (user) {
-        const list = this.getMyMusicList();
-        if (list) {
-          const findData = this.$lodash.find(list, {
-            id: this.collectionDoc._id
-          });
-          if (findData) {
-            this.getTotal().then(result => {
-              const remoteTotalCount = result.docs.length;
-              if (remoteTotalCount != findData.listCount) {
-                console.log("========================= list sync!");
-                this.getRemoteList();
+        this.getRemoteProfile().then(result => {
+          if (result.collections) {
+            const list = result.collections;
+            if (list) {
+              const findData = this.$lodash.find(list, {
+                id: this.collectionDoc._id
+              });
+              if (findData) {
+                this.getTotal().then(result => {
+                  const remoteTotalCount = result.docs.length;
+                  if (remoteTotalCount != findData.listCount) {
+                    console.log("========================= list sync!");
+                    this.getRemoteList();
+                  } else {
+                    console.log("========================= remote store get!");
+                    this.totalTracks = findData.listCount;
+                    this.playlist = findData.list;
+                  }
+                });
               } else {
-                console.log("========================= store get!");
-                this.totalTracks = findData.listCount;
-                this.playlist = findData.list;
+                this.getRemoteList();
               }
-            });
-          } else {
-            this.getRemoteList();
+            } else {
+              this.getRemoteList();
+            }
           }
-        }
+        });
       }
     },
 
@@ -212,7 +218,7 @@ export default {
               // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
               // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
 
-              this.$store.commit("setMyMusicList", docs);
+              this.setRemoteSubsetMusicData(docs, "n");
             }
           });
       });
