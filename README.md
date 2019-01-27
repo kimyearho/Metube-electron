@@ -9,8 +9,9 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### *** [[ Warning ]] ***
-I am going to initialize all the data in the next update by wrongly designing the local database. Currently I am building a new local database. I am really sorry about this problem. But I think there will be a lot of performance upgrades through this improvement. Thank you.
+### *** News ***
+Hi, I am a developer.
+Approximately two weeks have passed since the last deployment. I've made a lot of changes to my DB design at the moment, but I think there will be a little more delays in the update because of issues with synchronization issues with drag-and-drop processing for my collections. Thank you.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
