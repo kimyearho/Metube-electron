@@ -11,7 +11,7 @@
 
 ### [2019-01-28] *** News ***
 Hi, I am a developer.
-Approximately two weeks have passed since the last deployment. I've made a lot of changes to my DB design at the moment, but I think there will be a little more delays in the update because of issues with synchronization issues with drag-and-drop processing for my collections. The current progress is about 85%. Thank you.
+Approximately two weeks have passed since the last deployment. I've made a lot of changes to my DB design at the moment, but I think there will be a little more delays in the update because of issues with synchronization issues with drag-and-drop processing for my collections. The current progress is about 85%. We are trying to become a better "Metube". Thank you.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
