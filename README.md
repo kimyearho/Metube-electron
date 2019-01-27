@@ -9,7 +9,7 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### *** News ***
+### [2019-01-28] *** News ***
 Hi, I am a developer.
 Approximately two weeks have passed since the last deployment. I've made a lot of changes to my DB design at the moment, but I think there will be a little more delays in the update because of issues with synchronization issues with drag-and-drop processing for my collections. Thank you.
 
