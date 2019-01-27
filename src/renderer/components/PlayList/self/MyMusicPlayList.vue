@@ -174,10 +174,10 @@ export default {
     },
 
     // 재생중인 비디오 선택
-    videoActive() {
+    videoActive(selectedIndex) {
       const self = this;
+      const id = "#item" + selectedIndex;
       setTimeout(() => {
-        const id = "#item" + self.$route.params.start;
         self.$scrollTo(id, -1, options);
         self.load = true;
       }, 100);
@@ -323,7 +323,7 @@ export default {
             this.coverTitle = musicInfo.title;
             this.channelTitle = musicInfo.channelTitle;
             this.selectedIndex = musicInfo.index;
-            this.videoActive();
+            this.videoActive(musicInfo.index);
           } else {
             // 인덱스가 서로 다르므로 새로 시작
             this.autoStart();
@@ -440,7 +440,7 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails;
 
-      this.videoActive();
+      this.videoActive(playingItem.index);
 
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$eventBus.$emit("playMusicSetting");

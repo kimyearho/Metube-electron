@@ -146,11 +146,7 @@ export default {
             let playIndex = musicInfos.index;
             if (playIndex > this.index) {
               // 삭제한 비디오 인덱스가 0일때
-              if (this.index === 0) {
-                musicInfos.index = musicInfos.index - 1;
-              } else {
-                musicInfos.index = this.index;
-              }
+              musicInfos.index = musicInfos.index - 1;
               // 재생정보 세팅
               this.$store.commit("setPlayingMusicInfo", musicInfos);
               // 재생정보 변경 이벤트
