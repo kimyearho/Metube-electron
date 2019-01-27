@@ -63,7 +63,7 @@
           :index="index"
           :videoId="item.videoId"
           :data="item"
-          @is-success="feachData"
+          @is-success="feachSyncData"
         />
       </md-list-item>
 
@@ -149,9 +149,15 @@ export default {
      * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
      */
     this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
+    this.feachData();
   },
   mounted() {
-    this.feachData();
+    let self = this;
+    setTimeout(() => {
+      let id = "#item" + self.$route.params.start;
+      self.$scrollTo(id, -1, options);
+      self.load = true;
+    }, 350);
   },
   methods: {
     endDrag(value) {
@@ -177,7 +183,6 @@ export default {
      * 다음 순번의 비디오 수신
      */
     subscribeNextVideo(index) {
-      console.log("subscribeNextVideo => ", index);
       this.playItem(index, "sync");
     },
 
@@ -186,8 +191,44 @@ export default {
       setTimeout(() => {
         let id = "#item" + self.$route.params.start;
         self.$scrollTo(id, -1, options);
-        self.load = true;
       }, ms);
+    },
+
+    /**
+     * 비디오 삭제 후 동기화
+     */
+    feachSyncData() {
+      this.load = false;
+      this.playType = this.$route.params.playType;
+      this.id = this.$route.params.id;
+      let user = this.getUserId();
+      if (user) {
+        const param1 = this.$test.get(this.id);
+        const param2 = this.$test.find({
+          selector: {
+            userId: user,
+            parentId: this.id
+          },
+          sort: [{ creates: "asc" }],
+          limit: 100
+        });
+        Promise.all([param1, param2]).then(results => {
+          this.category = results[0].category;
+          let listDocs = results[1].docs;
+          if (listDocs.length > 0) {
+            this.totalTracks = listDocs.length;
+            this.playlist = listDocs;
+            let musicInfo = this.getMusicInfos();
+            if (musicInfo) {
+              this.cover = musicInfo.thumbnails;
+              this.coverTitle = musicInfo.title;
+              this.channelTitle = musicInfo.channelTitle;
+              this.selectedIndex = musicInfo.index;
+              // this.videoActive(400);
+            }
+          }
+        });
+      }
     },
 
     /**
@@ -206,6 +247,7 @@ export default {
             userId: user,
             parentId: this.id
           },
+          sort: [{ creates: "asc" }],
           limit: 100
         });
         Promise.all([param1, param2]).then(results => {
@@ -214,12 +256,14 @@ export default {
           if (listDocs.length > 0) {
             this.totalTracks = listDocs.length;
             this.playlist = listDocs;
+            // this.$store.commit("setMyMusicList", listDocs);
+
             let musicInfo = this.getMusicInfos();
             if (musicInfo) {
               // name -> 재생정보에 포함 된 재생목록의 key값
               // id -> 이 재생목록의 key값
               // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
-              if (musicInfo.name != this.id) {
+              if (musicInfo.name !== this.id) {
                 this.autoStart();
               } else {
                 // 현재 재생중인정보가 이 재생목록과 같은경우.
@@ -230,7 +274,7 @@ export default {
                   this.coverTitle = musicInfo.title;
                   this.channelTitle = musicInfo.channelTitle;
                   this.selectedIndex = musicInfo.index;
-                  this.videoActive(400);
+                  // this.videoActive(400);
                 } else {
                   // 인덱스가 서로 다르므로 새로 시작
                   this.autoStart();
@@ -261,7 +305,7 @@ export default {
       playingItem.index = startTrack;
       playingItem.name = this.id;
       this.playSetting(playingItem);
-      this.videoActive(500);
+      // this.videoActive(500);
     },
 
     /**

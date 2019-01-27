@@ -58,8 +58,8 @@ export default {
     getRemoveTrackIndex() {
       return this.$store.getters.getRemoveTrackIndex
     },
-    getSnow() {
-      return this.$store.getters.getSnow
+    getMyMusicList() {
+      return this.$store.getters.getMyMusicList
     },
     getLog(message, data) {
       if (process.env.NODE_ENV !== "production") {
@@ -101,7 +101,7 @@ export default {
                 creates: this.$moment().format("YYYYMMDDkkmmss"),
                 created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
               }
-              this.$test.post(postData);
+              this.$test.post(postData)
             } else {
               this.getLog("exists item: ", data)
             }

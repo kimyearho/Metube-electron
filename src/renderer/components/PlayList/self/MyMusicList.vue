@@ -144,6 +144,7 @@ export default {
       this.cover = this.collectionDoc.thumbnails;
       this.coverTitle = this.collectionDoc.title;
     },
+
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
@@ -154,6 +155,7 @@ export default {
         // this.syncMyCollection(sortPlaylist);
       }
     },
+
     syncCollectionInfo() {
       this.$test.get(this.collectionDoc._id).then(result => {
         this.category = result.category;
@@ -161,28 +163,72 @@ export default {
         this.closeModal();
       });
     },
+
     feachData() {
       const user = this.getUserId();
       if (user) {
-        this.createIndex(["userId", "parentId"]).then(result => {
-          return this.$test
-            .find({
-              selector: {
-                userId: user,
-                parentId: this.collectionDoc._id
-              },
-              limit: 100
-            })
-            .then(result => {
-              let docs = result.docs;
-              if (docs.length > 0) {
-                this.totalTracks = docs.length;
-                this.playlist = docs;
+        const list = this.getMyMusicList();
+        if (list) {
+          const findData = this.$lodash.find(list, {
+            id: this.collectionDoc._id
+          });
+          if (findData) {
+            this.getTotal().then(result => {
+              const remoteTotalCount = result.docs.length;
+              if (remoteTotalCount != findData.listCount) {
+                console.log("========================= list sync!");
+                this.getRemoteList();
+              } else {
+                console.log("========================= store get!");
+                this.totalTracks = findData.listCount;
+                this.playlist = findData.list;
               }
             });
-        });
+          } else {
+            this.getRemoteList();
+          }
+        }
       }
     },
+
+    getRemoteList() {
+      this.createIndex(["userId", "parentId"]).then(result => {
+        return this.$test
+          .find({
+            selector: {
+              userId: this.getUserId(),
+              parentId: this.collectionDoc._id
+            },
+            sort: [{ creates: "asc" }],
+            limit: 100
+          })
+          .then(result => {
+            let docs = result.docs;
+            if (docs.length > 0) {
+              this.totalTracks = docs.length;
+              this.playlist = docs;
+              this.$store.commit("setMyMusicList", docs);
+            }
+          });
+      });
+    },
+
+    getTotal() {
+      return this.createIndex(["userId", "parentId"]).then(result => {
+        return this.$test
+          .find({
+            selector: {
+              userId: this.getUserId(),
+              parentId: this.collectionDoc._id
+            },
+            limit: 100
+          })
+          .then(result => {
+            return result;
+          });
+      });
+    },
+
     route(items, index) {
       this.$store.commit("setPath", this.$route.path);
       this.$router.push({
@@ -194,12 +240,15 @@ export default {
         }
       });
     },
+
     collectionEdit() {
       this.isModify = true;
     },
+
     closeModal() {
       this.isModify = false;
     },
+
     goBack() {
       this.$router.push(this.$store.getters.getIndexPath);
     }
