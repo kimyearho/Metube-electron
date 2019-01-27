@@ -211,9 +211,21 @@ export default {
           this.category = results[0].category;
           let listDocs = results[1].docs;
           if (listDocs.length > 0) {
-            this.totalTracks = listDocs.length;
-            this.playlist = listDocs;
+            // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
+            // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
+            // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
+
+            // 갱신된 DB조회 결과를 스토어에 저장한다.
             this.$store.commit("setMyMusicList", listDocs);
+
+            // 스토어에 저장된 재생목록을 찾는다.
+            const findData = this.$lodash.find(this.getMyMusicList(), {
+              id: this.id
+            });
+
+            // 찾은 목록을 랜더링한다.
+            this.playlist = findData.list;
+            this.totalTracks = findData.listCount;
 
             let musicInfo = this.getMusicInfos();
             if (musicInfo) {

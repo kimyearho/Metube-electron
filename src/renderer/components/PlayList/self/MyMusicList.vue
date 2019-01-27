@@ -207,6 +207,11 @@ export default {
             if (docs.length > 0) {
               this.totalTracks = docs.length;
               this.playlist = docs;
+
+              // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
+              // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
+              // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
+
               this.$store.commit("setMyMusicList", docs);
             }
           });
