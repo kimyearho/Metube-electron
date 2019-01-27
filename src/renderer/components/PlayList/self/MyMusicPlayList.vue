@@ -149,17 +149,22 @@ export default {
      * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
      */
     this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
-    this.feachData();
-  },
-  mounted() {
-    let self = this;
-    setTimeout(() => {
-      let id = "#item" + self.$route.params.start;
-      self.$scrollTo(id, -1, options);
-      self.load = true;
-    }, 350);
+
+    this.getCategory();
   },
   methods: {
+    // 카테고리 가져온 뒤 목록가져오기
+    getCategory() {
+      this.load = false;
+      this.id = this.$route.params.id;
+      this.$test.get(this.id).then(result => {
+        if (result) {
+          this.category = result.category;
+          this.feachData();
+        }
+      });
+    },
+
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
@@ -168,15 +173,14 @@ export default {
       }
     },
 
-    /**
-     * 비디오 삭제 후 콜백 이벤트
-     */
-    removeCallback() {
-      let musicInfo = this.getMusicInfos();
-      this.selectedIndex = musicInfo.index;
-
-      /** @override 재생목록 동기화 */
-      this.removeTosyncPlaylist();
+    // 재생중인 비디오 선택
+    videoActive() {
+      const self = this;
+      setTimeout(() => {
+        const id = "#item" + self.$route.params.start;
+        self.$scrollTo(id, -1, options);
+        self.load = true;
+      }, 100);
     },
 
     /**
@@ -186,21 +190,12 @@ export default {
       this.playItem(index, "sync");
     },
 
-    videoActive(ms) {
-      let self = this;
-      setTimeout(() => {
-        let id = "#item" + self.$route.params.start;
-        self.$scrollTo(id, -1, options);
-      }, ms);
-    },
-
     /**
      * 비디오 삭제 후 동기화
      */
     feachSyncData() {
       this.load = false;
       this.playType = this.$route.params.playType;
-      this.id = this.$route.params.id;
       let user = this.getUserId();
       if (user) {
         const param1 = this.$test.get(this.id);
@@ -218,74 +213,123 @@ export default {
           if (listDocs.length > 0) {
             this.totalTracks = listDocs.length;
             this.playlist = listDocs;
+            this.$store.commit("setMyMusicList", listDocs);
+
             let musicInfo = this.getMusicInfos();
             if (musicInfo) {
               this.cover = musicInfo.thumbnails;
               this.coverTitle = musicInfo.title;
               this.channelTitle = musicInfo.channelTitle;
               this.selectedIndex = musicInfo.index;
-              // this.videoActive(400);
+              this.videoActive();
             }
           }
         });
       }
     },
 
+    // DB 조회
+    getRemoteList() {
+      this.createIndex(["userId", "parentId"]).then(result => {
+        return this.$test
+          .find({
+            selector: {
+              userId: this.getUserId(),
+              parentId: this.id
+            },
+            sort: [{ creates: "asc" }],
+            limit: 100
+          })
+          .then(result => {
+            let docs = result.docs;
+            if (docs.length > 0) {
+              this.totalTracks = docs.length;
+              this.playlist = docs;
+              this.$store.commit("setMyMusicList", docs);
+
+              this.feachExtends();
+            }
+          });
+      });
+    },
+
+    // DB의 등록된 목록의 총 개수
+    getTotal() {
+      return this.createIndex(["userId", "parentId"]).then(result => {
+        return this.$test
+          .find({
+            selector: {
+              userId: this.getUserId(),
+              parentId: this.id
+            },
+            limit: 100
+          })
+          .then(result => {
+            return result;
+          });
+      });
+    },
+
     /**
      * 인스턴스 초기화 시 조회되는 재생목록
      */
     feachData() {
-      this.load = false;
       this.startIndex = this.$route.params.start;
       this.playType = this.$route.params.playType;
-      this.id = this.$route.params.id;
-      let user = this.getUserId();
+      const user = this.getUserId();
       if (user) {
-        const param1 = this.$test.get(this.id);
-        const param2 = this.$test.find({
-          selector: {
-            userId: user,
-            parentId: this.id
-          },
-          sort: [{ creates: "asc" }],
-          limit: 100
-        });
-        Promise.all([param1, param2]).then(results => {
-          this.category = results[0].category;
-          let listDocs = results[1].docs;
-          if (listDocs.length > 0) {
-            this.totalTracks = listDocs.length;
-            this.playlist = listDocs;
-            // this.$store.commit("setMyMusicList", listDocs);
-
-            let musicInfo = this.getMusicInfos();
-            if (musicInfo) {
-              // name -> 재생정보에 포함 된 재생목록의 key값
-              // id -> 이 재생목록의 key값
-              // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
-              if (musicInfo.name !== this.id) {
-                this.autoStart();
+        const list = this.getMyMusicList();
+        if (list) {
+          const findData = this.$lodash.find(list, {
+            id: this.id
+          });
+          if (findData) {
+            this.getTotal().then(result => {
+              const remoteTotalCount = result.docs.length;
+              if (remoteTotalCount != findData.listCount) {
+                console.log("========================= list sync!");
+                this.getRemoteList();
               } else {
-                // 현재 재생중인정보가 이 재생목록과 같은경우.
-                // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
-                if (musicInfo.index === this.startIndex) {
-                  // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
-                  this.cover = musicInfo.thumbnails;
-                  this.coverTitle = musicInfo.title;
-                  this.channelTitle = musicInfo.channelTitle;
-                  this.selectedIndex = musicInfo.index;
-                  // this.videoActive(400);
-                } else {
-                  // 인덱스가 서로 다르므로 새로 시작
-                  this.autoStart();
-                }
+                console.log("========================= store get!");
+                this.totalTracks = findData.listCount;
+                this.playlist = findData.list;
+
+                this.feachExtends();
               }
-            } else {
-              this.autoStart();
-            }
+            });
+          } else {
+            this.getRemoteList();
           }
-          this.load = true;
-        });
+        }
+      }
+    },
+
+    // 재생
+    feachExtends() {
+      const musicInfo = this.getMusicInfos();
+      if (musicInfo) {
+        // name -> 재생정보에 포함 된 재생목록의 key값
+        // id -> 이 재생목록의 key값
+        // 따라서 현재 재생중인 정보가 이 재생목록과 다를경우이므로 새로 시작한다.
+        if (musicInfo.name !== this.id) {
+          this.autoStart();
+        } else {
+          // 현재 재생중인정보가 이 재생목록과 같은경우.
+          // 현재 재생중인 비디오의 인덱스와, 현재 재생목록의 시작인덱스가 동일한지?
+          if (musicInfo.index === this.startIndex) {
+            // 재생전 목록에서 재생중인 음악을 다시 클릭한 경우이므로 다시 재생할 필요는 없다.
+            this.cover = musicInfo.thumbnails;
+            this.coverTitle = musicInfo.title;
+            this.channelTitle = musicInfo.channelTitle;
+            this.selectedIndex = musicInfo.index;
+            this.videoActive();
+          } else {
+            // 인덱스가 서로 다르므로 새로 시작
+            this.autoStart();
+          }
+        }
+      } else {
+        this.autoStart();
       }
     },
 
@@ -305,7 +349,6 @@ export default {
       playingItem.index = startTrack;
       playingItem.name = this.id;
       this.playSetting(playingItem);
-      // this.videoActive(500);
     },
 
     /**
@@ -396,6 +439,8 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails;
 
+      this.videoActive();
+
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$eventBus.$emit("playMusicSetting");
       this.$ipcRenderer.send("win2Player", [
@@ -411,6 +456,8 @@ export default {
 
       /** @overade 사용자 재생 등록 */
       this.insertUserRecommand(playingItem);
+
+      this.load = true;
     },
 
     /**

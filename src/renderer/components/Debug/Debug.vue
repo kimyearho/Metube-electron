@@ -1,70 +1,24 @@
 <template>
   <div>
-    <top-header :isShow="false" />
+    <top-header :isShow="false"/>
     <h2 class="hello">Hello, PouchDB Debug</h2>
-    <md-button
-      class="md-raised md-primary"
-      @click="getAlbum"
-    >get Album</md-button>
-    <md-button
-      class="md-raised md-primary"
-      @click="addAlbum"
-    >add Album</md-button>
-    <md-button
-      class="md-raised md-primary"
-      @click="addMusic"
-    >add Music</md-button>
+    <md-button class="md-raised md-primary" @click="getAlbum">get Album</md-button>
     <!-- ======================= Album List ======================= -->
     <el-row>
-      <el-col
-        class="cols"
-        v-for="item in albumList"
-        :key="item._id"
-        :span="12"
-      >
-        <el-card
-          class="thumb"
-          style="width: 160px;"
-          :body-style="{ padding: '0px' }"
-        >
+      <el-col class="cols" v-for="item in albumList" :key="item._id" :span="12">
+        <el-card class="thumb" style="width: 160px;" :body-style="{ padding: '0px' }">
           <div class="overlay">
-            <img
-              class="md-image thumbnail cursor"
-              :src="item.thumbnails"
-              width="158"
-              height="100"
-            >
+            <img class="md-image thumbnail cursor" :src="item.thumbnails" width="158" height="100">
             <div class="playWrapper">
               <div class="overlayMenu">
-                <a
-                  class="cursor"
-                  @click="getMusic(item._id)"
-                  title="Play"
-                >
-                  <font-awesome-icon
-                    class="f25 fa"
-                    icon="play"
-                  />
+                <a class="cursor" @click="getMusic(item._id)" title="Play">
+                  <font-awesome-icon class="f25 fa" icon="play"/>
                 </a>
-                <a
-                  class="cursor"
-                  title="Remove"
-                  @click="deleteAlbum(item._id)"
-                >
-                  <font-awesome-icon
-                    class="f25 fa"
-                    icon="times"
-                  />
+                <a class="cursor" title="Remove" @click="deleteAlbum(item._id)">
+                  <font-awesome-icon class="f25 fa" icon="times"/>
                 </a>
-                <a
-                  class="cursor"
-                  @click="coverChange(item)"
-                  title="Cover change"
-                >
-                  <font-awesome-icon
-                    class="f25 fa"
-                    icon="images"
-                  />
+                <a class="cursor" @click="coverChange(item)" title="Cover change">
+                  <font-awesome-icon class="f25 fa" icon="images"/>
                 </a>
               </div>
             </div>
@@ -80,16 +34,10 @@
     <hr>
     <!-- ======================= Album List and Music items ======================= -->
     <ul class="rows">
-      <li
-        v-for="item in albumMusicList"
-        :key="item._id"
-      >
+      <li v-for="item in albumMusicList" :key="item._id">
         <div style="margin:10px">
           <span>{{ item.title.substring(0, 35) }}</span>
-          <md-button
-            class="md-raised md-primary custom"
-            @click="deleteMusic(item)"
-          >delete</md-button>
+          <md-button class="md-raised md-primary custom" @click="deleteMusic(item)">delete</md-button>
         </div>
       </li>
     </ul>
@@ -114,84 +62,54 @@ export default {
     };
   },
   methods: {
-    getAlbum() {
-      this.createIndex(["type", "userId"])
-        .then(result => {
-          return this.$test
-            .find({
-              selector: {
-                type: {
-                  $eq: "mycollection"
-                },
-                userId: {
-                  $eq: "113388783344159291766"
-                }
-              },
-              limit: 4
-            })
-            .then(result => {
-              this.albumList = result.docs;
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        });
-    },
-    addAlbum() {
-      let data = {
-        title: "TEST-COLLECTION-" + this.$moment().format("YYYYMMDDHHmmss"),
-        userId: "113388783344159291766",
-        type: "mycollection",
-        category: "Music",
-        thumbnails:
-          "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
-        creates: this.$moment().format("YYYYMMDDHHmmss"),
-        created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
-      };
-      this.$test.post(data).then(result => {
-        if (result.ok) {
-          this.getAlbum();
-        }
+    getHistory() {
+      this.createIndex(["creates"]).then(() => {
+        this.$test
+          .find({
+            selector: {
+              type: "history",
+              userId: "113388783344159291766"
+            },
+            limit: 100
+          })
+          .then(result => {
+            let docs = result.docs;
+            if (docs.length > 0) {
+              this.$lodash.forEach(docs, item => {
+                item._deleted = true;
+              });
+              const self = this;
+              setTimeout(() => {
+                self.$test.bulkDocs(docs).then(result => {
+                  console.log(result);
+                });
+              }, 3000);
+            }
+          });
       });
     },
-    deleteAlbum(_id) {
-      this.$test
-        .createIndex({
-          index: {
-            fields: ["userId", "parentId"]
-          }
-        })
-        .then(result => {
-          return this.$test
-            .find({
-              selector: {
-                userId: {
-                  $eq: "113388783344159291766"
-                },
-                parentId: {
-                  $eq: _id
-                }
+    getAlbum() {
+      this.getHistory();
+      this.createIndex(["type", "userId"]).then(result => {
+        return this.$test
+          .find({
+            selector: {
+              type: {
+                $eq: "mycollection"
               },
-              limit: 100
-            })
-            .then(results => {
-              return Promise.all(
-                results.docs.map(row => {
-                  return this.$test.remove(row);
-                })
-              );
-            })
-            .then(arrayToResult => {
-              this.$test.get(_id).then(doc => {
-                return this.$test.remove(doc).then(result => {
-                  if (result.ok) {
-                    this.getAlbum();
-                    this.getMusic(_id);
-                  }
-                });
-              });
-            });
-        });
+              userId: {
+                $eq: "113388783344159291766"
+              }
+            },
+            limit: 4
+          })
+          .then(result => {
+            this.albumList = result.docs;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
     },
     getMusic(id) {
       this.$test
