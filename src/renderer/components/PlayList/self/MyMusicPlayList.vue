@@ -149,7 +149,8 @@ export default {
      * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
      */
     this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
-
+  },
+  mounted() {
     this.getCategory();
   },
   methods: {

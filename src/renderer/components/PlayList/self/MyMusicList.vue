@@ -133,6 +133,8 @@ export default {
   },
   created() {
     this.init();
+  },
+  mounted() {
     this.feachData();
   },
   methods: {
@@ -148,9 +150,7 @@ export default {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        console.log("newIndex => ", value.newIndex);
-        console.log("oldIndex => ", value.oldIndex);
-
+        console.log(this.playlist);
         // let sortPlaylist = this.playlist;
         // this.syncMyCollection(sortPlaylist);
       }

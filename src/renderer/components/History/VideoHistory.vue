@@ -81,13 +81,14 @@ export default {
   created() {
     this.isLogin = this.getUserId() ? true : false;
     this.isMini = this.getMusicInfos() ? true : false;
+  },
+  mounted() {
     if (this.isLogin) {
       this.getHistory();
     } else {
       this.load = true;
     }
   },
-  mounted() {},
   methods: {
     getHistory() {
       this.createIndex(["creates"]).then(() => {

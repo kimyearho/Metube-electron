@@ -9,20 +9,16 @@
   <div>
     <el-dialog
       style="z-index:998 !important;"
-      title="MyCollectionsList"
+      title="MyCollection List"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
       :append-to-body="true"
-      @open="getPlaylist"
       width="300px"
     >
       <div class="wrapper">
         <ul>
-          <li
-            v-for="(item, index) in listData"
-            :key="index"
-          >
+          <li v-for="(item, index) in listData" :key="index">
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -57,8 +53,10 @@ export default {
       listData: []
     };
   },
+  mounted() {
+    this.getMyCollectionList();
+  },
   methods: {
-
     /**
      * 지정한 컬렉션에 음악을 추가한다.
      */
@@ -94,43 +92,39 @@ export default {
      *   - 각 컬렉션별 하위 데이터셋을 조회한 뒤 현재 비디오 아이디가 존재하는지 확인.
      *   - 존재한다면 isExists Valiable을 추가한다
      */
-    getPlaylist() {
-      this.createIndex(["type", "userId"])
-        .then(() => {
-          return this.$test
-            .find({
-              selector: {
-                type: {
-                  $eq: "mycollection"
-                },
-                userId: {
-                  $eq: this.getUserId()
-                }
+    getMyCollectionList() {
+      this.createIndex(["type", "userId"]).then(() => {
+        return this.$test
+          .find({
+            selector: {
+              type: {
+                $eq: "mycollection"
+              },
+              userId: {
+                $eq: this.getUserId()
               }
-            }).then(result => {
-              let docs = result.docs;
-              if (docs.length > 0) {
-                const arrayToItems = [];
-                this.$lodash
-                  .forEach(docs, (item) => {
-                    let dataToItem = this.getSubsetMusic(item._id)
-                      .then(result => {
-                        let findData = this.$lodash
-                          .find(result.docs, {
-                            videoId: this.data.videoId
-                          })
-                        if (findData) item.isExists = true
-                        return item;
-                      })
-                    arrayToItems.push(dataToItem);
+            }
+          })
+          .then(result => {
+            let docs = result.docs;
+            if (docs.length > 0) {
+              const arrayToItems = [];
+              this.$lodash.forEach(docs, item => {
+                let dataToItem = this.getSubsetMusic(item._id).then(result => {
+                  let findData = this.$lodash.find(result.docs, {
+                    videoId: this.data.videoId
                   });
-                Promise.all(arrayToItems)
-                  .then(result => {
-                    this.listData = result;
-                  })
-              }
-            })
-        })
+                  if (findData) item.isExists = true;
+                  return item;
+                });
+                arrayToItems.push(dataToItem);
+              });
+              Promise.all(arrayToItems).then(result => {
+                this.listData = result;
+              });
+            }
+          });
+      });
     },
     closeModal() {
       this.$emit("closeModal", false);

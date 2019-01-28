@@ -111,7 +111,7 @@ Vue.use(Col)
 Vue.use(Card)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
-Vue.use(Loading.directive)
+Vue.use(Loading)
 
 /* vue material  */
 Vue.use(MdAvatar)

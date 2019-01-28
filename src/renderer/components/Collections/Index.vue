@@ -221,7 +221,11 @@ export default {
   created() {
     // login user
     this.isLogin = this.getUserId() ? true : false;
-
+  },
+  beforeMount() {
+    this.$store.commit("setIndexPath", this.$route.path);
+  },
+  mounted() {
     /** @overide */
     this.getMyCollection();
 
@@ -230,9 +234,6 @@ export default {
 
     /** @overide */
     this.getChannelList();
-  },
-  beforeMount() {
-    this.$store.commit("setIndexPath", this.$route.path);
   },
   methods: {
     collectionAdd() {
