@@ -107,7 +107,7 @@ export default {
             type: "mycollection",
             category: this.form.category,
             thumbnails:
-              "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
+              "http://smeaker.com/wp-content/uploads/2017/03/Nonton-Video-YouTube-Gratis-Hanya-Bisa-pada-Waktu-Tengah-Malam-Kenapa.jpg",
             creates: this.$moment().format("YYYYMMDDHHmmss"),
             created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
           };
