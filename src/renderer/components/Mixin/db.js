@@ -47,7 +47,7 @@ export default {
         })
     },
 
-    setRemoteSubsetMusicData(payload, ev) {
+    setRemoteSubsetMusicData(payload, flag) {
       this.$test
         .find({
           selector: {
@@ -76,17 +76,27 @@ export default {
                 this.updateProfile(doc)
               } else {
                 if (findData.listCount != myMusicData.listCount) {
+                  // console.log(dItem)
+
+                  // TODO: DB에서 실제 삭제된 항목을 DB 스토어내 재생목록에 속한 비디오를 찾아서 제거한다.
+                  // let list =  this.$lodash.reject(findData.list, { videoId: dItem.deletedVideoId })
+                  // console.log(list);
+                  // console.log(collections)
+                  // console.log(doc)
+
                   const findDataIndex = this.$lodash.findIndex(collections, {
                     id: myMusicData.id
                   })
                   collections[findDataIndex] = myMusicData
-                  this.updateProfileAndListSync(doc, ev)
+                  this.updateProfileAndListSync(doc, myMusicData.id, flag)
                 }
               }
             }
           }
         })
     },
+
+    // 프로필 갱신
     updateProfile(doc) {
       this.$test.put(doc).then(res => {
         if (res.ok) {
@@ -94,7 +104,9 @@ export default {
         }
       })
     },
-    updateProfileAndListSync(doc, ev) {
+
+    // DB 스토어 갱신 후 목록 동기화
+    updateProfileAndListSync(doc, parentId, ev) {
       this.$test.put(doc).then(res => {
         if (res.ok) {
           this.getRemoteProfile().then(result => {
@@ -103,7 +115,7 @@ export default {
               if (list) {
                 // 스토어에 저장된 재생목록을 찾는다.
                 const findData = this.$lodash.find(list, {
-                  id: this.id
+                  id: parentId
                 })
                 // 찾은 목록을 랜더링한다.
                 if (findData) {

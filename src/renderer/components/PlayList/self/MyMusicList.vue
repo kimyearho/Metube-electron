@@ -91,7 +91,7 @@
           :index="index"
           :videoId="item.videoId"
           :data="item"
-          @is-success="feachData"
+          @is-success="test"
         />
         <!-- End -->
       </md-list-item>
@@ -167,8 +167,6 @@ export default {
   },
   created() {
     this.init();
-  },
-  mounted() {
     this.feachData();
   },
   methods: {
@@ -179,6 +177,10 @@ export default {
       this.category = this.collectionDoc.category;
       this.cover = this.collectionDoc.thumbnails;
       this.coverTitle = this.collectionDoc.title;
+    },
+
+    test(data) {
+      console.log(data)
     },
 
     endDrag(value) {
@@ -237,20 +239,29 @@ export default {
     },
 
     feachData() {
+      // console.log("deleteItem => ", item)
+
       const user = this.getUserId();
       if (user) {
+        // DB 스토어 조회
         this.getRemoteProfile().then(result => {
-          const list = result.collections;
-          if (list) {
-            const findData = this.$lodash.find(list, {
+          const dbStoreList = result.collections;
+          if (dbStoreList) {
+            // 스토어 DB 조회
+            const findData = this.$lodash.find(dbStoreList, {
               id: this.collectionDoc._id
             });
-            if (findData) {
-              this.getTotal().then(result => {
-                const remoteTotalCount = result.docs.length;
-                if (remoteTotalCount != findData.listCount) {
+            console.log("DB STORE => ", findData)
+
+            // DB스토어와 DB문서는 1:1임.
+            if (findData.list.length > 0) {
+              this.getRemoteDocument().then(doc => {
+                const remoteTotalCount = doc.docs.length;
+                // 스토어 개수와 DB개수가 다를경우(추가 or 삭제 이벤트가 일어난 경우)
+                if (remoteTotalCount !== findData.listCount) {
                   console.log("========================= list sync!");
-                  this.getRemoteList();
+                  // console.log("DeleteItem => ", dItem)
+                  this.getRemoteList(doc.docs, "n");
                 } else {
                   console.log("========================= remote store get!");
                   this.totalTracks = findData.listCount;
@@ -258,55 +269,49 @@ export default {
                 }
               });
             } else {
-              this.getRemoteList();
+              // DB스토어의 목록이 없으면, DB로 조회
+              this.getRemoteDocument().then(result => {
+                let docs = result.docs;
+                if (docs) {
+                  this.totalTracks = docs.length;
+                  this.playlist = docs;
+                  this.getRemoteList(docs)
+                }
+              })
             }
           } else {
-            this.getRemoteList();
+            // DB스토어의 목록이 없으면, DB로 조회
+            this.getRemoteDocument().then(result => {
+              let docs = result.docs;
+              if (docs) {
+                this.totalTracks = docs.length;
+                this.playlist = docs;
+                this.getRemoteList(docs)
+              }
+            })
           }
         });
       }
     },
 
-    getRemoteList() {
-      this.createIndex(["userId", "parentId"]).then(result => {
-        return this.$test
-          .find({
-            selector: {
-              userId: this.getUserId(),
-              parentId: this.collectionDoc._id
-            },
-            sort: [{ creates: "asc" }],
-            limit: 100
-          })
-          .then(result => {
-            let docs = result.docs;
-            if (docs.length > 0) {
-              this.totalTracks = docs.length;
-              this.playlist = docs;
-
-              // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
-              // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
-              // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
-
-              this.setRemoteSubsetMusicData(docs, "n");
-            }
-          });
-      });
+    getRemoteList(docs) {
+      // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
+      // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
+      // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
+      this.setRemoteSubsetMusicData(docs, "n");
     },
 
-    getTotal() {
-      return this.createIndex(["userId", "parentId"]).then(result => {
+    getRemoteDocument() {
+      return this.createIndex(["creates"]).then(result => {
         return this.$test
           .find({
             selector: {
               userId: this.getUserId(),
               parentId: this.collectionDoc._id
             },
-            limit: 100
+            limit: 100,
+            sort: [{ creates: "asc" }]
           })
-          .then(result => {
-            return result;
-          });
       });
     },
 
