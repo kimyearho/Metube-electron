@@ -152,9 +152,9 @@ export default {
               // 재생정보 변경 이벤트
               this.$eventBus.$emit("playMusicSetting");
             }
-            // 삭제 후 삭제한 비디오아이디를 전달한다.
-            this.$emit("is-success", true);
           }
+          // 삭제 후 삭제한 비디오아이디를 전달한다.
+          this.$emit("is-success", { deletedVideoId: this.videoId });
         }
       });
     }

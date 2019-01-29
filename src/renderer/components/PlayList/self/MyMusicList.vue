@@ -6,28 +6,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -38,16 +26,8 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a
-              class="cursor"
-              title="Collection edit"
-              style="color:#fff;"
-              @click="collectionEdit"
-            >
-              <font-awesome-icon
-                class="f20"
-                icon="edit"
-              />
+            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
+              <font-awesome-icon class="f20" icon="edit"/>
             </a>
           </div>
         </div>
@@ -65,11 +45,7 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -77,21 +53,15 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
         <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
           :index="index"
           :videoId="item.videoId"
           :data="item"
-          @is-success="test"
+          @is-success="feachData"
         />
         <!-- End -->
       </md-list-item>
@@ -115,14 +85,10 @@
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -167,6 +133,8 @@ export default {
   },
   created() {
     this.init();
+  },
+  mounted() {
     this.feachData();
   },
   methods: {
@@ -179,10 +147,6 @@ export default {
       this.coverTitle = this.collectionDoc.title;
     },
 
-    test(data) {
-      console.log(data)
-    },
-
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
@@ -191,14 +155,18 @@ export default {
         this.getRemoteProfile().then(result => {
           const collections = result.collections;
           if (collections) {
-            const findIndex = this.$lodash.findIndex(collections, { id: this.collectionDoc._id });
-            let findData = this.$lodash.find(collections, { id: this.collectionDoc._id });
+            const findIndex = this.$lodash.findIndex(collections, {
+              id: this.collectionDoc._id
+            });
+            let findData = this.$lodash.find(collections, {
+              id: this.collectionDoc._id
+            });
             if (findData) {
               // 현재 목록의 순서로 갱신
               findData.list = this.playlist;
               this.$test.put(result).then(res => {
                 if (res.ok) {
-                  console.log('remote store update!');
+                  console.log("remote store update!");
                   const musicInfo = this.getMusicInfos();
                   if (musicInfo) {
                     // 재생중...
@@ -206,27 +174,32 @@ export default {
                       // 현재 재생중인 비디오의 재생목록이 현재 재생목록과 동일한경우,
                       this.getRemoteProfile().then(res => {
                         const syncCollections = res.collections;
-                        let findData = this.$lodash.find(collections, { id: this.collectionDoc._id });
+                        let findData = this.$lodash.find(collections, {
+                          id: this.collectionDoc._id
+                        });
                         if (findData) {
                           // 동기화 된 재생목록의 비디오중 현재 재생중인 음악과 동일한 비디오를 찾는다.
-                          const videoIndex = this.$lodash.findIndex(findData.list, {
-                            videoId: musicInfo.videoId
-                          })
+                          const videoIndex = this.$lodash.findIndex(
+                            findData.list,
+                            {
+                              videoId: musicInfo.videoId
+                            }
+                          );
                           // 인덱스 교체
-                          musicInfo.index = videoIndex
+                          musicInfo.index = videoIndex;
                           // 재생정보 세팅
-                          this.$store.commit("setPlayingMusicInfo", musicInfo)
+                          this.$store.commit("setPlayingMusicInfo", musicInfo);
                           // 재생정보 변경 이벤트
-                          this.$eventBus.$emit("playMusicSetting")
+                          this.$eventBus.$emit("playMusicSetting");
                         }
                       });
                     }
                   }
                 }
-              })
+              });
             }
           }
-        })
+        });
       }
     },
 
@@ -238,9 +211,7 @@ export default {
       });
     },
 
-    feachData() {
-      // console.log("deleteItem => ", item)
-
+    feachData(data) {
       const user = this.getUserId();
       if (user) {
         // DB 스토어 조회
@@ -251,7 +222,7 @@ export default {
             const findData = this.$lodash.find(dbStoreList, {
               id: this.collectionDoc._id
             });
-            console.log("DB STORE => ", findData)
+            console.log("DB STORE => ", findData);
 
             // DB스토어와 DB문서는 1:1임.
             if (findData.list.length > 0) {
@@ -261,7 +232,7 @@ export default {
                 if (remoteTotalCount !== findData.listCount) {
                   console.log("========================= list sync!");
                   // console.log("DeleteItem => ", dItem)
-                  this.getRemoteList(doc.docs, "n");
+                  this.getRemoteList(doc.docs, data);
                 } else {
                   console.log("========================= remote store get!");
                   this.totalTracks = findData.listCount;
@@ -275,9 +246,9 @@ export default {
                 if (docs) {
                   this.totalTracks = docs.length;
                   this.playlist = docs;
-                  this.getRemoteList(docs)
+                  this.getRemoteList(docs);
                 }
-              })
+              });
             }
           } else {
             // DB스토어의 목록이 없으면, DB로 조회
@@ -286,32 +257,31 @@ export default {
               if (docs) {
                 this.totalTracks = docs.length;
                 this.playlist = docs;
-                this.getRemoteList(docs)
+                this.getRemoteList(docs);
               }
-            })
+            });
           }
         });
       }
     },
 
-    getRemoteList(docs) {
+    getRemoteList(docs, data) {
       // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
       // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
       // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
-      this.setRemoteSubsetMusicData(docs, "n");
+      this.setRemoteSubsetMusicData(docs, data, "n");
     },
 
     getRemoteDocument() {
       return this.createIndex(["creates"]).then(result => {
-        return this.$test
-          .find({
-            selector: {
-              userId: this.getUserId(),
-              parentId: this.collectionDoc._id
-            },
-            limit: 100,
-            sort: [{ creates: "asc" }]
-          })
+        return this.$test.find({
+          selector: {
+            userId: this.getUserId(),
+            parentId: this.collectionDoc._id
+          },
+          limit: 100,
+          sort: [{ creates: "asc" }]
+        });
       });
     },
 

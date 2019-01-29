@@ -47,7 +47,7 @@ export default {
         })
     },
 
-    setRemoteSubsetMusicData(payload, flag) {
+    setRemoteSubsetMusicData(payload, data, flag) {
       this.$test
         .find({
           selector: {
@@ -76,18 +76,21 @@ export default {
                 this.updateProfile(doc)
               } else {
                 if (findData.listCount != myMusicData.listCount) {
-                  // console.log(dItem)
-
-                  // TODO: DB에서 실제 삭제된 항목을 DB 스토어내 재생목록에 속한 비디오를 찾아서 제거한다.
-                  // let list =  this.$lodash.reject(findData.list, { videoId: dItem.deletedVideoId })
-                  // console.log(list);
-                  // console.log(collections)
-                  // console.log(doc)
-
                   const findDataIndex = this.$lodash.findIndex(collections, {
                     id: myMusicData.id
                   })
-                  collections[findDataIndex] = myMusicData
+
+                  if (!data) {
+                    collections[findDataIndex] = myMusicData
+                  } else {
+                    // TODO: DB에서 실제 삭제된 항목을 DB 스토어내 재생목록에 속한 비디오를 찾아서 제거한다.
+                    findData.list = this.$lodash.reject(findData.list, {
+                      videoId: data.deletedVideoId
+                    })
+                    findData.listCount = findData.list.length
+                    collections[findDataIndex] = findData
+                    console.log("collections : ", collections)
+                  }
                   this.updateProfileAndListSync(doc, myMusicData.id, flag)
                 }
               }
@@ -117,6 +120,9 @@ export default {
                 const findData = this.$lodash.find(list, {
                   id: parentId
                 })
+
+                console.log("remote find => ", findData)
+
                 // 찾은 목록을 랜더링한다.
                 if (findData) {
                   this.playlist = findData.list
