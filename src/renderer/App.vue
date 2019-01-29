@@ -14,30 +14,11 @@
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab
-        id="tabSearch"
-        class="md-tab"
-        md-label="Search"
-        @click="route('search')"
-      ></md-tab>
-      <md-tab
-        id="tabCollection"
-        class="md-tab"
-        md-label="Collections"
-        @click="route('collection')"
-      ></md-tab>
-      <md-tab
-        id="tabHistory"
-        class="md-tab"
-        md-label="History"
-        @click="route('history')"
-      ></md-tab>
+      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
     </md-tabs>
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -59,7 +40,7 @@ export default {
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
-      this.onNewReleaseCheck();
+      // this.onNewReleaseCheck();
     }
 
     // 비디오 상태 체크 이벤트 종료
@@ -142,31 +123,30 @@ export default {
           let nextIndex = currentIndex + 1;
 
           if (musicData.type) {
-            this.createIndex(["userId", "parentId"])
-              .then(result => {
-                return this.$test
-                  .find({
-                    selector: {
-                      userId: {
-                        $eq: this.getUserId()
-                      },
-                      parentId: {
-                        $eq: musicData.parentId
-                      }
+            this.createIndex(["userId", "parentId"]).then(result => {
+              return this.$test
+                .find({
+                  selector: {
+                    userId: {
+                      $eq: this.getUserId()
                     },
-                    limit: 100
-                  })
-                  .then(result => {
-                    let docs = result.docs;
-                    if (docs) {
-                      if (docs.length > nextIndex) {
-                        this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                      } else {
-                        this.$eventBus.$emit("playlist-nextMusicPlay", 0);
-                      }
+                    parentId: {
+                      $eq: musicData.parentId
                     }
-                  });
-              });
+                  },
+                  limit: 100
+                })
+                .then(result => {
+                  let docs = result.docs;
+                  if (docs) {
+                    if (docs.length > nextIndex) {
+                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
+                    } else {
+                      this.$eventBus.$emit("playlist-nextMusicPlay", 0);
+                    }
+                  }
+                });
+            });
           } else {
             // 전체 재생 목록
             let allPlaylist = this.getAllPlayList();
@@ -220,29 +200,28 @@ export default {
           let musicData = this.getMusicInfos();
           let nextIndex = musicData.index + 1;
           if (musicData.type) {
-            this.createIndex(["userId", "parentId"])
-              .then(result => {
-                return this.$test
-                  .find({
-                    selector: {
-                      userId: {
-                        $eq: this.getUserId()
-                      },
-                      parentId: {
-                        $eq: musicData.parentId
-                      }
+            this.createIndex(["userId", "parentId"]).then(result => {
+              return this.$test
+                .find({
+                  selector: {
+                    userId: {
+                      $eq: this.getUserId()
                     },
-                    limit: 100
-                  })
-                  .then(result => {
-                    const docs = result.docs;
-                    if (docs) {
-                      if (docs.length > nextIndex) {
-                        this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                      }
+                    parentId: {
+                      $eq: musicData.parentId
                     }
-                  });
-              });
+                  },
+                  limit: 100
+                })
+                .then(result => {
+                  const docs = result.docs;
+                  if (docs) {
+                    if (docs.length > nextIndex) {
+                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
+                    }
+                  }
+                });
+            });
           } else {
             let all = this.getAllPlayList();
             // 다음 인덱스

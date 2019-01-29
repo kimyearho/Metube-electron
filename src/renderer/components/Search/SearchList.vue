@@ -334,7 +334,7 @@ export default {
     },
     getKeyword() {
       if (this.getUserId()) {
-        this.$local
+        this.$test
           .find({
             selector: {
               type: "profile",
@@ -363,7 +363,7 @@ export default {
     updateKeyword(k) {
       let id = this.getUserId();
       if (id) {
-        this.$local
+        this.$test
           .find({
             selector: {
               type: "profile",
@@ -376,7 +376,7 @@ export default {
               searchKey: k,
               created: this.$moment().format("YYYYMMDDHHmmss")
             });
-            this.$local.put(docs).then(() => {
+            this.$test.put(docs).then(() => {
               this.getKeyword();
             });
           });

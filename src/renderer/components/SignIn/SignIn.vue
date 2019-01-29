@@ -117,13 +117,14 @@ export default {
               let data = {
                 type: "profile",
                 userId: this.getUserId(),
+                keywords: [],
                 setting: [],
                 collections: []
               };
               this.$test
                 .post(data)
                 .then(res => {
-                  this.$store.commit("setId", _id);
+                  // this.$store.commit("setId", _id);
                 })
                 .catch(err => {
                   console.log(err);

@@ -10,7 +10,7 @@ let PouchDB = require("pouchdb-core")
 
 // 개발용
 // pouchdb-server or couchdb
-Vue.prototype.$local = new PouchDB("http://localhost:5984/metube")
+// Vue.prototype.$local = new PouchDB("http://localhost:5984/metube")
 
 // 로컬
 // Vue.prototype.$local = new PouchDB("metubev3")
@@ -20,6 +20,6 @@ Vue.prototype.$local = new PouchDB("http://localhost:5984/metube")
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
 
 // 샘플
-Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
+// Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
 // Vue.prototype.$test = new PouchDB("http://202.182.100.137/sample")
-// Vue.prototype.$test = new PouchDB("test10")
+Vue.prototype.$test = new PouchDB("beta145")

@@ -166,7 +166,7 @@ export default {
               findData.list = this.playlist;
               this.$test.put(result).then(res => {
                 if (res.ok) {
-                  console.log("remote store update!");
+                  // console.log("remote store update!");
                   const musicInfo = this.getMusicInfos();
                   if (musicInfo) {
                     // 재생중...
@@ -222,10 +222,8 @@ export default {
             const findData = this.$lodash.find(dbStoreList, {
               id: this.collectionDoc._id
             });
-            console.log("DB STORE => ", findData);
-
             // DB스토어와 DB문서는 1:1임.
-            if (findData.list.length > 0) {
+            if (findData) {
               this.getRemoteDocument().then(doc => {
                 const remoteTotalCount = doc.docs.length;
                 // 스토어 개수와 DB개수가 다를경우(추가 or 삭제 이벤트가 일어난 경우)
@@ -266,9 +264,6 @@ export default {
     },
 
     getRemoteList(docs, data) {
-      // TODO: 추후 드래그가 적용 후 비디오를 삭제했을 때 드래그 정렬된 목록을 여기서 추가 동기화해야한다.
-      // 아래 갱신된 DB결과 조회를 스토어에 바로 저장하는 형태가 되면 안된다. (순서 초기화 됨. DB조회는 오름차순임)
-      // 실제 DB에서 삭제된 비디오를 스토어에 저장된 목록에서 삭제한 뒤 랜더링 하는 방법처럼 별도의 알고리즘이 필요.
       this.setRemoteSubsetMusicData(docs, data, "n");
     },
 

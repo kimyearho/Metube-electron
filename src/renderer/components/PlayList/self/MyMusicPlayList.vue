@@ -183,7 +183,7 @@ export default {
               findData.list = this.playlist;
               this.$test.put(result).then(res => {
                 if (res.ok) {
-                  console.log("remote store update!");
+                  // console.log("remote store update!");
                   const musicInfo = this.getMusicInfos();
                   if (musicInfo) {
                     // 재생중...
@@ -293,7 +293,7 @@ export default {
       });
     },
 
-    // DB의 등록된 목록의 총 개수
+    // DB Doc 조회
     getRemoteDocument() {
       return this.createIndex(["createds"]).then(result => {
         return this.$test.find({
@@ -320,8 +320,6 @@ export default {
             const findData = this.$lodash.find(list, {
               id: this.id
             });
-            console.log("DB STORE => ", findData);
-
             if (findData.list.length > 0) {
               this.getRemoteDocument().then(result => {
                 const remoteTotalCount = result.docs.length;
