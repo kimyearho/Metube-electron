@@ -8,16 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -54,9 +66,18 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -87,11 +108,15 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -169,8 +194,51 @@ export default {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        // const sortPlaylist = this.playlist;
-        // this.syncMyCollection(sortPlaylist);
+        // 드래그로인한 정렬은 DB와 연관이 없으므로, 별도 업데이트 처리는 하지 않고, DB스토어만 동기화한다.
+        // TODO: 단, 삭제 이벤트가 발생할경우는 별도의 동기화 처리를 해야한다.
+        this.getRemoteProfile().then(result => {
+          const collections = result.collections;
+          if (collections) {
+            const findIndex = this.$lodash.findIndex(collections, { id: this.id });
+            let findData = this.$lodash.find(collections, { id: this.id });
+            if (findData) {
+              // 현재 목록의 순서로 갱신
+              findData.list = this.playlist;
+              this.$test.put(result).then(res => {
+                if (res.ok) {
+                  console.log('remote store update!');
+                  const musicInfo = this.getMusicInfos();
+                  if (musicInfo) {
+                    // 재생중...
+                    if (musicInfo.name === this.id) {
+                      // 현재 재생중인 비디오의 재생목록이 현재 재생목록과 동일한경우,
+                      this.getRemoteProfile().then(res => {
+                        const syncCollections = res.collections;
+                        let findData = this.$lodash.find(collections, { id: this.id });
+                        // 재생목록 갱신
+                        this.playlist = findData.list;
+
+                        if (findData) {
+                          // 동기화 된 재생목록의 비디오중 현재 재생중인 음악과 동일한 비디오를 찾는다.
+                          const videoIndex = this.$lodash.findIndex(findData.list, {
+                            videoId: musicInfo.videoId
+                          })
+                          this.selectedIndex = videoIndex
+                          // 인덱스 교체
+                          musicInfo.index = videoIndex
+                          // 재생정보 세팅
+                          this.$store.commit("setPlayingMusicInfo", musicInfo)
+                          // 재생정보 변경 이벤트
+                          this.$eventBus.$emit("playMusicSetting")
+                        }
+                      });
+                    }
+                  }
+                }
+              })
+            }
+          }
+        })
       }
     },
 
@@ -358,25 +426,16 @@ export default {
      * @param {event} - 외부에서 트리거된 이벤트유무
      */
     playItem(index, event) {
-      // 재생정보
-      let musicInfo = this.getMusicInfos();
+      // 재생목록에서 해당하는 트랙번호의 비디오
+      let playingItem = this.playlist[index];
+      playingItem.index = index;
+      playingItem.name = this.getMusicInfos().name;
 
-      // 외부에서 EventBus로 재생햇을경우
-      if (event != undefined) {
-        /** @override 재생목록 동기화 */
-        this.getMyMusicSyncList(index, musicInfo);
+      this.playSetting(playingItem);
+      if (index === 0) {
+        this.endScrollTop();
       } else {
-        // 재생목록에서 해당하는 트랙번호의 비디오
-        let playingItem = this.playlist[index];
-        playingItem.index = index;
-        playingItem.name = musicInfo.name;
-
-        this.playSetting(playingItem);
-        if (index === 0) {
-          this.endScrollTop();
-        } else {
-          this.nextTrackScroll(-1);
-        }
+        this.nextTrackScroll(-1);
       }
     },
 

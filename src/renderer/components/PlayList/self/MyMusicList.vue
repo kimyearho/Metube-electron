@@ -6,16 +6,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -26,8 +38,16 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
-              <font-awesome-icon class="f20" icon="edit"/>
+            <a
+              class="cursor"
+              title="Collection edit"
+              style="color:#fff;"
+              @click="collectionEdit"
+            >
+              <font-awesome-icon
+                class="f20"
+                icon="edit"
+              />
             </a>
           </div>
         </div>
@@ -45,7 +65,11 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -53,8 +77,14 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
         <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
@@ -85,10 +115,14 @@
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -150,9 +184,47 @@ export default {
     endDrag(value) {
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
-        console.log(this.playlist);
-        // let sortPlaylist = this.playlist;
-        // this.syncMyCollection(sortPlaylist);
+        // 드래그로인한 정렬은 DB와 연관이 없으므로, 별도 업데이트 처리는 하지 않고, DB스토어만 동기화한다.
+        // TODO: 단, 삭제 이벤트가 발생할경우는 별도의 동기화 처리를 해야한다.
+        this.getRemoteProfile().then(result => {
+          const collections = result.collections;
+          if (collections) {
+            const findIndex = this.$lodash.findIndex(collections, { id: this.collectionDoc._id });
+            let findData = this.$lodash.find(collections, { id: this.collectionDoc._id });
+            if (findData) {
+              // 현재 목록의 순서로 갱신
+              findData.list = this.playlist;
+              this.$test.put(result).then(res => {
+                if (res.ok) {
+                  console.log('remote store update!');
+                  const musicInfo = this.getMusicInfos();
+                  if (musicInfo) {
+                    // 재생중...
+                    if (musicInfo.name === this.collectionDoc._id) {
+                      // 현재 재생중인 비디오의 재생목록이 현재 재생목록과 동일한경우,
+                      this.getRemoteProfile().then(res => {
+                        const syncCollections = res.collections;
+                        let findData = this.$lodash.find(collections, { id: this.collectionDoc._id });
+                        if (findData) {
+                          // 동기화 된 재생목록의 비디오중 현재 재생중인 음악과 동일한 비디오를 찾는다.
+                          const videoIndex = this.$lodash.findIndex(findData.list, {
+                            videoId: musicInfo.videoId
+                          })
+                          // 인덱스 교체
+                          musicInfo.index = videoIndex
+                          // 재생정보 세팅
+                          this.$store.commit("setPlayingMusicInfo", musicInfo)
+                          // 재생정보 변경 이벤트
+                          this.$eventBus.$emit("playMusicSetting")
+                        }
+                      });
+                    }
+                  }
+                }
+              })
+            }
+          }
+        })
       }
     },
 
