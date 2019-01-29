@@ -10,7 +10,7 @@
 </p>
 
 ### [2019-01-30] *** News ***
-1.4.5 Test version released. If you want to participate in this test version, please refer to the release item.
+1.4.5 Test version released. If you want to participate in this test version, please refer to the release item. 
 The current full version is 1.4.2.
 
 ### Project Information
