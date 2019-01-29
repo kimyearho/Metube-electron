@@ -13,8 +13,6 @@
 1.4.5 Test version released. If you want to participate in this test version, please refer to the release item.
 The current full version is 1.4.2.
 
-현재 정식 최신버전은 1.4.2 입니다.
-
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
