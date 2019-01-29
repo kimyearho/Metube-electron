@@ -241,7 +241,7 @@ export default {
               // DB스토어의 목록이 없으면, DB로 조회
               this.getRemoteDocument().then(result => {
                 let docs = result.docs;
-                if (docs) {
+                if (docs.length > 0) {
                   this.totalTracks = docs.length;
                   this.playlist = docs;
                   this.getRemoteList(docs);
@@ -252,7 +252,7 @@ export default {
             // DB스토어의 목록이 없으면, DB로 조회
             this.getRemoteDocument().then(result => {
               let docs = result.docs;
-              if (docs) {
+              if (docs.length > 0) {
                 this.totalTracks = docs.length;
                 this.playlist = docs;
                 this.getRemoteList(docs);
@@ -272,7 +272,10 @@ export default {
         return this.$test.find({
           selector: {
             userId: this.getUserId(),
-            parentId: this.collectionDoc._id
+            parentId: this.collectionDoc._id,
+            creates: {
+              $gte: null
+            }
           },
           limit: 100,
           sort: [{ creates: "asc" }]

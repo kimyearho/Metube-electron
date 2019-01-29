@@ -255,7 +255,6 @@ export default {
             userId: user,
             parentId: this.id
           },
-          sort: [{ creates: "asc" }],
           limit: 100
         });
         Promise.all([param1, param2]).then(results => {
@@ -270,12 +269,15 @@ export default {
 
     // DB 조회
     getRemoteList(data) {
-      this.createIndex(["createds"]).then(result => {
+      this.createIndex(["creates"]).then(result => {
         return this.$test
           .find({
             selector: {
               userId: this.getUserId(),
-              parentId: this.id
+              parentId: this.id,
+              creates: {
+                $gte: null
+              }
             },
             sort: [{ creates: "asc" }],
             limit: 100
@@ -295,13 +297,17 @@ export default {
 
     // DB Doc 조회
     getRemoteDocument() {
-      return this.createIndex(["createds"]).then(result => {
+      return this.createIndex(["creates"]).then(result => {
         return this.$test.find({
           selector: {
             userId: this.getUserId(),
-            parentId: this.id
+            parentId: this.id,
+            creates: {
+              $gte: null
+            }
           },
-          limit: 100
+          limit: 100,
+          sort: [{ creates: "asc" }]
         });
       });
     },

@@ -48,6 +48,7 @@ export default {
     },
 
     setRemoteSubsetMusicData(payload, data, flag) {
+      console.log(payload)
       this.$test
         .find({
           selector: {
