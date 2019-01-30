@@ -1,5 +1,5 @@
 {
-  "name": "metubebeta",
+  "name": "metube",
   "version": "1.4.5",
   "author": "kstory8715 <kstory8715@gmail.com>",
   "description": "Metube 1.4.5 Pre-Releases!",
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "metubeBeta",
+    "productName": "metube",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
