@@ -145,9 +145,9 @@ const vm = new Vue({
   template: "<App/>"
 }).$mount("#app")
 
-// 30분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
+// 10분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
 // 히스토리의 총 개수에서 20개를 뺀 나머지 만큼 오름차순 정렬 후 삭제한다.
-let timer = 18 * 100000
+let timer = 6 * 100000
 setInterval(() => {
   let user = vm.$store.getters.getGoogleProfile.googleId
   if (user) {

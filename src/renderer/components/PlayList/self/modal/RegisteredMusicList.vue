@@ -14,9 +14,10 @@
       :before-close="closeModal"
       :close-on-click-modal="false"
       :append-to-body="true"
+      @open="getMyCollectionList"
       width="300px"
     >
-      <div class="wrapper">
+      <div class="wrapper" v-loading="loading" element-loading-background="#ffffff">
         <ul>
           <li v-for="(item, index) in listData" :key="index">
             <div>{{ item.title }}</div>
@@ -50,11 +51,9 @@ export default {
   },
   data() {
     return {
-      listData: []
+      listData: [],
+      loading: true
     };
-  },
-  mounted() {
-    this.getMyCollectionList();
   },
   methods: {
     /**
@@ -93,7 +92,7 @@ export default {
      *   - 존재한다면 isExists Valiable을 추가한다
      */
     getMyCollectionList() {
-      this.createIndex(["type", "userId"]).then(() => {
+      this.createIndex(["creates"]).then(() => {
         return this.$test
           .find({
             selector: {
@@ -102,6 +101,9 @@ export default {
               },
               userId: {
                 $eq: this.getUserId()
+              },
+              creates: {
+                $gte: null
               }
             }
           })
@@ -121,6 +123,7 @@ export default {
               });
               Promise.all(arrayToItems).then(result => {
                 this.listData = result;
+                this.loading = false;
               });
             }
           });

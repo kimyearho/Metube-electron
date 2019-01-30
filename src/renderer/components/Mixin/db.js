@@ -48,7 +48,6 @@ export default {
     },
 
     setRemoteSubsetMusicData(payload, data, flag) {
-      console.log(payload)
       this.$test
         .find({
           selector: {
@@ -90,7 +89,6 @@ export default {
                     })
                     findData.listCount = findData.list.length
                     collections[findDataIndex] = findData
-                    console.log("collections : ", collections)
                   }
                   this.updateProfileAndListSync(doc, myMusicData.id, flag)
                 }
@@ -121,8 +119,6 @@ export default {
                 const findData = this.$lodash.find(list, {
                   id: parentId
                 })
-
-                console.log("remote find => ", findData)
 
                 // 찾은 목록을 랜더링한다.
                 if (findData) {

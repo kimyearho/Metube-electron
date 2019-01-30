@@ -104,10 +104,10 @@
         </md-list-item>
 
         <!-- Menu2 -->
-        <md-list-item @click="route('debug')">
+        <!-- <md-list-item @click="route('debug')">
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">Debug</span>
-        </md-list-item>
+        </md-list-item>-->
       </md-list>
     </md-drawer>
 

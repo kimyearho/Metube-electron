@@ -6,7 +6,9 @@ You can not delete this comment when you deploy an application.
 <template>
   <div>
     <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
-      <a class="cursor"> <img class="contextMenu" src="@/assets/images/svg/context-menu.svg" /> </a>
+      <a class="cursor">
+        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+      </a>
       <el-dropdown-menu slot="dropdown" v-show="videoId === data.videoId">
         <el-dropdown-item class="bold" command="A1">
           <i class="el-icon-news"></i> Open Youtube
@@ -16,21 +18,21 @@ You can not delete this comment when you deploy an application.
         </el-dropdown-item>
         <!-- <el-dropdown-item class="bold" command="A3">
           <i class="el-icon-share"></i> Social Share
-        </el-dropdown-item> -->
+        </el-dropdown-item>-->
         <el-dropdown-item class="bold" command="A4">
           <i class="el-icon-star-on"></i> Link Copy
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal" />
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal" />
+    <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
+    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
   </div>
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index"
-import RegisteredMusicList from "@/components/PlayList/self/modal/RegisteredMusicList"
-import SocialShareModal from "@/components/Context/modal/SocialShareModal"
+import StoreMixin from "@/components/Mixin/index";
+import RegisteredMusicList from "@/components/PlayList/self/modal/RegisteredMusicList";
+import SocialShareModal from "@/components/Context/modal/SocialShareModal";
 export default {
   name: "ContextMenu",
   mixins: [StoreMixin],
@@ -48,22 +50,22 @@ export default {
       isSign: null,
       isCheck: false,
       isShare: false
-    }
+    };
   },
   mounted() {
-    this.isSign = this.getUserId()
+    this.isSign = this.getUserId();
   },
   methods: {
     menuEvent(ev) {
       if (ev === "A1") {
-        this.watchYoutube()
+        this.watchYoutube();
       } else if (ev === "A2") {
-        this.addCollection()
+        this.addCollection();
       } else if (ev === "A3") {
-        this.isShare = true
+        this.isShare = true;
       } else {
-        let link = `https://www.youtube.com/watch?v=${this.videoId}`
-        let self = this
+        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
+        let self = this;
         this.$copyText(link).then(
           function(e) {
             self.$modal.show("dialog", {
@@ -74,7 +76,7 @@ export default {
                   title: "Close"
                 }
               ]
-            })
+            });
           },
           function(e) {
             self.$modal.show("dialog", {
@@ -85,9 +87,9 @@ export default {
                   title: "Close"
                 }
               ]
-            })
+            });
           }
-        )
+        );
       }
     },
     watchYoutube() {
@@ -95,18 +97,18 @@ export default {
         this.$ipcRenderer.send(
           "button:watchYoutubePopup",
           `https://www.youtube.com/watch?v=${this.videoId}`
-        )
+        );
       }
     },
     addCollection() {
-      this.registerOpen = true
+      this.registerOpen = true;
     },
     closeModal(is) {
-      this.registerOpen = is
-      this.isShare = false
+      this.registerOpen = is;
+      this.isShare = is;
     }
   }
-}
+};
 </script>
 
 <style scoped>
