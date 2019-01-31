@@ -9,8 +9,8 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### [2019-01-30] *** News ***
-1.4.5 Test version released. If you want to participate in this test version, please refer to the release item.<br> 
+### [2019-01-31] *** News ***
+1.4.5.1 Test version released. If you want to participate in this test version, please refer to the release item.<br> 
 The current full version is 1.4.2.
 
 ### Project Information
