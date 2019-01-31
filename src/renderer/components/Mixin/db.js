@@ -79,24 +79,14 @@ export default {
                   const findDataIndex = this.$lodash.findIndex(collections, {
                     id: myMusicData.id
                   })
-                  if (!data) {
-                    // 추가 했을때 비디오 아이디를 가지고 있으면, 추가한것만 기존 스토어에 추가한다.
-                    // 스토어 DB와, DOC DB 목록에서 중복을 제외한
-                    // let insertVideoData = myMusicData.list.slice(-1).pop();
-                    // collections[findDataIndex].list.push(insertVideoData)
-                    // collections[findDataIndex].listCount = collections[findDataIndex].list.length
-                  } else {
-                    // TODO: DB에서 실제 삭제된 항목을 DB 스토어내 재생목록에 속한 비디오를 찾아서 제거한다.
+                  if (data) {
                     findData.list = this.$lodash.reject(findData.list, {
                       videoId: data.deletedVideoId
                     })
                     findData.listCount = findData.list.length
                     collections[findDataIndex] = findData
-                  }
-
-
-                  console.log(doc)
-                  this.updateProfileAndListSync(doc, myMusicData.id, flag)
+                    this.updateProfileAndListSync(doc, myMusicData.id, flag)
+                  } 
                 }
               }
             }
