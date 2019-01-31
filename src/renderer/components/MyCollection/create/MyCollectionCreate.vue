@@ -99,7 +99,8 @@ export default {
             title: this.form.name,
             userId: this.getUserId(),
             type: "mycollection",
-            category: this.form.category !== "" ? this.form.category : "default",
+            category:
+              this.form.category !== "" ? this.form.category : "default",
             thumbnails:
               "http://smeaker.com/wp-content/uploads/2017/03/Nonton-Video-YouTube-Gratis-Hanya-Bisa-pada-Waktu-Tengah-Malam-Kenapa.jpg",
             creates: this.$moment().format("YYYYMMDDHHmmss"),
@@ -107,8 +108,31 @@ export default {
           };
           this.$test.post(myCollection).then(result => {
             if (result.ok) {
-              this.$refs.form.resetFields();
-              this.$emit("is-success", true);
+              const storeInitItem = {
+                list: [],
+                listCount: 0,
+                id: result.id
+              };
+              this.$test
+                .find({
+                  selector: {
+                    type: "profile",
+                    userId: this.getUserId()
+                  }
+                })
+                .then(result => {
+                  let docs = result.docs[0];
+                  if (docs) {
+                    docs.collections.push(storeInitItem);
+                    this.$test.put(docs).then(result => {
+                      if (result.ok) {
+                        this.getLog("db store collection create success!", {});
+                      }
+                    });
+                  }
+                  this.$refs.form.resetFields();
+                  this.$emit("is-success", true);
+                });
             }
           });
         }

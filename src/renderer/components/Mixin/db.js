@@ -66,27 +66,22 @@ export default {
               listCount: payload.length,
               id: payload[0].parentId // 모든 데이터에는 부모 아이디가 있으므로 1개만 선택한다.
             }
-            if (collections.length <= 0) {
+            const findData = this.$lodash.find(collections, { id: myMusicData.id })
+            if (!findData) {
               collections.push(myMusicData)
               this.updateProfile(doc)
             } else {
-              const findData = this.$lodash.find(collections, { id: myMusicData.id })
-              if (!findData) {
-                collections.push(myMusicData)
-                this.updateProfile(doc)
-              } else {
-                if (findData.listCount != myMusicData.listCount) {
-                  const findDataIndex = this.$lodash.findIndex(collections, {
-                    id: myMusicData.id
+              if (findData.listCount != myMusicData.listCount) {
+                const findDataIndex = this.$lodash.findIndex(collections, {
+                  id: myMusicData.id
+                })
+                if (data) {
+                  findData.list = this.$lodash.reject(findData.list, {
+                    videoId: data.deletedVideoId
                   })
-                  if (data) {
-                    findData.list = this.$lodash.reject(findData.list, {
-                      videoId: data.deletedVideoId
-                    })
-                    findData.listCount = findData.list.length
-                    collections[findDataIndex] = findData
-                    this.updateProfileAndListSync(doc, myMusicData.id, flag)
-                  } 
+                  findData.listCount = findData.list.length
+                  collections[findDataIndex] = findData
+                  this.updateProfileAndListSync(doc, myMusicData.id, flag)
                 }
               }
             }
