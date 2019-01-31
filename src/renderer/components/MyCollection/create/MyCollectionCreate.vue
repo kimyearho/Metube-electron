@@ -19,7 +19,7 @@
         <el-form-item label="Collection name" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="Category" :label-width="formLabelWidth" prop="category">
+        <el-form-item label="Category" :label-width="formLabelWidth">
           <el-select v-model="form.category" placeholder="Please select a category">
             <el-option
               v-for="item in form.categories"
@@ -60,21 +60,20 @@ export default {
             message: "Please enter a collection name.",
             trigger: "change"
           }
-        ],
-        category: [
-          {
-            required: true,
-            message: "Please select a collection category.",
-            trigger: "change"
-          }
         ]
+        // category: [
+        //   {
+        //     required: true,
+        //     message: "Please select a collection category.",
+        //     trigger: "change"
+        //   }
+        // ]
       },
       form: {
         name: "",
         category: "",
         categories: [
-          { label: "Film", value: "Film" },
-          { label: "Vehicles", value: "Vehicles" },
+          { label: "default", value: "default" },
           { label: "Music", value: "Music" },
           { label: "Radio", value: "Radio" },
           { label: "Rock", value: "Rock" },
@@ -86,12 +85,7 @@ export default {
           { label: "Piano", value: "Piano" },
           { label: "Sleep", value: "Sleep" },
           { label: "Epic", value: "Epic" },
-          { label: "Pets", value: "Pets" },
-          { label: "Entertainment", value: "Entertainment" },
           { label: "Travel", value: "Travel" },
-          { label: "Comedy", value: "Comedy" },
-          { label: "Trailers", value: "Trailers" },
-          { label: "Shorts", value: "Shorts" },
           { label: "Action", value: "Action" }
         ]
       }
@@ -105,7 +99,7 @@ export default {
             title: this.form.name,
             userId: this.getUserId(),
             type: "mycollection",
-            category: this.form.category,
+            category: this.form.category !== "" ? this.form.category : "default",
             thumbnails:
               "http://smeaker.com/wp-content/uploads/2017/03/Nonton-Video-YouTube-Gratis-Hanya-Bisa-pada-Waktu-Tengah-Malam-Kenapa.jpg",
             creates: this.$moment().format("YYYYMMDDHHmmss"),

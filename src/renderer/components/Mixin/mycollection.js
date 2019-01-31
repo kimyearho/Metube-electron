@@ -9,6 +9,7 @@ export default {
   methods: {
     /**
      * 나의 컬렉션을 삭제한다.
+     * 추가: DB 스토어도 삭제해야한다.
      *
      * @param {*} data - 컬렉션 데이터
      * @param {*} type - 타입
@@ -35,6 +36,7 @@ export default {
               limit: 100
             })
             .then(results => {
+              // 내 컬렉션 삭제
               return Promise.all(
                 results.docs.map(row => {
                   return this.$test.remove(row)
@@ -42,6 +44,7 @@ export default {
               )
             })
             .then(() => {
+              // 내 컬렉션이 삭제되면, 내 컬렉션에 포함된 하위 데이터들을 모두 삭제한다.
               this.$test.get(data._id).then(doc => {
                 return this.$test.remove(doc).then(result => {
                   if (result.ok) {
@@ -50,6 +53,26 @@ export default {
                     } else {
                       this.getMyCollectionList()
                     }
+                    // 위 실제 DB 모델이 삭제되었으므로, DB 스토어도 삭제한다.
+                    this.$test
+                      .find({
+                        selector: {
+                          type: "profile",
+                          userId: this.getUserId()
+                        }
+                      })
+                      .then(result => {
+                        const docs = result.docs[0]
+                        if (docs) {
+                          let collections = docs.collections
+                          docs.collections = this.$lodash.reject(collections, { id: data._id })
+                          this.$test.put(docs).then(result => {
+                            if (result.ok) {
+                              this.getLog("DB Stroe Remove Update!", {})
+                            }
+                          })
+                        }
+                      })
                   }
                 })
               })
@@ -138,19 +161,17 @@ export default {
         return this.$test
           .find({
             selector: {
-              userId: {
-                $eq: this.getUserId()
-              },
-              parentId: {
-                $eq: musicData.parentId
-              }
-            },
-            limit: 100
+              type: "profile",
+              userId: this.getUserId()
+            }
           })
           .then(result => {
-            let docs = result.docs
+            let docs = result.docs[0]
             if (docs) {
-              this.playlist = docs
+              let collections = docs.collections;
+              let findItem = this.$lodash.find(collections, { id: musicData.name })
+
+              this.playlist = findItem.list
 
               // 재생목록에서 해당하는 트랙번호의 비디오
               let playingItem = this.playlist[index]

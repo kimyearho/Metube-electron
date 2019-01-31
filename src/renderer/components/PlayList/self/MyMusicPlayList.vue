@@ -8,16 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -54,9 +66,18 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -87,11 +108,15 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -286,7 +311,7 @@ export default {
             let docs = result.docs;
             if (docs.length > 0) {
               this.totalTracks = docs.length;
-              this.playlist = docs;
+              // this.playlist = docs;
 
               this.setRemoteSubsetMusicData(docs, data, "p");
               this.feachExtends();
@@ -386,13 +411,11 @@ export default {
       // 재생목록 아이디
       this.playType = this.$route.params.playType;
 
-      // 첫 시작 트랙번호
-      let startTrack = this.$route.params.start;
-
       // 재생목록에서 해당하는 트랙번호의 비디오
-      let playingItem = this.playlist[startTrack];
+      console.log(this.playlist)
+      let playingItem = this.playlist[this.startIndex];
 
-      playingItem.index = startTrack;
+      playingItem.index = this.startIndex;
       playingItem.name = this.id;
       this.playSetting(playingItem);
     },
@@ -404,17 +427,24 @@ export default {
      * @param {event} - 외부에서 트리거된 이벤트유무
      */
     playItem(index, event) {
-      // 재생목록에서 해당하는 트랙번호의 비디오
-      let playingItem = this.playlist[index];
-      playingItem.index = index;
-      playingItem.name = this.getMusicInfos().name;
 
-      this.playSetting(playingItem);
-      if (index === 0) {
-        this.endScrollTop();
+      if (event != undefined) {
+        let musicData = this.getMusicInfos()
+        this.getMyMusicSyncList(index, musicData);
       } else {
-        this.nextTrackScroll(-1);
+        // 재생목록에서 해당하는 트랙번호의 비디오
+        let playingItem = this.playlist[index];
+        playingItem.index = index;
+        playingItem.name = this.getMusicInfos().name;
+
+        this.playSetting(playingItem);
+        if (index === 0) {
+          this.endScrollTop();
+        } else {
+          this.nextTrackScroll(-1);
+        }
       }
+
     },
 
     /**

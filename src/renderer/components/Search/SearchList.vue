@@ -57,7 +57,7 @@
       height="100px"
       style="margin:10px;"
     >
-      <el-carousel-item v-for="item in recommandList" :key="item.videoId">
+      <el-carousel-item v-for="(item, index) in recommandList" :key="index">
         <img
           class="md-image"
           style="border: 1px solid #606266;"

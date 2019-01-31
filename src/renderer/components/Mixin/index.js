@@ -58,6 +58,9 @@ export default {
     getRemoveTrackIndex() {
       return this.$store.getters.getRemoveTrackIndex
     },
+    getInsertVideo() {
+      return this.$store.getters.getInsertVideo
+    },
     getMyMusicList() {
       return this.$store.getters.getMyMusicList
     },

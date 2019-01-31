@@ -17,9 +17,16 @@
       @open="getMyCollectionList"
       width="300px"
     >
-      <div class="wrapper" v-loading="loading" element-loading-background="#ffffff">
+      <div
+        class="wrapper"
+        v-loading="loading"
+        element-loading-background="#ffffff"
+      >
         <ul>
-          <li v-for="(item, index) in listData" :key="index">
+          <li
+            v-for="(item, index) in listData"
+            :key="index"
+          >
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -80,6 +87,44 @@ export default {
       };
       this.$test.post(track).then(result => {
         if (result.ok) {
+          this.$test.get(result.id).then(doc => {
+            if(doc) {
+              this.$test.find({
+                selector: {
+                  type: "profile",
+                  userId: this.getUserId()
+                }
+              }).then(result => {
+                let docs = result.docs[0];
+                if(docs) {
+                  let findData = this.$lodash.find(docs.collections, { id: doc.parentId })
+                  findData.list.push(doc);
+                  findData.listCount = findData.list.length;
+                  this.$test.put(docs).then(result => {
+                    if(result.ok) {
+                      console.log("success db store insert and update!")
+                    }
+                  })
+                }
+              })
+            }
+          });
+          // this.createIndex(["type", "parendId"]).then(() => {
+          //   return this.$test.find({
+          //     selector: {
+          //       type: "mycollectionItem",
+          //       userId: this.getUserId(),
+          //       parentId: listData._id,
+          //       videoId: this.data.videoId
+          //     }
+          //   }).then(result => {
+          //     const docs = result.docs[0]
+          //     if(docs) {
+          //       // 등록한 비디오 아이디를 저장.
+          //       this.$store.commit("setInsertVideo", docs)
+          //     }
+          //   })
+          // })
           this.closeModal();
         }
       });

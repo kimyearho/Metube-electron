@@ -6,16 +6,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -26,8 +38,16 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
-              <font-awesome-icon class="f20" icon="edit"/>
+            <a
+              class="cursor"
+              title="Collection edit"
+              style="color:#fff;"
+              @click="collectionEdit"
+            >
+              <font-awesome-icon
+                class="f20"
+                icon="edit"
+              />
             </a>
           </div>
         </div>
@@ -45,7 +65,11 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -53,8 +77,14 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
         <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
@@ -85,10 +115,14 @@
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -211,7 +245,7 @@ export default {
       });
     },
 
-    feachData(data) {
+    feachData(deletedItem) {
       const user = this.getUserId();
       if (user) {
         // DB 스토어 조회
@@ -230,7 +264,7 @@ export default {
                 if (remoteTotalCount !== findData.listCount) {
                   console.log("========================= list sync!");
                   // console.log("DeleteItem => ", dItem)
-                  this.getRemoteList(doc.docs, data);
+                  this.getRemoteList(doc.docs, deletedItem);
                 } else {
                   console.log("========================= remote store get!");
                   this.totalTracks = findData.listCount;
@@ -263,8 +297,8 @@ export default {
       }
     },
 
-    getRemoteList(docs, data) {
-      this.setRemoteSubsetMusicData(docs, data, "n");
+    getRemoteList(docs, deletedItem) {
+      this.setRemoteSubsetMusicData(docs, deletedItem, "n");
     },
 
     getRemoteDocument() {
