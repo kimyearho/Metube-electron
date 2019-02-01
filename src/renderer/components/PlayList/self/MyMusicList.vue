@@ -297,6 +297,13 @@ export default {
       }
     },
 
+    /**
+     * RemoteDB 및 StoreDB 동기화
+     * 
+     * @param docs RemoteDB (or LocalDB)
+     * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined) 
+     * @param flag 재생여부
+     */
     getRemoteList(docs, deletedItem) {
       this.setRemoteSubsetMusicData(docs, deletedItem, "n");
     },

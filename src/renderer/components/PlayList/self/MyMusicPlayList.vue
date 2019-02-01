@@ -256,7 +256,7 @@ export default {
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;
-      }, 100);
+      }, 500);
     },
 
     /**
@@ -310,9 +310,13 @@ export default {
           .then(result => {
             let docs = result.docs;
             if (docs.length > 0) {
-              this.totalTracks = docs.length;
-              // this.playlist = docs;
-
+              /**
+               * RemoteDB 및 StoreDB 동기화
+               * 
+               * @param docs RemoteDB (or LocalDB)
+               * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined) 
+               * @param flag 재생여부
+               */
               this.setRemoteSubsetMusicData(docs, data, "p");
               this.feachExtends();
             }
@@ -412,7 +416,6 @@ export default {
       this.playType = this.$route.params.playType;
 
       // 재생목록에서 해당하는 트랙번호의 비디오
-      console.log(this.playlist)
       let playingItem = this.playlist[this.startIndex];
 
       playingItem.index = this.startIndex;
@@ -441,7 +444,7 @@ export default {
         if (index === 0) {
           this.endScrollTop();
         } else {
-          this.nextTrackScroll(-1);
+          this.nextTrackScroll(500);
         }
       }
 
@@ -506,7 +509,7 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails;
 
-      this.videoActive(playingItem.index);
+      // this.videoActive(playingItem.index);
 
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$eventBus.$emit("playMusicSetting");
