@@ -6,28 +6,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -38,16 +26,8 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a
-              class="cursor"
-              title="Collection edit"
-              style="color:#fff;"
-              @click="collectionEdit"
-            >
-              <font-awesome-icon
-                class="f20"
-                icon="edit"
-              />
+            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
+              <font-awesome-icon class="f20" icon="edit"/>
             </a>
           </div>
         </div>
@@ -65,11 +45,7 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -77,14 +53,8 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
         <!-- 내 확장메뉴 -->
         <my-context-menu
           :id="id"
@@ -96,10 +66,7 @@
         <!-- End -->
       </md-list-item>
       <md-list-item>
-        <span class="playlistEnd">
-          <i class="el-icon-check"></i>
-          {{ $t('COMMONS.END') }}
-        </span>
+        <span class="playlistEnd">Thanks for using "Metube"</span>
       </md-list-item>
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
@@ -115,14 +82,10 @@
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -299,9 +262,9 @@ export default {
 
     /**
      * RemoteDB 및 StoreDB 동기화
-     * 
+     *
      * @param docs RemoteDB (or LocalDB)
-     * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined) 
+     * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined)
      * @param flag 재생여부
      */
     getRemoteList(docs, deletedItem) {
@@ -358,7 +321,7 @@ export default {
 
 .playlistEnd {
   color: #ffffff;
-  margin-left: 125px;
+  margin-left: 68px;
 }
 
 .label_v {

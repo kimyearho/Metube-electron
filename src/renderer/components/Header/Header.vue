@@ -1,5 +1,8 @@
 <template>
   <div class="titlebar">
+    <div class="notch">
+      <span class="logo" :class="{ noMenu: !isMenu }">{{ $t('MAIN.APP_NAME') }}</span>
+    </div>
     <!-- 제목 바 -->
     <span class="notiButton">
       <img
@@ -10,7 +13,6 @@
         src="@/assets/images/svg/menu.svg"
       >
     </span>
-    <span class="logo" :class="{ noMenu: !isMenu }">{{ $t('MAIN.APP_NAME') }}</span>
     <span class="topButton">
       <div class="minimize cursor" @click="minimize" style="margin-right: 5px;" title="minimize"></div>
       <div class="close cursor" @click="close" title="exit"></div>
@@ -279,13 +281,25 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  font-size: 16px;
-  padding-left: 36px !important;
+.notch {
+  position: absolute;
+  border-top: 30px solid rgba(0, 0, 0, 0.1);
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  height: 0;
+  width: 245px;
+  top: 0;
+  left: 60px;
+  z-index: 1;
 }
 
-.noMenu {
-  padding-left: 50px !important;
+.logo {
+  font-size: 16px;
+  position: absolute;
+  width: 140px;
+  left: 33px;
+  right: 0;
+  top: -25px;
 }
 
 .md-icon.md-theme-default.md-icon-font {
@@ -335,7 +349,8 @@ export default {
   color: #ffffff;
   font-weight: 700;
   text-align: center;
-  border-bottom: 1px solid #232323;
+  border-bottom: 1px solid rgba(35, 35, 35, 0.73);
+  height: 31px;
   z-index: 101;
 }
 

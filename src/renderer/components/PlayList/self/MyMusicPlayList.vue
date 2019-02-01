@@ -8,28 +8,16 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -66,18 +54,9 @@
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span
-          class="md-list-item-text music-title cursor"
-          @click="playItem(index)"
-        >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
+        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
         <my-context-menu
           :id="id"
@@ -90,8 +69,7 @@
 
       <md-list-item>
         <span class="playlistEnd">
-          <i class="el-icon-check"></i>
-          {{ $t('COMMONS.END') }}
+          <span class="playlistEnd">Thanks for using "Metube"</span>
         </span>
       </md-list-item>
       <div class="bottom">
@@ -108,15 +86,11 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -312,9 +286,9 @@ export default {
             if (docs.length > 0) {
               /**
                * RemoteDB 및 StoreDB 동기화
-               * 
+               *
                * @param docs RemoteDB (or LocalDB)
-               * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined) 
+               * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined)
                * @param flag 재생여부
                */
               this.setRemoteSubsetMusicData(docs, data, "p");
@@ -430,9 +404,8 @@ export default {
      * @param {event} - 외부에서 트리거된 이벤트유무
      */
     playItem(index, event) {
-
       if (event != undefined) {
-        let musicData = this.getMusicInfos()
+        let musicData = this.getMusicInfos();
         this.getMyMusicSyncList(index, musicData);
       } else {
         // 재생목록에서 해당하는 트랙번호의 비디오
@@ -447,7 +420,6 @@ export default {
           this.nextTrackScroll(500);
         }
       }
-
     },
 
     /**
@@ -577,7 +549,7 @@ export default {
 <style scoped>
 .playlistEnd {
   color: #ffffff;
-  margin-left: 125px;
+  margin-left: 38px;
 }
 .label_v {
   padding: 4px 7px;

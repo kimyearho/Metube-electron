@@ -221,7 +221,8 @@
   background: #555;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition-property: opacity;
   transition-duration: 0.3s;
 }
@@ -230,6 +231,7 @@
   transition-delay: 0.3s;
 }
 
-.fade-enter, .fade-leave-active {
+.fade-enter,
+.fade-leave-active {
   opacity: 0;
 }
