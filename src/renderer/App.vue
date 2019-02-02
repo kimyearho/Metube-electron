@@ -37,14 +37,16 @@ export default {
       status: []
     };
   },
+  beforeCreate() {
+    // 비디오 상태 체크 이벤트 종료
+    this.$eventBus.$off("statusCheck");
+    this.$eventBus.$off("playerState");
+  },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
-      // this.onNewReleaseCheck();
+      this.onNewReleaseCheck();
     }
-
-    // 비디오 상태 체크 이벤트 종료
-    this.$eventBus.$off("statusCheck");
 
     // 비디오 상태 체크 이벤트 수신
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);

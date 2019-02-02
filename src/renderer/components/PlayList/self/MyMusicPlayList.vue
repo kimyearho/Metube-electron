@@ -134,14 +134,15 @@ export default {
       playlist: []
     };
   },
-  created() {
+  beforeCreate() {
     /**
      * 이벤트 중첩을 피하기 위해 작성한다.
      * 실제 재생목록은 음악이 재생중이라면 외부에서 이벤트를 계속 전달하므로, beforeDestory 훅에서 작성하면 안된다.
      * beforeDestory 훅에서 작성하게되면 페이지를 벗어날때 이벤트가 제거되므로, 루트에서 전달하는 이벤트를 수신할 수 없다.
      */
     this.$eventBus.$off("playlist-nextMusicPlay");
-
+  },
+  created() {
     /**
      * 다음 비디오 시작을 알리는 이벤트를 수신한다.
      * 이벤트 중첩을 피하기 위해 $once를 사용할 수도 있지만, 사용자가 재생목록에서 벗어나지 않았다면,
@@ -493,11 +494,13 @@ export default {
       this.$store.commit("setPlayType", true);
       this.$eventBus.$emit("statusCheck");
 
-      /** @overade 히스토리 등록 */
-      this.insertVideoHistory(playingItem);
+      if (process.env.NODE_ENV !== "development") {
+        /** @overade 히스토리 등록 */
+        this.insertVideoHistory(playingItem);
 
-      /** @overade 사용자 재생 등록 */
-      this.insertUserRecommand(playingItem);
+        /** @overade 사용자 재생 등록 */
+        this.insertUserRecommand(playingItem);
+      }
 
       this.load = true;
     },
