@@ -9,10 +9,6 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### [2019-01-31] *** News ***
-1.4.5.1 Test version released. If you want to participate in this test version, please refer to the release item.<br> 
-The current full version is 1.4.2.
-
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
