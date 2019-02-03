@@ -15,6 +15,10 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
+if (process.platform === "darwin") {
+  app.dock.hide()
+}
+
 if (process.env.NODE_ENV != "development") {
   let shouldQuit = app.makeSingleInstance(() => {
     if (mainWindow) {
@@ -30,7 +34,8 @@ if (process.env.NODE_ENV != "development") {
 let playerPath
 if (process.env.NODE_ENV === "development") {
   if (process.platform !== "darwin") {
-    playerPath = "http://localhost:7070"
+    // playerPath = "http://localhost:7070"
+    playerPath = "http://sharepod.kr"
   } else {
     playerPath = "http://sharepod.kr"
   }

@@ -19,7 +19,7 @@
         <el-form-item label="Collection name" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="Category" :label-width="formLabelWidth" prop="category">
+        <el-form-item label="Category" :label-width="formLabelWidth">
           <el-select v-model="form.category" placeholder="Please select a category">
             <el-option
               v-for="item in form.categories"
@@ -60,21 +60,20 @@ export default {
             message: "Please enter a collection name.",
             trigger: "change"
           }
-        ],
-        category: [
-          {
-            required: true,
-            message: "Please select a collection category.",
-            trigger: "change"
-          }
         ]
+        // category: [
+        //   {
+        //     required: true,
+        //     message: "Please select a collection category.",
+        //     trigger: "change"
+        //   }
+        // ]
       },
       form: {
         name: "",
         category: "",
         categories: [
-          { label: "Film", value: "Film" },
-          { label: "Vehicles", value: "Vehicles" },
+          { label: "default", value: "default" },
           { label: "Music", value: "Music" },
           { label: "Radio", value: "Radio" },
           { label: "Rock", value: "Rock" },
@@ -86,12 +85,7 @@ export default {
           { label: "Piano", value: "Piano" },
           { label: "Sleep", value: "Sleep" },
           { label: "Epic", value: "Epic" },
-          { label: "Pets", value: "Pets" },
-          { label: "Entertainment", value: "Entertainment" },
           { label: "Travel", value: "Travel" },
-          { label: "Comedy", value: "Comedy" },
-          { label: "Trailers", value: "Trailers" },
-          { label: "Shorts", value: "Shorts" },
           { label: "Action", value: "Action" }
         ]
       }
@@ -102,41 +96,45 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           const myCollection = {
-            _key: this.getCollectionKey(),
             title: this.form.name,
-            category: this.form.category,
+            userId: this.getUserId(),
+            type: "mycollection",
+            category:
+              this.form.category !== "" ? this.form.category : "default",
             thumbnails:
-              "http://www.groovelily.com/wp-content/uploads/2017/11/3.jpg",
+              "http://smeaker.com/wp-content/uploads/2017/03/Nonton-Video-YouTube-Gratis-Hanya-Bisa-pada-Waktu-Tengah-Malam-Kenapa.jpg",
             creates: this.$moment().format("YYYYMMDDHHmmss"),
-            created: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
-            tracks: []
+            created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
           };
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: this.getUserId()
-              }
-            })
-            .then(result => {
-              let docs = result.docs[0];
-              if (docs) {
-                // collection max
-                if (docs.playlists.length >= 7) {
-                  alert(
-                    "You can not create more than the maximum number of collections.\nCurrently, the maximum number is 7"
-                  );
-                } else {
-                  docs.playlists.push(myCollection);
-                  this.$local.put(docs).then(res => {
-                    if (res.ok) {
-                      this.$refs.form.resetFields();
-                      this.$emit("is-success", true);
-                    }
-                  });
-                }
-              }
-            });
+          this.$test.post(myCollection).then(result => {
+            if (result.ok) {
+              const storeInitItem = {
+                list: [],
+                listCount: 0,
+                id: result.id
+              };
+              this.$test
+                .find({
+                  selector: {
+                    type: "profile",
+                    userId: this.getUserId()
+                  }
+                })
+                .then(result => {
+                  let docs = result.docs[0];
+                  if (docs) {
+                    docs.collections.push(storeInitItem);
+                    this.$test.put(docs).then(result => {
+                      if (result.ok) {
+                        this.getLog("db store collection create success!", {});
+                      }
+                    });
+                  }
+                  this.$refs.form.resetFields();
+                  this.$emit("is-success", true);
+                });
+            }
+          });
         }
       });
     },

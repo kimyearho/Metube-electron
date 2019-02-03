@@ -114,6 +114,7 @@
 <script>
 import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import ContextMenu from "@/components/Context/ContextMenu";
@@ -125,7 +126,7 @@ const options = { container: "#list", offset: -80 };
 
 export default {
   name: "MusicPlayList",
-  mixins: [StoreMixin, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -157,7 +158,7 @@ export default {
       data: null
     };
   },
-  created() {
+  beforeCreate() {
     /**
      * 이벤트 중첩을 피하기 위해 작성한다.
      * 실제 재생목록은 음악이 재생중이라면 외부에서 이벤트를 계속 전달하므로, beforeDestory 훅에서 작성하면 안된다.
@@ -165,7 +166,8 @@ export default {
      */
     this.$eventBus.$off("playlist-nextMusicPlay");
     this.$eventBus.$off("playlist-nextLoad");
-
+  },
+  created() {
     /**
      * 다음 비디오 시작을 알리는 이벤트를 수신한다.
      * 이벤트 중첩을 피하기 위해 $once를 사용할 수도 있지만, 사용자가 재생목록에서 벗어나지 않았다면,
@@ -456,11 +458,13 @@ export default {
       this.$eventBus.$emit("statusCheck");
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
-      /** @overade 히스토리 등록 */
-      this.insertVideoHistory(playingItem);
+      if (process.env.NODE_ENV !== "development") {
+        /** @overade 히스토리 등록 */
+        this.insertVideoHistory(playingItem);
 
-      /** @overade 사용자 재생 등록 */
-      this.insertUserRecommand(playingItem);
+        /** @overade 사용자 재생 등록 */
+        this.insertUserRecommand(playingItem);
+      }
     },
 
     /**

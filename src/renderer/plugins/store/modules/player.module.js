@@ -158,6 +158,7 @@ const mutations = {
     }
     playData.nextPageToken = payload.nextPageToken
     playData.totalTracks = payload.totalResults
+    playData.playlistTitle = payload.playlistTitle
     playData.list = payload.list
     state.playlist.push(playData)
   },

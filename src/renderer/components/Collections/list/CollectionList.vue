@@ -12,7 +12,7 @@
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img width="20" src="@/assets/images/svg/collection.svg">
+              <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
@@ -98,6 +98,7 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
+import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import MyQueryMixin from "@/components/Mixin/mycollection";
 import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
@@ -107,7 +108,7 @@ import Loading from "@/components/Loader/Loader";
 
 export default {
   name: "CollectionList",
-  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin, DataUtils],
   components: {
     CoverChangeModal,
     SubPlayerBar,
@@ -155,7 +156,7 @@ export default {
               if (data.category) {
                 this.myCollectionRemove(data, "list");
               } else {
-                this.albumCollectionRemoveCallback();
+                this.albumCollectionRemoveCallback(data);
               }
             }
           },

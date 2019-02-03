@@ -55,64 +55,29 @@ export default {
       if (url) {
         let img = new Image()
         img.src = url
-
-        // this가 사용되지 않으므로 임시적으로 self로 대체
         img.onload = function () {
           self.CollectionCoverChange(url)
         }
         img.onerror = function () {
           self.messageDialog('Error', self.$t('COMMONS.DIALOG.ERROR_URL'))
         }
-
         self.linkForm = ''
       } else {
         self.messageDialog('Info', self.$t('COMMONS.DIALOG.BLANK_FORM'))
       }
     },
-    CollectionCoverChange (img) {
-      this.$local
-        .find({
-          selector: {
-            type: 'profile',
-            userId: this.getUserId()
-          }
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          let key = docs._id
-          if (key) {
-            this.$local.get(key).then(doc => {
-              // TODO: MY-COLLECTION 구분
-              if (this.data.category) {
-                this.$lodash.forEach(doc.playlists, item => {
-                  if (item._key === this.data._key) {
-                    item.thumbnails = img
-                  }
-                })
-              } else {
-                this.$lodash.forEach(doc.collections, item => {
-                  if (item.playlistId === this.data.playlistId) {
-                    item.thumbnails = img
-                  }
-                })
-              }
-              return this.$local.put(doc).then(res => {
-                if (res.ok) {
-                  if (this.data.category) {
-                    this.$emit('is-success', {
-                      playType: 'my-collection'
-                    })
-                  } else {
-                    this.$emit('is-success', {
-                      playType: this.data.playType
-                    })
-                  }
-                  this.closeModal()
-                }
-              })
+    CollectionCoverChange (url) {
+      this.$test.get(this.data._id).then(doc => {
+        doc.thumbnails = url;
+        return this.$test.put(doc).then(result => {
+          if(result.ok) {
+            this.$emit('is-success', {
+              playType: this.data.playType
             })
           }
+          this.closeModal()
         })
+      });
     }
   }
 }

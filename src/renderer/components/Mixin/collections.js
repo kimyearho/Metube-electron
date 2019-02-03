@@ -7,246 +7,178 @@
 
 export default {
   methods: {
+    /**
+     * @/MusicList.vue
+     * @/MusicPlayList.vue
+     *
+     * Youtube로 검색되는 재생 목록 or 채널 목록에서 사용 됨.
+     * 해당 재생목록이 콜렉션에 등록되어 있는지 체크함. (재생목록내 상단 우측에 별모양 아이콘(on/off) 확인)
+     */
     getLike() {
-      let user_id = this.getUserId()
+      const user_id = this.getUserId()
       if (user_id) {
         if (this.playType === "play") {
-          let id = this.playlist[0].playlistId
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: user_id
-              },
-              fields: ["collections"]
-            })
-            .then(result => {
-              let docs = result.docs[0]
-              let collections = docs.collections
-              if (collections) {
-                let item = this.$lodash.find(collections, {
-                  playType: "play",
-                  playlistId: id
-                })
-                if (item) {
+          const playlistId = this.playlist[0].playlistId
+          this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test
+              .find({
+                selector: {
+                  type: { $eq: "myplaylist" },
+                  userId: { $eq: user_id },
+                  playlistId: { $eq: playlistId }
+                }
+              })
+              .then(result => {
+                let docs = result.docs
+                if (docs.length > 0) {
                   this.isLikeToggle = true
                 }
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
+              })
+          })
         } else if (this.playType === "channel") {
-          let id = this.playlist[0].channelId
-          this.$local
-            .find({
-              selector: {
-                type: "profile",
-                userId: user_id
-              },
-              fields: ["collections"]
-            })
-            .then(result => {
-              let docs = result.docs[0]
-              let collections = docs.collections
-              if (collections) {
-                let item = this.$lodash.find(collections, {
-                  playType: "channel",
-                  channelId: id
-                })
-                if (item) {
+          const channelId = this.playlist[0].channelId
+          this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test
+              .find({
+                selector: {
+                  type: { $eq: "mychannel" },
+                  userId: { $eq: user_id },
+                  channelId: { $eq: channelId }
+                }
+              })
+              .then(result => {
+                let docs = result.docs
+                if (docs.length > 0) {
                   this.isLikeToggle = true
                 }
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
+              })
+          })
         }
       }
     },
 
+    /**
+     * @/CollectionList.vue
+     *
+     * 내 콜렉션 PLAY LIST or CHANNEL 상세 목록조회
+     * 목록 최대갯수는 디폴트 25개이며, 리미트로 변경가능.
+     */
     getCollectionList() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
+      const user = this.getUserId()
       if (musicInfo) this.isSub = true
-
-      let id = this.getUserId()
-      if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
+      if (user) {
+        const options = {
+          selector: {
+            type: {
+              $eq: this.playType === "play" ? "myplaylist" : "mychannel"
             },
-            fields: ["collections"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.collections
-            if (collections) {
-              let items = this.$lodash.filter(collections, {
-                playType: this.playType
-              })
-              if (items) {
-                this.playlists = this.$lodash
-                  .chain(items)
-                  .orderBy(["creates"], ["desc"])
-                  .take(10)
-                  .value()
-                this.load = true
-              }
+            userId: {
+              $eq: user
             }
+          }
+        }
+        this.createIndex(["type", "userId", "playlistId"]).then(() => {
+          this.$test.find(options).then(result => {
+            this.playlists = result.docs
           })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        this.load = true
+        })
       }
+      this.load = true
     },
 
+    /**
+     * @/Collection/Index.vue
+     *
+     * 내 컬렉션 목록에 등록 된 PLAY LIST를 최근 4개만 조회한다.
+     */
     getPlaylist() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
+      const user = this.getUserId()
       if (musicInfo) this.isSub = true
-
-      let id = this.getUserId()
-
-      if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
-            },
-            fields: ["collections"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.collections
-            if (collections) {
-              let items = this.$lodash.filter(collections, {
-                playType: "play"
-              })
-              if (items) {
-                this.playlists = this.$lodash
-                  .chain(items)
-                  .orderBy(["creates"], ["desc"])
-                  .take(4)
-                  .value()
-              }
-            } else {
-              this.playlists = []
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      if (user) {
+        this.createIndex(["type", "userId", "playlistId"]).then(() => {
+          this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "myplaylist"
+                },
+                userId: {
+                  $eq: user
+                }
+              },
+              limit: 4
+            })
+            .then(result => {
+              this.playlists = result.docs
+            })
+        })
       }
     },
 
+    /**
+     * @/Collection/Index.vue
+     *
+     * 내 컬렉션 목록에 등록 된 CHANNEL을 최근 4개만 조회한다.
+     */
     getChannelList() {
-      let musicInfo = this.getMusicInfos()
+      const musicInfo = this.getMusicInfos()
+      const user = this.getUserId()
       if (musicInfo) this.isSub = true
-
-      let id = this.getUserId()
-
-      if (id) {
-        this.$local
-          .find({
-            selector: {
-              type: "profile",
-              userId: id
-            },
-            fields: ["collections"]
-          })
-          .then(result => {
-            let docs = result.docs[0]
-            let collections = docs.collections
-            if (collections) {
-              let items = this.$lodash.filter(collections, {
-                playType: "channel"
-              })
-              if (items) {
-                this.channelLists = this.$lodash
-                  .chain(items)
-                  .orderBy(["creates"], ["desc"])
-                  .take(4)
-                  .value()
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      if (user) {
+        this.createIndex(["type", "userId", "channelId"]).then(() => {
+          this.$test
+            .find({
+              selector: {
+                type: {
+                  $eq: "mychannel"
+                },
+                userId: {
+                  $eq: user
+                }
+              },
+              limit: 4
+            })
+            .then(result => {
+              this.channelLists = result.docs
+            })
+        })
       }
     },
 
-    albumRemoveCallback() {
-      let playlistId = this.data.playlistId
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["_id", "collections"]
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          let key = docs._id
-          if (key) {
-            this.$local.get(key).then(doc => {
-              doc.collections = this.$lodash.reject(doc.collections, {
-                playlistId: playlistId
-              })
-              return this.$local.put(doc).then(res => {
-                if (res.ok) {
-                  if (this.playType === "play") {
-                    this.getPlaylist()
-                  } else {
-                    this.getChannelList()
-                  }
-                }
-              })
-            })
-            this.$modal.hide("dialog")
+    /**
+     * @/Collections/Index.vue
+     *
+     * 내 컬렉션에 등록 된 PLAY LIST or CHANNEL을 삭제한다.
+     * // 주의: 이 삭제는 Index 페이지에서 삭제일 경우임.
+     */
+    albumRemoveCallback(doc) {
+      this.$test.remove(doc).then(result => {
+        if (result.ok) {
+          if (doc.playType === "play") {
+            this.getPlaylist()
+          } else if (doc.playType === "channel") {
+            this.getChannelList()
           }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        }
+        this.$modal.hide("dialog")
+      })
     },
 
-    albumCollectionRemoveCallback() {
-      let playlistId = this.data.playlistId
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["_id", "collections"]
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          let key = docs._id
-          if (key) {
-            this.$local.get(key).then(doc => {
-              doc.collections = this.$lodash.reject(doc.collections, {
-                playlistId: playlistId
-              })
-              return this.$local.put(doc).then(res => {
-                if (res.ok) {
-                  this.getList()
-                }
-              })
-            })
-            this.$modal.hide("dialog")
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    /**
+     * @/CollectionList.vue
+     *
+     * 내 컬렉션에 등록 된 PLAY LIST or CHANNEL을 삭제한다.
+     * // 주의: 이 삭제는 상세 페이지 목록에서 삭제일 경우임.
+     */
+    albumCollectionRemoveCallback(doc) {
+      this.$test.remove(doc).then(result => {
+        if (result.ok) {
+          this.getCollectionList()
+        }
+        this.$modal.hide("dialog")
+      })
     }
   }
 }

@@ -11,7 +11,8 @@ const state = {
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
-  locale: "en"
+  locale: "en",
+  insertVideo: null
 }
 
 const getters = {
@@ -53,6 +54,9 @@ const getters = {
   },
   getId() {
     return state._id
+  },
+  getInsertVideo() {
+    return state.insertVideo;
   }
 }
 
@@ -99,6 +103,9 @@ const mutations = {
   },
   setId(state, value) {
     state._id = value
+  },
+  setInsertVideo(state, value) {
+    state.insertVideo = value
   }
 }
 

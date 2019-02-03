@@ -58,8 +58,11 @@ export default {
     getRemoveTrackIndex() {
       return this.$store.getters.getRemoveTrackIndex
     },
-    getSnow() {
-      return this.$store.getters.getSnow
+    getInsertVideo() {
+      return this.$store.getters.getInsertVideo
+    },
+    getMyMusicList() {
+      return this.$store.getters.getMyMusicList
     },
     getLog(message, data) {
       if (process.env.NODE_ENV !== "production") {
@@ -70,27 +73,44 @@ export default {
       this.$refs.fab.MdSpeedDial.active = false
     },
     insertVideoHistory(data) {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["_id", "history"]
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          if (docs) {
-            let item = this.$lodash.find(docs.history, {
-              videoId: data.videoId
-            })
-            if (!item) {
-              this.insertHistoryCallback(data)
-            } else {
-              this.getLog("exists item: ", item)
+      this.createIndex(["type", "userId", "videoId"]).then(() => {
+        return this.$test
+          .find({
+            selector: {
+              type: {
+                $eq: "history"
+              },
+              userId: {
+                $eq: this.getUserId()
+              },
+              videoId: {
+                $eq: data.videoId
+              }
             }
-          }
-        })
+          })
+          .then(result => {
+            let docs = result.docs
+            if (docs.length <= 0) {
+              const postData = {
+                type: "history",
+                userId: this.getUserId(),
+                videoId: data.videoId,
+                channelId: data.channelId,
+                channelTitle: data.channelTitle,
+                title: data.title,
+                isLive: data.isLive,
+                image: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
+                duration_time: data.duration_time,
+                duration: data.duration,
+                creates: this.$moment().format("YYYYMMDDkkmmss"),
+                created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+              }
+              this.$test.post(postData)
+            } else {
+              this.getLog("exists item: ", data)
+            }
+          })
+      })
     },
     insertUserRecommand(data) {
       this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
@@ -128,41 +148,6 @@ export default {
           })
         }
       })
-    },
-    insertHistoryCallback(data) {
-      let postData = {
-        videoId: data.videoId,
-        title: data.title,
-        isLive: data.isLive,
-        image: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
-        duration_code: data.duration_code,
-        duration_time: data.duration_time,
-        duration: data.duration,
-        creates: this.$moment().format("YYYYMMDDkkmmss"),
-        created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
-      }
-
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          }
-        })
-        .then(result => {
-          let docs = result.docs[0]
-          if (docs) {
-            docs.history.push(postData)
-            this.$local.put(docs).then(res => {
-              if (res.ok) {
-                // this.getLog('put success', null);
-              }
-            })
-          }
-        })
-        .catch(err => {
-          this.getLog("[insertHistoryCallback] error => ", err)
-        })
     }
   }
 }

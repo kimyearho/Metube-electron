@@ -1,8 +1,8 @@
 {
   "name": "metube",
-  "version": "1.4.2",
+  "version": "1.4.5",
   "author": "kstory8715 <kstory8715@gmail.com>",
-  "description": "An electron-vue project",
+  "description": "Metube 1.4.5 Pre-Releases!",
   "license": "GPL-3.0",
   "main": "./dist/electron/main.js",
   "scripts": {

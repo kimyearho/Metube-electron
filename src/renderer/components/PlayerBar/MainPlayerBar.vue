@@ -131,6 +131,11 @@ export default {
       isVolume: false
     };
   },
+  beforeCreate() {
+    this.$eventBus.$off("playerSecond");
+    this.$eventBus.$off("playTypeControl");
+    this.$eventBus.$off("playMusicSetting");
+  },
   created() {
     // 영상의 재생시간 수신
     this.$eventBus.$on("playerSecond", this.progressRange);
@@ -190,6 +195,7 @@ export default {
 
     // 재생정보 세팅
     playMusicSetting() {
+      console.log("main임");
       let musicInfo = this.getMusicInfos();
       this.maxTime = musicInfo.duration_time;
       this.totalTime = musicInfo.duration;

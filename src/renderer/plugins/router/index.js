@@ -58,6 +58,11 @@ export default new VueRouter({
       path: "/history",
       name: "VIDEO-HISTORY",
       component: require("@/components/history/VideoHistory").default
+    },
+    {
+      path: "/debug",
+      name: "DEBUG",
+      component: require("@/components/Debug/Debug").default
     }
   ]
 })

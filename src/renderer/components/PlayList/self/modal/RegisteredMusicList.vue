@@ -9,17 +9,24 @@
   <div>
     <el-dialog
       style="z-index:998 !important;"
-      title="MyCollectionsList"
+      title="MyCollection List"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
       :append-to-body="true"
-      @open="getPlaylist"
+      @open="getMyCollectionList"
       width="300px"
     >
-      <div class="wrapper">
+      <div
+        class="wrapper"
+        v-loading="loading"
+        element-loading-background="#ffffff"
+      >
         <ul>
-          <li v-for="(item, index) in listData" :key="index">
+          <li
+            v-for="(item, index) in listData"
+            :key="index"
+          >
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -37,9 +44,11 @@
 
 <script>
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
+
 export default {
   name: "RegisteredMusicList",
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, DataUtils],
   props: {
     isOpen: {
       type: Boolean,
@@ -49,77 +58,121 @@ export default {
   },
   data() {
     return {
-      listData: []
+      listData: [],
+      loading: true
     };
   },
   methods: {
+    /**
+     * 지정한 컬렉션에 음악을 추가한다.
+     */
     addItem(listData) {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          }
-        })
-        .then(result => {
-          let docs = result.docs[0];
-          let selectedPlaylistKey = listData._key;
-          let resultTracks = this.$lodash
-            .chain(docs.playlists)
-            .find({ _key: selectedPlaylistKey })
-            .value().tracks;
-          let flag = this.$lodash.find(resultTracks, {
-            videoId: this.data.videoId
+      let track = {
+        userId: this.getUserId(),
+        parentId: listData._id,
+        videoId: this.data.videoId,
+        channelId: this.data.channelId,
+        channelTitle: this.data.channelTitle,
+        type: "mycollectionItem",
+        isLive: this.data.isLive ? this.data.isLive : "none",
+        title: this.data.title,
+        duration: this.data.duration,
+        duration_time: this.data.duration_time,
+        thumbnails:
+          this.data.imageInfo !== undefined
+            ? this.data.imageInfo
+            : this.data.image,
+        creates: this.$moment().format("YYYYMMDDHHmmss"),
+        created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
+      };
+      this.$test.post(track).then(result => {
+        if (result.ok) {
+          this.$test.get(result.id).then(doc => {
+            if(doc) {
+              this.$test.find({
+                selector: {
+                  type: "profile",
+                  userId: this.getUserId()
+                }
+              }).then(result => {
+                let docs = result.docs[0];
+                if(docs) {
+                  let findData = this.$lodash.find(docs.collections, { id: doc.parentId })
+                  findData.list.push(doc);
+                  findData.listCount = findData.list.length;
+                  this.$test.put(docs).then(result => {
+                    if(result.ok) {
+                      console.log("success db store insert and update!")
+                    }
+                  })
+                }
+              })
+            }
           });
-          if (!flag) {
-            let insertTrackData = {
-              videoId: this.data.videoId,
-              channelId: this.data.channelId,
-              channelTitle: this.data.channelTitle,
-              type: "MY-COLLECTION",
-              isLive: this.data.isLive ? this.data.isLive : "none",
-              title: this.data.title,
-              duration: this.data.duration,
-              duration_time: this.data.duration_time,
-              thumbnails:
-                this.data.imageInfo !== undefined
-                  ? this.data.imageInfo
-                  : this.data.image,
-              creates: this.$moment().format("YYYYMMDDHHmmss"),
-              created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
-            };
-            resultTracks.push(insertTrackData);
-            this.$local.put(docs).then(res => {
-              if (res.ok) {
-                this.closeModal();
-              }
-            });
-          }
-        });
+          // this.createIndex(["type", "parendId"]).then(() => {
+          //   return this.$test.find({
+          //     selector: {
+          //       type: "mycollectionItem",
+          //       userId: this.getUserId(),
+          //       parentId: listData._id,
+          //       videoId: this.data.videoId
+          //     }
+          //   }).then(result => {
+          //     const docs = result.docs[0]
+          //     if(docs) {
+          //       // 등록한 비디오 아이디를 저장.
+          //       this.$store.commit("setInsertVideo", docs)
+          //     }
+          //   })
+          // })
+          this.closeModal();
+        }
+      });
     },
-    getPlaylist() {
-      this.$local
-        .find({
-          selector: {
-            type: "profile",
-            userId: this.getUserId()
-          },
-          fields: ["playlists"]
-        })
-        .then(result => {
-          let docs = result.docs[0];
-          if (docs) {
-            this.listData = docs.playlists;
-            this.$lodash.forEach(docs.playlists, (item, index) => {
-              let data = this.$lodash.find(item.tracks, {
-                videoId: this.data.videoId
-              });
-              if (data) {
-                this.listData[index].isExists = true;
+
+    /**
+     * 등록한 나의 컬렉션 조회
+     *   - 내가 등록한 컬렉션 목록을 조회
+     *   - 각 컬렉션별 하위 데이터셋을 조회한 뒤 현재 비디오 아이디가 존재하는지 확인.
+     *   - 존재한다면 isExists Valiable을 추가한다
+     */
+    getMyCollectionList() {
+      this.createIndex(["creates"]).then(() => {
+        return this.$test
+          .find({
+            selector: {
+              type: {
+                $eq: "mycollection"
+              },
+              userId: {
+                $eq: this.getUserId()
+              },
+              creates: {
+                $gte: null
               }
-            });
-          }
-        });
+            }
+          })
+          .then(result => {
+            let docs = result.docs;
+            if (docs.length > 0) {
+              const arrayToItems = [];
+              this.$lodash.forEach(docs, item => {
+                let dataToItem = this.getSubsetMusic(item._id).then(result => {
+                  let findData = this.$lodash.find(result.docs, {
+                    videoId: this.data.videoId
+                  });
+                  if (findData) item.isExists = true;
+                  return item;
+                });
+                arrayToItems.push(dataToItem);
+              });
+              Promise.all(arrayToItems).then(result => {
+                this.listData = result;
+                this.loading = false;
+              });
+            }
+          });
+      });
     },
     closeModal() {
       this.$emit("closeModal", false);

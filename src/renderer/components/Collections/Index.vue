@@ -187,6 +187,7 @@
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import MyQueryMixin from "@/components/Mixin/mycollection";
 import StoreMixin from "@/components/Mixin/index";
+import DataUtils from "@/components/Mixin/db";
 import CoverChangeModal from "./cover/CollectionCoverChange";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
@@ -194,7 +195,7 @@ import Loading from "@/components/Loader/Loader";
 
 export default {
   name: "Collections",
-  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin],
+  mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin, DataUtils],
   components: {
     CollectionRegister,
     CoverChangeModal,
@@ -220,7 +221,11 @@ export default {
   created() {
     // login user
     this.isLogin = this.getUserId() ? true : false;
-
+  },
+  beforeMount() {
+    this.$store.commit("setIndexPath", this.$route.path);
+  },
+  mounted() {
     /** @overide */
     this.getMyCollection();
 
@@ -229,9 +234,6 @@ export default {
 
     /** @overide */
     this.getChannelList();
-  },
-  beforeMount() {
-    this.$store.commit("setIndexPath", this.$route.path);
   },
   methods: {
     collectionAdd() {
@@ -248,11 +250,11 @@ export default {
               this.$set(this, "data", data);
               this.$set(this, "playType", data.playType);
               if (data.category) {
-                /** @overide */
+                /** @overide 내 콜렉션 제거 */
                 this.myCollectionRemove(data, "index");
               } else {
-                /** @overide */
-                this.albumRemoveCallback();
+                /** @overide 그외 콜렉션 제거 */
+                this.albumRemoveCallback(data);
               }
             }
           },
@@ -271,7 +273,7 @@ export default {
         name: "NOT-MY-PLAYLIST",
         params: {
           playType: "self",
-          id: item._key
+          doc: item
         }
       });
     },

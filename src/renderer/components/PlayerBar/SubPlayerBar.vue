@@ -61,6 +61,11 @@ export default {
       isPlay: true
     };
   },
+  beforeCreate() {
+    this.$eventBus.$off("playerSecond");
+    this.$eventBus.$off("playTypeControl");
+    this.$eventBus.$off("playMusicSetting");
+  },
   created() {
     // 영상의 재생시간 수신
     this.$eventBus.$on("playerSecond", this.progressRange);
@@ -108,6 +113,7 @@ export default {
 
     // 재생
     playTypeControl(event) {
+      console.log("1");
       this.isPlay = event.playType;
     },
 
