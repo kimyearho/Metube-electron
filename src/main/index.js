@@ -15,6 +15,10 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
+if (process.platform === "darwin") {
+  app.dock.hide()
+}
+
 if (process.env.NODE_ENV != "development") {
   let shouldQuit = app.makeSingleInstance(() => {
     if (mainWindow) {
