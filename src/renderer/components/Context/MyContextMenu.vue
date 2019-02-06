@@ -14,6 +14,9 @@ strict';
         <el-dropdown-item class="bold" command="A1" :disabled="user === null">
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A5" :disabled="user === null">
+          <i class="el-icon-edit-outline"></i> Change Cover
+        </el-dropdown-item>
         <!-- <el-dropdown-item class="bold" command="A2" :disabled="user === null">
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item>-->
@@ -91,7 +94,7 @@ export default {
             });
           }
         );
-      } else {
+      } else if (ev === "A4") {
         let musicInfo = this.getMusicInfos();
         if (musicInfo) {
           if (this.videoId === musicInfo.videoId) {
@@ -110,6 +113,25 @@ export default {
         } else {
           this.deleteDialog();
         }
+      } else {
+        // A5
+        this.$modal.show("dialog", {
+          title: "Info",
+          text:
+            "Would you like to change the image of the selected video to my collection cover?",
+          buttons: [
+            {
+              title: "Yes",
+              handler: () => {
+                this.updateMyCollectionCover();
+                this.$modal.hide("dialog");
+              }
+            },
+            {
+              title: "Close"
+            }
+          ]
+        });
       }
     },
     watchYoutube() {
@@ -136,6 +158,18 @@ export default {
             title: "Close"
           }
         ]
+      });
+    },
+    updateMyCollectionCover() {
+      this.$test.get(this.data.parentId).then(doc => {
+        doc.thumbnails = this.data.thumbnails;
+        return this.$test.put(doc).then(result => {
+          if (result.ok) {
+            this.$emit("is-cover", true);
+          } else {
+            this.$emit("is-cover", false);
+          }
+        });
       });
     },
     delete() {

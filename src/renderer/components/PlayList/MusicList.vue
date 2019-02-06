@@ -249,7 +249,6 @@ export default {
 
             this.$http.get(requestURL).then(res => {
               if (this.$lodash.size(res.data.items) > 0) {
-                console.log(res.data.items);
                 let pathName = null;
                 if (this.playType === "play") {
                   pathName = "setDuration";

@@ -61,6 +61,7 @@
           :index="index"
           :videoId="item.videoId"
           :data="item"
+          @is-cover="reloadCollection"
           @is-success="feachData"
         />
         <!-- End -->
@@ -258,6 +259,12 @@ export default {
           }
         });
       }
+    },
+
+    reloadCollection() {
+      this.$test.get(this.collectionDoc._id).then(doc => {
+        this.cover = doc.thumbnails;
+      });
     },
 
     /**
