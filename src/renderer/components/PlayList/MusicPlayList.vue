@@ -289,11 +289,11 @@ export default {
 
         if (musicId !== playlistId) {
           this.playlist = findPlaylist.list;
-          this.data = this.playlist[0];
+          this.data = findPlaylist;
           this.autoStart();
         } else {
           this.playlist = findPlaylist.list;
-          this.data = this.playlist[0];
+          this.data = findPlaylist;
 
           // 현재 재생중인 비디오의 인덱스와 현재 페이지의 시작인덱스가 동일한지?
           if (musicInfo.index === this.$route.params.start) {
@@ -314,7 +314,7 @@ export default {
       } else {
         // 재생중인거 없어서 첫 시작
         this.playlist = findPlaylist.list;
-        this.data = this.playlist[0];
+        this.data = findPlaylist;
         if (this.playType === "channel") {
           this.channelPlaylistId = findPlaylist.channelPlaylistId;
         }

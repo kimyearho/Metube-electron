@@ -16,9 +16,6 @@ You can not delete this comment when you deploy an application.
         <el-dropdown-item class="bold" command="A2" :disabled="isCheck || isSign === null">
           <i class="el-icon-plus"></i> Add to Collection
         </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A5">
-          <i class="el-icon-edit-outline"></i> Change Cover
-        </el-dropdown-item>
         <!-- <el-dropdown-item class="bold" command="A3">
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item>-->
@@ -93,34 +90,6 @@ export default {
             });
           }
         );
-      } else {
-        this.$modal.show("dialog", {
-          title: "Info",
-          text:
-            "Would you like to change the image of the selected video to my playlist cover?",
-          buttons: [
-            {
-              title: "Yes",
-              handler: () => {
-                this.updateMyPlaylistCover();
-                this.$modal.hide("dialog");
-              }
-            },
-            {
-              title: "Close"
-            }
-          ]
-        });
-      }
-    },
-    updateMyPlaylistCover() {
-      const myPlaylistId = `PLAYLIST:${this.data.playlistId}`;
-      const allPlaylist = this.getAllPlayList();
-      let findItem = this.$lodash.find(allPlaylist, {
-        playlistId: myPlaylistId
-      });
-      if (findItem) {
-        console.log(findItem);
       }
     },
     watchYoutube() {

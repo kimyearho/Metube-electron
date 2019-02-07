@@ -102,8 +102,8 @@ export default {
                 image: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
                 duration_time: data.duration_time,
                 duration: data.duration,
-                creates: this.$moment().format("YYYYMMDDkkmmss"),
-                created: this.$moment().format("YYYY-MM-DD kk:mm:ss")
+                creates: this.$moment().format("YYYYMMDDHHmmss"),
+                created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
               }
               this.$test.post(postData)
             } else {
