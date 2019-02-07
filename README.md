@@ -1,4 +1,5 @@
 # [2019-02-03] v1.4.6 UPDATE
+ - MacOS UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/YdDRBqN.png" />
