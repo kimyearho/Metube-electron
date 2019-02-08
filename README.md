@@ -28,8 +28,11 @@ If you like the program, please click on the star! It will help developers a lot
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
 
-### User experience
-I am developing "Metube" as a global service. But I do not know the user experience on the global. So, if you let us know your user experience, I think it will help you to develop your app. Thank you.
+### Roadmap
+[ ] Multiple selection when adding video
+[ ] Copy and move videos added to my collection
+[ ] PouchDB Backup and Restore
+[ ] Improved YouTube playback performance
 ***
 
 ### Installation
