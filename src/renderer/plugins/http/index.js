@@ -6,7 +6,7 @@ import "nprogress/nprogress.css"
 NProgress.configure({ showSpinner: false })
 
 const service = axios.create({
-  timeout: 5000
+  timeout: 10000
 })
 
 /* Request interceptors */

@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 /* topHeader */
 import topHeader from "./components/Header/Header"
 
+import GlobalEventHandler from "./components/PlayerBar/GlobalEventHandler"
+
 /* vue-modal */
 import VModal from "vue-js-modal"
 
@@ -35,6 +37,8 @@ import VueClipboard from "vue-clipboard2"
 
 /* mousetrap */
 import mousetrap from "mousetrap"
+
+import { ipcRenderer } from "electron"
 
 /* ElementUI */
 import {
@@ -87,6 +91,7 @@ if (!process.env.IS_WEB) Vue.use(require("vue-electron"))
 Vue.config.productionTip = false
 
 /* global component */
+Vue.component("global-event-handler", GlobalEventHandler)
 Vue.component("font-awesome-icon", FontAwesomeIcon)
 Vue.component("top-header", topHeader)
 
@@ -135,6 +140,8 @@ Vue.prototype.$loading = Loading.service
 Vue.prototype.$message = Message
 Vue.prototype.$version = require("../../package.json").version
 Vue.prototype.$locale = require("electron").remote.app.getLocale()
+Vue.prototype.$ipcRenderer = ipcRenderer
+Vue.prototype.$eventBus = new Vue()
 
 /* eslint-disable no-new */
 const vm = new Vue({

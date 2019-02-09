@@ -79,9 +79,9 @@
 
     <!-- 메인 재생바 컴포넌트 -->
     <main-player-bar
+      @nextMusicPlay="subscribeNextVideo"
       @previousVideoTrack="previousPlayItem"
       @nextVideoTrack="nextPlayItem"
-      @jump="nextTrackScroll(500)"
     />
 
     <!-- 로딩 컴포넌트 -->
@@ -133,22 +133,6 @@ export default {
       startIndex: 0,
       playlist: []
     };
-  },
-  beforeCreate() {
-    /**
-     * 이벤트 중첩을 피하기 위해 작성한다.
-     * 실제 재생목록은 음악이 재생중이라면 외부에서 이벤트를 계속 전달하므로, beforeDestory 훅에서 작성하면 안된다.
-     * beforeDestory 훅에서 작성하게되면 페이지를 벗어날때 이벤트가 제거되므로, 루트에서 전달하는 이벤트를 수신할 수 없다.
-     */
-    this.$eventBus.$off("playlist-nextMusicPlay");
-  },
-  created() {
-    /**
-     * 다음 비디오 시작을 알리는 이벤트를 수신한다.
-     * 이벤트 중첩을 피하기 위해 $once를 사용할 수도 있지만, 사용자가 재생목록에서 벗어나지 않았다면,
-     * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
-     */
-    this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
   },
   mounted() {
     this.getCategory();
@@ -231,7 +215,7 @@ export default {
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;
-      }, 500);
+      }, 250);
     },
 
     /**
@@ -261,6 +245,13 @@ export default {
           this.category = results[0].category;
           let listDocs = results[1].docs;
           if (listDocs.length > 0) {
+            /**
+             * RemoteDB 및 StoreDB 동기화
+             *
+             * @param docs RemoteDB (or LocalDB)
+             * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined)
+             * @param flag 재생여부
+             */
             this.setRemoteSubsetMusicData(listDocs, data, "p");
           }
         });

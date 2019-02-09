@@ -105,16 +105,22 @@
         </div>
       </div>
     </div>
+    <global-event-handler
+      @sendNextMusicPlay="sendNextMusicPlay"
+      @playVideoSecond="progressRange"
+      @sendNextPage="sendNextPage"
+    ></global-event-handler>
   </div>
 </template>
 
 <script>
 import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
+import GlobalMixin from "@/components/Mixin/common";
 
 export default {
   name: "MainPlayerBar",
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, GlobalMixin],
   data() {
     return {
       range: 0,
@@ -131,14 +137,9 @@ export default {
       isVolume: false
     };
   },
-  beforeCreate() {
-    this.$eventBus.$off("playerSecond");
-    this.$eventBus.$off("playTypeControl");
-    this.$eventBus.$off("playMusicSetting");
-  },
   created() {
-    // 영상의 재생시간 수신
-    this.$eventBus.$on("playerSecond", this.progressRange);
+    // 재생 기본설정
+    this.playReady();
 
     // 재생음악의 정보 수신
     this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
@@ -155,9 +156,6 @@ export default {
     }
   },
   mounted() {
-    // 재생 기본설정
-    this.playReady();
-
     // 현재 재생음악의 정보를 설정
     this.fetchData();
 
@@ -165,6 +163,14 @@ export default {
     this.isRepeat = this.getRepeat();
   },
   methods: {
+    sendNextMusicPlay(value) {
+      this.$emit("nextMusicPlay", value);
+    },
+
+    sendNextPage(value) {
+      this.$emit("nextPage", value);
+    },
+
     // 재생정보 및 플레이타입 설정
     fetchData() {
       let musicInfo = this.getMusicInfos();
@@ -186,16 +192,15 @@ export default {
     // 재생준비 (기본 볼륨: 50)
     playReady() {
       this.volume = this.getVolume();
-      this.$store.commit("setVolume", this.volume);
       if (this.volume === 0) {
         this.volume = 50;
       }
+      this.$store.commit("setVolume", this.volume);
       this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
     },
 
     // 재생정보 세팅
     playMusicSetting() {
-      console.log("main임");
       let musicInfo = this.getMusicInfos();
       this.maxTime = musicInfo.duration_time;
       this.totalTime = musicInfo.duration;
@@ -206,8 +211,8 @@ export default {
     },
 
     // 프로그레스
-    progressRange($event) {
-      this.range = this.second($event);
+    progressRange(value) {
+      this.range = this.second(value);
     },
 
     // 재생
@@ -301,6 +306,10 @@ export default {
         return 0;
       }
     }
+  },
+  beforeDestroy() {
+    this.$eventBus.$off("playTypeControl");
+    this.$eventBus.$off("playMusicSetting");
   }
 };
 </script>

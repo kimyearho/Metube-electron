@@ -7,6 +7,7 @@ const state = {
   isRepeat: false,
   minTraffic: false,
   isPlay: true,
+  second: 0,
   musicList: [],
   playlist: [],
   videoList: [],
@@ -33,6 +34,9 @@ const getters = {
   },
   getTrafficOption() {
     return state.minTraffic
+  },
+  getPlayerSecond() {
+    return state.second
   }
 }
 
@@ -175,6 +179,9 @@ const mutations = {
 
 // 비동기
 const actions = {
+  setPlayerSecond(state, value) {
+    return value
+  },
   setSearchDuration(context) {
     state.videoList = []
     let videoIds = _.map(state.searchList, "videoId")

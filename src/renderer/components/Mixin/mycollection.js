@@ -115,7 +115,7 @@ export default {
     },
 
     /**
-     * 내 컬렉션 목록을 가져온다. (최대 7개)
+     * 내 컬렉션 목록을 가져온다. (최대 15개)
      */
     getMyCollectionList() {
       const musicInfo = this.getMusicInfos()
@@ -136,7 +136,7 @@ export default {
                   $gte: null
                 }
               },
-              limit: 7,
+              limit: 15,
               sort: [{ creates: "desc" }]
             })
             .then(result => {
@@ -168,7 +168,7 @@ export default {
           .then(result => {
             let docs = result.docs[0]
             if (docs) {
-              let collections = docs.collections;
+              let collections = docs.collections
               let findItem = this.$lodash.find(collections, { id: musicData.name })
 
               this.playlist = findItem.list
