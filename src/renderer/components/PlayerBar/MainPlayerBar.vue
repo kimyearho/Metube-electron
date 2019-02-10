@@ -121,6 +121,12 @@ import GlobalMixin from "@/components/Mixin/common";
 export default {
   name: "MainPlayerBar",
   mixins: [StoreMixin, GlobalMixin],
+  props: {
+    videoSetting: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       range: 0,
@@ -141,9 +147,6 @@ export default {
     // 재생 기본설정
     this.playReady();
 
-    // 재생음악의 정보 수신
-    this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
-
     // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
     this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
@@ -153,6 +156,10 @@ export default {
       this.volume = v;
       this.$store.commit("setVolume", this.volume);
       this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
+    },
+    // 재생될 비디오 정보 갱신
+    videoSetting(event) {
+      this.playMusicSetting(event)
     }
   },
   mounted() {
@@ -200,12 +207,11 @@ export default {
     },
 
     // 재생정보 세팅
-    playMusicSetting() {
-      let musicInfo = this.getMusicInfos();
-      this.maxTime = musicInfo.duration_time;
-      this.totalTime = musicInfo.duration;
-      if (musicInfo.isLive) {
-        this.isLive = musicInfo.isLive != "none";
+    playMusicSetting(data) {
+      this.maxTime = data.duration_time;
+      this.totalTime = data.duration;
+      if (data.isLive) {
+        this.isLive = data.isLive != "none";
       }
       this.isPlay = true;
     },

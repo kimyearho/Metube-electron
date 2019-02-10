@@ -6,7 +6,6 @@ import i18n from "./plugins/lang"
 import "expose-loader?$!jquery"
 import "electron-disable-file-drop"
 import "./plugins/pouchdb"
-import "./plugins/ipc"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons"
@@ -151,6 +150,12 @@ const vm = new Vue({
   i18n,
   template: "<App/>"
 }).$mount("#app")
+
+if (process.env.NODE_ENV !== "development") {
+  setInterval(() => {
+    ipcRenderer.send("event:appStart", {})
+  }, 30000)
+}
 
 // 10분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
 // 히스토리의 총 개수에서 20개를 뺀 나머지 만큼 오름차순 정렬 후 삭제한다.

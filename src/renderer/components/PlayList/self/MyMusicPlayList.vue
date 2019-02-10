@@ -79,6 +79,7 @@
 
     <!-- 메인 재생바 컴포넌트 -->
     <main-player-bar
+      :videoSetting="videoData"
       @nextMusicPlay="subscribeNextVideo"
       @previousVideoTrack="previousPlayItem"
       @nextVideoTrack="nextPlayItem"
@@ -121,6 +122,7 @@ export default {
     return {
       load: false,
       isMini: false,
+      videoData: null,
       totalTracks: null,
       playType: null,
       id: null,
@@ -473,17 +475,14 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails;
 
-      // this.videoActive(playingItem.index);
-
       this.$store.commit("setPlayingMusicInfo", playingItem);
-      this.$eventBus.$emit("playMusicSetting");
-      this.$ipcRenderer.send("win2Player", [
-        "loadVideoById",
-        playingItem.videoId
-      ]);
+      this.$set(this, "videoData", this.getMusicInfos());
 
       this.$store.commit("setPlayType", true);
       this.$eventBus.$emit("statusCheck");
+
+      const videoId = playingItem.videoId;
+      this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */

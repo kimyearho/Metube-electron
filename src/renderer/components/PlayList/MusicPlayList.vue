@@ -98,6 +98,7 @@
 
     <!-- 메인 재생바 컴포넌트 -->
     <main-player-bar
+      :videoSetting="videoData"
       @nextPage="nextPlaylistAutoPageLoad"
       @nextMusicPlay="subscribeNextVideo"
       @previousVideoTrack="previousPlayItem"
@@ -138,6 +139,7 @@ export default {
   data() {
     return {
       playlist: [],
+      videoData: null,
       totalTracks: null,
       coverTitle: "",
       channelTitle: null,
@@ -220,7 +222,6 @@ export default {
     videoActive(ms) {
       let self = this;
       let id = `#item${this.selectedIndex}`;
-      console.log(id);
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;
@@ -428,18 +429,21 @@ export default {
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
     playSetting(playingItem) {
-      // 현재 선택한 비디오의 인덱스
-      this.selectedIndex = playingItem.index;
 
-      // 커버 및 제목/채널 세팅
+      // 페이지 설정
+      this.selectedIndex = playingItem.index;
       this.coverTitle = playingItem.title;
       this.channelTitle = playingItem.channelTitle;
       this.cover = playingItem.imageInfo;
 
-      let videoId = playingItem.videoId;
+      // 재생될 비디오 정보를 갱신
       this.$store.commit("setPlayingMusicInfo", playingItem);
-      this.$eventBus.$emit("playMusicSetting");
+
+      this.$set(this, 'videoData', this.getMusicInfos());
       this.$eventBus.$emit("statusCheck");
+
+      // 비디오 재생 이벤트 전송
+      const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
       if (process.env.NODE_ENV !== "development") {

@@ -1,9 +1,14 @@
+'usestrict';
+
 export default {
   data() {
     return {
       state: "",
       status: []
     }
+  },
+  created() {
+    this.$eventBus.$on("statusCheck", this.videoStatusCheck);
   },
   mounted() {
     this.$watch(
@@ -27,7 +32,6 @@ export default {
         this.$eventBus.$emit("playTypeControl", { playType: true })
       } else if (this.state === 0) {
         // 종료일 경우
-        // 재생중인 음악정보
         let musicData = this.getMusicInfos()
         let isRepeat = this.getRepeat()
         // 반복여부
@@ -92,6 +96,72 @@ export default {
       }
     },
 
+    /**
+     * 비디오 상태 체크
+     * 재생불가능한 비디오를 감시한다
+     */
+    videoStatusCheck() {
+      let isTimer = this.$store.getters.getTimer;
+      if (isTimer) {
+        // clear and set
+        let isTime = this.$store.getters.getTime;
+        clearTimeout(isTime);
+      }
+      this.$store.commit("setTimer", true);
+      setTimeout(() => {
+        this.$store.commit("setTime", 1000);
+        this.statusResult();
+      }, 15000);
+    },
+
+    statusResult() {
+      this.$store.commit("setTimer", false);
+      let statusSize = this.$lodash.size(this.status);
+      let lastIndex = this.status[statusSize - 1];
+      if (lastIndex) {
+        if (lastIndex === -1) {
+          let musicData = this.getMusicInfos();
+          let nextIndex = musicData.index + 1;
+          if (musicData.type) {
+            this.createIndex(["userId", "parentId"]).then(result => {
+              return this.$test
+                .find({
+                  selector: {
+                    userId: {
+                      $eq: this.getUserId()
+                    },
+                    parentId: {
+                      $eq: musicData.parentId
+                    }
+                  },
+                  limit: 100
+                })
+                .then(result => {
+                  const docs = result.docs;
+                  if (docs) {
+                    if (docs.length > nextIndex) {
+                      this.$emit("sendNextMusicPlay", nextIndex)
+                    }
+                  }
+                });
+            });
+          } else {
+            let all = this.getAllPlayList();
+            // 다음 인덱스
+            let playlist = this.$lodash.find(all, {
+              playlistId: musicData.name
+            });
+            if (playlist != undefined) {
+              if (playlist.list.length > nextIndex) {
+                this.$emit("sendNextMusicPlay", nextIndex)
+              }
+            }
+          }
+        }
+      }
+      this.status = [];
+    },
+
     messageDialog(type, message) {
       this.$modal.show("dialog", {
         title: type,
@@ -103,5 +173,8 @@ export default {
         ]
       })
     }
+  },
+  beforeDestory() {
+    this.$eventBus.$off("statusCheck")
   }
 }

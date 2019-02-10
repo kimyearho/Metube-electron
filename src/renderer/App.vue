@@ -1,8 +1,7 @@
 /*--------------------------------------------------------------------------------------------- *
 Licensed under the GPL-3.0 License. See License.txt in the project root for license information. *
 You can not delete this comment when you deploy an application.
-*--------------------------------------------------------------------------------------------*/ 'use
-strict';
+*--------------------------------------------------------------------------------------------*/ 
 
 <template>
   <div id="app">
@@ -36,31 +35,13 @@ export default {
       status: []
     };
   },
-  beforeCreate() {
-    // 이벤트 버스 종료
-    this.$eventBus.$off("statusCheck");
-    this.$eventBus.$off("playTypeControl");
-    this.$eventBus.$off("playlist-nextMusicPlay");
-    this.$eventBus.$off("playlist-nextLoad");
-  },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
     }
-
-    // 비디오 상태 체크 이벤트 수신
-    this.$eventBus.$on("statusCheck", this.videoStatusCheck);
   },
   mounted() {
-    this.$watch(
-      () => {
-        return this.state;
-      },
-      (newVal, oldVal) => {
-        this.status.push(newVal);
-      }
-    );
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
@@ -91,72 +72,6 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
-    },
-
-    /**
-     * 비디오 상태 체크
-     * 재생불가능한 비디오를 감시한다
-     */
-    videoStatusCheck() {
-      let isTimer = this.$store.getters.getTimer;
-      if (isTimer) {
-        // clear and set
-        let isTime = this.$store.getters.getTime;
-        clearTimeout(isTime);
-      }
-      this.$store.commit("setTimer", true);
-      setTimeout(() => {
-        this.$store.commit("setTime", 1000);
-        this.statusResult();
-      }, 15000);
-    },
-
-    statusResult() {
-      this.$store.commit("setTimer", false);
-      let statusSize = this.$lodash.size(this.status);
-      let lastIndex = this.status[statusSize - 1];
-      if (lastIndex) {
-        if (lastIndex === -1) {
-          let musicData = this.getMusicInfos();
-          let nextIndex = musicData.index + 1;
-          if (musicData.type) {
-            this.createIndex(["userId", "parentId"]).then(result => {
-              return this.$test
-                .find({
-                  selector: {
-                    userId: {
-                      $eq: this.getUserId()
-                    },
-                    parentId: {
-                      $eq: musicData.parentId
-                    }
-                  },
-                  limit: 100
-                })
-                .then(result => {
-                  const docs = result.docs;
-                  if (docs) {
-                    if (docs.length > nextIndex) {
-                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                    }
-                  }
-                });
-            });
-          } else {
-            let all = this.getAllPlayList();
-            // 다음 인덱스
-            let playlist = this.$lodash.find(all, {
-              playlistId: musicData.name
-            });
-            if (playlist != undefined) {
-              if (playlist.list.length > nextIndex) {
-                this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-              }
-            }
-          }
-        }
-      }
-      this.status = [];
     },
 
     onNewReleaseCheck() {
