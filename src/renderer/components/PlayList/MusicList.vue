@@ -107,7 +107,7 @@ import StoreMixin from "@/components/Mixin/index";
 import DataUtils from "@/components/Mixin/db";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import ContextMenu from "@/components/Context/ContextMenu";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 
 export default {

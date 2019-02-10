@@ -100,7 +100,7 @@ import CollectionQueryMixin from "@/components/Mixin/collections";
 import CollectionModifyForm from "@/components/MyCollection/modify/MyCollectionModify";
 import MyContextMenu from "@/components/Context/MyContextMenu";
 import draggable from "vuedraggable";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 
 export default {
   name: "MyMusicList",

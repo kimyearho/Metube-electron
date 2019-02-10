@@ -121,7 +121,7 @@ import CollectionRegister from "@/components/Collections/regist/CollectionRegist
 import ContextMenu from "@/components/Context/ContextMenu";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
 import MarqueeText from "vue-marquee-text-component";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 
 const options = { container: "#list", offset: -80 };
 

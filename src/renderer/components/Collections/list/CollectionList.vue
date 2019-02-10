@@ -104,7 +104,7 @@ import MyQueryMixin from "@/components/Mixin/mycollection";
 import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
 import StoreMixin from "@/components/Mixin/index";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 
 export default {
   name: "CollectionList",

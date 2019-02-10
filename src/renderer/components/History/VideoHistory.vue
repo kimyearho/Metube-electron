@@ -53,7 +53,7 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import Loading from "@/components/Loader/loader";
+import Loading from "@/components/Loader/PageLoading";
 import storeMixin from "@/components/Mixin/index";
 import DataUtils from "@/components/Mixin/db";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";

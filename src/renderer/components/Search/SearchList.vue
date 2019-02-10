@@ -120,7 +120,7 @@
 import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 
 export default {
   name: "SearchList",

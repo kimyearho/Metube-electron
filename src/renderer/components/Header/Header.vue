@@ -104,12 +104,7 @@
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">Setting</span>
         </md-list-item>
-
-        <!-- Menu2 -->
-        <!-- <md-list-item @click="route('debug')">
-          <md-icon>settings</md-icon>
-          <span class="md-list-item-text">Debug</span>
-        </md-list-item>-->
+    
       </md-list>
     </md-drawer>
 
@@ -226,10 +221,6 @@ export default {
       } else if (name === "setting") {
         this.$router.push({
           name: "setting"
-        });
-      } else if (name === "debug") {
-        this.$router.push({
-          name: "DEBUG"
         });
       }
     },

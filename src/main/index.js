@@ -3,9 +3,6 @@ import { googleLogin, getOauth2Client } from "../auth/auth"
 import { exec } from "child_process"
 import request from "request"
 
-// https connect true
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-
 let player
 let mainWindow
 let popupWindow
@@ -15,11 +12,7 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
-if (process.platform === "darwin") {
-  app.dock.hide()
-}
-
-if (process.env.NODE_ENV != "development") {
+if (process.env.NODE_ENV !== "development") {
   let shouldQuit = app.makeSingleInstance(() => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore()
@@ -31,12 +24,17 @@ if (process.env.NODE_ENV != "development") {
   }
 }
 
+if (process.platform === "darwin") {
+  app.dock.hide()
+}
+
 let playerPath
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV !== "production") {
   if (process.platform !== "darwin") {
-    // playerPath = "http://localhost:7070"
-    playerPath = "http://sharepod.kr"
+    // windows
+    playerPath = "http://localhost:7070"
   } else {
+    // other
     playerPath = "http://sharepod.kr"
   }
 } else {
@@ -61,7 +59,7 @@ function createWindow() {
   mainWindow.setMenu(null)
   mainWindow.loadURL(winURL)
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV !== "production") {
     mainWindow.webContents.openDevTools()
   }
 

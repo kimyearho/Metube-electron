@@ -191,7 +191,7 @@ import DataUtils from "@/components/Mixin/db";
 import CoverChangeModal from "./cover/CollectionCoverChange";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Loader/PageLoading";
 
 export default {
   name: "Collections",
