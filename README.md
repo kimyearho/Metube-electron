@@ -10,9 +10,6 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### Notice
-Your current daily quota has been exceeded and features related to Youtube API are not available. Items stored in my collection are playable.
-
 ### Help me.
 Find someone who can design new app icons and promotional banners.<br>
 The banner is for posting in the README.<br>
