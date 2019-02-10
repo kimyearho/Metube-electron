@@ -7,6 +7,9 @@ export default {
       status: []
     }
   },
+  beforeCreate() {
+    this.$eventBus.$off("statusCheck")
+  },
   created() {
     this.$eventBus.$on("statusCheck", this.videoStatusCheck);
   },
@@ -173,8 +176,5 @@ export default {
         ]
       })
     }
-  },
-  beforeDestory() {
-    this.$eventBus.$off("statusCheck")
   }
 }
