@@ -51,9 +51,6 @@
       </md-speed-dial-target>
 
       <md-speed-dial-content>
-        <md-button class="md-icon-button md-accent" title="PlayList Search" @click="showPageSearch">
-          <md-icon>search</md-icon>
-        </md-button>
         <md-button
           v-show="isUser"
           class="md-icon-button b-success"
