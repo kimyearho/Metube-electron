@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="reload"/>
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
@@ -148,7 +148,7 @@ export default {
     toggleChange(value) {
       this.isLikeToggle = value;
     },
-
+  
     addCollection() {
       if (this.getUserId()) {
         let message = "";
@@ -184,9 +184,6 @@ export default {
           ]
         });
       }
-    },
-    reload() {
-      this.feachData();
     },
     feachData() {
       let musicInfo = this.getMusicInfos();
