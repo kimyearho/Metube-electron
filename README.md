@@ -10,12 +10,6 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### Help me.
-Find someone who can design new app icons and promotional banners.<br>
-The banner is for posting in the README.<br>
-It's a private project, so you can't pay a lot of money. Therefore, you can pay for free support or a small amount.<br>
-[kstory8715@gmail.com]
-
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
