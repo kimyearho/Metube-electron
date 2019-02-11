@@ -146,9 +146,6 @@ export default {
   created() {
     // 재생 기본설정
     this.playReady();
-
-    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
-    this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   watch: {
     // 볼륨 감시
@@ -168,12 +165,18 @@ export default {
 
     // 반복
     this.isRepeat = this.getRepeat();
+
+    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
+    this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   methods: {
+
+    // 다음 재생 이벤트 전달
     sendNextMusicPlay(value) {
       this.$emit("nextMusicPlay", value);
     },
 
+    // 다음 페이지 조회 이벤트 전달
     sendNextPage(value) {
       this.$emit("nextPage", value);
     },
@@ -222,8 +225,8 @@ export default {
     },
 
     // 재생
-    playTypeControl(event) {
-      this.isPlay = event.playType;
+    playTypeControl() {
+      this.isPlay = this.getPlayType()
     },
 
     // 일시정지 -> 재생으로 전환
@@ -315,7 +318,6 @@ export default {
   },
   beforeDestroy() {
     this.$eventBus.$off("playTypeControl");
-    this.$eventBus.$off("playMusicSetting");
   }
 };
 </script>

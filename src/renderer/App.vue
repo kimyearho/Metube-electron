@@ -56,6 +56,20 @@ export default {
         this.$eventBus.$emit("playTypeControl", { playType: true });
       }
     });
+    this.$trap.bind("left",  () => {
+      const volume = Number(this.getVolume()) - 5;
+      if(volume >= 0) {
+        this.$store.commit("setVolume", volume);
+        this.$ipcRenderer.send("win2Player", ["setVolume", volume]);
+      }
+    })
+    this.$trap.bind("right",  () => {
+      const volume = Number(this.getVolume()) + 5;
+      if(volume <= 100) {
+        this.$store.commit("setVolume", volume);
+        this.$ipcRenderer.send("win2Player", ["setVolume", volume]);
+      }
+    })
   },
   methods: {
     route(path) {

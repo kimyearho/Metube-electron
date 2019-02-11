@@ -9,14 +9,25 @@
   <!-- root div -->
   <div>
     <div class="zaudio_player">
-      <progress :value="range" min="0" :max="maxTime"/>
+      <progress
+        :value="range"
+        min="0"
+        :max="maxTime"
+      />
       <div class="zaudio_playercontrols">
         <div class="zaudio_buttonwrapper">
           <div>
-            <img class="miniImage" width="30" :src="image">
+            <img
+              class="miniImage"
+              width="30"
+              :src="image"
+            >
           </div>
           <div class="zaudio_playercontrolbuttons">
-            <div class="cover channelInfo cursor" @click="showPlaylist">
+            <div
+              class="cover channelInfo cursor"
+              @click="showPlaylist"
+            >
               <div>{{ coverTitle }}</div>
               <div class="channel">{{ channelTitle }}</div>
             </div>
@@ -245,6 +256,7 @@ export default {
 
     // 재생
     playTypeControl(event) {
+      console.log(event)
       this.isPlay = event.playType;
     },
 
@@ -325,7 +337,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$eventBus.$off("playTypeControl");
+    this.$eventBus.$off("playTypeControl")
   }
 };
 </script>
