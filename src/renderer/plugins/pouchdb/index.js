@@ -11,6 +11,7 @@ let PouchDB = require("pouchdb-core")
 // 개발용
 // pouchdb-server or couchdb
 Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
+Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
 
 // 로컬
 // Vue.prototype.$test = new PouchDB("metubev145")

@@ -1,18 +1,15 @@
 const state = {
-  _id: null,
   path: "",
   indexPath: "",
   isTop: false,
   isPlayer: false,
   isTimer: false,
   isTime: 0,
-  isSnow: true,
   isVersion: false,
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
-  locale: "en",
-  insertVideo: null
+  locale: "en"
 }
 
 const getters = {
@@ -51,12 +48,6 @@ const getters = {
   },
   getSnow() {
     return state.isSnow
-  },
-  getId() {
-    return state._id
-  },
-  getInsertVideo() {
-    return state.insertVideo;
   }
 }
 
@@ -97,15 +88,6 @@ const mutations = {
   },
   setScrollPos(state, value) {
     state.scrollPos = value
-  },
-  setSnow(state, value) {
-    state.isSnow = value
-  },
-  setId(state, value) {
-    state._id = value
-  },
-  setInsertVideo(state, value) {
-    state.insertVideo = value
   }
 }
 

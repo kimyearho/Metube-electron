@@ -7,9 +7,6 @@
 
 export default {
   methods: {
-    getId() {
-      return this.$store.getters.getId
-    },
     getProfile() {
       return this.$store.getters.getGoogleProfile
     },
@@ -54,12 +51,6 @@ export default {
     },
     getScrollPos() {
       return this.$store.getters.getScrollPos
-    },
-    getRemoveTrackIndex() {
-      return this.$store.getters.getRemoveTrackIndex
-    },
-    getInsertVideo() {
-      return this.$store.getters.getInsertVideo
     },
     getMyMusicList() {
       return this.$store.getters.getMyMusicList

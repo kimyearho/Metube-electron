@@ -8,15 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -27,7 +40,10 @@
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -53,28 +69,57 @@
     </div>
     <div class="overay"></div>
 
-    <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+    <md-list
+      id="list"
+      class="searchList"
+      :class="{ dynamicHeight: isMini }"
+    >
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
-          <img :src="item.imageInfo" alt="People">
+          <img
+            :src="item.imageInfo"
+            alt="People"
+          >
         </md-avatar>
 
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
+        <context-menu
+          :videoId="item.videoId"
+          :data="item"
+        />
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
+        <span
+          v-if="!isMore"
+          class="loadMoreCenter"
+        >
+          <a
+            class="cursor"
+            @click="nextPageLoad"
+          >
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+        <span
+          v-else
+          class="loadMoreCenter loadMoreLoading"
+        >LOADING ...</span>
       </md-list-item>
       <md-list-item v-else>
         <span class="playlistEnd">
@@ -89,14 +134,18 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -148,7 +197,7 @@ export default {
     toggleChange(value) {
       this.isLikeToggle = value;
     },
-  
+
     addCollection() {
       if (this.getUserId()) {
         let message = "";
@@ -266,18 +315,47 @@ export default {
                     results.splice(listSize - 1, listSize);
                   }
 
-                  let payload = {
-                    playlistName: playlistName,
-                    playlistId2: subChannelId || null,
+                  // let payload = {
+                  //   playlistName: playlistName,
+                  //   playlistId2: subChannelId || null,
+                  //   nextPageToken: res.data.nextPageToken
+                  //     ? res.data.nextPageToken
+                  //     : null,
+                  //   totalResults: res.data.pageInfo.totalResults,
+                  //   playlistTitle: plistTitle,
+                  //   list: results
+                  // };
+
+                  // S1: 재생목록 기본정보 등록
+                  const playlistInfo = {
+                    playlistId: playlistName, // PLAYLIST:ID
+                    playlistTitle: plistTitle,
+                    channelPlaylistId: subChannelId || null,
                     nextPageToken: res.data.nextPageToken
                       ? res.data.nextPageToken
                       : null,
-                    totalResults: res.data.pageInfo.totalResults,
-                    playlistTitle: plistTitle,
-                    list: results
-                  };
-                  this.$store.commit("setPlayList", payload);
-                  this.getData();
+                    totalResults: res.data.pageInfo.totalResults
+                  }
+
+                  this.$local.post(playlistInfo).then(result => {
+                    if (result.ok) {
+                      const docId = result.id;
+                      let list = []
+                      this.$lodash.forEach(results, (item, idx) => {
+                        item.type = this.playType
+                        item.parentId = docId
+                        list.push(item);
+                        if (idx === results.length - 1) {
+                          // S2: 조회된 재생목록 하위 데이터 한꺼번에 등록
+                          this.$local.bulkDocs(results).then(res => {
+                            console.log(res)
+                          })
+                        }
+                      });
+                    }
+                  })
+                  // this.$store.commit("setPlayList", payload);
+                  // this.getData();
                 });
               } else {
                 this.errorDialog();
