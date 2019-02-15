@@ -190,7 +190,7 @@ export default {
       data: null
     };
   },
-  created() {
+  mounted() {
     this.feachData();
   },
   methods: {
@@ -341,6 +341,7 @@ export default {
                       if (idx === results.length - 1) {
                         // 조회된 재생목록 하위 데이터 한꺼번에 등록
                         this.$local.bulkDocs(results).then(() => {
+                          // 등록이 끝났으면, 랜더링하기 위해 등록된 정보를 모두 조회한다.
                           this.getData();
                         })
                       }
@@ -359,6 +360,7 @@ export default {
 
     },
 
+    // 최초 등록 후 데이터 조회
     getData() {
 
       let playlistName = null;
