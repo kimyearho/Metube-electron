@@ -11,8 +11,7 @@
 </p>
 
 ### Progress history
-Hi.
-I have been busy with my company work in recent weeks and have not been able to develop it often. I recently looked at your app and found that playing apps that are searched on YouTube slows down app responsiveness. We are currently working on improving this area. It may take some time, but we will try to improve the user. My collection is normal.
+I noticed that when you run a YouTube playlist, your apps slow down significantly. After a closer look at the app, I noticed that the design was wrong. I am currently testing with a redesign as a prototype, which is a very satisfactory result. I think that the performance compared to the previous one is improved by more than 50%. I plan to distribute it next week after testing.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
