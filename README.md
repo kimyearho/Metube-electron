@@ -10,6 +10,10 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
+### Progress history
+Hi.
+I have been busy with my company work in recent weeks and have not been able to develop it often. I recently looked at your app and found that playing apps that are searched on YouTube slows down app responsiveness. We are currently working on improving this area. It may take some time, but we will try to improve the user. My collection is normal.
+
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
