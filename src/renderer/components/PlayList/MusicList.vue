@@ -284,11 +284,11 @@ export default {
                 // 재생목록 기본정보 등록 및 하위 데이터 모두 등록
                 this.$local.post(playlistInfo).then(result => {
                   if (result.ok) {
-                    const docId = result.id;
+                    this.playlistInfoId = result.id;
                     let list = [];
                     this.$lodash.forEach(results, (item, idx) => {
                       item.type = this.playType;
-                      item.parentId = docId;
+                      item.parentId = this.playlistInfoId;
                       list.push(item);
                       if (idx === results.length - 1) {
                         // 조회된 재생목록 하위 데이터 한꺼번에 등록
@@ -486,7 +486,7 @@ export default {
                     doc.nextPageToken = res.data.nextPageToken
                       ? res.data.nextPageToken
                       : null;
-                      // 재생정보 업데이트
+                    // 재생정보 업데이트
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
                         // 성공 후 페이지 리로드
@@ -576,6 +576,11 @@ export default {
   text-overflow: ellipsis;
   padding-right: 10px;
   color: #ffffff;
+}
+
+.playlistEnd {
+  color: #ffffff;
+  margin-left: 128px;
 }
 
 .cover {
