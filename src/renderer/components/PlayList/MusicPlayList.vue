@@ -44,11 +44,12 @@
         <br>
         <br>
         <div class="titleflow">
-          <marquee-text
+          <span class="zaudio_songtitle">{{ coverTitle }}</span>
+          <!-- <marquee-text
             class="zaudio_songtitle"
             :key="coverTitle"
             :duration="coverTitle.length / 2"
-          >&nbsp; {{ coverTitle }}</marquee-text>
+          >&nbsp; {{ coverTitle }}</marquee-text> -->
           <div style="margin-top:5px;">
             <span class="zaudio_songartist">{{ channelTitle }}</span>
             <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
@@ -139,6 +140,8 @@ export default {
   data() {
     return {
       playlist: [],
+      playlistInfoId: null,
+      playlistId: null,
       videoData: null,
       totalTracks: null,
       coverTitle: "",
@@ -233,29 +236,78 @@ export default {
      */
     feachData() {
       let playlistName = null;
-      let playlistId = this.$route.params.id;
+      this.playlistId = this.$route.params.id;
       this.playType = this.$route.params.playType;
 
       if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
+        playlistName = `PLAYLIST:${this.playlistId}`;
       } else if (this.playType === "related") {
-        this.videoId = playlistId;
-        playlistName = `RELATED:${playlistId}`;
+        this.videoId = this.playlistId;
+        playlistName = `RELATED:${this.playlistId}`;
       } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
+        playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      // 현재 재생중인 비디오가 있는지 조회
-      let musicInfo = this.getMusicInfos();
+      // 로컬 디비로 등록 되어있는 재생목록인지 조회
+      this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
+        return this.$local
+          .find({
+            selector: {
+              type: this.playType + "ListInfo",
+              playlistId: playlistName
+            }
+          })
+          .then(result => {
+            let doc = result.docs[0];
+            if (doc) {
+              // 필요한 정보 설정
+              this.playlistInfoId = doc._id;
+              this.totalTracks = doc.totalResults;
+              this.nextPageToken = doc.nextPageToken;
+              this.channelPlaylistId = doc.channelPlaylistId
+                ? doc.channelPlaylistId
+                : null;
+              this.isNext = !!this.nextPageToken;
 
-      // 현재 페이지의 재생목록이 조회
-      let findPlaylist = this.$lodash.find(this.getAllPlayList(), {
-        playlistId: playlistName
+              // 재생정보의 id값과 일치하는 하위 비디오를 조회
+              this.$local
+                .find({
+                  selector: {
+                    type: this.playType,
+                    parentId: doc._id
+                  },
+                  limit: this.totalTracks
+                })
+                .then(result => {
+                  const docs = result.docs;
+                  this.playlist = docs;
+                  // this.data = findPlaylist;
+                  this.feachExtends()
+                });
+            }
+          });
       });
+    },
 
-      this.totalTracks = findPlaylist.totalTracks;
-      this.nextPageToken = findPlaylist.nextPageToken;
-      this.isNext = !!findPlaylist.nextPageToken;
+    // 재생목록이 컬렉션에 등록되어있는지 체크
+    checkCollection() {
+      const collection = this.getLike();
+      if (collection) {
+        collection.then(result => {
+          let docs = result.docs;
+          if (docs.length > 0) {
+            this.isLikeToggle = true;
+          }
+          this.load = true;
+        });
+      } else {
+        this.load = true;
+      }
+    },
+
+    feachExtends() {
+      // 현재 재생중인 비디오가 있는지 조회
+      const musicInfo = this.getMusicInfos();
 
       // 재생중인정보가 있는지?
       if (musicInfo) {
@@ -267,23 +319,18 @@ export default {
         } else if (this.playType === "related") {
           musicId = musicInfo.mainId;
         } else if (this.playType === "channel") {
-          // 채널 재생목록 아이디 (채널 아이디 아님)
-          this.channelPlaylistId = findPlaylist.channelPlaylistId;
           musicId = musicInfo.channelId;
         }
 
-        if (musicId !== playlistId) {
-          this.playlist = findPlaylist.list;
-          this.data = findPlaylist;
+        if (musicId !== this.playlistId) {
+          // this.data = findPlaylist;
           this.autoStart();
         } else {
-          this.playlist = findPlaylist.list;
-          this.data = findPlaylist;
-
+          // this.data = findPlaylist;
           // 현재 재생중인 비디오의 인덱스와 현재 페이지의 시작인덱스가 동일한지?
           if (musicInfo.index === this.$route.params.start) {
             /** @override 컬렉션 등록여부 조회 */
-            this.getLike();
+            this.checkCollection();
 
             // 재생중인게 있고 페이지 인덱스 변경없이 재방문
             this.coverTitle = musicInfo.title;
@@ -298,27 +345,23 @@ export default {
         }
       } else {
         // 재생중인거 없어서 첫 시작
-        this.playlist = findPlaylist.list;
-        this.data = findPlaylist;
-        if (this.playType === "channel") {
-          this.channelPlaylistId = findPlaylist.channelPlaylistId;
-        }
+
+        // this.data = findPlaylist;
         this.autoStart();
       }
     },
+
     autoStart() {
       // 재생목록 아이디
       let playlistName = null;
-      let playlistId = this.$route.params.id;
-      this.playType = this.$route.params.playType;
 
       if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
+        playlistName = `PLAYLIST:${this.playlistId}`;
       } else if (this.playType === "related") {
-        this.videoId = playlistId;
-        playlistName = `RELATED:${playlistId}`;
+        this.videoId = this.playlistId;
+        playlistName = `RELATED:${this.playlistId}`;
       } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
+        playlistName = `CHANNEL:${this.playlistId}`;
       }
 
       // 첫 시작 트랙번호
@@ -334,7 +377,7 @@ export default {
       }
 
       /** @override 컬렉션 등록여부 조회 */
-      this.getLike();
+      this.checkCollection();
 
       // 재생세팅
       this.playSetting(playingItem);
@@ -360,7 +403,7 @@ export default {
       if (index === 0) {
         this.endScrollTop();
       } else {
-        this.nextTrackScroll(-1);
+        this.nextTrackScroll(500);
       }
     },
 
@@ -429,7 +472,6 @@ export default {
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
     playSetting(playingItem) {
-
       // 페이지 설정
       this.selectedIndex = playingItem.index;
       this.coverTitle = playingItem.title;
@@ -439,7 +481,7 @@ export default {
       // 재생될 비디오 정보를 갱신
       this.$store.commit("setPlayingMusicInfo", playingItem);
 
-      this.$set(this, 'videoData', this.getMusicInfos());
+      this.$set(this, "videoData", this.getMusicInfos());
       this.$eventBus.$emit("statusCheck");
 
       // 비디오 재생 이벤트 전송

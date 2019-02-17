@@ -73,6 +73,7 @@
     "nprogress": "^0.2.0",
     "pouchdb-adapter-http": "^7.0.0",
     "pouchdb-adapter-idb": "^7.0.0",
+    "pouchdb-adapter-memory": "^7.0.0",
     "pouchdb-browser": "^7.0.0",
     "pouchdb-core": "^7.0.0",
     "pouchdb-find": "^7.0.0",

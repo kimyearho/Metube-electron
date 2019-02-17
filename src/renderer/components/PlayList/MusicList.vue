@@ -206,6 +206,7 @@ export default {
                   // this.data = findPlaylist;
                 });
             } else {
+              console.log('1')
               // no
               this.initialSetting(playlistName);
             }

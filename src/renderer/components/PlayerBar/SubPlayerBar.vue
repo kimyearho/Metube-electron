@@ -264,7 +264,7 @@ export default {
     showPlaylist() {
       let musicInfo = this.getMusicInfos();
       this.$store.commit("setPath", this.$route.path);
-      if (musicInfo.type != undefined) {
+      if (musicInfo.type === 'mycollectionItem') {
         this.$router.push({
           name: "MY-PLAYING-PLAYLIST",
           params: {
