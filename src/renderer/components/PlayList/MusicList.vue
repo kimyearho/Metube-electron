@@ -185,7 +185,7 @@ export default {
                     type: this.playType,
                     parentId: doc._id
                   },
-                  limit: this.totalTracks
+                  limit: 30
                 })
                 .then(result => {
                   const docs = result.docs;
@@ -284,6 +284,7 @@ export default {
                     this.$lodash.forEach(results, (item, idx) => {
                       item.type = this.playType;
                       item.parentId = this.playlistInfoId;
+                      item.pageNum = 1;
                       list.push(item);
                       if (idx === results.length - 1) {
                         // 조회된 재생목록 하위 데이터 한꺼번에 등록
@@ -331,6 +332,7 @@ export default {
             // 채널 재생목록 아이디 (채널 아이디 아님)
             this.channelPlaylistId =
               this.playType === "channel" ? docs.channelPlaylistId : null;
+            this.totalPage = doc.totalPage;
             // 총 트랙수
             this.totalTracks = docs.totalResults;
             // 다음 페이지 토큰
@@ -348,7 +350,7 @@ export default {
                     type: self.playType,
                     parentId: docs._id
                   },
-                  limit: self.totalTracks
+                  limit: 30
                 })
                 .then(res => {
                   let docs = res.docs;
