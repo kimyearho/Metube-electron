@@ -49,7 +49,7 @@
             class="zaudio_songtitle"
             :key="coverTitle"
             :duration="coverTitle.length / 2"
-          >&nbsp; {{ coverTitle }}</marquee-text> -->
+          >&nbsp; {{ coverTitle }}</marquee-text>-->
           <div style="margin-top:5px;">
             <span class="zaudio_songartist">{{ channelTitle }}</span>
             <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
@@ -81,7 +81,8 @@
         <span v-if="!isMore" class="loadMoreCenter">
           <a class="cursor" @click="nextPageLoad">
             <i class="el-icon-refresh"></i>
-            {{ $t('COMMONS.MORE') }}
+            <!-- {{ $t('COMMONS.MORE') }} -->
+            {{ pageNum }} / {{ totalPage }} Next ->
           </a>
         </span>
         <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
@@ -144,6 +145,8 @@ export default {
       playlistId: null,
       videoData: null,
       totalTracks: null,
+      pageNum: 1,
+      totalPage: 0,
       coverTitle: "",
       channelTitle: null,
       channelId: null,
@@ -263,6 +266,8 @@ export default {
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
               this.totalTracks = doc.totalResults;
+              this.totalPage = doc.totalPage;
+              this.pageNum = doc.pageNum;
               this.nextPageToken = doc.nextPageToken;
               this.channelPlaylistId = doc.channelPlaylistId
                 ? doc.channelPlaylistId
@@ -274,15 +279,16 @@ export default {
                 .find({
                   selector: {
                     type: this.playType,
-                    parentId: doc._id
+                    parentId: doc._id,
+                    pageNum: this.pageNum
                   },
-                  limit: this.totalTracks
+                  limit: 30
                 })
                 .then(result => {
                   const docs = result.docs;
                   this.playlist = docs;
                   // this.data = findPlaylist;
-                  this.feachExtends()
+                  this.feachExtends();
                 });
             }
           });
@@ -311,36 +317,47 @@ export default {
 
       // 재생중인정보가 있는지?
       if (musicInfo) {
-        // 재생중인건 있는데 재생중인 재생목록 페이지와 현재 페이지가 달라서 새로 시작
-        let musicId = null;
+        let id = null;
 
         if (this.playType === "play") {
-          musicId = musicInfo.playlistId;
+          id = musicInfo.playlistId;
         } else if (this.playType === "related") {
-          musicId = musicInfo.mainId;
+          id = musicInfo.mainId;
         } else if (this.playType === "channel") {
-          musicId = musicInfo.channelId;
+          id = musicInfo.channelId;
         }
 
-        if (musicId !== this.playlistId) {
+        // 재생중인건 있는데 재생중인 재생목록 페이지와 현재 페이지가 달라서 새로 시작
+        if (id !== this.playlistId) {
           // this.data = findPlaylist;
           this.autoStart();
         } else {
           // this.data = findPlaylist;
-          // 현재 재생중인 비디오의 인덱스와 현재 페이지의 시작인덱스가 동일한지?
-          if (musicInfo.index === this.$route.params.start) {
-            /** @override 컬렉션 등록여부 조회 */
-            this.checkCollection();
 
-            // 재생중인게 있고 페이지 인덱스 변경없이 재방문
+          // 현재 재생중인 음악의 페이지 번호가 현재 페이지 번호와 같으면
+          if (musicInfo.pageNum === this.pageNum) {
+            this.checkCollection();
             this.coverTitle = musicInfo.title;
             this.channelTitle = musicInfo.channelTitle;
             this.cover = musicInfo.imageInfo;
             this.selectedIndex = musicInfo.index;
             this.videoActive(500);
           } else {
-            // 재생중인게 있고 페이지 시작 인덱스가 달라서 시작 인덱스로 새로 시작
-            this.autoStart();
+            // 현재 재생중인 비디오의 인덱스와 현재 페이지의 시작인덱스가 동일한지?
+            if (musicInfo.index === this.$route.params.start) {
+              /** @override 컬렉션 등록여부 조회 */
+              this.checkCollection();
+
+              // 재생중인게 있고 페이지 인덱스 변경없이 재방문
+              this.coverTitle = musicInfo.title;
+              this.channelTitle = musicInfo.channelTitle;
+              this.cover = musicInfo.imageInfo;
+              this.selectedIndex = musicInfo.index;
+              this.videoActive(500);
+            } else {
+              // 재생중인게 있고 페이지 시작 인덱스가 달라서 시작 인덱스로 새로 시작
+              this.autoStart();
+            }
           }
         }
       } else {
@@ -533,25 +550,23 @@ export default {
     nextPageLoad() {
       let playlistName = null;
       let playlistItem = null;
-      let playlistId = this.$route.params.id;
-      this.playType = this.$route.params.playType;
       this.isMore = true;
 
       // 토큰을 사용한 새 재생목록 가져오기
       if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
+        playlistName = `PLAYLIST:${this.playlistId}`;
         playlistItem = $commons.youtubePagingPlaylistItem(
-          playlistId,
+          this.playlistId,
           this.nextPageToken
         );
       } else if (this.playType === "related") {
-        playlistName = `RELATED:${playlistId}`;
+        playlistName = `RELATED:${this.playlistId}`;
         playlistItem = $commons.youtubePagingRelatedSearch(
-          playlistId,
+          this.playlistId,
           this.nextPageToken
         );
       } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
+        playlistName = `CHANNEL:${this.playlistId}`;
         playlistItem = $commons.youtubePagingPlaylistItem(
           this.channelPlaylistId,
           this.nextPageToken
@@ -574,26 +589,36 @@ export default {
             this.$store.commit("setMusicList", res.data.items);
           }
 
+          const nextPage = this.pageNum + 1
           this.$store.dispatch(pathName).then(results => {
-            // 기존 재생목록 뒤로, 토큰으로 조회한 목록을 합친다.
-            this.playlist = this.$lodash.concat(this.playlist, results);
-
-            // 토큰여부
-            this.nextPageToken = res.data.nextPageToken
-              ? res.data.nextPageToken
-              : null;
-
-            // 토큰이 있으면 true / 없으면 false
-            this.isNext = !!this.nextPageToken;
-
-            // 전체 재생목록에 등록 된 현재 재생목록에 대한 정보 업데이트
-            let payload = {
-              playlistId: playlistName,
-              appendPlaylist: this.playlist,
-              nextPageToken: this.nextPageToken
-            };
-            this.$store.commit("setPageAppendList", payload);
-            this.isMore = false;
+            let list = [];
+            this.$lodash.forEach(results, (item, idx) => {
+              item.type = this.playType;
+              item.parentId = this.playlistInfoId;
+              item.pageNum = nextPage;
+              list.push(item);
+              if (idx === results.length - 1) {
+                // 조회된 재생목록 하위 데이터 한꺼번에 등록
+                this.$local.bulkDocs(results).then(() => {
+                  // 등록이 끝났으면, 다음 페이지 토큰을 업데이트 하기위해 재생목록정보를 조회한다.
+                  this.$local.get(this.playlistInfoId).then(doc => {
+                    // 토큰 갱신
+                    doc.nextPageToken = res.data.nextPageToken
+                      ? res.data.nextPageToken
+                      : null;
+                    doc.pageNum = nextPage;
+                    // 재생정보 업데이트
+                    return this.$local.put(doc).then(result => {
+                      if (result.ok) {
+                        // 성공 후 페이지 리로드
+                        this.feachData();
+                        this.isMore = false;
+                      }
+                    });
+                  });
+                });
+              }
+            });
           });
         })
         .catch(error => {

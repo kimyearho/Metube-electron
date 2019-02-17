@@ -176,7 +176,6 @@ export default {
               this.channelPlaylistId = doc.channelPlaylistId
                 ? doc.channelPlaylistId
                 : null;
-              this.isNext = !!this.nextPageToken;
 
               // 재생정보의 id값과 일치하는 하위 비디오를 조회
               this.$local
@@ -273,7 +272,8 @@ export default {
                     ? res.data.nextPageToken
                     : null,
                   totalResults: res.data.pageInfo.totalResults,
-                  totalPage: Math.ceil(res.data.pageInfo.totalResults / 30)
+                  totalPage: Math.ceil(res.data.pageInfo.totalResults / 30),
+                  pageNum: 1
                 };
 
                 // 재생목록 기본정보 등록 및 하위 데이터 모두 등록
@@ -332,13 +332,11 @@ export default {
             // 채널 재생목록 아이디 (채널 아이디 아님)
             this.channelPlaylistId =
               this.playType === "channel" ? docs.channelPlaylistId : null;
-            this.totalPage = doc.totalPage;
+            this.totalPage = docs.totalPage;
             // 총 트랙수
             this.totalTracks = docs.totalResults;
             // 다음 페이지 토큰
             this.nextPageToken = docs.nextPageToken ? docs.nextPageToken : null;
-            // 토큰이 있으면 true / 없으면 false
-            this.isNext = !!this.nextPageToken;
 
             // 1초후 실행
             const self = this;

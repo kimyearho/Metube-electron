@@ -79,7 +79,7 @@ export default {
                   type: musicData.type,
                   parentId: parentId
                 },
-                limit: doc.totalResults
+                limit: 30
               }).then(result => {
                 let docs = result.docs;
                 if (docs) {
