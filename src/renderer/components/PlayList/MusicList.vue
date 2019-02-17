@@ -68,18 +68,9 @@
         <context-menu :videoId="item.videoId" :data="item"/>
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
-            <i class="el-icon-refresh"></i>
-            {{ $t('COMMONS.MORE') }}
-          </a>
-        </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
-      </md-list-item>
-      <md-list-item v-else>
-        <span class="playlistEnd">
-          <i class="el-icon-check"></i>
-          {{ $t('COMMONS.END') }}
+        <span class="loadMoreCenter">
+          <i class="el-icon-check" style="padding-right: 10px;"></i>
+          Total {{ totalPage }} Page
         </span>
       </md-list-item>
       <div class="bottom">
@@ -133,6 +124,7 @@ export default {
       playlistInfoId: null,
       playType: null,
       selected: null,
+      totalPage: 1,
       totalTracks: null,
       nextPageToken: null,
       channelPlaylistId: null,
@@ -178,6 +170,7 @@ export default {
             if (doc) {
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
+              this.totalPage = doc.totalPage;
               this.totalTracks = doc.totalResults;
               this.nextPageToken = doc.nextPageToken;
               this.channelPlaylistId = doc.channelPlaylistId
@@ -206,7 +199,7 @@ export default {
                   // this.data = findPlaylist;
                 });
             } else {
-              console.log('1')
+              console.log("1");
               // no
               this.initialSetting(playlistName);
             }
@@ -279,7 +272,8 @@ export default {
                   nextPageToken: res.data.nextPageToken
                     ? res.data.nextPageToken
                     : null,
-                  totalResults: res.data.pageInfo.totalResults
+                  totalResults: res.data.pageInfo.totalResults,
+                  totalPage: Math.ceil(res.data.pageInfo.totalResults / 30)
                 };
 
                 // 재생목록 기본정보 등록 및 하위 데이터 모두 등록
@@ -565,7 +559,7 @@ export default {
 
 .searchList {
   overflow-y: scroll;
-  max-height: 348px;
+  max-height: 357px;
 }
 
 .music-title {
@@ -577,6 +571,11 @@ export default {
   text-overflow: ellipsis;
   padding-right: 10px;
   color: #ffffff;
+}
+
+.loadMoreCenter {
+  color: #ffffff;
+  margin-left: 95px;
 }
 
 .playlistEnd {

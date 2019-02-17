@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain, dialog, shell } from "electron"
 import { googleLogin, getOauth2Client } from "../auth/auth"
 import { exec } from "child_process"
 import request from "request"
+import fs from "fs"
+import path from "path"
 
 let player
 let mainWindow
@@ -11,6 +13,26 @@ const winURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
+
+const deleteChromeCache = function () {
+  var chromeCacheDir = path.join(app.getPath('userData'), 'Cache');
+  if (fs.existsSync(chromeCacheDir)) {
+    var files = fs.readdirSync(chromeCacheDir);
+    for (var i = 0; i < files.length; i++) {
+      var filename = path.join(chromeCacheDir, files[i]);
+      if (fs.existsSync(filename)) {
+        try {
+          fs.unlinkSync(filename);
+        }
+        catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }
+};
+
+// deleteChromeCache()
 
 if (process.env.NODE_ENV !== "development") {
   let shouldQuit = app.makeSingleInstance(() => {
@@ -43,6 +65,7 @@ if (process.env.NODE_ENV !== "production") {
 
 // Create Main Window
 function createWindow() {
+
   mainWindow = new BrowserWindow({
     width: 368,
     height: 612,
@@ -143,7 +166,7 @@ ipcMain.on("main:googleAuth", () => {
         if (res.tokens.access_token) {
           let requestURL = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${
             res.tokens.access_token
-          }`
+            }`
           request.get(requestURL, (error, response, body) => {
             if (response.statusCode === 200) {
               mainWindow.webContents.send("render:googleAuth", {
