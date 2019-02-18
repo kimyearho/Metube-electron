@@ -8,6 +8,7 @@ const state = {
   second: 0,
   isRepeat: false,
   isPlay: true,
+  tokenList: [],
   musicList: [],
   playlist: [],
   videoList: [],
@@ -56,6 +57,13 @@ const mutations = {
   },
   setNextSearchList(state, data) {
     state.videoList = data
+  },
+  setTokenList(state, data) {
+    const list = {
+      pageNum: data.pageNum,
+      pageToken: data.pageToken
+    }
+    state.tokenList.push(list)
   },
   // 연관 재생목록 생성
   setRelatedList(state, data) {

@@ -8,15 +8,29 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" :data="{ playType: 'list' }" @scrollTop="endScrollTop"/>
+    <top-header
+      :isShow="false"
+      :data="{ playType: 'list' }"
+      @scrollTop="endScrollTop"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="route">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="route"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -27,7 +41,10 @@
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -59,7 +76,10 @@
     </div>
     <div class="overay"></div>
 
-    <md-list id="list" class="musicPlayList">
+    <md-list
+      id="list"
+      class="musicPlayList"
+    >
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in playlist"
@@ -70,22 +90,43 @@
           <img :src="item.imageInfo">
         </md-avatar>
 
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
-        <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
+        <span
+          v-if="item.videoId && item.isLive != 'live'"
+          class="label_video"
+        >{{ item.duration }}</span>
+        <span
+          v-if="item.videoId && item.isLive == 'live'"
+          class="label_live"
+        >LIVE</span>
 
         <!-- 확장메뉴 -->
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <context-menu
+          :videoId="item.videoId"
+          :data="item"
+        />
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
+        <span
+          v-if="!isMore"
+          class="loadMoreCenter"
+        >
+          <a
+            class="cursor"
+            @click="nextPageLoad"
+          >
             <i class="el-icon-refresh"></i>
             <!-- {{ $t('COMMONS.MORE') }} -->
             {{ pageNum }} / {{ totalPage }} Next ->
           </a>
         </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+        <span
+          v-else
+          class="loadMoreCenter loadMoreLoading"
+        >LOADING ...</span>
       </md-list-item>
       <md-list-item v-else>
         <span class="playlistEnd">
@@ -108,10 +149,14 @@
     />
 
     <!-- 로딩 컴포넌트 -->
-    <loading v-show="!load"/>
+    <loading v-show="!load" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -250,6 +295,19 @@ export default {
       } else if (this.playType === "channel") {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
+
+      // TODO: 1. 토큰 저장소 조회
+      // 토큰 저장소를 조회하여 저장된 토큰이 있으면, 현재 재생중인 음악의 페이지 번호를 이용하여 토큰정보를 찾는다.
+      // let tokenData = this.$lodash.find(this.getToeknList, { pageNum: musicInfo.pageNum })
+
+      // this.playlistId === (this.playType별) musicInfo.playlistId / mainId / channelId
+      // 현재 재생목록 페이지와, 재생중인 음악정보의 재생목록과 동일한지
+         // YES
+           // - 위에서 조회한 토큰이 없는경우는 1페이지 이므로 별도 처리할건 없다. 아래로 패스
+             // - 토큰도 있고, 페이지도 동일하면 최소 한번은 페이징을 사용했다는 의미임. (페이징을 누르기전에는 토큰저장소에 추가하지 않음.)
+             // - 재생목록 정보의 토큰을 새로 갱신하고, 페이지 번호도 갱신해준다. 그럼 갱신된 재생목록정보를 기반으로 아래에서 데이터를 조회할거임.
+         // NO
+           // - 다른 재생목록으로 들어왔으면, 다른 재생목록을 실행하는것이므로, 토큰저장소를 초기화하면 된다.
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회
       this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
@@ -610,6 +668,21 @@ export default {
                     // 재생정보 업데이트
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
+                        let currentTokenData = {
+                          pageNum: this.pageNum,
+                          pageToken: this.nextPageToken
+                        }
+                        // 이전 토큰 저장
+                        this.$store.commit('setTokenList', currentTokenData);
+
+                        // 총 페이지와, 다음페이지가 동일하면 마지막 페이지도 함께 토큰저장소에 추가한다.
+                        // 마지막 페이지 이므로 토큰은 없고, 페이지 번호만 필요.
+                        if (this.totalPage === nextPage) {
+                          currentTokenData.pageNum = nextPage
+                          currentTokenData.pageToken = 'end'
+                          this.$store.commit('setTokenList', currentTokenData);
+                        }
+
                         // 성공 후 페이지 리로드
                         this.feachData();
                         this.isMore = false;
