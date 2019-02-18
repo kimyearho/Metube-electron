@@ -62,11 +62,15 @@ const mutations = {
     state.videoList = data
   },
   setTokenList(state, data) {
-    const list = {
-      pageNum: data.pageNum,
-      pageToken: data.pageToken
+    if(data !== null) {
+      const list = {
+        pageNum: data.pageNum,
+        pageToken: data.pageToken
+      }
+      state.tokenList.push(list)
+    } else {
+      state.tokenList = []
     }
-    state.tokenList.push(list)
   },
   // 연관 재생목록 생성
   setRelatedList(state, data) {
