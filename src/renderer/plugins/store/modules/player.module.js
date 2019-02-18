@@ -38,6 +38,9 @@ const getters = {
   },
   getPlayingMusicInfo() {
     return state.playingInfo
+  },
+  getTokenList() {
+    return state.tokenList
   }
 }
 

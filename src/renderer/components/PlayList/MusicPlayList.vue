@@ -296,9 +296,20 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      // TODO: 1. 토큰 저장소 조회
-      // 토큰 저장소를 조회하여 저장된 토큰이 있으면, 현재 재생중인 음악의 페이지 번호를 이용하여 토큰정보를 찾는다.
-      // let tokenData = this.$lodash.find(this.getToeknList, { pageNum: musicInfo.pageNum })
+      // 재생중인 음악정보
+      const musicInfo = this.getMusicInfos();
+
+      if(musicInfo) {
+
+        const storeTokens = this.getTokenList();
+        console.log(storeTokens)
+
+        // TODO: 1. 토큰 저장소 조회
+        // 토큰 저장소를 조회하여 저장된 토큰이 있으면, 현재 재생중인 음악의 페이지 번호를 이용하여 토큰정보를 찾는다.
+        const tokenData = this.$lodash.find(storeTokens, { pageNum: musicInfo.pageNum })
+        console.log(tokenData)
+      }
+
 
       // this.playlistId === (this.playType별) musicInfo.playlistId / mainId / channelId
       // 현재 재생목록 페이지와, 재생중인 음악정보의 재생목록과 동일한지

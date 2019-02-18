@@ -60,6 +60,9 @@ export default {
         console.log(message, data)
       }
     },
+    getTokenList() {
+      return this.$store.getters.getTokenList
+    },
     closeFab() {
       this.$refs.fab.MdSpeedDial.active = false
     },
