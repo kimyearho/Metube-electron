@@ -113,27 +113,53 @@ export default {
             });
         });
       } else {
-        // 내 콜렉션일때
-        this.createIndex(["userId", "parentId"]).then(() => {
+        this.createIndex(["userId", "parentId"]).then(result => {
           return this.$test
             .find({
               selector: {
-                type: "profile",
-                userId: this.getUserId()
-              }
+                userId: {
+                  $eq: this.getUserId()
+                },
+                parentId: {
+                  $eq: musicData.parentId
+                }
+              },
+              limit: 100
             })
             .then(result => {
-              let docs = result.docs[0];
+              let docs = result.docs;
               if (docs) {
-                let collections = docs.collections;
-                let findItem = this.$lodash.find(collections, {
-                  id: musicInfo.name
-                });
-                this.subList = findItem.list;
-                this.subPlay(index);
+                this.subList = docs;
+                if (docs.length > nextIndex) {
+                  this.subPlay(nextIndex);
+                } else {
+                  this.subPlay(0);
+                }
               }
             });
         });
+
+        // 내 콜렉션일때
+        // this.createIndex(["userId", "parentId"]).then(() => {
+        //   return this.$test
+        //     .find({
+        //       selector: {
+        //         type: "profile",
+        //         userId: this.getUserId()
+        //       }
+        //     })
+        //     .then(result => {
+        //       let docs = result.docs[0];
+        //       if (docs) {
+        //         let collections = docs.collections;
+        //         let findItem = this.$lodash.find(collections, {
+        //           id: musicInfo.name
+        //         });
+        //         this.subList = findItem.list;
+        //         this.subPlay(index);
+        //       }
+        //     });
+        // });
       }
     },
 
