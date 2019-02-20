@@ -72,33 +72,7 @@ export default {
                 })
             })
           } else {
-            const parentId = musicData.parentId;
-            this.$local.get(parentId).then(doc => {
-              this.$local.find({
-                selector: {
-                  type: musicData.type,
-                  parentId: parentId
-                },
-                limit: 30
-              }).then(result => {
-                let docs = result.docs;
-                if (docs) {
-                  if (docs.length > nextIndex) {
-                    this.$emit("sendNextMusicPlay", nextIndex)
-                  } else {
-                    // 토큰여부
-                    let nextPageToken = doc.nextPageToken
-                    if (nextPageToken === null) {
-                      // 목록의 마지막 번째 음악이 종료되었으므로, 처음부터 재생
-                      this.$emit("sendNextMusicPlay", 0)
-                    } else {
-                      // 다음 페이지 조회
-                      this.$emit("sendNextPage")
-                    }
-                  }
-                }
-              })
-            })
+            this.$emit("sendNextMusicPlay", nextIndex)
           }
         }
       }

@@ -9,25 +9,14 @@
   <!-- root div -->
   <div>
     <div class="zaudio_player">
-      <progress
-        :value="range"
-        min="0"
-        :max="maxTime"
-      />
+      <progress :value="range" min="0" :max="maxTime"/>
       <div class="zaudio_playercontrols">
         <div class="zaudio_buttonwrapper">
           <div>
-            <img
-              class="miniImage"
-              width="30"
-              :src="image"
-            >
+            <img class="miniImage" width="30" :src="image">
           </div>
           <div class="zaudio_playercontrolbuttons">
-            <div
-              class="cover channelInfo cursor"
-              @click="showPlaylist"
-            >
+            <div class="cover channelInfo cursor" @click="showPlaylist">
               <div>{{ coverTitle }}</div>
               <div class="channel">{{ channelTitle }}</div>
             </div>
@@ -87,18 +76,44 @@ export default {
     this.playMusicSetting();
   },
   methods: {
-    // 서브 플레이어에서는 현재 재생중인 목록을 가져와 컨트롤한다.
     sendNextMusicPlay(index) {
-      let musicInfo = this.getMusicInfos();
-      if (!musicInfo.type) {
-        // 현재 재생중인 비디오의 재생정보를 검색
-        const findPlaylist = this.$lodash.find(this.getAllPlayList(), {
-          playlistId: musicInfo.name
+      const musicInfo = this.getMusicInfos();
+      // Youtube 재생목록일때
+      if (musicInfo.type !== "mycollectionItem") {
+        const parentId = musicInfo.parentId;
+        this.$local.get(parentId).then(doc => {
+          this.$local
+            .find({
+              selector: {
+                type: musicInfo.type,
+                parentId: parentId,
+                pageNum: musicInfo.pageNum
+              },
+              limit: 30
+            })
+            .then(result => {
+              let docs = result.docs;
+              if (docs) {
+                this.subList = docs;
+                if (docs.length > index) {
+                  this.subPlay(index);
+                } else {
+                  // 토큰여부
+                  let nextPageToken = doc.nextPageToken;
+                  if (nextPageToken === null) {
+                    // 목록의 마지막 번째 음악이 종료되었으므로, 처음부터 재생
+                    tthis.subPlay(0);
+                  } else {
+                    // 다음 페이지 조회
+                    // TODO: 다시 테스트 해봐야함
+                    this.$emit("sendNextPage");
+                  }
+                }
+              }
+            });
         });
-        // 재생목록 조회
-        this.subList = findPlaylist.list;
-        this.subPlay(index);
       } else {
+        // 내 콜렉션일때
         this.createIndex(["userId", "parentId"]).then(() => {
           return this.$test
             .find({
@@ -256,7 +271,7 @@ export default {
 
     // 재생
     playTypeControl(event) {
-      console.log(event)
+      console.log(event);
       this.isPlay = event.playType;
     },
 
@@ -264,7 +279,7 @@ export default {
     showPlaylist() {
       let musicInfo = this.getMusicInfos();
       this.$store.commit("setPath", this.$route.path);
-      if (musicInfo.type === 'mycollectionItem') {
+      if (musicInfo.type === "mycollectionItem") {
         this.$router.push({
           name: "MY-PLAYING-PLAYLIST",
           params: {
@@ -337,7 +352,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$eventBus.$off("playTypeControl")
+    this.$eventBus.$off("playTypeControl");
   }
 };
 </script>
