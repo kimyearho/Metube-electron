@@ -113,53 +113,30 @@ export default {
             });
         });
       } else {
-        this.createIndex(["userId", "parentId"]).then(result => {
+        this.createIndex(["userId", "parentId"]).then(() => {
           return this.$test
             .find({
               selector: {
-                userId: {
-                  $eq: this.getUserId()
-                },
-                parentId: {
-                  $eq: musicData.parentId
-                }
-              },
-              limit: 100
+                type: "profile",
+                userId: this.getUserId()
+              }
             })
             .then(result => {
-              let docs = result.docs;
+              let docs = result.docs[0];
               if (docs) {
-                this.subList = docs;
-                if (docs.length > nextIndex) {
-                  this.subPlay(nextIndex);
+                let collections = docs.collections;
+                let findItem = this.$lodash.find(collections, {
+                  id: musicInfo.name
+                });
+                this.subList = findItem.list;
+                if (this.subList.length > index) {
+                  this.subPlay(index);
                 } else {
                   this.subPlay(0);
                 }
               }
             });
         });
-
-        // 내 콜렉션일때
-        // this.createIndex(["userId", "parentId"]).then(() => {
-        //   return this.$test
-        //     .find({
-        //       selector: {
-        //         type: "profile",
-        //         userId: this.getUserId()
-        //       }
-        //     })
-        //     .then(result => {
-        //       let docs = result.docs[0];
-        //       if (docs) {
-        //         let collections = docs.collections;
-        //         let findItem = this.$lodash.find(collections, {
-        //           id: musicInfo.name
-        //         });
-        //         this.subList = findItem.list;
-        //         this.subPlay(index);
-        //       }
-        //     });
-        // });
       }
     },
 

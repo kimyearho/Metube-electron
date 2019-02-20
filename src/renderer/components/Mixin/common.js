@@ -46,34 +46,7 @@ export default {
           // 다음 인덱스
           let nextIndex = currentIndex + 1
           // 내컬렉션일 경우
-          if (musicData.type === 'mycollectionItem') {
-            this.createIndex(["userId", "parentId"]).then(result => {
-              return this.$test
-                .find({
-                  selector: {
-                    userId: {
-                      $eq: this.getUserId()
-                    },
-                    parentId: {
-                      $eq: musicData.parentId
-                    }
-                  },
-                  limit: 100
-                })
-                .then(result => {
-                  let docs = result.docs
-                  if (docs) {
-                    if (docs.length > nextIndex) {
-                      this.$emit("sendNextMusicPlay", nextIndex)
-                    } else {
-                      this.$emit("sendNextMusicPlay", 0)
-                    }
-                  }
-                })
-            })
-          } else {
-            this.$emit("sendNextMusicPlay", nextIndex)
-          }
+          this.$emit("sendNextMusicPlay", nextIndex)
         }
       }
     },

@@ -326,7 +326,7 @@ export default {
             if (findData.list.length > 0) {
               this.getRemoteDocument().then(result => {
                 const remoteTotalCount = result.docs.length;
-                if (remoteTotalCount != findData.listCount) {
+                if (remoteTotalCount !== findData.listCount) {
                   console.log("========================= list sync!");
                   this.getRemoteList();
                 } else {
