@@ -147,6 +147,7 @@ export default {
     };
   },
   created() {
+    this.recommandTrack();
     this.searchText = this.getSearchKeyword();
     this.init(this.searchText);
   },
@@ -157,24 +158,17 @@ export default {
       }
     }
   },
-  beforeMount() {
-    this.$store.commit("setIndexPath", this.$route.path);
-  },
   mounted() {
     let pos = this.getScrollPos();
     this.$el.querySelector("#list").scrollTo(0, pos);
   },
-  beforeDestroy() {
-    this.handleScroll();
-  },
   methods: {
     recommandTrack() {
       this.loading = true;
-      let urlId = "17901f376f4ff226c03adecee00013d5";
       this.$db
-        .get(urlId)
+        .get("17901f376f4ff226c03adecee00013d5")
         .then(result => {
-          console.log(result)
+          console.log(result);
           let data = result.recommand;
           this.recommandList = this.$lodash
             .chain(data)
@@ -313,7 +307,6 @@ export default {
             }
           });
       }
-      this.recommandTrack();
     },
     updateKeyword(k) {
       let id = this.getUserId();
@@ -453,7 +446,13 @@ export default {
       this.searchText = item;
       this.submit(this.searchText);
     }
-  }
+  },
+  beforeMount() {
+    this.$store.commit("setIndexPath", this.$route.path);
+  },
+  beforeDestroy() {
+    this.handleScroll();
+  },
 };
 </script>
 
