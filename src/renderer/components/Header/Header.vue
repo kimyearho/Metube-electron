@@ -222,6 +222,7 @@ export default {
       }
     },
     close() {
+      this.$local.destroy().then(() => {});
       this.$ipcRenderer.send("button:close", null);
     },
     closeModal() {

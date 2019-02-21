@@ -168,7 +168,6 @@ export default {
       this.$db
         .get("17901f376f4ff226c03adecee00013d5")
         .then(result => {
-          console.log(result);
           let data = result.recommand;
           this.recommandList = this.$lodash
             .chain(data)
