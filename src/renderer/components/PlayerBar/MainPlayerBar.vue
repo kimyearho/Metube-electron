@@ -156,7 +156,7 @@ export default {
     },
     // 재생될 비디오 정보 갱신
     videoSetting(event) {
-      this.playMusicSetting(event)
+      this.playMusicSetting(event);
     }
   },
   mounted() {
@@ -170,7 +170,6 @@ export default {
     this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   methods: {
-
     // 다음 재생 이벤트 전달
     sendNextMusicPlay(value) {
       this.$emit("nextMusicPlay", value);
@@ -226,7 +225,7 @@ export default {
 
     // 재생
     playTypeControl() {
-      this.isPlay = this.getPlayType()
+      this.isPlay = this.getPlayType();
     },
 
     // 일시정지 -> 재생으로 전환

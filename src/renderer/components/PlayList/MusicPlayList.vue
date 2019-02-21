@@ -438,8 +438,7 @@ export default {
     },
 
     pagingReload() {
-
-      let playlistName = null
+      let playlistName = null;
       if (this.playType === "play") {
         playlistName = `PLAYLIST:${this.playlistId}`;
       } else if (this.playType === "related") {
@@ -532,19 +531,47 @@ export default {
      * @param {index} - 다음곡 or 선택곡의 index
      */
     playItem(index) {
-      let musicInfo = this.getMusicInfos();
+      // 재생음악 정보
+      const musicInfo = this.getMusicInfos();
 
-      // 재생목록에서 해당하는 트랙번호의 비디오
-      let playingItem = this.playlist[index];
-      playingItem.index = index;
-      playingItem.name = musicInfo.name;
-      if (this.playType === "related") playingItem.mainId = this.videoId;
-
-      this.playSetting(playingItem);
-      if (index === 0) {
-        this.endScrollTop();
+      // 재생목록 페이지에서 현재 페이지와, 재생이 종료되는 음악의 페이지번호가 다르면
+      // 예) 사용자가 2페이지를 보고 있는데, 현재 종료되는 음악은 1페이지 음악일경우
+      let playingItem;
+      if (this.pageNum !== musicInfo.pageNum) {
+        this.createLocalIndex(["type", "parentId", "pageNum"]).then(() => {
+          return this.$local
+            .find({
+              selector: {
+                type: musicInfo.type,
+                parentId: musicInfo.parentId,
+                pageNum: musicInfo.pageNum
+              },
+              limit: 30
+            })
+            .then(result => {
+              const docs = result.docs;
+              if (docs) {
+                playingItem = docs[index];
+                playingItem.index = index;
+                playingItem.name = musicInfo.name;
+                if (this.playType === "related")
+                  playingItem.mainId = this.videoId;
+                this.playSetting(playingItem);
+              }
+            });
+        });
       } else {
-        this.nextTrackScroll(500);
+        // 재생목록 현재 페이지와 재생이 종료되는 음악의 페이지번호가 일치할경우
+        playingItem = this.playlist[index];
+        playingItem.index = index;
+        playingItem.name = musicInfo.name;
+        if (this.playType === "related") playingItem.mainId = this.videoId;
+        this.playSetting(playingItem);
+        if (index === 0) {
+          this.endScrollTop();
+        } else {
+          this.nextTrackScroll(500);
+        }
       }
     },
 
@@ -750,7 +777,7 @@ export default {
                         }
 
                         this.pagingReload();
-                        this.isMore = false
+                        this.isMore = false;
                       }
                     });
                   });
