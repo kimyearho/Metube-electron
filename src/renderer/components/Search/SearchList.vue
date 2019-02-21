@@ -148,7 +148,6 @@ export default {
   },
   created() {
     this.searchText = this.getSearchKeyword();
-    this.recommandTrack();
     this.init(this.searchText);
   },
   watch: {
@@ -175,6 +174,7 @@ export default {
       this.$db
         .get(urlId)
         .then(result => {
+          console.log(result)
           let data = result.recommand;
           this.recommandList = this.$lodash
             .chain(data)
@@ -313,6 +313,7 @@ export default {
             }
           });
       }
+      this.recommandTrack();
     },
     updateKeyword(k) {
       let id = this.getUserId();

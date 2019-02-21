@@ -32,7 +32,7 @@ const deleteChromeCache = function () {
   }
 };
 
-// deleteChromeCache()
+deleteChromeCache()
 
 if (process.env.NODE_ENV !== "development") {
   let shouldQuit = app.makeSingleInstance(() => {
@@ -50,11 +50,14 @@ if (process.platform === "darwin") {
   app.dock.hide()
 }
 
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
 let playerPath
 if (process.env.NODE_ENV !== "production") {
   if (process.platform !== "darwin") {
     // windows
-    playerPath = "http://localhost:7070"
+    // playerPath = "http://localhost:7070"
+    playerPath = "http://sharepod.kr"
   } else {
     // other
     playerPath = "http://sharepod.kr"

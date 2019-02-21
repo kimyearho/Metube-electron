@@ -37,8 +37,8 @@ export default {
   },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
+    this.onNewReleaseCheck();
     if (process.env.NODE_ENV !== "development") {
-      this.onNewReleaseCheck();
     }
   },
   mounted() {

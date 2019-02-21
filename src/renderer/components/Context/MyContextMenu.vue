@@ -29,20 +29,15 @@ strict';
       </el-dropdown-menu>
     </el-dropdown>
 
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
   </div>
 </template>
 
 <script>
 import StoreMixin from "@/components/Mixin/index";
-import SocialShareModal from "@/components/Context/modal/SocialShareModal";
 
 export default {
   name: "MyContextMenu",
   mixins: [StoreMixin],
-  components: {
-    SocialShareModal
-  },
   props: {
     id: String,
     videoId: String,
