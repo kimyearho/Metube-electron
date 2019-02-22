@@ -10,9 +10,6 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### Progress history
-I noticed that when you run a YouTube playlist, your apps slow down significantly. After a closer look at the app, I noticed that the design was wrong. I am currently testing with a redesign as a prototype, which is a very satisfactory result. I think that the performance compared to the previous one is improved by more than 50%. I plan to distribute it next week after testing.
-
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
