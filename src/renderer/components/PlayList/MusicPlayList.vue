@@ -26,7 +26,9 @@
         />
       </a>
     </div>
-    <div class>
+
+    <!-- 커버 영역 -->
+    <div>
       <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span
@@ -45,11 +47,6 @@
         <br>
         <div class="titleflow">
           <span class="zaudio_songtitle">{{ coverTitle }}</span>
-          <!-- <marquee-text
-            class="zaudio_songtitle"
-            :key="coverTitle"
-            :duration="coverTitle.length / 2"
-          >&nbsp; {{ coverTitle }}</marquee-text>-->
           <div style="margin-top:5px;">
             <span class="zaudio_songartist">{{ channelTitle }}</span>
             <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
@@ -57,42 +54,60 @@
         </div>
       </div>
     </div>
+
+    <!-- 커버 오버레이 -->
     <div class="overay"></div>
 
+    <!-- 재생목록 -->
     <md-list id="list" class="musicPlayList">
+      <!-- 비디오 목록 -->
       <md-list-item
-        :id="`item${index}`"
         v-for="(item, index) in playlist"
+        :id="`item${index}`"
         :key="item.id"
         :class="selectedIndex === index ? active : ''"
       >
+        <!-- 라운딩 썸네일 -->
         <md-avatar style="margin-right: 0;">
           <img :src="item.imageInfo">
         </md-avatar>
 
+        <!-- 비디오 제목 -->
         <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <!-- 비디오 재생시간 -->
         <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
+        <!-- 비디오 라이브 여부 -->
         <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
 
         <!-- 확장메뉴 -->
         <context-menu :videoId="item.videoId" :data="item"/>
       </md-list-item>
+
+      <!-- 페이징 -->
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
-            <i class="el-icon-refresh"></i>
-            <!-- {{ $t('COMMONS.MORE') }} -->
-            {{ pageNum }} / {{ totalPage }} Next ->
+        <div v-if="!isMore" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
+          <a v-if="pageNum !== 1" class="cursor" @click="prevPageLoad">
+            <md-icon class="md-size-2x">navigate_before</md-icon>
+            <span style="margin-right: 15px;">Prev</span>
           </a>
-        </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
+          <span>{{ pageNum }} / {{ totalPage }}</span>
+          <a class="cursor" @click="nextPageLoad">
+            <span style="margin-left: 15px;">Next</span>
+            <md-icon class="md-size-2x">navigate_next</md-icon>
+          </a>
+        </div>
+        <div v-else class="loadMoreCenter loadMoreLoading">LOADING ...</div>
       </md-list-item>
+
+      <!-- 페이지의 끝 -->
       <md-list-item v-else>
-        <span class="playlistEnd">
+        <div class="playlistEnd">
           <i class="el-icon-check"></i>
           {{ $t('COMMONS.END') }}
-        </span>
+        </div>
       </md-list-item>
+
+      <!-- 유튜브 로고 -->
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
       </div>
@@ -117,25 +132,23 @@
 
 <script>
 import * as $commons from "@/service/commons-service.js";
-import StoreMixin from "@/components/Mixin/index";
+import IndexMix from "@/components/Mixin/index";
 import DataUtils from "@/components/Mixin/db";
-import CollectionQueryMixin from "@/components/Mixin/collections";
+import CollectionMix from "@/components/Mixin/collections";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import ContextMenu from "@/components/Context/ContextMenu";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
-import MarqueeText from "vue-marquee-text-component";
 import Loading from "@/components/Loader/PageLoading";
 
 const options = { container: "#list", offset: -80 };
 
 export default {
   name: "MusicPlayList",
-  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
+  mixins: [IndexMix, CollectionMix, DataUtils],
   components: {
     CollectionRegister,
     ContextMenu,
     MainPlayerBar,
-    MarqueeText,
     Loading
   },
   data() {
@@ -352,8 +365,7 @@ export default {
                       limit: 30
                     })
                     .then(result => {
-                      const docs = result.docs;
-                      this.playlist = docs;
+                      this.playlist = result.docs;
                       // this.data = findPlaylist;
                       this.feachExtends();
                     });
@@ -435,60 +447,6 @@ export default {
         // this.data = findPlaylist;
         this.autoStart();
       }
-    },
-
-    pagingReload() {
-      let playlistName = null;
-      if (this.playType === "play") {
-        playlistName = `PLAYLIST:${this.playlistId}`;
-      } else if (this.playType === "related") {
-        this.videoId = this.playlistId;
-        playlistName = `RELATED:${this.playlistId}`;
-      } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${this.playlistId}`;
-      }
-
-      this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
-        return this.$local
-          .find({
-            selector: {
-              type: this.playType + "ListInfo",
-              playlistId: playlistName
-            }
-          })
-          .then(result => {
-            let doc = result.docs[0];
-            if (doc) {
-              // 필요한 정보 설정
-              this.playlistInfoId = doc._id;
-              this.totalTracks = doc.totalResults;
-              this.totalPage = doc.totalPage;
-              this.pageNum = doc.pageNum;
-              this.nextPageToken = doc.nextPageToken;
-              this.channelPlaylistId = doc.channelPlaylistId
-                ? doc.channelPlaylistId
-                : null;
-              this.isNext = !!this.nextPageToken;
-
-              // 재생정보의 id값과 일치하는 하위 비디오를 조회
-              this.$local
-                .find({
-                  selector: {
-                    type: this.playType,
-                    parentId: doc._id,
-                    pageNum: this.pageNum
-                  },
-                  limit: 30
-                })
-                .then(result => {
-                  const docs = result.docs;
-                  this.playlist = docs;
-                  // this.data = findPlaylist;
-                  // this.feachExtends();
-                });
-            }
-          });
-      });
     },
 
     autoStart() {
@@ -695,6 +653,115 @@ export default {
       }, 1500);
     },
 
+    // 페이징 재조회
+    pagingReload(type) {
+      let playlistName = null;
+      if (this.playType === "play") {
+        playlistName = `PLAYLIST:${this.playlistId}`;
+      } else if (this.playType === "related") {
+        this.videoId = this.playlistId;
+        playlistName = `RELATED:${this.playlistId}`;
+      } else if (this.playType === "channel") {
+        playlistName = `CHANNEL:${this.playlistId}`;
+      }
+
+      // 재생중인 음악정보 조회
+      const musicData = this.getMusicInfos();
+
+      // 재생목록 정보 조회
+      this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
+        return this.$local
+          .find({
+            selector: {
+              type: this.playType + "ListInfo",
+              playlistId: playlistName
+            }
+          })
+          .then(result => {
+            let doc = result.docs[0];
+            // 재생목록 정보를 설정
+            if (doc) {
+              // 재생목록정보 아이디 
+              this.playlistInfoId = doc._id;
+              // 재생목록 총 개수
+              this.totalTracks = doc.totalResults;
+              // 재생목록 총 페이지
+              this.totalPage = doc.totalPage;
+              // 페이지 번호
+              this.pageNum = doc.pageNum
+              // 다음 페이지 토큰
+              this.nextPageToken = doc.nextPageToken;
+              // 채널이라면 채널아이디 설정
+              this.channelPlaylistId = doc.channelPlaylistId
+                ? doc.channelPlaylistId
+                : null;
+              // 토큰의 여부
+              this.isNext = !!this.nextPageToken;
+              // 선택된 인덱스 설정 (기본값)
+              this.selectedIndex = null
+              // 조회타입이 이전 페이지 조회일때
+              if(type === 'prev') {
+                // 재생중인 음악의 페이지 번호와, 현재 페이지가 동일하면
+                if(musicData.pageNum === this.pageNum) {
+                  this.selectedIndex = musicData.index
+                }
+              }
+              // 재생목록 정보의 id값과 일치하는 하위 비디오를 조회
+              this.$local
+                .find({
+                  selector: {
+                    type: this.playType,
+                    parentId: doc._id,
+                    pageNum: this.pageNum
+                  },
+                  limit: 30
+                })
+                .then(result => {
+                  const docs = result.docs;
+                  this.playlist = docs;
+                  this.endScrollTop()
+                  // this.data = findPlaylist;
+                  // this.feachExtends();
+                });
+            }
+          });
+      });
+    },
+
+    prevPageLoad() {
+      // 이전 페이지가 될 페이지 번호
+      const prevPageNum = this.pageNum - 1
+      // 현재 재생목록 정보 조회
+      this.$local.get(this.playlistInfoId).then(doc => {
+
+        // 토큰목록을 가져옴
+        const storeTokens = this.getTokenList();
+        // 이전 페이지번호와 일치하는 토큰정보를 찾음
+        const tokenData = this.$lodash.find(storeTokens, {
+          pageNum: prevPageNum
+        });
+        // 재생목록정보에 이전 페이지의 토큰과 페이지 번호를 갱신
+        doc.nextPageToken = tokenData.pageToken;
+        doc.pageNum = prevPageNum
+
+        // 토큰 저장소에서 이전 페이지의 토큰정보를 삭제해야한다.
+        // 그래야 이전페이지 이동 후 다음페이지 이동 시 토큰이 중복으로 추가되지 않는다.
+        // 현재4, 토큰1,2,3
+        // 현재3, 토큰1,2
+        // 현재2, 토큰1
+        // 현재1, 토큰x
+        const newTokenList = this.$lodash.reject(storeTokens, { pageNum: prevPageNum })
+        this.$store.commit('setTokenUpdate', newTokenList);
+
+        // 재생정보 업데이트
+        return this.$local.put(doc).then(result => {
+          if (result.ok) {
+            this.pagingReload('prev')
+          }
+        })
+      })
+    },
+
     /**
      * 다음 페이지 로드
      */
@@ -776,7 +843,7 @@ export default {
                           this.$store.commit("setTokenList", currentTokenData);
                         }
 
-                        this.pagingReload();
+                        this.pagingReload('next');
                         this.isMore = false;
                       }
                     });
@@ -906,6 +973,15 @@ export default {
 <style scope>
 .loadMoreCenter {
   color: #ffffff;
-  margin-left: 110px;
+  margin-left: 140px;
+}
+.prev {
+  margin-left: 45px;
+}
+.md-icon {
+  color: #ffffff !important;
+}
+.md-icon:hover {
+  color: #448aff !important;
 }
 </style>
