@@ -262,6 +262,7 @@ export default {
                 }
 
                 // 재생목록 기본정보 설정
+                // TODO: 20180225 최조 조회시 다음 페이지 토큰을 토큰저장소에 저장할필요 있음.
                 const playlistInfo = {
                   type: this.playType + "ListInfo",
                   playlistId: playlistName, // PLAYLIST:ID

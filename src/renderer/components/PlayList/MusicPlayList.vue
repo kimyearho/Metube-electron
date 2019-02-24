@@ -750,6 +750,7 @@ export default {
         // 현재3, 토큰1,2
         // 현재2, 토큰1
         // 현재1, 토큰x
+        // ===================================
         const newTokenList = this.$lodash.reject(storeTokens, { pageNum: prevPageNum })
         this.$store.commit('setTokenUpdate', newTokenList);
 
