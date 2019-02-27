@@ -157,7 +157,7 @@ export default {
       }
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회
-      this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
+      this.createLocalIndex(["type", "playlistId"]).then(() => {
         return this.$local
           .find({
             selector: {
@@ -262,7 +262,6 @@ export default {
                 }
 
                 // 재생목록 기본정보 설정
-                // TODO: 20180225 최조 조회시 다음 페이지 토큰을 토큰저장소에 저장할필요 있음.
                 const playlistInfo = {
                   type: this.playType + "ListInfo",
                   playlistId: playlistName, // PLAYLIST:ID
@@ -318,7 +317,7 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      this.createLocalIndex(["type", "parentId"]).then(() => {
+      this.createLocalIndex(["type", "playlistId"]).then(() => {
         return this.$local
           .find({
             selector: {
@@ -420,84 +419,6 @@ export default {
           ]
         });
       }
-    },
-
-    nextPageLoad() {
-      // 재생목록 아이디
-      let playlistName = null;
-      let playlistItem = null;
-
-      this.isMore = true;
-
-      // 토큰을 사용한 새 재생목록 가져오기
-      if (this.playType === "play") {
-        playlistName = `PLAYLIST:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
-          this.playlistId,
-          this.nextPageToken
-        );
-      } else if (this.playType === "related") {
-        playlistName = `RELATED:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingRelatedSearch(
-          this.playlistId,
-          this.nextPageToken
-        );
-      } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
-          this.channelPlaylistId,
-          this.nextPageToken
-        );
-      }
-
-      this.$http
-        .get(playlistItem)
-        .then(res => {
-          let pathName = null;
-
-          if (this.playType === "play") {
-            pathName = "setDuration";
-            this.$store.commit("setMusicList", res.data.items);
-          } else if (this.playType === "related") {
-            pathName = "setRelatedDuration";
-            this.$store.commit("setRelatedList", res.data.items);
-          } else if (this.playType === "channel") {
-            pathName = "setDuration";
-            this.$store.commit("setMusicList", res.data.items);
-          }
-
-          this.$store.dispatch(pathName).then(results => {
-            let list = [];
-            this.$lodash.forEach(results, (item, idx) => {
-              item.type = this.playType;
-              item.parentId = this.playlistInfoId;
-              list.push(item);
-              if (idx === results.length - 1) {
-                // 조회된 재생목록 하위 데이터 한꺼번에 등록
-                this.$local.bulkDocs(results).then(() => {
-                  // 등록이 끝났으면, 다음 페이지 토큰을 업데이트 하기위해 재생목록정보를 조회한다.
-                  this.$local.get(this.playlistInfoId).then(doc => {
-                    // 토큰 갱신
-                    doc.nextPageToken = res.data.nextPageToken
-                      ? res.data.nextPageToken
-                      : null;
-                    // 재생정보 업데이트
-                    return this.$local.put(doc).then(result => {
-                      if (result.ok) {
-                        // 성공 후 페이지 리로드
-                        this.feachData();
-                        this.isMore = false;
-                      }
-                    });
-                  });
-                });
-              }
-            });
-          });
-        })
-        .catch(error => {
-          this.errorDialog();
-        });
     },
     errorDialog() {
       this.$modal.show("dialog", {

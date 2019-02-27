@@ -8,7 +8,7 @@ const state = {
   second: 0,
   isRepeat: false,
   isPlay: true,
-  tokenList: [],
+  nextToken: null,
   musicList: [],
   playlist: [],
   videoList: [],
@@ -39,8 +39,8 @@ const getters = {
   getPlayingMusicInfo() {
     return state.playingInfo
   },
-  getTokenList() {
-    return state.tokenList
+  getNextToken() {
+    return state.nextToken
   }
 }
 
@@ -61,20 +61,12 @@ const mutations = {
   setNextSearchList(state, data) {
     state.videoList = data
   },
-  setTokenList(state, data) {
-    if(!_.isEmpty(data)) {
-      const list = {
-        pageNum: data.pageNum,
-        pageToken: data.pageToken
-      }
-      state.tokenList.push(list)
-    } else {
-      state.tokenList = []
-    }
+  setNextToken(state, data) {
+    state.nextToken = data
   },
-  setTokenUpdate(state, data) {
-    state.tokenList = _.clone(data);
-  },
+  // setTokenUpdate(state, data) {
+  //   state.tokenList = _.clone(data);
+  // },
   // 연관 재생목록 생성
   setRelatedList(state, data) {
     state.relatedList = []
