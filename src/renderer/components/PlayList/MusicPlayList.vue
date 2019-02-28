@@ -8,15 +8,29 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" :data="{ playType: 'list' }" @scrollTop="endScrollTop"/>
+    <top-header
+      :isShow="false"
+      :data="{ playType: 'list' }"
+      @scrollTop="endScrollTop"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="route">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="route"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -29,7 +43,10 @@
 
     <!-- 커버 영역 -->
     <div>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -59,7 +76,10 @@
     <div class="overay"></div>
 
     <!-- 재생목록 -->
-    <md-list id="list" class="musicPlayList">
+    <md-list
+      id="list"
+      class="musicPlayList"
+    >
       <!-- 비디오 목록 -->
       <md-list-item
         v-for="(item, index) in playlist"
@@ -73,30 +93,56 @@
         </md-avatar>
 
         <!-- 비디오 제목 -->
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
         <!-- 비디오 재생시간 -->
-        <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
+        <span
+          v-if="item.videoId && item.isLive != 'live'"
+          class="label_video"
+        >{{ item.duration }}</span>
         <!-- 비디오 라이브 여부 -->
-        <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
+        <span
+          v-if="item.videoId && item.isLive == 'live'"
+          class="label_live"
+        >LIVE</span>
 
         <!-- 확장메뉴 -->
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <context-menu
+          :videoId="item.videoId"
+          :data="item"
+        />
       </md-list-item>
 
       <!-- 페이징 -->
       <md-list-item v-if="isNext">
-        <div v-if="!isMore" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
-          <a v-if="pageNum !== 1" class="cursor" @click="prevPageLoad">
+        <div
+          v-if="!isMore"
+          class="loadMoreCenter"
+          :class="{ prev: pageNum !== 1 }"
+        >
+          <a
+            v-if="pageNum !== 1"
+            class="cursor"
+            @click="prevPageLoad"
+          >
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
           </a>
           <span>{{ pageNum }} / {{ totalPage }}</span>
-          <a class="cursor" @click="nextPageLoad">
+          <a
+            class="cursor"
+            @click="nextPageLoad"
+          >
             <span style="margin-left: 15px;">Next</span>
             <md-icon class="md-size-2x">navigate_next</md-icon>
           </a>
         </div>
-        <div v-else class="loadMoreCenter loadMoreLoading">LOADING ...</div>
+        <div
+          v-else
+          class="loadMoreCenter loadMoreLoading"
+        >LOADING ...</div>
       </md-list-item>
 
       <!-- 페이지의 끝 -->
@@ -123,10 +169,14 @@
     />
 
     <!-- 로딩 컴포넌트 -->
-    <loading v-show="!load"/>
+    <loading v-show="!load" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -252,9 +302,10 @@ export default {
      * 인스턴스 초기화 시 조회되는 재생목록
      */
     feachData() {
-      let playlistName = null;
       this.playlistId = this.$route.params.id;
       this.playType = this.$route.params.playType;
+
+      let playlistName = null;
 
       if (this.playType === "play") {
         playlistName = `PLAYLIST:${this.playlistId}`;
@@ -265,19 +316,24 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      let parentPlaylistId = null;
-      let promise = null;
-
       // 토큰조회
-      const nextToken = this.getNextToken();
+      const nextTokenData = this.getNextToken();
 
       // 토큰이 없으면 처음 조회
-      if (nextToken === null) {
+      if (nextTokenData === null) {
         this.initTokenUpdateWithStart(playlistName);
       } else {
+
+        // 토큰이 d
+        if(nextTokenData.nextToken === null) {
+
+        }
+
         // 재생중인 음악정보
         const musicInfo = this.getMusicInfos();
         // (음악이 재생중인경우, 한번이라도 실행한 경우임 (일시정지 여부 관계없음))
+
+        let parentPlaylistId = null;
 
         if (this.playType === "play") {
           parentPlaylistId = musicInfo.playlistId;
@@ -290,128 +346,29 @@ export default {
         // STEP 01
         // - 현재 재생목록과, 재생중인 음악정보의 재생목록과 동일한지 체크한다. (playlistId 비교)
         // - 토큰 등록시 주의할 점은 pageNum을 현재 페이지 번호의 +1로 해야한다. 1페이지와, 마지막페이지는 토큰이 없음.
-        // - 무조건 첫 페이지의 토큰은 2페이를 조회하기 위한 토큰이다.
-        // 즉 토큰은 아래와 같은 규칙이 적용된다.
+        // - 무조건 첫 페이지의 토큰은 2페이를 조회하기 위한 토큰이다. 즉 토큰은 아래와 같은 규칙이 적용된다.
         // 1page: { pageNum: 2, nextToken: 'xxx' }
-        if (this.playlistId === parentPlaylistId) {
+        if (this.playlistId !== parentPlaylistId) {
+          // playlistId가 서로 다르므로, 이건 다른 재생목록이다.
+          // 토큰을 초기화 및 새 재생목록에 대한 토큰을 갱신하고 처음 재생한다.
+          console.log('다른 재생목록')
+          this.initTokenUpdateWithStart(playlistName, 'init');
+        } else {
           // playlistId가 서로 동일하므로, 같은 재생목록이다.
           console.log('같은 재생목록')
-        } else {
-          console.log('다른 재생목록')
-          // playlistId가 서로 다르므로, 이건 다른 재생목록이다.
-          this.initTokenUpdateWithStart(playlistName);
+          // 현재 페이지 번호를 재생중인 음악정보의 페이지 번호로 갱신
+          this.pageNum = musicInfo.pageNum
+          // 현재 재생중인 음악정보의 페이지번호와 일치하는 DB 비디오 레코드를 조회하여 랜더링 한다.
+          this.initPlaySetting(playlistName, 'same');
         }
 
-        // STEP 02 -> 다른 페이지에서 재생목록으로 접근할때
-        // - 재생목록이 동일하면 재생중인 음악정보의 페이지 번호와, 현재 페이지 번호가 동일한지 체크한다. (default: 1page)
-        //   - 동일한 페이지라면 DB에서 페이지 번호에 해당하는 목록을 가져와서 랜더링하면 된다.
-        // - 재생중인 음악정보의 페이지가 1페이지가 아니라면, 해당 페이지번
-        // - 이때 재생중인 음악정보의 페이지번호가 3이라면, 토큰 저장소에는 4페이지 토큰이 있으므로 페이지번호를 +1하여 조회한다.
-
-        // const storeTokens = this.getTokenList();
-        // // 토큰 저장소를 조회하여 저장된 토큰이 있으면, 현재 재생중인 음악의 페이지 번호를 이용하여 토큰정보를 찾는다.
-        // const tokenData = this.$lodash.find(storeTokens, {
-        //   pageNum: musicInfo.pageNum
-        // });
-
-        //   promise = new Promise((resolve, reject) => {
-        //     // 현재 재생목록 페이지와, 재생중인 음악정보의 재생목록과 동일한지
-        //     if (this.playlistId === id) {
-        //       if (tokenData) {
-        //         // YES
-        //         // - 토큰도 있고, 페이지도 동일하면 최소 한번은 페이징을 사용했다는 의미임. (페이징을 누르기전에는 토큰저장소에 추가하지 않음.)
-        //         // - 재생목록 정보의 토큰을 새로 갱신하고, 페이지 번호도 갱신해준다. 그럼 갱신된 재생목록정보를 기반으로 아래에서 데이터를 조회할거임.
-        //         this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
-        //           this.$local
-        //             .find({
-        //               selector: {
-        //                 type: this.playType + "ListInfo",
-        //                 playlistId: playlistName
-        //               }
-        //             })
-        //             .then(result => {
-        //               let docs = result.docs[0];
-        //               if (docs) {
-        //                 // 토큰 및 페이지 번호 갱신
-        //                 docs.pageNum = tokenData.pageNum;
-        //                 docs.nextPageToken = tokenData.pageToken;
-        //                 return this.$local.put(docs).then(result => {
-        //                   if (result.ok) {
-        //                     // 토큰 저장소 초기화
-        //                     this.$store.commit("setTokenList", null);
-        //                     resolve(true);
-        //                   }
-        //                 });
-        //               }
-        //             });
-        //         });
-        //       } else {
-        //         resolve(true);
-        //       }
-        //     } else {
-        //       // 다른 재생목록을 시작하므로, 토큰 저장소를 초기화한다.
-        //       this.$store.commit("setTokenList", null);
-        //       resolve(true);
-        //     }
-        //   });
-        // } else {
-        //   promise = new Promise((resolve, reject) => {
-        //     resolve(true);
-        //   });
-        // }
-
-        // promise.then(result => {
-        //   if (result) {
-        //     // 로컬 디비로 등록 되어있는 재생목록인지 조회
-        //     this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
-        //       return this.$local
-        //         .find({
-        //           selector: {
-        //             type: this.playType + "ListInfo",
-        //             playlistId: playlistName
-        //           }
-        //         })
-        //         .then(result => {
-        //           let doc = result.docs[0];
-        //           if (doc) {
-        //             // 필요한 정보 설정
-        //             this.playlistInfoId = doc._id;
-        //             this.totalTracks = doc.totalResults;
-        //             this.totalPage = doc.totalPage;
-        //             this.pageNum = doc.pageNum;
-        //             this.nextPageToken = doc.nextPageToken;
-        //             this.channelPlaylistId = doc.channelPlaylistId
-        //               ? doc.channelPlaylistId
-        //               : null;
-        //             this.isNext = !!this.nextPageToken;
-
-        //             // 재생정보의 id값과 일치하는 하위 비디오를 조회
-        //             this.$local
-        //               .find({
-        //                 selector: {
-        //                   type: this.playType,
-        //                   parentId: doc._id,
-        //                   pageNum: this.pageNum
-        //                 },
-        //                 limit: 30
-        //               })
-        //               .then(result => {
-        //                 this.playlist = result.docs;
-        //                 // this.data = findPlaylist;
-        //                 this.feachExtends();
-        //               });
-        //           }
-        //         });
-        //     });
-        //   }
-        // });
       }
     },
 
     /**
      * 재생목록 정보에서 현재 페이지의 토큰을 가져와 토큰 저장소로 등록한다.
      */
-    initTokenUpdateWithStart(id) {
+    initTokenUpdateWithStart(id, listType) {
       // 토큰 저장소 초기화
       this.$store.commit("setNextToken", null);
       this.getPlaylistInfoData(this.playType, id).then(result => {
@@ -420,22 +377,27 @@ export default {
         // 총 개수가 30개보다 커야 토큰이 존재함. 이하는 null
         if (totalCount > 30) {
           const nextTokenData = {
-            pageNum: this.pageNum + 1,
+            pageNum: this.pageNum,
             nextToken: docs.nextPageToken
           };
           // 다음 페이지 토큰을 등록한다
           this.$store.commit("setNextToken", nextTokenData);
-          // 첫 재생을 세팅한다.
-          this.initPlaySetting(id);
+
+          if (listType === undefined) {
+            // 첫 재생을 세팅한다.
+            this.initPlaySetting(id, 'init');
+          } else {
+            this.initPlaySetting(id, listType);
+          }
         }
       });
     },
 
     /**
      * 초기 재생목록 세팅.
-     * 미재생, 재생목록에서 이미 1페이지 데이터는 DB로 등록되었으므로, DB로 목록을 조회한다.
+     * 현재 페이지 번호와 일치하는 레코드를 DB에서 조회하여 랜더링한다.
      */
-    initPlaySetting(id) {
+    initPlaySetting(id, listType) {
       this.getPlaylistInfoData(this.playType, id).then(result => {
         let doc = result.docs[0];
         if (doc) {
@@ -443,13 +405,11 @@ export default {
           this.playlistInfoId = doc._id;
           this.totalTracks = doc.totalResults;
           this.totalPage = doc.totalPage;
-          this.pageNum = doc.pageNum;
-          this.nextPageToken = doc.nextPageToken;
+          this.nextPageToken = this.getNextToken().nextToken
           this.channelPlaylistId = doc.channelPlaylistId
             ? doc.channelPlaylistId
             : null;
           this.isNext = !!this.nextPageToken;
-
           // 재생정보의 id값과 일치하는 하위 비디오를 조회
           this.$local
             .find({
@@ -463,7 +423,7 @@ export default {
             .then(result => {
               this.playlist = result.docs;
               // this.data = findPlaylist;
-              this.feachExtends();
+              this.feachExtends(listType);
             });
         }
       });
@@ -485,61 +445,27 @@ export default {
       }
     },
 
-    feachExtends() {
+    feachExtends(listType) {
+
       // 현재 재생중인 비디오가 있는지 조회
       const musicInfo = this.getMusicInfos();
 
-      // 재생중인정보가 있는지?
-      if (musicInfo) {
-        let id = null;
-
-        if (this.playType === "play") {
-          id = musicInfo.playlistId;
-        } else if (this.playType === "related") {
-          id = musicInfo.mainId;
-        } else if (this.playType === "channel") {
-          id = musicInfo.channelId;
-        }
-
-        // 재생중인건 있는데 재생중인 재생목록 페이지와 현재 페이지가 달라서 새로 시작
-        if (id !== this.playlistId) {
-          // this.data = findPlaylist;
-          this.autoStart();
-        } else {
-          // this.data = findPlaylist;
-
-          // 현재 재생중인 음악의 페이지 번호가 현재 페이지 번호와 같으면
-          if (musicInfo.pageNum === this.pageNum) {
-            this.checkCollection();
-            this.coverTitle = musicInfo.title;
-            this.channelTitle = musicInfo.channelTitle;
-            this.cover = musicInfo.imageInfo;
-            this.selectedIndex = musicInfo.index;
-            this.videoActive(500);
-          } else {
-            // 현재 재생중인 비디오의 인덱스와 현재 페이지의 시작인덱스가 동일한지?
-            if (musicInfo.index === this.$route.params.start) {
-              /** @override 컬렉션 등록여부 조회 */
-              this.checkCollection();
-
-              // 재생중인게 있고 페이지 인덱스 변경없이 재방문
-              this.coverTitle = musicInfo.title;
-              this.channelTitle = musicInfo.channelTitle;
-              this.cover = musicInfo.imageInfo;
-              this.selectedIndex = musicInfo.index;
-              this.videoActive(500);
-            } else {
-              // 재생중인게 있고 페이지 시작 인덱스가 달라서 시작 인덱스로 새로 시작
-              this.autoStart();
-            }
-          }
-        }
-      } else {
-        // 재생중인거 없어서 첫 시작
-
-        // this.data = findPlaylist;
+      // 재생목록 첫 시작 or 다른 재생목록을 실행의 경우.
+      if (listType === 'init') {
         this.autoStart();
+      } else {
+        // 같은 재생목록일때
+        /** @override 컬렉션 등록여부 조회 */
+        this.checkCollection();
+
+        // 재생중인게 있고 페이지 인덱스 변경없이 재방문
+        this.coverTitle = musicInfo.title;
+        this.channelTitle = musicInfo.channelTitle;
+        this.cover = musicInfo.imageInfo;
+        this.selectedIndex = musicInfo.index;
+        this.videoActive(500);
       }
+
     },
 
     autoStart() {
@@ -748,6 +674,12 @@ export default {
 
     // 페이징 재조회
     pagingReload(type) {
+
+      let page = this.pageNum
+      if(type === 'prev') {
+        page = this.pageNum - 1
+      }
+
       let playlistName = null;
       if (this.playType === "play") {
         playlistName = `PLAYLIST:${this.playlistId}`;
@@ -761,100 +693,49 @@ export default {
       // 재생중인 음악정보 조회
       const musicData = this.getMusicInfos();
 
-      // 재생목록 정보 조회
-      this.createLocalIndex(["_id", "type", "parentId"]).then(() => {
-        return this.$local
-          .find({
-            selector: {
-              type: this.playType + "ListInfo",
-              playlistId: playlistName
-            }
-          })
-          .then(result => {
-            let doc = result.docs[0];
-            // 재생목록 정보를 설정
-            if (doc) {
-              // 재생목록정보 아이디
-              this.playlistInfoId = doc._id;
-              // 재생목록 총 개수
-              this.totalTracks = doc.totalResults;
-              // 재생목록 총 페이지
-              this.totalPage = doc.totalPage;
-              // 페이지 번호
-              this.pageNum = doc.pageNum;
-              // 다음 페이지 토큰
-              this.nextPageToken = doc.nextPageToken;
-              // 채널이라면 채널아이디 설정
-              this.channelPlaylistId = doc.channelPlaylistId
-                ? doc.channelPlaylistId
-                : null;
-              // 토큰의 여부
-              this.isNext = !!this.nextPageToken;
-              // 선택된 인덱스 설정 (기본값)
-              this.selectedIndex = null;
-              // 조회타입이 이전 페이지 조회일때
-              if (type === "prev") {
-                // 재생중인 음악의 페이지 번호와, 현재 페이지가 동일하면
-                if (musicData.pageNum === this.pageNum) {
-                  this.selectedIndex = musicData.index;
-                }
+      this.getPlaylistInfoData(this.playType, playlistName)
+        .then(result => {
+          let doc = result.docs[0];
+          if (doc) {
+            // 선택된 인덱스 설정 (기본값)
+            this.selectedIndex = null;
+            // 현재 토큰이 있는지 여부
+            this.isNext = !!this.getNextToken().nextToken;
+            if (type === "prev") {
+              // 재생중인 음악의 페이지 번호와, 현재 페이지가 동일하면
+              if (musicData.pageNum === page) {
+                this.selectedIndex = musicData.index;
               }
-              // 재생목록 정보의 id값과 일치하는 하위 비디오를 조회
-              this.$local
-                .find({
-                  selector: {
-                    type: this.playType,
-                    parentId: doc._id,
-                    pageNum: this.pageNum
-                  },
-                  limit: 30
-                })
-                .then(result => {
-                  const docs = result.docs;
-                  this.playlist = docs;
-                  this.endScrollTop();
-                  // this.data = findPlaylist;
-                  // this.feachExtends();
-                });
             }
-          });
-      });
+            // 재생목록 정보의 id값과 일치하는 하위 비디오를 조회
+            this.$local
+              .find({
+                selector: {
+                  type: this.playType,
+                  parentId: doc._id,
+                  pageNum: page
+                },
+                limit: 30
+              })
+              .then(result => {
+
+                this.pageNum = page
+
+                const docs = result.docs;
+                this.playlist = docs;
+                this.endScrollTop();
+                // this.data = findPlaylist;
+                // this.feachExtends();
+              });
+          }
+        })
     },
 
+    /**
+     * 이전 페이징은 토큰이 필요없다. (전부 DB로 조회)
+     */
     prevPageLoad() {
-      // 이전 페이지가 될 페이지 번호
-      const prevPageNum = this.pageNum - 1;
-      // 현재 재생목록 정보 조회
-      this.$local.get(this.playlistInfoId).then(doc => {
-        // 토큰목록을 가져옴
-        const storeTokens = this.getTokenList();
-        // 이전 페이지번호와 일치하는 토큰정보를 찾음
-        const tokenData = this.$lodash.find(storeTokens, {
-          pageNum: prevPageNum
-        });
-        // 재생목록정보에 이전 페이지의 토큰과 페이지 번호를 갱신
-        doc.nextPageToken = tokenData.pageToken;
-        doc.pageNum = prevPageNum;
-
-        // 토큰 저장소에서 이전 페이지의 토큰정보를 삭제해야한다.
-        // 그래야 이전페이지 이동 후 다음페이지 이동 시 토큰이 중복으로 추가되지 않는다.
-        // 현재4, 토큰1,2,3
-        // 현재3, 토큰1,2
-        // 현재2, 토큰1
-        // 현재1, 토큰x
-        // ===================================
-        const newTokenList = this.$lodash.reject(storeTokens, {
-          pageNum: prevPageNum
-        });
-        this.$store.commit("setTokenUpdate", newTokenList);
-
-        // 재생정보 업데이트
-        return this.$local.put(doc).then(result => {
-          if (result.ok) {
-            this.pagingReload("prev");
-          }
-        });
-      });
+      this.pagingReload("prev");
     },
 
     /**
@@ -870,19 +751,19 @@ export default {
         playlistName = `PLAYLIST:${this.playlistId}`;
         playlistItem = $commons.youtubePagingPlaylistItem(
           this.playlistId,
-          this.nextPageToken
+          this.getNextToken().nextToken
         );
       } else if (this.playType === "related") {
         playlistName = `RELATED:${this.playlistId}`;
         playlistItem = $commons.youtubePagingRelatedSearch(
           this.playlistId,
-          this.nextPageToken
+          this.getNextToken().nextToken
         );
       } else if (this.playType === "channel") {
         playlistName = `CHANNEL:${this.playlistId}`;
         playlistItem = $commons.youtubePagingPlaylistItem(
           this.channelPlaylistId,
-          this.nextPageToken
+          this.getNextToken().nextToken
         );
       }
 
@@ -902,47 +783,33 @@ export default {
             this.$store.commit("setMusicList", res.data.items);
           }
 
-          const nextPage = this.pageNum + 1;
           this.$store.dispatch(pathName).then(results => {
             let list = [];
             this.$lodash.forEach(results, (item, idx) => {
               item.type = this.playType;
               item.parentId = this.playlistInfoId;
-              item.pageNum = nextPage;
+              item.pageNum = this.pageNum + 1;
               list.push(item);
               if (idx === results.length - 1) {
                 // 조회된 재생목록 하위 데이터 한꺼번에 등록
                 this.$local.bulkDocs(results).then(() => {
-                  // 등록이 끝났으면, 다음 페이지 토큰을 업데이트 하기위해 재생목록정보를 조회한다.
-                  this.$local.get(this.playlistInfoId).then(doc => {
-                    // 토큰 갱신
-                    doc.nextPageToken = res.data.nextPageToken
+                  let nextTokenData = {
+                    pageNum: this.pageNum + 1,
+                    nextToken: res.data.nextPageToken
                       ? res.data.nextPageToken
-                      : null;
-                    doc.pageNum = nextPage;
-                    // 재생정보 업데이트
-                    return this.$local.put(doc).then(result => {
-                      if (result.ok) {
-                        let currentTokenData = {
-                          pageNum: this.pageNum,
-                          pageToken: this.nextPageToken
-                        };
-                        // 이전 토큰 저장
-                        // this.$store.commit("setTokenList", currentTokenData);
+                      : null,
+                  };
+                  // 다음 페이지 토큰 저장
+                  this.$store.commit('setNextToken', nextTokenData)
 
-                        // 총 페이지와, 다음페이지가 동일하면 마지막 페이지도 함께 토큰저장소에 추가한다.
-                        // 마지막 페이지 이므로 토큰은 없고, 페이지 번호만 필요.
-                        if (this.totalPage === nextPage) {
-                          currentTokenData.pageNum = nextPage;
-                          currentTokenData.pageToken = "end";
-                          // this.$store.commit("setTokenList", currentTokenData);
-                        }
+                  // 현재 토큰 갱신
+                  // this.nextPageToken = nextTokenData.nextToken
 
-                        this.pagingReload("next");
-                        this.isMore = false;
-                      }
-                    });
-                  });
+                  // 현재 페이지 번호를 갱신
+                  this.pageNum = nextTokenData.pageNum
+                  // 페이지 재조회
+                  this.pagingReload("next");
+                  this.isMore = false
                 });
               }
             });
