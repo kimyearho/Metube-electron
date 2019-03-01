@@ -16,6 +16,32 @@ export default {
           }
         });
       });
+    },
+
+    getPlaylistVideoCount(playType, listId, page) {
+      const params = ["type", "playlistId"];
+      return this.createLocalIndex(params).then(() => {
+        return this.$local.find({
+          selector: {
+            type: playType + "ListInfo",
+            playlistId: listId
+          }
+        }).then(result => {
+          return this.$local
+            .find({
+              selector: {
+                type: playType,
+                parentId: result.docs[0]._id,
+                pageNum: page
+              },
+              limit: 30
+            })
+            .then(result => {
+              const docs = result.docs;
+              return this.$lodash.size(docs);
+            });
+        })
+      });
     }
   }
 };

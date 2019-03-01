@@ -310,12 +310,10 @@ export default {
                   playlistId: playlistName, // PLAYLIST:ID
                   playlistTitle: plistTitle,
                   channelPlaylistId: subChannelId || null,
-                  firstPageNextToken: res.data.nextPageToken
-                    ? res.data.nextPageToken
-                    : null,
                   nextPageToken: res.data.nextPageToken
                     ? res.data.nextPageToken
                     : null,
+                  lastPageToken: 'none',
                   totalResults: res.data.pageInfo.totalResults,
                   totalPage: Math.ceil(res.data.pageInfo.totalResults / 30),
                   pageNum: 1
