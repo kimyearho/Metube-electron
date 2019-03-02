@@ -89,7 +89,7 @@
       <!-- 페이징 -->
       <md-list-item v-if="pageNum !== lastPageNum">
         <div v-if="!isMore" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
-          <a v-if="pageNum !== 1" class="cursor" @click="prevPageLoad">
+          <a v-if="pageNum !== 1" class="cursor" @click="prevPageLoad('self')">
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
           </a>
@@ -105,16 +105,12 @@
       <!-- 페이지의 끝 -->
       <md-list-item v-else>
         <div v-if="pageNum === lastPageNum" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
-          <a class="cursor" @click="prevPageLoad">
+          <a class="cursor" @click="prevPageLoad('self')">
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
           </a>
           <span>{{ pageNum }} / {{ totalPage }}</span>
         </div>
-        <!-- <div class="playlistEnd">
-          <i class="el-icon-check"></i>
-          {{ $t('COMMONS.END') }}
-        </div>-->
       </md-list-item>
 
       <!-- 유튜브 로고 -->
@@ -486,7 +482,7 @@ export default {
       const playType = musicInfo.type;
       const parentId = musicInfo.parentId;
 
-      // 다음순번 인덱스
+      // 다음순번 or 이전순번 인덱스
       let nextIndex = index;
       // 재생중인 음악의 페이지 번호
       let musicPageNum = musicInfo.pageNum;
@@ -514,12 +510,12 @@ export default {
         });
       } else {
         // 각 페이지의 마지막 번째 음악이 종료됬을 때
-        if (nextIndex % 30 === 0) {
+        if (nextIndex !== 0 && nextIndex % 30 === 0) {
           // 현재 보고 있는페이지가 다르다면,
           if (this.pageNum !== musicInfo.pageNum) {
-            this.nextPageLoad("other");
+            this.nextPageLoad("P0003");
           } else {
-            this.nextPageLoad("auto");
+            this.nextPageLoad("P0004");
           }
         } else {
           // 그외 다음 곡 재생
@@ -553,10 +549,21 @@ export default {
       let musicInfo = this.getMusicInfos();
       let previousIndex = musicInfo.index - 1;
 
+      console.log("previousIndex => ", previousIndex);
+
       if (previousIndex !== -1) {
         this.prevPlay(previousIndex);
       } else {
-        this.playItem(0);
+        // 현재 페이지가 1페이지가 아니고, 인덱스가 -1일때
+        if (musicInfo.pageNum !== 1) {
+          // 현재 보고 있는 페이지와, 재생음악 페이지가 다를때
+          // 예) 음악은 2페이지 0번째 음악재생중, 현재 페이지는 다른페이지일때
+          if (this.pageNum !== musicInfo.pageNum) {
+            this.prevPageLoad("P0002");
+          } else {
+            this.prevPageLoad("P0001");
+          }
+        }
       }
     },
 
@@ -576,9 +583,9 @@ export default {
           if (this.lastPageToken || this.lastPageToken === null) {
             // 보고 있는 페이지가 다르면 other / 같으면 auto
             if (this.pageNum !== musicInfo.pageNum) {
-              this.nextPageLoad("other");
+              this.nextPageLoad("P0003");
             } else {
-              this.nextPageLoad("auto");
+              this.nextPageLoad("P0004");
             }
           }
         } else {
@@ -590,9 +597,11 @@ export default {
     prevPlay(prevIndex) {
       let musicInfo = this.getMusicInfos();
 
+      console.log(this.pageNum);
+      console.log(musicInfo.pageNum);
+
       // TODO: 보고있는 페이지가 다를 때
       if (this.pageNum !== musicInfo.pageNum) {
-        console.log("페이지가 다름!");
         this.playItem(prevIndex);
       } else {
         // 페이지가 같음
@@ -738,27 +747,50 @@ export default {
               const docs = result.docs;
 
               // 이벤트 타입이 other가 아니면
-              if (eventType !== "other") {
+              if (eventType !== "P0002" && eventType !== "P0003") {
                 // 이벤트 타입 self, auto만 해당 됨.
                 this.pageNum = page;
                 this.playlist = docs;
-                this.endScrollTop();
 
                 // 이벤트 타입이 auto 이면 목록의 0번째 시작
-                if (eventType === "auto") {
+                if (eventType === "P0004") {
                   this.mainPlayItem(0);
                 }
+
+                if (eventType !== "P0001") {
+                  this.endScrollTop();
+                }
+
+                if (eventType === "P0001") {
+                  let playingItem = docs[docs.length - 1];
+                  playingItem.index = docs.length - 1;
+                  playingItem.name = musicData.name;
+                  if (this.playType === "related") {
+                    playingItem.mainId = this.videoId;
+                  }
+                  this.selectedIndex = playingItem.index;
+                  this.playSetting(playingItem);
+                  this.videoActive(500);
+                }
               } else {
-                // 이벤트 타입 other만 해당 됨
-                let playingItem = docs[0];
-                playingItem.index = 0;
-                playingItem.name = musicData.name;
-                if (this.playType === "related") {
-                  playingItem.mainId = this.videoId;
+                let playingItem;
+                if (eventType === "P0002") {
+                  playingItem = docs[docs.length - 1];
+                  playingItem.index = docs.length - 1;
+                  playingItem.name = musicData.name;
+                  if (this.playType === "related") {
+                    playingItem.mainId = this.videoId;
+                  }
+                } else if (eventType === "P0003") {
+                  playingItem = docs[0];
+                  playingItem.index = 0;
+                  playingItem.name = musicData.name;
+                  if (this.playType === "related") {
+                    playingItem.mainId = this.videoId;
+                  }
                 }
                 this.playSetting(playingItem);
               }
-
               // this.data = findPlaylist;
             });
           return this.$local.put(doc).then(result => {
@@ -773,9 +805,14 @@ export default {
     /**
      * 이전 페이징은 토큰이 필요없다. (전부 DB로 조회)
      */
-    prevPageLoad() {
-      const prevPageNum = this.pageNum - 1;
-      this.pagingReload("prev", prevPageNum, "self");
+    prevPageLoad(eventType) {
+      let prevPageNum = 0;
+      if (eventType === "P0002") {
+        prevPageNum = this.getMusicInfos().pageNum - 1;
+      } else {
+        prevPageNum = this.pageNum - 1;
+      }
+      this.pagingReload("prev", prevPageNum, eventType);
     },
 
     /**
@@ -812,10 +849,8 @@ export default {
 
       let nextPageNum;
 
-      console.log("eventType => ", eventType);
-
       //
-      if (eventType === "other") {
+      if (eventType === "P0003") {
         const musicInfo = this.getMusicInfos();
         nextPageNum = musicInfo.pageNum + 1;
       } else {
@@ -889,7 +924,7 @@ export default {
      * 다음 페이지를 실행하고, 첫번째 음악을 실행한다.
      */
     nextPageMusicPlay() {
-      this.nextPageLoad("auto");
+      this.nextPageLoad("P0004");
     },
 
     /**
