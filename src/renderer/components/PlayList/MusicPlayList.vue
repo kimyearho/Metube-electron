@@ -179,14 +179,11 @@ export default {
       nextPageToken: null,
       isLikeToggle: false,
       isMore: false,
-      selected: null,
       selectedIndex: 0,
       active: "active",
       cover: null,
       load: false,
-      menu: null,
       videoId: null,
-      clickIdx: null,
       playType: null,
       data: null
     };
@@ -309,7 +306,6 @@ export default {
               } else if (this.playType === "channel") {
                 parentPlaylistId = musicInfo.channelId;
               }
-              // STEP 01
               // - 현재 재생목록과, 재생중인 음악정보의 재생목록과 동일한지 체크한다. (playlistId 비교)
               // - 토큰 등록시 주의할 점은 pageNum을 현재 페이지 번호의 +1로 해야한다. 1페이지와, 마지막페이지는 토큰이 없음.
               // - 무조건 첫 페이지의 토큰은 2페이를 조회하기 위한 토큰이다. 즉 토큰은 아래와 같은 규칙이 적용된다.
