@@ -45,7 +45,7 @@ export default {
           let currentIndex = musicData.index
           // 다음 인덱스
           let nextIndex = currentIndex + 1
-          // 내컬렉션일 경우
+
           this.$emit("sendNextMusicPlay", nextIndex)
         }
       }
@@ -74,10 +74,14 @@ export default {
       let statusSize = this.$lodash.size(this.status);
       let lastIndex = this.status[statusSize - 1];
       if (lastIndex) {
+        // 재생실패
         if (lastIndex === -1) {
+
           let musicData = this.getMusicInfos();
           let nextIndex = musicData.index + 1;
-          if (musicData.type) {
+
+          // 내 콜렉션타입일때
+          if (musicData.type === 'mycollectionItem') {
             this.createIndex(["userId", "parentId"]).then(result => {
               return this.$test
                 .find({
@@ -101,6 +105,8 @@ export default {
                 });
             });
           } else {
+            // 유튜브 재생목록 타입일때
+
             let all = this.getAllPlayList();
             // 다음 인덱스
             let playlist = this.$lodash.find(all, {
