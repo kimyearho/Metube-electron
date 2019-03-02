@@ -516,10 +516,10 @@ export default {
         // 각 페이지의 마지막 번째 음악이 종료됬을 때
         if (nextIndex % 30 === 0) {
           // 현재 보고 있는페이지가 다르다면,
-          if(this.pageNum !== musicInfo.pageNum) {
-            this.nextPageLoad('other')
+          if (this.pageNum !== musicInfo.pageNum) {
+            this.nextPageLoad("other");
           } else {
-            this.nextPageLoad('auto');
+            this.nextPageLoad("auto");
           }
         } else {
           // 그외 다음 곡 재생
@@ -554,7 +554,7 @@ export default {
       let previousIndex = musicInfo.index - 1;
 
       if (previousIndex !== -1) {
-        this.prevPlay(previousIndex)
+        this.prevPlay(previousIndex);
       } else {
         this.playItem(0);
       }
@@ -575,7 +575,7 @@ export default {
           // 목록의 마지막인데, 다음 페이지가 있을 때
           if (this.lastPageToken || this.lastPageToken === null) {
             // 보고 있는 페이지가 다르면 other / 같으면 auto
-            if(this.pageNum !== musicInfo.pageNum) {
+            if (this.pageNum !== musicInfo.pageNum) {
               this.nextPageLoad("other");
             } else {
               this.nextPageLoad("auto");
@@ -590,10 +590,10 @@ export default {
     prevPlay(prevIndex) {
       let musicInfo = this.getMusicInfos();
 
-      // TODO: 보고있는 페이지가 다를 때 
-      if(this.pageNum !== musicInfo.pageNum) {
-        console.log('페이지가 다름!')
-        this.playItem(prevIndex)
+      // TODO: 보고있는 페이지가 다를 때
+      if (this.pageNum !== musicInfo.pageNum) {
+        console.log("페이지가 다름!");
+        this.playItem(prevIndex);
       } else {
         // 페이지가 같음
         // 재생목록에서 해당하는 트랙번호의 비디오
@@ -614,9 +614,9 @@ export default {
       let musicInfo = this.getMusicInfos();
       let nextIndex = musicInfo.index + 1;
 
-      // TODO: 보고있는 페이지가 다를 때 
-      if(this.pageNum !== musicInfo.pageNum) {
-        this.playItem(nextIndex)
+      // TODO: 보고있는 페이지가 다를 때
+      if (this.pageNum !== musicInfo.pageNum) {
+        this.playItem(nextIndex);
       } else {
         // 페이지가 같음
         // 재생목록에서 해당하는 트랙번호의 비디오
@@ -708,14 +708,15 @@ export default {
       // 재생중인 음악정보 조회
       const musicData = this.getMusicInfos();
 
+      // 선택된 인덱스 설정 (기본값)
+      this.selectedIndex = null;
+
       this.getPlaylistInfoData(this.playType, playlistName).then(result => {
         let doc = result.docs[0];
         if (doc) {
           // 재생목록정보에 토큰을 최신화
           doc.lastPageToken = this.nextPageToken;
 
-          // 선택된 인덱스 설정 (기본값)
-          this.selectedIndex = null;
           // 현재 토큰이 있는지 여부
           if (type) {
             // 재생중인 음악의 페이지 번호와, 현재 페이지가 동일하면
@@ -736,21 +737,28 @@ export default {
             .then(result => {
               const docs = result.docs;
 
-              if(eventType !== 'other') {
+              // 이벤트 타입이 other가 아니면
+              if (eventType !== "other") {
+                // 이벤트 타입 self, auto만 해당 됨.
                 this.pageNum = page;
                 this.playlist = docs;
                 this.endScrollTop();
-              } 
-              if (eventType === "auto") {
-                this.mainPlayItem(0);
-              } else if(eventType === "other") {
-                // 재생목록 현재 페이지와 재생이 종료되는 음악의 페이지번호가 일치할경우
+
+                // 이벤트 타입이 auto 이면 목록의 0번째 시작
+                if (eventType === "auto") {
+                  this.mainPlayItem(0);
+                }
+              } else {
+                // 이벤트 타입 other만 해당 됨
                 let playingItem = docs[0];
                 playingItem.index = 0;
                 playingItem.name = musicData.name;
-                if (this.playType === "related") playingItem.mainId = this.videoId;
+                if (this.playType === "related") {
+                  playingItem.mainId = this.videoId;
+                }
                 this.playSetting(playingItem);
               }
+
               // this.data = findPlaylist;
             });
           return this.$local.put(doc).then(result => {
@@ -804,17 +812,17 @@ export default {
 
       let nextPageNum;
 
-      console.log("eventType => ", eventType)
+      console.log("eventType => ", eventType);
 
-      // 
-      if(eventType === 'other') {
+      //
+      if (eventType === "other") {
         const musicInfo = this.getMusicInfos();
         nextPageNum = musicInfo.pageNum + 1;
       } else {
         nextPageNum = this.pageNum + 1;
       }
 
-      console.log("nextPageNum => ", nextPageNum)
+      console.log("nextPageNum => ", nextPageNum);
 
       this.getPlaylistVideoCount(this.playType, playlistName, nextPageNum).then(
         count => {
