@@ -741,8 +741,15 @@ export default {
                 this.playlist = docs;
                 this.endScrollTop();
               } 
-              if (eventType === "auto" || eventType === "other") {
+              if (eventType === "auto") {
                 this.mainPlayItem(0);
+              } else if(eventType === "other") {
+                // 재생목록 현재 페이지와 재생이 종료되는 음악의 페이지번호가 일치할경우
+                let playingItem = docs[0];
+                playingItem.index = 0;
+                playingItem.name = musicData.name;
+                if (this.playType === "related") playingItem.mainId = this.videoId;
+                this.playSetting(playingItem);
               }
               // this.data = findPlaylist;
             });
