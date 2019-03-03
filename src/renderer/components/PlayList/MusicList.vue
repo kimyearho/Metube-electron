@@ -140,6 +140,7 @@ import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
 import DataUtils from "@/components/Mixin/db";
+import PlaylistMix from "@/components/Mixin/playlist";
 import CollectionQueryMixin from "@/components/Mixin/collections";
 import ContextMenu from "@/components/Context/ContextMenu";
 import Loading from "@/components/Loader/PageLoading";
@@ -147,7 +148,7 @@ import CollectionRegister from "@/components/Collections/regist/CollectionRegist
 
 export default {
   name: "MusicList",
-  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, PlaylistMix, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -210,7 +211,13 @@ export default {
           })
           .then(result => {
             let doc = result.docs[0];
+            
+            console.log('doc => ', doc)
+
             if (doc) {
+
+              console.log('1 ==================================')
+
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
               this.playlistTitle = doc.playlistTitle
@@ -243,6 +250,7 @@ export default {
                 });
             } else {
               // no
+              console.log('2 ==================================')
               this.initialSetting(playlistName);
             }
           });
@@ -328,6 +336,7 @@ export default {
                     this.$lodash.forEach(results, (item, idx) => {
                       item.type = this.playType;
                       item.parentId = this.playlistInfoId;
+                      item.sortIndex = idx
                       item.pageNum = 1;
                       list.push(item);
                       if (idx === results.length - 1) {
@@ -388,16 +397,10 @@ export default {
             const self = this;
             setTimeout(() => {
               // 재생목록 기본정보를 통해 하위 데이터 조회
-              self.$local
-                .find({
-                  selector: {
-                    type: self.playType,
-                    parentId: docs._id
-                  },
-                  limit: 30
-                })
-                .then(res => {
-                  let docs = res.docs;
+
+              self.getPageVideoList(self.playType, docs._id, 1)
+                .then(result => {
+                  let docs = result.docs;
                   if (docs.length > 0) {
                     // 커버설정
                     self.coverTitle = docs[0].title.substring(0, 35);
@@ -408,7 +411,7 @@ export default {
                     self.checkCollection();
                     self.data = docs;
                   }
-                });
+                })
             }, 10 * 100);
           });
       });

@@ -62,14 +62,16 @@ export default {
      * @param {*} page     페이지 번호
      */
     getPageVideoList(playType, parentId, page) {
-      const param = ["type", "parentId", "pageNum"];
+      const param = ["sortIndex", "type", "parentId", "pageNum"];
       return this.createLocalIndex(param).then(() => {
         return this.$local.find({
           selector: {
             type: playType,
             parentId: parentId,
-            pageNum: page
+            pageNum: page,
+            sortIndex: { $gt: null }
           },
+          sort: [{ sortIndex: "asc" }],
           limit: 30
         });
       });

@@ -356,24 +356,18 @@ export default {
         this.channelPlaylistId = doc.channelPlaylistId
           ? doc.channelPlaylistId
           : null;
+
         // 재생정보의 id값과 일치하는 하위 비디오를 조회
-        this.$local
-          .find({
-            selector: {
-              type: this.playType,
-              parentId: doc._id,
-              pageNum: this.pageNum
-            },
-            limit: 30
-          })
-          .then(result => {
+        this.getPageVideoList(this.playType, doc._id, this.pageNum).then(
+          result => {
             this.playlist = result.docs;
             this.data = result.docs;
             this.feachExtends(listType);
-          });
+          }
+        );
         return this.$local.put(doc).then(result => {
           if (result.ok) {
-            this.getLog("====> 재생목록정보 업데이트 완료")
+            this.getLog("====> 재생목록정보 업데이트 완료");
           }
         });
       });
@@ -707,7 +701,6 @@ export default {
       this.getPlaylistInfoData(this.playType, playlistName).then(result => {
         let doc = result.docs[0];
         if (doc) {
-
           // 재생목록 정보 페이지 갱신
           doc.pageNum = page;
 
@@ -721,67 +714,59 @@ export default {
             }
           }
           // 재생목록 정보의 id값과 일치하는 하위 비디오를 조회
-          this.$local
-            .find({
-              selector: {
-                type: this.playType,
-                parentId: doc._id,
-                pageNum: page
-              },
-              limit: 30
-            })
-            .then(result => {
-              const docs = result.docs;
 
-              // 이벤트 타입이 other가 아니면
-              if (eventType !== "P0002" && eventType !== "P0003") {
-                // 이벤트 타입 self, auto만 해당 됨.
-                this.pageNum = page;
-                this.playlist = docs;
+          this.getPageVideoList(this.playType, doc._id, page).then(result => {
+            const docs = result.docs;
 
-                // 이벤트 타입이 auto 이면 목록의 0번째 시작
-                if (eventType === "P0004") {
-                  this.mainPlayItem(0);
-                }
+            // 이벤트 타입이 other가 아니면
+            if (eventType !== "P0002" && eventType !== "P0003") {
+              // 이벤트 타입 self, auto만 해당 됨.
+              this.pageNum = page;
+              this.playlist = docs;
 
-                if (eventType !== "P0001") {
-                  this.endScrollTop();
-                }
-
-                if (eventType === "P0001") {
-                  let playingItem = docs[docs.length - 1];
-                  playingItem.index = docs.length - 1;
-                  playingItem.name = musicData.name;
-                  if (this.playType === "related") {
-                    playingItem.mainId = this.videoId;
-                  }
-                  this.selectedIndex = playingItem.index;
-                  this.playSetting(playingItem);
-                  this.videoActive(500);
-                }
-              } else {
-                let playingItem;
-                if (eventType === "P0002") {
-                  playingItem = docs[docs.length - 1];
-                  playingItem.index = docs.length - 1;
-                  playingItem.name = musicData.name;
-                  if (this.playType === "related") {
-                    playingItem.mainId = this.videoId;
-                  }
-                } else if (eventType === "P0003") {
-                  playingItem = docs[0];
-                  playingItem.index = 0;
-                  playingItem.name = musicData.name;
-                  if (this.playType === "related") {
-                    playingItem.mainId = this.videoId;
-                  }
-                }
-                this.playSetting(playingItem);
+              // 이벤트 타입이 auto 이면 목록의 0번째 시작
+              if (eventType === "P0004") {
+                this.mainPlayItem(0);
               }
-            });
+
+              if (eventType !== "P0001") {
+                this.endScrollTop();
+              }
+
+              if (eventType === "P0001") {
+                let playingItem = docs[docs.length - 1];
+                playingItem.index = docs.length - 1;
+                playingItem.name = musicData.name;
+                if (this.playType === "related") {
+                  playingItem.mainId = this.videoId;
+                }
+                this.selectedIndex = playingItem.index;
+                this.playSetting(playingItem);
+                this.videoActive(500);
+              }
+            } else {
+              let playingItem;
+              if (eventType === "P0002") {
+                playingItem = docs[docs.length - 1];
+                playingItem.index = docs.length - 1;
+                playingItem.name = musicData.name;
+                if (this.playType === "related") {
+                  playingItem.mainId = this.videoId;
+                }
+              } else if (eventType === "P0003") {
+                playingItem = docs[0];
+                playingItem.index = 0;
+                playingItem.name = musicData.name;
+                if (this.playType === "related") {
+                  playingItem.mainId = this.videoId;
+                }
+              }
+              this.playSetting(playingItem);
+            }
+          });
           return this.$local.put(doc).then(result => {
             if (result.ok) {
-              this.getLog("====> 재생목록정보 업데이트 완료")
+              this.getLog("====> 재생목록정보 업데이트 완료");
             }
           });
         }
@@ -871,6 +856,7 @@ export default {
                   this.$lodash.forEach(results, (item, idx) => {
                     item.type = this.playType;
                     item.parentId = this.playlistInfoId;
+                    item.sortIndex = idx;
                     item.pageNum = nextPageNum;
                     list.push(item);
                     if (idx === results.length - 1) {

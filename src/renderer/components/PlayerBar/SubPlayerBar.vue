@@ -300,6 +300,7 @@ export default {
             this.$lodash.forEach(results, (item, idx) => {
               item.type = playType;
               item.parentId = this.playlistParentId;
+              item.sortIndex = idx
               item.pageNum = nextPageNum;
               list.push(item);
               if (idx === results.length - 1) {
