@@ -40,26 +40,27 @@
         </div>
       </div>
     </div>
-    <global-event-handler
-      @sendNextPage="subNextPlaylistAutoPageLoad"
-      @sendNextMusicPlay="sendNextMusicPlay"
-      @playVideoSecond="progressRange"
-    ></global-event-handler>
+    <global-event-handler @sendNextMusicPlay="sendNextMusicPlay" @playVideoSecond="progressRange"></global-event-handler>
   </div>
 </template>
 
 <script>
 import * as $commons from "@/service/commons-service.js";
+import PlaylistMix from "@/components/Mixin/playlist";
 import StoreMixin from "@/components/Mixin/index";
 import DataMixin from "@/components/Mixin/db";
 
 export default {
   name: "SubPlayerBar",
-  mixins: [StoreMixin, DataMixin],
+  mixins: [StoreMixin, DataMixin, PlaylistMix],
   data() {
     return {
       coverTitle: "",
       channelTitle: "",
+      playlistParentId: null,
+      channelPlaylistId: null,
+      playlistLastPage: 0,
+      lastPageToken: null,
       subList: [],
       image: "",
       totalTime: 0,
@@ -76,17 +77,33 @@ export default {
     this.playMusicSetting();
   },
   methods: {
-    sendNextMusicPlay(index) {
+    sendNextMusicPlay(nextIndex) {
+      // 재생중인 음악정보
       const musicInfo = this.getMusicInfos();
+      const playingPageNum = musicInfo.pageNum;
+
       // Youtube 재생목록일때
       if (musicInfo.type !== "mycollectionItem") {
-        const parentId = musicInfo.parentId;
-        this.$local.get(parentId).then(doc => {
+        // 재생목록정보의 아이디
+        this.playlistParentId = musicInfo.parentId;
+
+        this.$local.get(this.playlistParentId).then(doc => {
+          // 이 재생목록의 총 페이지 번호
+          this.playlistLastPage = doc.totalPage;
+
+          // 최근 토큰
+          this.lastPageToken = doc.lastPageToken;
+
+          // 채널 아이디 여부
+          this.channelPlaylistId = doc.channelPlaylistId
+            ? doc.channelPlaylistId
+            : null;
+
           this.$local
             .find({
               selector: {
                 type: musicInfo.type,
-                parentId: parentId,
+                parentId: this.playlistParentId,
                 pageNum: musicInfo.pageNum
               },
               limit: 30
@@ -94,19 +111,83 @@ export default {
             .then(result => {
               let docs = result.docs;
               if (docs) {
+                // 임시 목록
                 this.subList = docs;
-                if (docs.length > index) {
-                  this.subPlay(index);
+
+                // 목록의 총 갯수가 index보다 큰가?
+                if (docs.length > nextIndex) {
+                  // 클때 재생
+                  this.subPlay(nextIndex);
                 } else {
-                  // 토큰여부
-                  let nextPageToken = doc.nextPageToken;
-                  if (nextPageToken === null) {
-                    // 목록의 마지막 번째 음악이 종료되었으므로, 처음부터 재생
-                    tthis.subPlay(0);
+                  const playType = musicInfo.type;
+                  const nextPage = musicInfo.pageNum + 1;
+                  const playlistName = musicInfo.name;
+
+                  // 재생중인 음악의 페이지번호와, 마지막페이지 번호가 일치하는가?
+                  if (playingPageNum === this.playlistLastPage) {
+                    // 마지막 번째 음악이 종료됬음.
+                    if (this.subList.length === nextIndex) {
+                      console.log("마지막 번째 음악이 종료됨");
+                      // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
+                      this.getPageVideoList(
+                        playType,
+                        this.playlistParentId,
+                        1
+                      ).then(result => {
+                        let docs = result.docs;
+                        if (docs) {
+                          // 조회된 다음 페이지 목록
+                          this.subList = docs;
+                          // 다음 페이지 번호를 재생목록정보에 갱신
+                          this.$local.get(this.playlistParentId).then(doc => {
+                            doc.pageNum = 1;
+                            return this.$local.put(doc).then(result => {
+                              if (result.ok) {
+                                // 다음 페이지 목록의 0번째 음악 실행
+                                this.subPlay(0);
+                              }
+                            });
+                          });
+                        }
+                      });
+                    }
                   } else {
-                    // 다음 페이지 조회
-                    // TODO: 다시 테스트 해봐야함
-                    this.$emit("sendNextPage");
+                    console.log("다음 페이지 조회");
+                    // 다음 페이지의 데이터가 DB에 있는지?
+                    this.getPlaylistVideoCount(
+                      playType,
+                      playlistName,
+                      nextPage
+                    ).then(count => {
+                      if (count > 0) {
+                        // 다음 페이지 데이터가 DB에 있음.
+                        this.getPageVideoList(
+                          playType,
+                          this.playlistParentId,
+                          nextPage
+                        ).then(result => {
+                          let docs = result.docs;
+                          if (docs) {
+                            // 조회된 다음 페이지 목록
+                            this.subList = docs;
+
+                            // 다음 페이지 번호를 재생목록정보에 갱신
+                            this.$local.get(this.playlistParentId).then(doc => {
+                              doc.pageNum = nextPage;
+                              return this.$local.put(doc).then(result => {
+                                if (result.ok) {
+                                  // 다음 페이지 목록의 0번째 음악 실행
+                                  this.subPlay(0);
+                                }
+                              });
+                            });
+                          }
+                        });
+                      } else {
+                        // 다음 페이지 데이터가 DB에 없을 때
+                        this.subNextPlayPageLoad();
+                      }
+                    });
                   }
                 }
               }
@@ -144,6 +225,7 @@ export default {
       // 재생목록에서 해당하는 트랙번호의 비디오
       const musicInfo = this.getMusicInfos();
       let playingItem = this.subList[index];
+
       playingItem.index = index;
       playingItem.name = musicInfo.name;
       if (this.playType === "related") playingItem.mainId = this.videoId;
@@ -165,85 +247,90 @@ export default {
       }
     },
 
-    subNextPlaylistAutoPageLoad() {
-      const musicInfo = this.getMusicInfos();
-      const playlistId = musicInfo.playlistId;
-      const allPlaylist = this.getAllPlayList();
-
+    subNextPlayPageLoad() {
       let playlistName = null;
       let playlistItem = null;
-      let playType = null;
 
-      let nameType = musicInfo.name.split(":")[0];
-      if (nameType === "PLAYLIST") {
-        playType = "play";
-      } else if (nameType === "CHANNEL") {
-        playType = "channel";
-      } else if (nameType === "RELATED") {
-        playType = "related";
-      }
+      const musicInfo = this.getMusicInfos();
+      const playType = musicInfo.type;
+      const playlistIdName = musicInfo.name;
+      const nextPageNum = musicInfo.pageNum + 1;
+      const playlistId = playlistIdName.split(":")[1];
 
-      // 현재 재생중인 비디오의 재생정보를 검색
-      let findItem = this.$lodash.find(allPlaylist, {
-        playlistId: musicInfo.name
-      });
-
-      // 토큰을 사용한 새 재생목록 가져오기
       if (playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
+        playlistName = playlistIdName;
         playlistItem = $commons.youtubePagingPlaylistItem(
           playlistId,
-          findItem.nextPageToken
+          this.lastPageToken
         );
       } else if (playType === "related") {
-        playlistName = `RELATED:${musicInfo.mainId}`;
+        playlistName = playlistIdName;
         playlistItem = $commons.youtubePagingRelatedSearch(
-          musicInfo.mainId,
-          findItem.nextPageToken
+          playlistId,
+          this.lastPageToken
         );
       } else if (playType === "channel") {
-        playlistName = `CHANNEL:${musicInfo.channelId}`;
+        playlistName = playlistIdName;
         playlistItem = $commons.youtubePagingPlaylistItem(
           this.channelPlaylistId,
-          findItem.nextPageToken
+          this.lastPageToken
         );
       }
 
-      this.$http.get(playlistItem).then(res => {
-        let pathName = null;
+      this.$http
+        .get(playlistItem)
+        .then(res => {
+          let pathName = null;
+          if (playType === "play") {
+            pathName = "setDuration";
+            this.$store.commit("setMusicList", res.data.items);
+          } else if (playType === "related") {
+            pathName = "setRelatedDuration";
+            this.$store.commit("setRelatedList", res.data.items);
+          } else if (playType === "channel") {
+            pathName = "setDuration";
+            this.$store.commit("setMusicList", res.data.items);
+          }
+          this.$store.dispatch(pathName).then(results => {
+            let list = [];
+            this.$lodash.forEach(results, (item, idx) => {
+              item.type = playType;
+              item.parentId = this.playlistParentId;
+              item.pageNum = nextPageNum;
+              list.push(item);
+              if (idx === results.length - 1) {
+                // 마지막 페이징일때
+                if (nextPageNum === this.playlistLastPage) {
+                  let lastIndex = results.length - 1;
+                  // 마지막번째 비디오 객체에 마지막번째라는 키값을 추가한다.
+                  results[lastIndex].lastVideo = true;
+                }
 
-        if (playType === "play") {
-          pathName = "setDuration";
-          this.$store.commit("setMusicList", res.data.items);
-        } else if (playType === "related") {
-          pathName = "setRelatedDuration";
-          this.$store.commit("setRelatedList", res.data.items);
-        } else if (playType === "channel") {
-          pathName = "setDuration";
-          this.$store.commit("setMusicList", res.data.items);
-        }
-
-        this.$store.dispatch(pathName).then(results => {
-          // 기존 재생목록 뒤로, 토큰으로 조회한 목록을 합친다.
-          this.subList = this.$lodash.concat(findItem.list, results);
-
-          // 토큰여부
-          findItem.nextPageToken = res.data.nextPageToken
-            ? res.data.nextPageToken
-            : null;
-
-          // 전체 재생목록에 등록 된 현재 재생목록에 대한 정보 업데이트
-          const payload = {
-            playlistId: playlistName,
-            appendPlaylist: this.subList,
-            nextPageToken: findItem.nextPageToken
-          };
-          this.$store.commit("setPageAppendList", payload);
-
-          const nextIndex = musicInfo.index + 1;
-          this.subPlay(nextIndex);
+                // 조회된 재생목록 하위 데이터 한꺼번에 등록
+                this.$local.bulkDocs(results).then(() => {
+                  this.$local.get(this.playlistParentId).then(doc => {
+                    doc.lastPageToken = res.data.nextPageToken
+                      ? res.data.nextPageToken
+                      : null;
+                    doc.pageNum = nextPageNum;
+                    return this.$local.put(doc).then(result => {
+                      if (result.ok) {
+                        console.log(
+                          "subNextPlayPageLoad => 재생목록정보 업데이트 완료!"
+                        );
+                        this.subList = results;
+                        this.subPlay(0);
+                      }
+                    });
+                  });
+                });
+              }
+            });
+          });
+        })
+        .catch(error => {
+          this.errorDialog();
         });
-      });
     },
 
     // 재생정보 세팅
@@ -274,7 +361,6 @@ export default {
 
     // 재생
     playTypeControl(event) {
-      console.log(event);
       this.isPlay = event.playType;
     },
 

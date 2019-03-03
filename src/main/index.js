@@ -15,6 +15,7 @@ const winURL =
     : `file://${__dirname}/index.html`
 
 const deleteChromeCache = function () {
+  console.log('====================== CHROME CACHE CLEAR ======================')
   var chromeCacheDir = path.join(app.getPath('userData'), 'Cache');
   if (fs.existsSync(chromeCacheDir)) {
     var files = fs.readdirSync(chromeCacheDir);
@@ -56,8 +57,7 @@ let playerPath
 if (process.env.NODE_ENV !== "production") {
   if (process.platform !== "darwin") {
     // windows
-    // playerPath = "http://localhost:7070"
-    playerPath = "http://sharepod.kr"
+    playerPath = "http://localhost:7070"
   } else {
     // other
     playerPath = "http://sharepod.kr"

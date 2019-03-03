@@ -545,8 +545,6 @@ export default {
       let musicInfo = this.getMusicInfos();
       let previousIndex = musicInfo.index - 1;
 
-      console.log("previousIndex => ", previousIndex);
-
       if (previousIndex !== -1) {
         this.prevPlay(previousIndex);
       } else {
@@ -592,10 +590,6 @@ export default {
 
     prevPlay(prevIndex) {
       let musicInfo = this.getMusicInfos();
-
-      console.log(this.pageNum);
-      console.log(musicInfo.pageNum);
-
       // TODO: 보고있는 페이지가 다를 때
       if (this.pageNum !== musicInfo.pageNum) {
         this.playItem(prevIndex);
@@ -719,10 +713,13 @@ export default {
       this.getPlaylistInfoData(this.playType, playlistName).then(result => {
         let doc = result.docs[0];
         if (doc) {
+
+          // 재생목록 정보 페이지 갱신
+          doc.pageNum = page;
+
           // 재생목록정보에 토큰을 최신화
           doc.lastPageToken = this.nextPageToken;
 
-          // 현재 토큰이 있는지 여부
           if (type) {
             // 재생중인 음악의 페이지 번호와, 현재 페이지가 동일하면
             if (musicData.pageNum === page) {
@@ -845,11 +842,12 @@ export default {
 
       let nextPageNum;
 
-      //
+      // 페이지가 다름
       if (eventType === "P0003") {
         const musicInfo = this.getMusicInfos();
         nextPageNum = musicInfo.pageNum + 1;
       } else {
+        // 동일 페이지내에서
         nextPageNum = this.pageNum + 1;
       }
 
