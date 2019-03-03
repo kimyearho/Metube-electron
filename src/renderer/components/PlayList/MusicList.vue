@@ -8,28 +8,15 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :isShow="false"
-      @reloadMusicList="feachData"
-    />
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a
-        class="cursor"
-        @click="goBack"
-      >
-        <img
-          src="@/assets/images/svg/menu-back.svg"
-          title="Back"
-        >
+      <a class="cursor" @click="goBack">
+        <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
       <!-- 컬렉션 등록 -->
-      <a
-        class="cursor"
-        v-if="playType !== 'related'"
-        @click="addCollection"
-      >
+      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
         <collection-register
           ref="likes"
           :data="data"
@@ -41,10 +28,7 @@
       </a>
     </div>
     <div class>
-      <img
-        class="playlistCover"
-        :src="cover"
-      >
+      <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -70,46 +54,23 @@
     </div>
     <div class="overay"></div>
 
-    <md-list
-      id="list"
-      class="searchList"
-      :class="{ dynamicHeight: isMini }"
-    >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-      >
+    <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
+      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
         <md-avatar style="margin-right: 0;">
-          <img
-            :src="item.imageInfo"
-            alt="People"
-          >
+          <img :src="item.imageInfo" alt="People">
         </md-avatar>
 
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive != 'live'"
-        >{{ item.duration }}</span>
-        <span
-          class="label_live"
-          v-if="item.videoId && item.isLive == 'live'"
-        >LIVE</span>
-        <context-menu
-          :videoId="item.videoId"
-          :data="item"
-        />
+        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <context-menu :videoId="item.videoId" :data="item"/>
       </md-list-item>
       <md-list-item v-if="isNext">
         <span class="loadMoreCenter">
-          <i
-            class="el-icon-check"
-            style="padding-right: 10px;"
-          ></i>
+          <i class="el-icon-check" style="padding-right: 10px;"></i>
           Total {{ totalPage }} Page
         </span>
       </md-list-item>
@@ -120,18 +81,14 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load" />
+      <loading v-show="!load"/>
     </transition>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -211,16 +168,15 @@ export default {
           })
           .then(result => {
             let doc = result.docs[0];
-            
-            console.log('doc => ', doc)
+
+            console.log("doc => ", doc);
 
             if (doc) {
-
-              console.log('1 ==================================')
+              console.log("1 ==================================");
 
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
-              this.playlistTitle = doc.playlistTitle
+              this.playlistTitle = doc.playlistTitle;
               this.totalPage = doc.totalPage;
               this.totalTracks = doc.totalResults;
               this.nextPageToken = doc.nextPageToken;
@@ -228,29 +184,20 @@ export default {
                 ? doc.channelPlaylistId
                 : null;
 
-              // 재생정보의 id값과 일치하는 하위 비디오를 조회
-              this.$local
-                .find({
-                  selector: {
-                    type: this.playType,
-                    parentId: doc._id
-                  },
-                  limit: 30
-                })
-                .then(result => {
-                  const docs = result.docs;
-                  // 커버 및 재생목록정보를 설정한다.
-                  this.coverTitle = docs[0].title.substring(0, 35);
-                  this.channelTitle = docs[0].channelTitle;
-                  this.cover = docs[0].imageInfo;
-                  this.playlist = docs;
-                  // 체크 콜렉션
-                  this.checkCollection();
-                  this.data = docs;
-                });
+              this.getPageVideoList(this.playType, doc._id, 1).then(result => {
+                const docs = result.docs;
+                // 커버 및 재생목록정보를 설정한다.
+                this.coverTitle = docs[0].title.substring(0, 35);
+                this.channelTitle = docs[0].channelTitle;
+                this.cover = docs[0].imageInfo;
+                this.playlist = docs;
+                // 체크 콜렉션
+                this.checkCollection();
+                this.data = docs;
+              });
             } else {
               // no
-              console.log('2 ==================================')
+              console.log("2 ==================================");
               this.initialSetting(playlistName);
             }
           });
@@ -322,7 +269,7 @@ export default {
                   nextPageToken: res.data.nextPageToken
                     ? res.data.nextPageToken
                     : null,
-                  lastPageToken: 'none',
+                  lastPageToken: "none",
                   totalResults: res.data.pageInfo.totalResults,
                   totalPage: Math.ceil(res.data.pageInfo.totalResults / 30),
                   pageNum: 1
@@ -336,7 +283,7 @@ export default {
                     this.$lodash.forEach(results, (item, idx) => {
                       item.type = this.playType;
                       item.parentId = this.playlistInfoId;
-                      item.sortIndex = idx
+                      item.sortIndex = idx;
                       item.pageNum = 1;
                       list.push(item);
                       if (idx === results.length - 1) {
@@ -382,7 +329,7 @@ export default {
           .then(result => {
             let docs = result.docs[0];
 
-            this.playlistTitle = docs.playlistTitle
+            this.playlistTitle = docs.playlistTitle;
 
             // 채널 재생목록 아이디 (채널 아이디 아님)
             this.channelPlaylistId =
@@ -398,20 +345,19 @@ export default {
             setTimeout(() => {
               // 재생목록 기본정보를 통해 하위 데이터 조회
 
-              self.getPageVideoList(self.playType, docs._id, 1)
-                .then(result => {
-                  let docs = result.docs;
-                  if (docs.length > 0) {
-                    // 커버설정
-                    self.coverTitle = docs[0].title.substring(0, 35);
-                    self.channelTitle = docs[0].channelTitle;
-                    self.cover = docs[0].imageInfo;
-                    self.playlist = docs;
+              self.getPageVideoList(self.playType, docs._id, 1).then(result => {
+                let docs = result.docs;
+                if (docs.length > 0) {
+                  // 커버설정
+                  self.coverTitle = docs[0].title.substring(0, 35);
+                  self.channelTitle = docs[0].channelTitle;
+                  self.cover = docs[0].imageInfo;
+                  self.playlist = docs;
 
-                    self.checkCollection();
-                    self.data = docs;
-                  }
-                })
+                  self.checkCollection();
+                  self.data = docs;
+                }
+              });
             }, 10 * 100);
           });
       });

@@ -99,101 +99,96 @@ export default {
             ? doc.channelPlaylistId
             : null;
 
-          this.$local
-            .find({
-              selector: {
-                type: musicInfo.type,
-                parentId: this.playlistParentId,
-                pageNum: musicInfo.pageNum
-              },
-              limit: 30
-            })
-            .then(result => {
-              let docs = result.docs;
-              if (docs) {
-                // 임시 목록
-                this.subList = docs;
+          this.getPageVideoList(
+            musicInfo.type,
+            this.playlistParentId,
+            musicInfo.pageNum
+          ).then(result => {
+            let docs = result.docs;
+            if (docs) {
+              // 임시 목록
+              this.subList = docs;
 
-                // 목록의 총 갯수가 index보다 큰가?
-                if (docs.length > nextIndex) {
-                  // 클때 재생
-                  this.subPlay(nextIndex);
+              // 목록의 총 갯수가 index보다 큰가?
+              if (docs.length > nextIndex) {
+                // 클때 재생
+                this.subPlay(nextIndex);
+              } else {
+                const playType = musicInfo.type;
+                const nextPage = musicInfo.pageNum + 1;
+                const playlistName = musicInfo.name;
+
+                // 재생중인 음악의 페이지번호와, 마지막페이지 번호가 일치하는가?
+                if (playingPageNum === this.playlistLastPage) {
+                  // 마지막 번째 음악이 종료됬음.
+                  if (this.subList.length === nextIndex) {
+                    this.getLog("====> 마지막 번째 음악이 종료 됨");
+                    // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
+                    this.getPageVideoList(
+                      playType,
+                      this.playlistParentId,
+                      1
+                    ).then(result => {
+                      let docs = result.docs;
+                      if (docs) {
+                        // 조회된 다음 페이지 목록
+                        this.subList = docs;
+                        // 다음 페이지 번호를 재생목록정보에 갱신
+                        this.$local.get(this.playlistParentId).then(doc => {
+                          doc.pageNum = 1;
+                          return this.$local.put(doc).then(result => {
+                            if (result.ok) {
+                              // 다음 페이지 목록의 0번째 음악 실행
+                              this.getLog("====> 재생목록정보 업데이트 완료");
+                              this.subPlay(0);
+                            }
+                          });
+                        });
+                      }
+                    });
+                  }
                 } else {
-                  const playType = musicInfo.type;
-                  const nextPage = musicInfo.pageNum + 1;
-                  const playlistName = musicInfo.name;
-
-                  // 재생중인 음악의 페이지번호와, 마지막페이지 번호가 일치하는가?
-                  if (playingPageNum === this.playlistLastPage) {
-                    // 마지막 번째 음악이 종료됬음.
-                    if (this.subList.length === nextIndex) {
-                      this.getLog("====> 마지막 번째 음악이 종료 됨")
-                      // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
+                  this.getLog("====> 다음 페이지 조회");
+                  // 다음 페이지의 데이터가 DB에 있는지?
+                  this.getPlaylistVideoCount(
+                    playType,
+                    playlistName,
+                    nextPage
+                  ).then(count => {
+                    if (count > 0) {
+                      // 다음 페이지 데이터가 DB에 있음.
                       this.getPageVideoList(
                         playType,
                         this.playlistParentId,
-                        1
+                        nextPage
                       ).then(result => {
                         let docs = result.docs;
                         if (docs) {
                           // 조회된 다음 페이지 목록
                           this.subList = docs;
+
                           // 다음 페이지 번호를 재생목록정보에 갱신
                           this.$local.get(this.playlistParentId).then(doc => {
-                            doc.pageNum = 1;
+                            doc.pageNum = nextPage;
                             return this.$local.put(doc).then(result => {
                               if (result.ok) {
+                                this.getLog("====> 재생목록정보 업데이트 완료");
                                 // 다음 페이지 목록의 0번째 음악 실행
-                                this.getLog("====> 재생목록정보 업데이트 완료")
                                 this.subPlay(0);
                               }
                             });
                           });
                         }
                       });
+                    } else {
+                      // 다음 페이지 데이터가 DB에 없을 때
+                      this.subNextPlayPageLoad();
                     }
-                  } else {
-                    this.getLog("====> 다음 페이지 조회")
-                    // 다음 페이지의 데이터가 DB에 있는지?
-                    this.getPlaylistVideoCount(
-                      playType,
-                      playlistName,
-                      nextPage
-                    ).then(count => {
-                      if (count > 0) {
-                        // 다음 페이지 데이터가 DB에 있음.
-                        this.getPageVideoList(
-                          playType,
-                          this.playlistParentId,
-                          nextPage
-                        ).then(result => {
-                          let docs = result.docs;
-                          if (docs) {
-                            // 조회된 다음 페이지 목록
-                            this.subList = docs;
-
-                            // 다음 페이지 번호를 재생목록정보에 갱신
-                            this.$local.get(this.playlistParentId).then(doc => {
-                              doc.pageNum = nextPage;
-                              return this.$local.put(doc).then(result => {
-                                if (result.ok) {
-                                  this.getLog("====> 재생목록정보 업데이트 완료")
-                                  // 다음 페이지 목록의 0번째 음악 실행
-                                  this.subPlay(0);
-                                }
-                              });
-                            });
-                          }
-                        });
-                      } else {
-                        // 다음 페이지 데이터가 DB에 없을 때
-                        this.subNextPlayPageLoad();
-                      }
-                    });
-                  }
+                  });
                 }
               }
-            });
+            }
+          });
         });
       } else {
         this.createIndex(["userId", "parentId"]).then(() => {
@@ -250,7 +245,7 @@ export default {
     },
 
     subNextPlayPageLoad() {
-      this.getLog("====> 다음 페이지가 DB에 없어 API를 통해서 조회")
+      this.getLog("====> 다음 페이지가 DB에 없어 API를 통해서 조회");
 
       let playlistName = null;
       let playlistItem = null;
@@ -300,7 +295,7 @@ export default {
             this.$lodash.forEach(results, (item, idx) => {
               item.type = playType;
               item.parentId = this.playlistParentId;
-              item.sortIndex = idx
+              item.sortIndex = idx;
               item.pageNum = nextPageNum;
               list.push(item);
               if (idx === results.length - 1) {
@@ -320,7 +315,7 @@ export default {
                     doc.pageNum = nextPageNum;
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
-                        this.getLog("====> 재생목록정보 업데이트 완료")
+                        this.getLog("====> 재생목록정보 업데이트 완료");
                         this.subList = results;
                         this.subPlay(0);
                       }
