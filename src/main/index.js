@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from "electron"
 import { googleLogin, getOauth2Client } from "../auth/auth"
 import { exec } from "child_process"
+import log from "electron-log"
 import request from "request"
 import fs from "fs"
 import path from "path"
@@ -15,7 +16,7 @@ const winURL =
     : `file://${__dirname}/index.html`
 
 const deleteChromeCache = function () {
-  console.log('====================== CHROME CACHE CLEAR ======================')
+  log.info('====================== CHROME CACHE CLEAR ======================')
   var chromeCacheDir = path.join(app.getPath('userData'), 'Cache');
   if (fs.existsSync(chromeCacheDir)) {
     var files = fs.readdirSync(chromeCacheDir);
@@ -209,6 +210,14 @@ ipcMain.on("button:close", () => {
     app.quit()
   } else {
     app.quit()
+  }
+})
+
+ipcMain.on("eventLogger", (e, args) => {
+  if(args.value) {
+    log.info(args.message, args.value);
+  } else {
+    log.info(args.message);
   }
 })
 

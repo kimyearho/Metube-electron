@@ -311,13 +311,23 @@ export default {
               // - 무조건 첫 페이지의 토큰은 2페이를 조회하기 위한 토큰이다. 즉 토큰은 아래와 같은 규칙이 적용된다.
               // 1page: { pageNum: 2, nextToken: 'xxx' }
               if (this.playlistId !== parentPlaylistId) {
+                this.getLog(
+                  "[MusicPlayList]/[feachData] ====> playlistId가 불일치하므로 다른 재생목록일때"
+                );
                 // playlistId가 서로 다르므로, 이건 다른 재생목록이다.
                 // 토큰을 초기화 및 새 재생목록에 대한 토큰을 갱신하고 처음 재생한다.
                 this.initWithStart(playlistName, "init");
               } else {
+                this.getLog(
+                  "[MusicPlayList]/[feachData] ====> playlistId가 일치하므로 같읕 재생목록일때"
+                );
                 // playlistId가 서로 동일하므로, 같은 재생목록이다.
                 // 현재 페이지 번호를 재생중인 음악정보의 페이지 번호로 갱신
                 this.pageNum = musicInfo.pageNum;
+                this.getLog(
+                  "[MusicPlayList]/[feachData] ====> 현재 페이지번호 : ",
+                  this.pageNum
+                );
                 // 현재 재생중인 음악정보의 페이지번호와 일치하는 DB 비디오 레코드를 조회하여 랜더링 한다.
                 this.initPlaySetting(playlistName, "same");
               }
@@ -367,7 +377,9 @@ export default {
         );
         return this.$local.put(doc).then(result => {
           if (result.ok) {
-            this.getLog("====> 재생목록정보 업데이트 완료");
+            this.getLog(
+              "[MusicPlayList]/[initPlaySetting] ====> 재생목록정보 업데이트 완료"
+            );
           }
         });
       });
@@ -477,6 +489,9 @@ export default {
 
       // 마지막 페이지, 마지막 비디오일때
       if (musicInfo.lastVideo) {
+        this.getLog(
+          "[MusicPlayList]/[playItem] ====> 마지막페이지, 마지막곡이 종료되어 1페이지로 돌아가서 다시 시작."
+        );
         musicPageNum = 1;
         nextIndex = 0;
         this.getPageVideoList(playType, parentId, musicPageNum).then(result => {
@@ -501,8 +516,16 @@ export default {
         if (nextIndex !== 0 && nextIndex % 30 === 0) {
           // 현재 보고 있는페이지가 다르다면,
           if (this.pageNum !== musicInfo.pageNum) {
+            this.getLog(
+              "[MusicPlayList]/[playItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 다를때 - ",
+              "P0003"
+            );
             this.nextPageLoad("P0003");
           } else {
+            this.getLog(
+              "[MusicPlayList]/[playItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 같음 - ",
+              "P0004"
+            );
             this.nextPageLoad("P0004");
           }
         } else {
@@ -539,10 +562,27 @@ export default {
         // 현재 페이지가 1페이지가 아니고, 인덱스가 -1일때
         if (musicInfo.pageNum !== 1) {
           // 현재 보고 있는 페이지와, 재생음악 페이지가 다를때
-          // 예) 음악은 2페이지 0번째 음악재생중, 현재 페이지는 다른페이지일때
+          this.getLog(
+            "[MusicPlayList]/[previousPlayItem] ====> (현재 페이지 번호) pageNum : ",
+            this.pageNum
+          );
+          this.getLog(
+            "[MusicPlayList]/[previousPlayItem] ====> (재생중 음악정보 페이지 번호) pageNum : ",
+            musicInfo.pageNum
+          );
+
+          // 보고 있는 페이지가 다르면 P0002 / 같으면 P0001
           if (this.pageNum !== musicInfo.pageNum) {
+            this.getLog(
+              "[MusicPlayList]/[previousPlayItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 다를때 - ",
+              "P0002"
+            );
             this.prevPageLoad("P0002");
           } else {
+            this.getLog(
+              "[MusicPlayList]/[previousPlayItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 같을때 - ",
+              "P0001"
+            );
             this.prevPageLoad("P0001");
           }
         }
@@ -563,10 +603,27 @@ export default {
         if (nextIndex % 30 === 0) {
           // 목록의 마지막인데, 다음 페이지가 있을 때
           if (this.lastPageToken || this.lastPageToken === null) {
-            // 보고 있는 페이지가 다르면 other / 같으면 auto
+            this.getLog(
+              "[MusicPlayList]/[nextPlayItem] ====> (현재 페이지 번호) pageNum : ",
+              this.pageNum
+            );
+            this.getLog(
+              "[MusicPlayList]/[nextPlayItem] ====> (재생중 음악정보 페이지 번호) pageNum : ",
+              musicInfo.pageNum
+            );
+
+            // 보고 있는 페이지가 다르면 P0003 / 같으면 P0004
             if (this.pageNum !== musicInfo.pageNum) {
+              this.getLog(
+                "[MusicPlayList]/[nextPlayItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 다를때 - ",
+                "P0003"
+              );
               this.nextPageLoad("P0003");
             } else {
+              this.getLog(
+                "[MusicPlayList]/[nextPlayItem] ====> 각 페이지 마지막번째 음악이 종료되고, 현재 보고있는 페이지가 같을때 - ",
+                "P0004"
+              );
               this.nextPageLoad("P0004");
             }
           }
@@ -578,7 +635,7 @@ export default {
 
     prevPlay(prevIndex) {
       let musicInfo = this.getMusicInfos();
-      // TODO: 보고있는 페이지가 다를 때
+      // 보고있는 페이지가 다를 때
       if (this.pageNum !== musicInfo.pageNum) {
         this.playItem(prevIndex);
       } else {
@@ -623,10 +680,12 @@ export default {
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
     playSetting(playingItem) {
-      // 페이지 설정
+      // 현재 페이지와, 재생하고자하는 페이지가 동일할때
       if (this.pageNum === playingItem.pageNum) {
         this.selectedIndex = playingItem.index;
       }
+
+      // 페이지 설정
       this.coverTitle = playingItem.title;
       this.channelTitle = playingItem.channelTitle;
       this.cover = playingItem.imageInfo;
@@ -766,7 +825,7 @@ export default {
           });
           return this.$local.put(doc).then(result => {
             if (result.ok) {
-              this.getLog("====> 재생목록정보 업데이트 완료");
+              this.getLog("[MusicPlayList]/[pagingReload] ====> 재생목록정보 업데이트 완료");
             }
           });
         }
@@ -836,6 +895,7 @@ export default {
             this.pagingReload("next", nextPageNum, eventType);
             this.isMore = false;
           } else {
+            this.getLog("[MusicPlayList]/[nextPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회");
             // 다음 페이지가 없으므로 새로 조회한다.
             this.$http
               .get(playlistItem)

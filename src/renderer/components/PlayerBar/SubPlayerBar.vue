@@ -122,7 +122,7 @@ export default {
                 if (playingPageNum === this.playlistLastPage) {
                   // 마지막 번째 음악이 종료됬음.
                   if (this.subList.length === nextIndex) {
-                    this.getLog("====> 마지막 번째 음악이 종료 됨");
+                    this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 마지막 번째 음악이 종료 됨");
                     // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
                     this.getPageVideoList(
                       playType,
@@ -139,7 +139,7 @@ export default {
                           return this.$local.put(doc).then(result => {
                             if (result.ok) {
                               // 다음 페이지 목록의 0번째 음악 실행
-                              this.getLog("====> 재생목록정보 업데이트 완료");
+                              this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 1페이지 0번째 음악 시작");
                               this.subPlay(0);
                             }
                           });
@@ -148,7 +148,7 @@ export default {
                     });
                   }
                 } else {
-                  this.getLog("====> 다음 페이지 조회");
+                  this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 다음 페이지 조회");
                   // 다음 페이지의 데이터가 DB에 있는지?
                   this.getPlaylistVideoCount(
                     playType,
@@ -172,7 +172,7 @@ export default {
                             doc.pageNum = nextPage;
                             return this.$local.put(doc).then(result => {
                               if (result.ok) {
-                                this.getLog("====> 재생목록정보 업데이트 완료");
+                                this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작");
                                 // 다음 페이지 목록의 0번째 음악 실행
                                 this.subPlay(0);
                               }
@@ -245,7 +245,7 @@ export default {
     },
 
     subNextPlayPageLoad() {
-      this.getLog("====> 다음 페이지가 DB에 없어 API를 통해서 조회");
+      this.getLog("[SubPlayerBar]/[subNextPlayPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회");
 
       let playlistName = null;
       let playlistItem = null;
@@ -315,7 +315,8 @@ export default {
                     doc.pageNum = nextPageNum;
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
-                        this.getLog("====> 재생목록정보 업데이트 완료");
+                        this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 현재 페이지번호 : ", nextPageNum);
+                        this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작");
                         this.subList = results;
                         this.subPlay(0);
                       }

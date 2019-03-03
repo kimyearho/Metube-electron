@@ -57,12 +57,18 @@ export default {
     },
     getLog(message, data) {
       if (process.env.NODE_ENV !== "production") {
-        if(data) {
-          console.log(message, data)
-        } else {
-          console.log(message)
-        }
+        // if(data) {
+        //   console.log(message, data)
+        // } else {
+        //   console.log(message)
+        // }
+      } 
+      // 테스트
+      const logger = {
+        message : message,
+        value: data
       }
+      this.$ipcRenderer.send("eventLogger", logger);
     },
     getNextToken() {
       return this.$store.getters.getNextToken

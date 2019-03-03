@@ -169,10 +169,7 @@ export default {
           .then(result => {
             let doc = result.docs[0];
 
-            console.log("doc => ", doc);
-
             if (doc) {
-              console.log("1 ==================================");
 
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
@@ -197,7 +194,6 @@ export default {
               });
             } else {
               // no
-              console.log("2 ==================================");
               this.initialSetting(playlistName);
             }
           });
