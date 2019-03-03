@@ -38,16 +38,7 @@ export default {
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
-      // this.onNewReleaseCheck();
-      this.$modal.show("dialog", {
-        title: "Info",
-        text: "This version is a beta version. Therefore, this version can not be used when it becomes a full release. Please use it for testing purposes only",
-        buttons: [
-          {
-            title: "Close"
-          }
-        ]
-      });
+      this.onNewReleaseCheck();
     }
   },
   mounted() {
@@ -98,33 +89,42 @@ export default {
     },
 
     onNewReleaseCheck() {
-      this.$db
-        .get("17901f376f4ff226c03adecee0004104")
-        .then(doc => {
-          let live_version = `${doc.version}`;
-          let local_version = this.$version;
-          if (live_version != local_version) {
-            this.$modal.show("dialog", {
-              title: "Info",
-              text: this.$t("SETTING.NEW_RELEASE"),
-              buttons: [
-                {
-                  title: "Yes",
-                  handler: () => {
-                    this.$ipcRenderer.send("showGit", null);
-                    this.$modal.hide("dialog");
-                  }
-                },
-                {
-                  title: "Close"
-                }
-              ]
-            });
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: "This version is a beta version. Therefore, this version can not be used when it becomes a full release. Please use it for testing purposes only",
+        buttons: [
+          {
+            title: "Close"
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        ]
+      });
+      // this.$db
+      //   .get("17901f376f4ff226c03adecee0004104")
+      //   .then(doc => {
+      //     let live_version = `${doc.version}`;
+      //     let local_version = this.$version;
+      //     if (live_version != local_version) {
+      //       this.$modal.show("dialog", {
+      //         title: "Info",
+      //         text: this.$t("SETTING.NEW_RELEASE"),
+      //         buttons: [
+      //           {
+      //             title: "Yes",
+      //             handler: () => {
+      //               this.$ipcRenderer.send("showGit", null);
+      //               this.$modal.hide("dialog");
+      //             }
+      //           },
+      //           {
+      //             title: "Close"
+      //           }
+      //         ]
+      //       });
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     }
   }
 };
