@@ -227,7 +227,7 @@ export default {
       let self = this
       setTimeout(() => {
         self.$ipcRenderer.send("button:close", null);
-      }, 3000);
+      }, 1000);
     },
     closeModal() {
       this.$modal.hide("input-focus-modal");
