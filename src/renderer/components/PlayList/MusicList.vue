@@ -32,9 +32,10 @@
       >
         <collection-register
           ref="likes"
-          :isLikeToggle="isLikeToggle"
           :data="data"
+          :isLikeToggle="isLikeToggle"
           :playType="playType"
+          :playlistTitle="playlistTitle"
           @toggle="toggleChange"
         />
       </a>
@@ -163,8 +164,8 @@ export default {
       cover: "",
       coverTitle: "",
       channelTitle: "",
-      menu: null,
       playlistInfoId: null,
+      playlistTitle: null,
       playType: null,
       selected: null,
       totalPage: 1,
@@ -172,7 +173,6 @@ export default {
       nextPageToken: null,
       channelPlaylistId: null,
       videoId: null,
-      clickIdx: null,
       playlist: [],
       data: null
     };
@@ -213,6 +213,7 @@ export default {
             if (doc) {
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
+              this.playlistTitle = doc.playlistTitle
               this.totalPage = doc.totalPage;
               this.totalTracks = doc.totalResults;
               this.nextPageToken = doc.nextPageToken;
@@ -238,7 +239,7 @@ export default {
                   this.playlist = docs;
                   // 체크 콜렉션
                   this.checkCollection();
-                  // this.data = findPlaylist;
+                  this.data = docs;
                 });
             } else {
               // no
@@ -372,6 +373,8 @@ export default {
           .then(result => {
             let docs = result.docs[0];
 
+            this.playlistTitle = docs.playlistTitle
+
             // 채널 재생목록 아이디 (채널 아이디 아님)
             this.channelPlaylistId =
               this.playType === "channel" ? docs.channelPlaylistId : null;
@@ -403,8 +406,7 @@ export default {
                     self.playlist = docs;
 
                     self.checkCollection();
-
-                    // this.data = findPlaylist;
+                    self.data = docs;
                   }
                 });
             }, 10 * 100);

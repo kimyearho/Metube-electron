@@ -368,7 +368,7 @@ export default {
           })
           .then(result => {
             this.playlist = result.docs;
-            // this.data = findPlaylist;
+            this.data = result.docs;
             this.feachExtends(listType);
           });
         return this.$local.put(doc).then(result => {
@@ -778,7 +778,6 @@ export default {
                 }
                 this.playSetting(playingItem);
               }
-              // this.data = findPlaylist;
             });
           return this.$local.put(doc).then(result => {
             if (result.ok) {
