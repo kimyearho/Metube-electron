@@ -313,11 +313,9 @@ export default {
               if (this.playlistId !== parentPlaylistId) {
                 // playlistId가 서로 다르므로, 이건 다른 재생목록이다.
                 // 토큰을 초기화 및 새 재생목록에 대한 토큰을 갱신하고 처음 재생한다.
-                console.log("다른 재생목록");
                 this.initWithStart(playlistName, "init");
               } else {
                 // playlistId가 서로 동일하므로, 같은 재생목록이다.
-                console.log("같은 재생목록");
                 // 현재 페이지 번호를 재생중인 음악정보의 페이지 번호로 갱신
                 this.pageNum = musicInfo.pageNum;
                 // 현재 재생중인 음악정보의 페이지번호와 일치하는 DB 비디오 레코드를 조회하여 랜더링 한다.
@@ -375,7 +373,7 @@ export default {
           });
         return this.$local.put(doc).then(result => {
           if (result.ok) {
-            console.log("initPlaySetting => 재생목록정보 업데이트 완료!");
+            this.getLog("====> 재생목록정보 업데이트 완료")
           }
         });
       });
@@ -532,10 +530,6 @@ export default {
           );
         }
       }
-
-      console.log("page => ", this.pageNum);
-      console.log("musicPageNum => ", musicPageNum);
-      console.log("nextIndex => ", nextIndex);
     },
 
     /**
@@ -788,7 +782,7 @@ export default {
             });
           return this.$local.put(doc).then(result => {
             if (result.ok) {
-              console.log("pagingReload => 재생목록정보 업데이트 완료!");
+              this.getLog("====> 재생목록정보 업데이트 완료")
             }
           });
         }
@@ -850,8 +844,6 @@ export default {
         // 동일 페이지내에서
         nextPageNum = this.pageNum + 1;
       }
-
-      console.log("nextPageNum => ", nextPageNum);
 
       this.getPlaylistVideoCount(this.playType, playlistName, nextPageNum).then(
         count => {

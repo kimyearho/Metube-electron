@@ -57,7 +57,11 @@ export default {
     },
     getLog(message, data) {
       if (process.env.NODE_ENV !== "production") {
-        console.log(message, data)
+        if(data) {
+          console.log(message, data)
+        } else {
+          console.log(message)
+        }
       }
     },
     getNextToken() {

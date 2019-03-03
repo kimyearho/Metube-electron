@@ -127,7 +127,7 @@ export default {
                   if (playingPageNum === this.playlistLastPage) {
                     // 마지막 번째 음악이 종료됬음.
                     if (this.subList.length === nextIndex) {
-                      console.log("마지막 번째 음악이 종료됨");
+                      this.getLog("====> 마지막 번째 음악이 종료 됨")
                       // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
                       this.getPageVideoList(
                         playType,
@@ -144,6 +144,7 @@ export default {
                             return this.$local.put(doc).then(result => {
                               if (result.ok) {
                                 // 다음 페이지 목록의 0번째 음악 실행
+                                this.getLog("====> 재생목록정보 업데이트 완료")
                                 this.subPlay(0);
                               }
                             });
@@ -152,7 +153,7 @@ export default {
                       });
                     }
                   } else {
-                    console.log("다음 페이지 조회");
+                    this.getLog("====> 다음 페이지 조회")
                     // 다음 페이지의 데이터가 DB에 있는지?
                     this.getPlaylistVideoCount(
                       playType,
@@ -176,6 +177,7 @@ export default {
                               doc.pageNum = nextPage;
                               return this.$local.put(doc).then(result => {
                                 if (result.ok) {
+                                  this.getLog("====> 재생목록정보 업데이트 완료")
                                   // 다음 페이지 목록의 0번째 음악 실행
                                   this.subPlay(0);
                                 }
@@ -315,9 +317,7 @@ export default {
                     doc.pageNum = nextPageNum;
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
-                        console.log(
-                          "subNextPlayPageLoad => 재생목록정보 업데이트 완료!"
-                        );
+                        this.getLog("====> 재생목록정보 업데이트 완료")
                         this.subList = results;
                         this.subPlay(0);
                       }
