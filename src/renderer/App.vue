@@ -38,7 +38,16 @@ export default {
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
-      this.onNewReleaseCheck();
+      // this.onNewReleaseCheck();
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: "This version is a beta version. Therefore, this version can not be used when it becomes a full release. Please use it for testing purposes only",
+        buttons: [
+          {
+            title: "Close"
+          }
+        ]
+      });
     }
   },
   mounted() {

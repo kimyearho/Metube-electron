@@ -250,6 +250,8 @@ export default {
     },
 
     subNextPlayPageLoad() {
+      this.getLog("====> 다음 페이지가 DB에 없어 API를 통해서 조회")
+
       let playlistName = null;
       let playlistItem = null;
 

@@ -222,8 +222,12 @@ export default {
       }
     },
     close() {
-      this.$local.destroy().then(() => {});
-      this.$ipcRenderer.send("button:close", null);
+      this.$local.destroy().then(result => { console.log(result) });
+
+      let self = this
+      setTimeout(() => {
+        self.$ipcRenderer.send("button:close", null);
+      }, 3000);
     },
     closeModal() {
       this.$modal.hide("input-focus-modal");
