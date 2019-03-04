@@ -75,7 +75,7 @@ export default {
       setTimeout(() => {
         this.$store.commit("setTime", 1000);
         this.statusResult();
-      }, 15000);
+      }, 10000);
     },
 
     statusResult() {
