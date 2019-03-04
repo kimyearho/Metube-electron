@@ -184,16 +184,22 @@ export default {
           this.videoId
         );
         if (result.ok) {
-          if (this.getMusicInfos() != undefined) {
+          if (this.getMusicInfos()) {
             let musicInfos = this.getMusicInfos();
-            let playIndex = musicInfos.index;
-            if (playIndex > this.index) {
-              // 삭제한 비디오 인덱스가 0일때
-              musicInfos.index = musicInfos.index - 1;
-              // 재생정보 세팅
-              this.$store.commit("setPlayingMusicInfo", musicInfos);
-              // 재생정보 변경 이벤트
-              this.$eventBus.$emit("playMusicSetting");
+
+            // 현재 재생중인데 내 컬렉션일때만,
+            // 이 조건이 없으면 유튜브 재생목록 재생 중에, 내 컬렉션 0번째 삭제 후 인덱스가 교체 되버림.
+            if(musicInfos.type === "mycollectionItem") {
+              let playIndex = musicInfos.index;
+              // 내 컬렉션에서 0번째 음악을 삭제했을경우 처리
+              if (playIndex > this.index) {
+                // 삭제한 비디오 인덱스가 0일때
+                musicInfos.index = musicInfos.index - 1;
+                // 재생정보 세팅
+                this.$store.commit("setPlayingMusicInfo", musicInfos);
+                // 재생정보 변경 이벤트
+                this.$eventBus.$emit("playMusicSetting");
+              }
             }
           }
 
