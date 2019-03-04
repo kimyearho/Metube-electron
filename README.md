@@ -1,5 +1,5 @@
+# [2019-03-04] v1.6.0 BETA UPDATE
 # [2019-02-03] v1.4.6 UPDATE
- - MacOS UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/YdDRBqN.png" />
