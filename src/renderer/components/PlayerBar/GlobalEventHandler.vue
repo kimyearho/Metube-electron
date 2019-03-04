@@ -6,9 +6,11 @@
 import StoreMix from "@/components/Mixin/index";
 import DataMix from "@/components/Mixin/db";
 import GlobalMix from "@/components/Mixin/common";
+import PlaylistMix from "@/components/Mixin/Playlist"
+
 export default {
   name: "GlobalEventHandler",
-  mixins: [StoreMix, GlobalMix, DataMix],
+  mixins: [StoreMix, GlobalMix, DataMix, PlaylistMix],
   created() {
     const routerName = this.$route.name;
     this.$ipcRenderer.on("player2Win", (e, data) => {
@@ -21,9 +23,7 @@ export default {
         this.$emit("playVideoSecond", event_value);
       }
     });
-  },
-  mounted() {},
-  methods: {}
+  }
 };
 </script>
 

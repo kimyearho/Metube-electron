@@ -106,17 +106,22 @@ export default {
             });
           } else {
             // 유튜브 재생목록 타입일때
+            // 재생되는 비디오는 어떠한 경우에든 DB로 등록되어있음.
+            const playType = musicData.type
+            const playlistParentId = musicData.parentId
+            const playPageNum = musicData.pageNum
 
-            let all = this.getAllPlayList();
-            // 다음 인덱스
-            let playlist = this.$lodash.find(all, {
-              playlistId: musicData.name
-            });
-            if (playlist != undefined) {
-              if (playlist.list.length > nextIndex) {
-                this.$emit("sendNextMusicPlay", nextIndex)
-              }
-            }
+            this.getLog("[PlaylistMix]/[statusResult] ====> 유튜브 재생실패 후 다음 비디오 시작 nextIndex => ", nextIndex)
+            this.getPageVideoList(playType, playlistParentId, playPageNum)
+              .then(result => {
+                const docs = result.docs;
+                if(docs) {
+                  if(docs.length > nextIndex) {
+                    this.$emit("sendNextMusicPlay", nextIndex)
+                  }
+                }
+              })
+            
           }
         }
       }
