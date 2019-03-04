@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <global-event-handler @sendNextMusicPlay="sendNextMusicPlay" @playVideoSecond="progressRange"></global-event-handler>
+    <global-event-handler @sendSubNextMusicPlay="sendNextMusicPlay" @playVideoSecond="progressRange"></global-event-handler>
   </div>
 </template>
 
@@ -78,6 +78,9 @@ export default {
   },
   methods: {
     sendNextMusicPlay(nextIndex) {
+
+      console.log('11111111111111111111111')
+
       // 재생중인 음악정보
       const musicInfo = this.getMusicInfos();
       const playingPageNum = musicInfo.pageNum;

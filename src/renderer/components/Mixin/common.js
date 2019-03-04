@@ -46,7 +46,16 @@ export default {
           // 다음 인덱스
           let nextIndex = currentIndex + 1
 
-          this.$emit("sendNextMusicPlay", nextIndex)
+          let eventName = ''
+
+          // 라우트 이름이 무엇
+          if(this.$route.name === 'MY-PLAYING-PLAYLIST') {
+            eventName = 'sendNextMusicPlay'
+          } else {
+            eventName = 'sendSubNextMusicPlay'
+          }
+
+          this.$emit(eventName, nextIndex)
         }
       }
     },
@@ -77,7 +86,17 @@ export default {
         // 재생실패
         if (lastIndex === -1) {
 
+          let eventName = ''
+
+          // 라우트 이름이 무엇
+          if(this.$route.name === 'MY-PLAYING-PLAYLIST') {
+            eventName = 'sendNextMusicPlay'
+          } else {
+            eventName = 'sendSubNextMusicPlay'
+          }
+
           this.getLog("[PlaylistMix]/[statusResult] ====> 재생실패 lastIndex => ", lastIndex)
+          this.getLog("[PlaylistMix]/[statusResult] ====> 재생실패 eventName => ", eventName)
 
           let musicData = this.getMusicInfos();
           let nextIndex = musicData.index + 1;
@@ -102,7 +121,7 @@ export default {
                   const docs = result.docs;
                   if (docs) {
                     if (docs.length > nextIndex) {
-                      this.$emit("sendNextMusicPlay", nextIndex)
+                      this.$emit(eventName, nextIndex)
                     }
                   }
                 });
@@ -120,7 +139,7 @@ export default {
                 const docs = result.docs;
                 if(docs) {
                   if(docs.length > nextIndex) {
-                    this.$emit("sendNextMusicPlay", nextIndex)
+                    this.$emit(eventName, nextIndex)
                   }
                 }
               })
