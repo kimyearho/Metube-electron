@@ -77,11 +77,14 @@ export default {
         // 재생실패
         if (lastIndex === -1) {
 
+          this.getLog("[PlaylistMix]/[statusResult] ====> 재생실패 lastIndex => ", lastIndex)
+
           let musicData = this.getMusicInfos();
           let nextIndex = musicData.index + 1;
 
           // 내 콜렉션타입일때
           if (musicData.type === 'mycollectionItem') {
+            this.getLog("[PlaylistMix]/[statusResult] ====> 컬렉션 재생실패 후 다음 비디오 시작 nextIndex => ", nextIndex)
             this.createIndex(["userId", "parentId"]).then(result => {
               return this.$test
                 .find({
