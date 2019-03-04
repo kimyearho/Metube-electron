@@ -13,10 +13,10 @@ let PouchDB = require("pouchdb-core")
 // Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
 
 // 내 콜렉션 로컬
-Vue.prototype.$test = new PouchDB("collecton/160")
+Vue.prototype.$test = new PouchDB("collecton/160/rc1")
 
 // 유튜브 로컬
-Vue.prototype.$local = new PouchDB("test/160")
+Vue.prototype.$local = new PouchDB("test/160/rc1")
 
 // 서비스
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
