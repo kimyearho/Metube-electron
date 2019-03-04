@@ -89,7 +89,7 @@ export default {
           let eventName = ''
 
           // 라우트 이름이 무엇
-          if(this.$route.name === 'MY-PLAYING-PLAYLIST') {
+          if(this.$route.name === 'MY-PLAYING-PLAYLIST' || this.$route.name === 'PLAYING-PLAYLIST') {
             eventName = 'sendNextMusicPlay'
           } else {
             eventName = 'sendSubNextMusicPlay'

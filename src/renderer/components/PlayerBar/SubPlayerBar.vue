@@ -79,8 +79,6 @@ export default {
   methods: {
     sendNextMusicPlay(nextIndex) {
 
-      console.log('11111111111111111111111')
-
       // 재생중인 음악정보
       const musicInfo = this.getMusicInfos();
       const playingPageNum = musicInfo.pageNum;
