@@ -60,7 +60,16 @@ export default {
         })
     },
 
+    /**
+     * 실제 DB 레코드를 삭제 후 스토어 DB도 함께 삭제하여 동기화를 위해 사용된다.
+     * 스토어 DB의 컬렉션은 내 프로필에 존재한다.
+     * 
+     * @param {*} payload 
+     * @param {*} data 
+     * @param {*} flag 
+     */
     setRemoteSubsetMusicData(payload, data, flag) {
+
       this.$test
         .find({
           selector: {
@@ -70,20 +79,47 @@ export default {
         })
         .then(result => {
           if (result) {
-            // 스토어 디비 데이터셋
+
             let doc = result.docs[0]
+
+            // 내 프로필 하위의 컬렉션을 조회한다. (스토어 DB)
             let collections = doc.collections
-            // 실제 db 데이터셋
-            const myMusicData = {
-              list: payload,
-              listCount: payload.length,
-              id: payload[0].parentId // 모든 데이터에는 부모 아이디가 있으므로 1개만 선택한다.
+
+            // 실제 DB목록을 가져오므로 마지막 레코드를 DB에서 삭제하면
+            // payload값이 없다.
+
+            // 실제 DB 레코드 셋
+            let myMusicData = null
+
+            if(payload.length > 0) {
+              myMusicData = {
+                // 실제 DB 목록임
+                list: payload,
+                listCount: payload.length,
+                id: payload[0].parentId // 모든 데이터에는 부모 아이디가 있으므로 1개만 선택한다.
+              }
+            } else {
+              myMusicData = {
+                // 실제 DB 목록임
+                list: [],
+                listCount: 0,
+                id: data.myCollectionId
+              }
             }
+
+            // 스토어 DB 컬렉션에 id와 일치하는
             const findData = this.$lodash.find(collections, { id: myMusicData.id })
+
+            // 없으면
             if (!findData) {
+              // 없으면 프로필 스토어 컬렉션에 신규로 추가한다
               collections.push(myMusicData)
+              // 컬렉션 추가 후 프로필을 전부 업데이트
               this.updateProfile(doc)
             } else {
+              // 있으면 
+
+              // 검색된 컬렉션 스토어 DB 갯수와, 실제 DB갯수가 다르면
               if (findData.listCount != myMusicData.listCount) {
                 const findDataIndex = this.$lodash.findIndex(collections, {
                   id: myMusicData.id

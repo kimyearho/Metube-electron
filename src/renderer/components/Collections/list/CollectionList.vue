@@ -167,13 +167,15 @@ export default {
       });
     },
     showMusicList(item) {
+      console.log(item)
       this.$store.commit("setPath", this.$route.path);
       if (item.category) {
         this.$router.push({
           name: "NOT-MY-PLAYLIST",
           params: {
             playType: "self",
-            id: item._key
+            id: item._id,
+            doc: item
           }
         });
       } else {

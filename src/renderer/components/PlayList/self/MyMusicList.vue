@@ -216,21 +216,30 @@ export default {
         this.getRemoteProfile().then(result => {
           const dbStoreList = result.collections;
           if (dbStoreList) {
+
+            this.getLog("[MyMusicList]/[feachData] 스토어 DB ====> ", dbStoreList)
+
             // 스토어 DB 조회
             const findData = this.$lodash.find(dbStoreList, {
               id: this.collectionDoc._id
             });
+
+            this.getLog("[MyMusicList]/[feachData] 스토어 DB에서 찾은 findData ====> ", findData)
+
             // DB스토어와 DB문서는 1:1임.
             if (findData) {
+              // 실제 DB에 등록된 목록을 조회
               this.getRemoteDocument().then(doc => {
+
+                this.getLog("[MyMusicList]/[feachData] 삭제 후 실제 DB 목록 ====> ", doc)
+
                 const remoteTotalCount = doc.docs.length;
                 // 스토어 개수와 DB개수가 다를경우(추가 or 삭제 이벤트가 일어난 경우)
                 if (remoteTotalCount !== findData.listCount) {
-                  console.log("========================= list sync!");
-                  // console.log("DeleteItem => ", dItem)
+                  this.getLog("[MyMusicList]/[feachData] ====> List Sync")
                   this.getRemoteList(doc.docs, deletedItem);
                 } else {
-                  console.log("========================= remote store get!");
+                  this.getLog("[MyMusicList]/[feachData] ====> remote store get!")
                   this.totalTracks = findData.listCount;
                   this.playlist = findData.list;
                 }
