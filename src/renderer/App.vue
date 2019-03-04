@@ -89,15 +89,6 @@ export default {
     },
 
     onNewReleaseCheck() {
-      this.$modal.show("dialog", {
-        title: "Info",
-        text: "This version is a beta version. Therefore, this version can not be used when it becomes a full release. Please use it for testing purposes only",
-        buttons: [
-          {
-            title: "Close"
-          }
-        ]
-      });
       // this.$db
       //   .get("17901f376f4ff226c03adecee0004104")
       //   .then(doc => {
