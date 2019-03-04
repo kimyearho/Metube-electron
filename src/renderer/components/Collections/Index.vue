@@ -75,7 +75,9 @@
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub">{{ item.title }}</span>
+                <span class="sub cursor" @click="showMyCollectionList(item)">
+                  {{ item.title }}
+                </span>
               </div>
             </div>
           </el-card>
@@ -116,7 +118,9 @@
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub">{{ item.title }}</span>
+                <span class="sub cursor" @click="showMusicList(item)">
+                  {{ item.title }}
+                </span>
               </div>
             </div>
           </el-card>
@@ -156,7 +160,9 @@
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub">{{ item.title }}</span>
+                <span class="sub cursor" @click="showMusicList(item)">
+                  {{ item.title }}
+                </span>
               </div>
             </div>
           </el-card>
@@ -346,5 +352,10 @@ export default {
   color: #303133;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+}
+
+.titleflow .sub:hover {
+  color: yellow;
+  font-weight: 700;
 }
 </style>
