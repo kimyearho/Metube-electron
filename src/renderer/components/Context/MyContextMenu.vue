@@ -28,7 +28,6 @@ strict';
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-
   </div>
 </template>
 
@@ -93,15 +92,20 @@ export default {
         let musicInfo = this.getMusicInfos();
         if (musicInfo) {
           if (this.videoId === musicInfo.videoId) {
-            this.$modal.show("dialog", {
-              title: "Info",
-              text: "You can not delete videos that are playing",
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
+            if (musicInfo.type !== "mycollectionItem") {
+              // 삭제
+              this.deleteDialog();
+            } else {
+              this.$modal.show("dialog", {
+                title: "Info",
+                text: "You can not delete videos that are playing",
+                buttons: [
+                  {
+                    title: "Close"
+                  }
+                ]
+              });
+            }
           } else {
             this.deleteDialog();
           }
@@ -171,8 +175,14 @@ export default {
       this.$test.remove(this.data).then(result => {
         // 실제 DB에 등록 된 내 컬렉션 재생목록정보의 아이디 값
         const parentId = this.data.parentId;
-        this.getLog("[MyContextMenu]/[delete] 실제 DB에 등록 된 내 컬렉션 재생목록정보 아이디 ====> ", parentId)
-        this.getLog("[MyContextMenu]/[delete] 실제 DB에서 삭제한 비디오 아이디 ====> ", this.videoId)
+        this.getLog(
+          "[MyContextMenu]/[delete] 실제 DB에 등록 된 내 컬렉션 재생목록정보 아이디 ====> ",
+          parentId
+        );
+        this.getLog(
+          "[MyContextMenu]/[delete] 실제 DB에서 삭제한 비디오 아이디 ====> ",
+          this.videoId
+        );
         if (result.ok) {
           if (this.getMusicInfos() != undefined) {
             let musicInfos = this.getMusicInfos();
@@ -188,7 +198,10 @@ export default {
           }
 
           // 삭제 후 삭제한 비디오아이디를 전달한다.
-          this.$emit("is-success", { deletedVideoId: this.videoId, myCollectionId: parentId });
+          this.$emit("is-success", {
+            deletedVideoId: this.videoId,
+            myCollectionId: parentId
+          });
         }
       });
     }

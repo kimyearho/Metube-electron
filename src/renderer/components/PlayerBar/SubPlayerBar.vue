@@ -207,8 +207,8 @@ export default {
                   id: musicInfo.name
                 });
                 this.subList = findItem.list;
-                if (this.subList.length > index) {
-                  this.subPlay(index);
+                if (this.subList.length > nextIndex) {
+                  this.subPlay(nextIndex);
                 } else {
                   this.subPlay(0);
                 }
