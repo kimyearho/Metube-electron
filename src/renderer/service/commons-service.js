@@ -1,6 +1,6 @@
 const API_URL = "https://www.googleapis.com/youtube/v3"
-// const API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
-const API_KEY = "AIzaSyBXQrLCFWgip6navZZfww_LhsyjbaW0vIQ"
+const API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
+// const API_KEY = "AIzaSyBXQrLCFWgip6navZZfww_LhsyjbaW0vIQ"
 
 export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`
 
