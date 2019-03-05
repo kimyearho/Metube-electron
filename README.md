@@ -1,4 +1,9 @@
-# [2019-03-04] v1.6.0 BETA UPDATE
+# Information
+Hi.
+I think some of you have been having problems with apps lately.
+This issue is caused by exceeding the Youtube API daily quota.
+Google does not provide 100.00 per day quota, so I think it is a big issue. In addition, Google does not seem to maintain APIs either. We are currently preparing an alternative. If possible, please use the collection. Thank you.
+
 # [2019-02-03] v1.4.6 UPDATE
 
 <p align="center">
