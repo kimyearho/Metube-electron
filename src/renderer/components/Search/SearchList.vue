@@ -431,7 +431,7 @@ export default {
                 .catch(error => {
                   console.error(error);
                 });
-            }, 100);
+            }, 500);
           }
         } else {
           // 검색어가 없을 때 자동검색목록 닫음.
@@ -460,7 +460,7 @@ export default {
   background-color: #242d40 !important;
 }
 .loadMoreCenter {
-  margin-left: 90px;
+  margin-left: 110px !important;
   padding: 0;
 }
 .loadMoreCenter a {

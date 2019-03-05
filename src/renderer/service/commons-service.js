@@ -1,6 +1,15 @@
 const API_URL = "https://www.googleapis.com/youtube/v3"
-const API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
+// const API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
 // const API_KEY = "AIzaSyBXQrLCFWgip6navZZfww_LhsyjbaW0vIQ"
+
+// DEV
+let API_KEY = "";
+
+if(process.env.NODE_ENV === "development") {
+  API_KEY = "AIzaSyAcNGab-jHH_79rEhgFFFy_4oS46yUMNds"
+} else {
+  API_KEY = "AIzaSyCxEq_AA-zkHKNvN0vW1l8dbWFjGRceG1w"
+}
 
 export const googleSearchPath = `https://suggestqueries.google.com/complete/search?ds=yt&client=youtube&q=`
 

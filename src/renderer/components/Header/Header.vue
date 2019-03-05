@@ -222,7 +222,8 @@ export default {
       }
     },
     close() {
-      this.$local.destroy().then(result => { console.log(result) });
+      // 일단 임시로 
+      // this.$local.destroy().then(result => { console.log(result) });
 
       let self = this
       setTimeout(() => {
