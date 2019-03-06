@@ -55,14 +55,8 @@ export default {
     };
   },
   created() {
-
     // API 인증
     this.apiAuthentication()
-
-    // 10초마다 재인증
-    setInterval(() => {
-      this.apiAuthentication()
-    }, 10000);
 
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
