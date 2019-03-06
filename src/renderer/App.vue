@@ -12,11 +12,30 @@ You can not delete this comment when you deploy an application.
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
-      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
-      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
+      <md-tab
+        id="tabSearch"
+        class="md-tab"
+        md-label="Search"
+        @click="route('search')"
+      ></md-tab>
+      <md-tab
+        id="tabCollection"
+        class="md-tab"
+        md-label="Collections"
+        @click="route('collection')"
+      ></md-tab>
+      <md-tab
+        id="tabHistory"
+        class="md-tab"
+        md-label="History"
+        @click="route('history')"
+      ></md-tab>
     </md-tabs>
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -36,6 +55,9 @@ export default {
     };
   },
   created() {
+    // API 인증
+    this.apiAuthentication()
+
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
@@ -86,6 +108,23 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
+    },
+
+    apiAuthentication() {
+      this.$repo.get("63585eea117ff56b58ea7ea582000d6d").then(result => {
+        let apiKey = ""
+        const keyList = result.key_list
+        if (process.env.NODE_ENV === "development") {
+          // dev
+          const service = this.$lodash.find(keyList, { "service-type": "dev" })
+          apiKey = service.apiKey
+        } else {
+          // production
+          const service = this.$lodash.find(keyList, { "service-type": "production1" })
+          apiKey = service.apiKey
+        }
+        this.$store.commit("setKeys", apiKey)
+      })
     },
 
     onNewReleaseCheck() {

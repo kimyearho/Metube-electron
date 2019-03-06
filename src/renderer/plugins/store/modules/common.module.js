@@ -9,6 +9,7 @@ const state = {
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
+  apiKey: "",
   locale: "en"
 }
 
@@ -48,11 +49,17 @@ const getters = {
   },
   getSnow() {
     return state.isSnow
+  },
+  getKeys() {
+    return state.apiKey
   }
 }
 
 // 동기
 const mutations = {
+  setKeys(state, value) {
+    state.apiKey = value
+  },
   setPath(state, value) {
     state.path = value
   },
