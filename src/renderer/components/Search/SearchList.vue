@@ -206,7 +206,8 @@ export default {
     this.recommandTrack();
     this.searchText = this.getSearchKeyword();
     setTimeout(() => {
-      this.API_KEY = this.$store.getters.getKeys
+      const key = this.$store.getters.getKeys
+      this.$set(this, 'API_KEY', key)
       this.init(this.searchText);
     }, 1000);
   },
