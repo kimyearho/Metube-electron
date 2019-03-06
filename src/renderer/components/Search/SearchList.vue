@@ -143,7 +143,7 @@
         <span
           v-if="!isMore"
           @click="nextPageLoad"
-          class="loadMoreCenter"
+          class="searchPagingCenter"
         >
           <a class="cursor">
             <i class="el-icon-refresh"></i>
@@ -152,7 +152,7 @@
         </span>
         <span
           v-if="isMore"
-          class="loadMoreCenter loadMoreLoading"
+          class="searchPagingCenter" style="color:#ffffff;"
         >LOADING ...</span>
       </md-list-item>
       <div class="bottom">
@@ -518,11 +518,11 @@ export default {
 .md-list.md-theme-default {
   background-color: #242d40 !important;
 }
-.loadMoreCenter {
+.searchPagingCenter {
   margin-left: 110px !important;
   padding: 0;
 }
-.loadMoreCenter a {
+.searchPagingCenter a {
   color: #ffffff !important;
 }
 .taginfo {

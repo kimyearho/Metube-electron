@@ -111,7 +111,7 @@
           </a>
           <span>{{ pageNum }} / {{ totalPage }}</span>
         </div>
-        <div v-else class="loadMoreCenter noPage" :class="{ prev: pageNum !== 1 }">
+        <div v-else class="loadMoreCenter noPage">
           <span>{{ pageNum }} / {{ totalPage }}</span>
         </div>
       </md-list-item>
@@ -1033,6 +1033,12 @@ export default {
 </script>
 
 <style>
+
+.pageCenter {
+  color: #ffffff;
+  margin-left: 140px;
+}
+
 .loadMoreCenter {
   color: #ffffff;
   margin-left: 140px;

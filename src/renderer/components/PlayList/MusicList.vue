@@ -487,7 +487,7 @@ export default {
 
 .loadMoreCenter {
   color: #ffffff;
-  margin-left: 95px;
+  margin-left: 100px !important;
 }
 
 .playlistEnd {
