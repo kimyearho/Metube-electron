@@ -4,16 +4,29 @@
       <div class="circle"></div>
       <div class="orbit"></div>
     </div>
+    <div class="init" v-show="init">Initializing ... Please wait.</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "PageLoading"
+  name: "PageLoading",
+  props: {
+    init: {
+      type: Boolean,
+      default: false
+    }
+  }
 };
 </script>
 
 <style scoped>
+.init {
+  margin-top: 30px;
+  margin-left: 116px;
+  color: #ffffff;
+  font-weight: 700;
+}
 .loading {
   position: absolute;
   background: #181e2b;
