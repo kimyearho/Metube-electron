@@ -83,7 +83,6 @@ import "./assets/css/commons.css"
 import "./assets/css/playlist.css"
 import "./assets/css/collection.css"
 import "./assets/css/search.css"
-
 library.add(fas)
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"))

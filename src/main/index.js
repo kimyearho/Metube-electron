@@ -34,7 +34,7 @@ const deleteChromeCache = function () {
   }
 };
 
-deleteChromeCache()
+// deleteChromeCache()
 
 // if (process.env.NODE_ENV !== "development") {
 //   let shouldQuit = app.makeSingleInstance(() => {

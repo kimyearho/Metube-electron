@@ -115,6 +115,7 @@ export default {
         let apiKey = ""
         const keyList = result.key_list
         if (process.env.NODE_ENV === "development") {
+          console.log('dev')
           // dev
           const service = this.$lodash.find(keyList, { "service-type": "dev" })
           apiKey = service.apiKey
