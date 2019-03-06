@@ -26,7 +26,7 @@ export default {
       return this.$store.getters.getNextSearchList
     },
     getNextPageToken() {
-      return this.$store.getters.getNextPageToekn
+      return this.$store.getters.getNextPageToken
     },
     getRepeat() {
       return this.$store.getters.getRepeat

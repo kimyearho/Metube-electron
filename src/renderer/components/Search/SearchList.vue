@@ -117,15 +117,14 @@
 </template>
 
 <script>
-// import * as $commons from "@/service/commons-service.js";
+import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
-import ApiMixin from "@/components/Mixin/api";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import Loading from "@/components/Loader/PageLoading";
 
 export default {
   name: "SearchList",
-  mixins: [StoreMixin, ApiMixin],
+  mixins: [StoreMixin],
   components: {
     Loading,
     SubPlayerBar
@@ -153,18 +152,19 @@ export default {
   created() {
     this.recommandTrack();
     this.searchText = this.getSearchKeyword();
-    let key = this.$store.getters.getKeys;
-    if (key) {
-      this.init(this.searchText);
-    } else {
-      this.getLog("[init]/[Search] ===> API KEY 로딩 중 ...")
-      this.$set(this, 'initLoading', true)
-      setTimeout(() => {
-        let key = this.$store.getters.getKeys;
-        this.$set(this, "API_KEY", key);
-        this.init(this.searchText);
-      }, 3000);
-    }
+    this.init(this.searchText);
+    // let key = this.$store.getters.getKeys;
+    // if (key) {
+    //   this.init(this.searchText);
+    // } else {
+    //   this.getLog("[init]/[Search] ===> API KEY 로딩 중 ...")
+    //   this.$set(this, 'initLoading', true)
+    //   setTimeout(() => {
+    //     // let key = this.$store.getters.getKeys;
+    //     // this.$set(this, "API_KEY", key);
+    //     this.init(this.searchText);
+    //   }, 3000);
+    // }
   },
   watch: {
     searchText(value) {
@@ -239,7 +239,7 @@ export default {
         } else {
           this.$store.commit("setSearchText", text);
         }
-        let request = this.youtubeSearch(text);
+        let request = $commons.youtubeSearch(text);
         this.$http
           .get(request)
           .then(res => {
@@ -270,7 +270,7 @@ export default {
       } else {
         this.$store.commit("setSearchText", text);
       }
-      let request = this.youtubeSearch(text);
+      let request = $commons.youtubeSearch(text);
       this.$http
         .get(request)
         .then(res => {
@@ -378,7 +378,7 @@ export default {
         this.getSearchKeyword() === null
           ? "top music 2018"
           : this.getSearchKeyword();
-      let request = this.youtubePagingSearch(text, this.getNextPageToken());
+      let request = $commons.youtubePagingSearch(text, this.getNextPageToken());
       this.$http
         .get(request)
         .then(res => {

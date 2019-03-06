@@ -26,7 +26,7 @@ const getters = {
   getSearchText() {
     return state.searchText
   },
-  getNextPageToekn() {
+  getNextPageToken() {
     return state.nextPageToken
   },
   getAlwaysTopOption() {
