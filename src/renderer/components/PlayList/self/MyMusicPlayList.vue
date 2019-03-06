@@ -87,7 +87,7 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <!-- <loading :init="false" v-show="!load"/> -->
     </transition>
 
     <!-- 팝업 컴포넌트 -->
@@ -112,7 +112,7 @@ export default {
   name: "MyMusicPlayList",
   mixins: [StoreMixin, MyCollectionMixin, DataUtils],
   components: {
-    Loading,
+    // Loading,
     MainPlayerBar,
     MarqueeText,
     draggable,
@@ -214,6 +214,7 @@ export default {
     videoActive(selectedIndex) {
       const self = this;
       const id = "#item" + selectedIndex;
+      console.log(id)
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;

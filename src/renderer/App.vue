@@ -129,7 +129,7 @@ export default {
           const service = this.$lodash.find(keyList, { "service-type": "production1" })
           apiKey = service.apiKey
         }
-        this.getLog('[App]/[apiAuthentication] ===> API KEY : ', apiKey)
+        // this.getLog('[App]/[apiAuthentication] ===> API KEY : ', apiKey)
         this.$store.commit("setKeys", apiKey)
       })
     },
