@@ -111,7 +111,7 @@ export default {
     },
 
     apiAuthentication() {
-      this.$repo.get("63585eea117ff56b58ea7ea582000d6d").then(result => {
+      this.$db.get("cfb9d27f0b59d3fbc55073830f009acc").then(result => {
         let apiKey = ""
         const keyList = result.key_list
         if (process.env.NODE_ENV === "development") {
