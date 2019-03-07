@@ -104,9 +104,7 @@ const mutations = {
 // 비동기
 const actions = {
   setAuthKey(context, { vm }) {
-    // 63585eea117ff56b58ea7ea582000d6d
-    // cfb9d27f0b59d3fbc55073830f009acc .. Real
-    vm.$repo.get("63585eea117ff56b58ea7ea582000d6d").then(result => {
+    vm.$db.get("cfb9d27f0b59d3fbc55073830f01db05").then(result => {
       const auth = result.auth
       const envType = process.env.NODE_ENV === "development" ? "dev" : "production"
       const service = vm.$lodash.find(auth, { type: envType })

@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import StoreMix from "@/components/Mixin/index";
-import DataMix from "@/components/Mixin/db";
-import GlobalMix from "@/components/Mixin/common";
-import PlaylistMix from "@/components/Mixin/Playlist"
+import StoreMix from "@/components/Commons/Mixin/index";
+import DataMix from "@/components/Commons/Mixin/db";
+import GlobalMix from "@/components/Commons/Mixin/common";
+import PlaylistMix from "@/components/Commons/Mixin/Playlist"
 
 export default {
   name: "GlobalEventHandler",

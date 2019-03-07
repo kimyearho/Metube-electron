@@ -97,11 +97,11 @@
 
 <script>
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
-import MyCollectionMixin from "@/components/Mixin/mycollection";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
+import MyCollectionMixin from "@/components/Commons/Mixin/mycollection";
 import MyContextMenu from "@/components/Context/MyContextMenu";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 import draggable from "vuedraggable";
 import MarqueeText from "vue-marquee-text-component";
 

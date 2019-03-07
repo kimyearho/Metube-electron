@@ -12,7 +12,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
 /* topHeader */
-import topHeader from "./components/Header/Header"
+import topHeader from "./components/Commons/Header/Header"
 
 import GlobalEventHandler from "./components/PlayerBar/GlobalEventHandler"
 

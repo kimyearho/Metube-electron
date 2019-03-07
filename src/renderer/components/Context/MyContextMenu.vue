@@ -32,7 +32,7 @@ strict';
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 
 export default {
   name: "MyContextMenu",

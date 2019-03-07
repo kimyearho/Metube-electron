@@ -114,8 +114,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import GlobalMixin from "@/components/Mixin/common";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import GlobalMixin from "@/components/Commons/Mixin/common";
 
 export default {
   name: "MainPlayerBar",

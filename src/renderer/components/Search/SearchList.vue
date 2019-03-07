@@ -175,10 +175,10 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import ApiMixin from "@/components/Mixin/api";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import ApiMixin from "@/components/Commons/Mixin/api";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 
 export default {
   name: "SearchList",

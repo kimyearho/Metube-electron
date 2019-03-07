@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "RegisteredMusicList",

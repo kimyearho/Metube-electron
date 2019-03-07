@@ -67,7 +67,7 @@
 
 <script>
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 
 export default {
   name: "SettingPage",

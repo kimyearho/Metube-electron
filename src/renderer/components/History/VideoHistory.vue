@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import Loading from "@/components/Loader/PageLoading";
-import storeMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import Loading from "@/components/Commons/Loader/PageLoading";
+import storeMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import ContextMenu from "@/components/Context/ContextMenu";
 

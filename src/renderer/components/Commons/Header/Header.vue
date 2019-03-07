@@ -112,8 +112,8 @@
 
 <script>
 import * as query from "querystring";
-import StoreMixin from "@/components/Mixin/index";
-import MyQueryMixin from "@/components/Mixin/mycollection";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
 import CreateFrom from "@/components/MyCollection/create/MyCollectionCreate";
 
 export default {

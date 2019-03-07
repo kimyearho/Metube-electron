@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import ApiMixin from "@/components/Mixin/api";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import ApiMixin from "@/components/Commons/Mixin/api";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "CollectionRegister",

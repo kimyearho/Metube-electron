@@ -29,7 +29,7 @@ You can not delete this comment when you deploy an application.
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 import RegisteredMusicList from "@/components/PlayList/self/modal/RegisteredMusicList";
 export default {
   name: "ContextMenu",

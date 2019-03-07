@@ -11,7 +11,6 @@ let PouchDB = require("pouchdb-core")
 // 개발용
 Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
 Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
-Vue.prototype.$repo = new PouchDB("http://localhost:5984/repo")
 
 // 내 콜렉션 로컬
 // Vue.prototype.$test = new PouchDB("collecton/160/rc2")

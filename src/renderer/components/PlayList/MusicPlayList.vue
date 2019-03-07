@@ -139,15 +139,15 @@
 </template>
 
 <script>
-import IndexMix from "@/components/Mixin/index";
-import ApiMix from "@/components/Mixin/api";
-import DataUtils from "@/components/Mixin/db";
-import CollectionMix from "@/components/Mixin/collections";
-import PlaylistMix from "@/components/Mixin/playlist";
+import IndexMix from "@/components/Commons/Mixin/index";
+import ApiMix from "@/components/Commons/Mixin/api";
+import DataUtils from "@/components/Commons/Mixin/db";
+import CollectionMix from "@/components/Commons/Mixin/collections";
+import PlaylistMix from "@/components/Commons/Mixin/playlist";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import ContextMenu from "@/components/Context/ContextMenu";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 import { resolve } from "dns";
 
 const options = {

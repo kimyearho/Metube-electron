@@ -97,13 +97,13 @@
 </template>
 
 <script>
-import DataUtils from "@/components/Mixin/db";
-import CollectionQueryMixin from "@/components/Mixin/collections";
-import MyQueryMixin from "@/components/Mixin/mycollection";
+import DataUtils from "@/components/Commons/Mixin/db";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
 import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 
 export default {
   name: "CollectionList",

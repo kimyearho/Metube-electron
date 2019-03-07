@@ -190,14 +190,14 @@
 </template>
 
 <script>
-import CollectionQueryMixin from "@/components/Mixin/collections";
-import MyQueryMixin from "@/components/Mixin/mycollection";
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 import CoverChangeModal from "./cover/CollectionCoverChange";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 
 export default {
   name: "Collections",

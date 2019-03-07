@@ -94,13 +94,13 @@
 
 <script>
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import ApiMixin from "@/components/Mixin/api";
-import DataUtils from "@/components/Mixin/db";
-import PlaylistMix from "@/components/Mixin/playlist";
-import CollectionQueryMixin from "@/components/Mixin/collections";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import ApiMixin from "@/components/Commons/Mixin/api";
+import DataUtils from "@/components/Commons/Mixin/db";
+import PlaylistMix from "@/components/Commons/Mixin/playlist";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
 import ContextMenu from "@/components/Context/ContextMenu";
-import Loading from "@/components/Loader/PageLoading";
+import Loading from "@/components/Commons/Loader/PageLoading";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 
 export default {
@@ -249,7 +249,7 @@ export default {
                 this.$store.commit("setMusicList", res.data.items);
               }
 
-              this.$store.dispatch(pathName).then(results => {
+              this.$store.dispatch(pathName, { vm: this }).then(results => {
                 // 만약 갯수가 30가 나누어 참이 아니라면 맨 뒤에 배열을 제거한다.
                 let listSize = this.$lodash.size(results);
                 if (listSize % 30 !== 0) {

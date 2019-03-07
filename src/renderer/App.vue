@@ -40,8 +40,8 @@ You can not delete this comment when you deploy an application.
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "App",

@@ -45,10 +45,10 @@
 </template>
 
 <script>
-import ApiMixin from "@/components/Mixin/api";
-import PlaylistMix from "@/components/Mixin/playlist";
-import StoreMixin from "@/components/Mixin/index";
-import DataMixin from "@/components/Mixin/db";
+import ApiMixin from "@/components/Commons/Mixin/api";
+import PlaylistMix from "@/components/Commons/Mixin/playlist";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataMixin from "@/components/Commons/Mixin/db";
 
 export default {
   name: "SubPlayerBar",
