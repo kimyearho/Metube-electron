@@ -52,7 +52,7 @@ import DataMixin from "@/components/Commons/Mixin/db";
 
 export default {
   name: "SubPlayerBar",
-  mixins: [StoreMixin, DataMixin, PlaylistMix],
+  mixins: [StoreMixin, DataMixin, ApiMixin, PlaylistMix],
   data() {
     return {
       coverTitle: "",
@@ -291,7 +291,7 @@ export default {
             pathName = "setDuration";
             this.$store.commit("setMusicList", res.data.items);
           }
-          this.$store.dispatch(pathName).then(results => {
+          this.$store.dispatch(pathName, { vm: this }).then(results => {
             let list = [];
             this.$lodash.forEach(results, (item, idx) => {
               item.type = playType;
@@ -331,6 +331,18 @@ export default {
         .catch(error => {
           this.errorDialog();
         });
+    },
+
+    errorDialog() {
+      this.$modal.show("dialog", {
+        title: "Error",
+        text: "The URL you entered is invalid.",
+        buttons: [
+          {
+            title: "Close"
+          }
+        ]
+      });
     },
 
     // 재생정보 세팅

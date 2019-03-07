@@ -63,6 +63,7 @@
     "expose-loader": "^0.7.5",
     "googleapis": "^36.0.0",
     "http-server": "^0.11.1",
+    "jquery": "^3.3.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "mousetrap": "^1.6.2",

@@ -3,6 +3,7 @@ import App from "./App"
 import router from "./plugins/router"
 import store from "./plugins/store"
 import i18n from "./plugins/lang"
+import "expose-loader?$!jquery"
 import "electron-disable-file-drop"
 import "./plugins/pouchdb"
 
