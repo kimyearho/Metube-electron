@@ -5,7 +5,7 @@
 
 <template>
   <div>
-    <top-header @my-sync-list="getMyCollectionList"/>
+    <top-header :create="isCreate" @create-close="createClose" @my-sync-list="getMyCollectionList"/>
     <div class="wrapper">
       <!-- 로그인 상태 -->
       <el-row>
@@ -14,6 +14,10 @@
             <div>
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
+              <md-button class="md-raised b-primary c-add" @click="create">
+                <i class="material-icons" style="float:left;">add</i>
+                <span class="create">Create</span>
+              </md-button>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
           </div>
@@ -58,7 +62,7 @@
               </div>
               <div class="playWrapper" :class="{ channelWrapper: playType === 'channel' }">
                 <div class="overlayMenu" :class="{ channelMenu: playType === 'channel' }">
-                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                  <!-- <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
                   <a class="cursor" @click="showRemove(item)" title="Remove">
@@ -71,7 +75,7 @@
                     v-if="playType !== 'channel'"
                   >
                     <font-awesome-icon class="f25 fa" icon="images"/>
-                  </a>
+                  </a> -->
                 </div>
               </div>
             </div>
@@ -119,6 +123,7 @@ export default {
       load: false,
       playlists: [],
       data: null,
+      isCreate: false,
       playType: null,
       selectedData: null,
       isLogin: false
@@ -140,6 +145,16 @@ export default {
         this.isLogin = true;
       }
       this.playType = this.$route.params.playType;
+    },
+
+    // 컬렉션 생성 팝업 추가
+    create() {
+      this.$set(this, "isCreate", true);
+    },
+
+    // 컬렉션 생성 팝업 닫기
+    createClose() {
+      this.$set(this, "isCreate", false);
     },
 
     showRemove(data) {
@@ -209,6 +224,12 @@ export default {
 <style scoped>
 .dynamicHeight {
   height: 410px !important;
+}
+
+.create {
+  position: relative;
+  top: 4px;
+  left: 1px;
 }
 
 .c-add {

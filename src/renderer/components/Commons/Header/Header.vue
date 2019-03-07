@@ -38,7 +38,7 @@
     </modal>
 
     <!-- fab -->
-    <md-speed-dial
+    <!-- <md-speed-dial
       v-if="isFab"
       ref="fab"
       class="md-bottom-right"
@@ -60,8 +60,7 @@
           <md-icon>add</md-icon>
         </md-button>
       </md-speed-dial-content>
-    </md-speed-dial>
-
+    </md-speed-dial>-->
     <!-- Side Menu -->
     <md-drawer
       :md-active.sync="showNavigation"
@@ -101,7 +100,12 @@
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">Setting</span>
         </md-list-item>
-    
+
+        <!-- Menu2 -->
+        <md-list-item @click="route('setting')">
+          <md-icon>settings</md-icon>
+          <span class="md-list-item-text">FAQ</span>
+        </md-list-item>
       </md-list>
     </md-drawer>
 
@@ -126,7 +130,6 @@ export default {
     return {
       isCheck: false,
       isCreate: false,
-      isFab: true,
       isUser: false,
       profileData: "",
       playType: null,
@@ -144,13 +147,15 @@ export default {
       type: Boolean,
       default: true
     },
-    isShow: {
+    create: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
-  created() {
-    this.isFab = this.isShow;
+  watch: {
+    create(val) {
+      this.isCreate = val;
+    }
   },
   mounted() {
     this.isUser = this.getUserId();
@@ -159,9 +164,6 @@ export default {
     }
     if (this.data) {
       this.playType = this.data.playType;
-    }
-    if (this.$route.name === "collection" && !this.isUser) {
-      this.isFab = false;
     }
   },
   methods: {
@@ -222,10 +224,10 @@ export default {
       }
     },
     close() {
-      // 일단 임시로 
+      // 일단 임시로
       // this.$local.destroy().then(result => { console.log(result) });
 
-      let self = this
+      let self = this;
       setTimeout(() => {
         self.$ipcRenderer.send("button:close", null);
       }, 1000);
@@ -233,18 +235,8 @@ export default {
     closeModal() {
       this.$modal.hide("input-focus-modal");
     },
-    closeCreateModal(v) {
-      this.isCreate = v;
-    },
-    showCreateMyCollection() {
-      /** @overaide fab 닫기  */
-      this.closeFab();
-      this.isCreate = true;
-    },
-    showPageSearch() {
-      /** @overaide fab 닫기  */
-      this.closeFab();
-      this.$modal.show("input-focus-modal");
+    closeCreateModal(value) {
+      this.$emit("create-close", value);
     },
     myCollectionSync() {
       this.isCreate = false;

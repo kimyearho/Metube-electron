@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <top-header @my-sync="getMyCollection"/>
+    <top-header :create="isCreate" @create-close="createClose" @my-sync="getMyCollection"/>
     <div class="wrapper">
       <!-- 비로그인 상태 -->
       <el-row v-if="!isLogin">
@@ -27,6 +27,11 @@
             <div>
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
+
+              <md-button class="md-raised b-primary c-add" @click="create">
+                <i class="material-icons" style="float:left;">add</i>
+                <span class="create">Create</span>
+              </md-button>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>
           </div>
@@ -43,7 +48,6 @@
                 <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>
             </label>
-            <!-- <md-button class="md-raised b-primary c-add" @click="collectionAdd">add</md-button> -->
           </div>
         </el-col>
 
@@ -60,7 +64,7 @@
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
               <div class="playWrapper">
-                <div class="overlayMenu">
+                <!-- <div class="overlayMenu">
                   <a class="cursor" @click="showMyCollectionList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
@@ -70,14 +74,12 @@
                   <a class="cursor" @click="showCoverModal(item)" title="Cover change">
                     <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
-                </div>
+                </div>-->
               </div>
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub cursor" @click="showMyCollectionList(item)">
-                  {{ item.title }}
-                </span>
+                <span class="sub cursor" @click="showMyCollectionList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
@@ -103,7 +105,7 @@
             <div class="overlay">
               <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper">
-                <div class="overlayMenu">
+                <!-- <div class="overlayMenu">
                   <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
@@ -113,14 +115,12 @@
                   <a class="cursor" @click="showCoverModal(item)" title="Cover change">
                     <font-awesome-icon class="f25 fa" icon="images"/>
                   </a>
-                </div>
+                </div>-->
               </div>
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub cursor" @click="showMusicList(item)">
-                  {{ item.title }}
-                </span>
+                <span class="sub cursor" @click="showMusicList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
@@ -148,21 +148,19 @@
             <div class="overlay">
               <img class="thumbnail channelThumb" :src="item.thumbnails" width="158" height="100">
               <div class="playWrapper channelWrapper">
-                <div class="overlayMenu channelMenu">
+                <!-- <div class="overlayMenu channelMenu">
                   <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f30 fa" icon="play"/>
                   </a>
                   <a class="cursor" @click="showRemove(item)" title="Remove">
                     <font-awesome-icon class="f30 fa" icon="times"/>
                   </a>
-                </div>
+                </div>-->
               </div>
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub cursor" @click="showMusicList(item)">
-                  {{ item.title }}
-                </span>
+                <span class="sub cursor" @click="showMusicList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
@@ -173,19 +171,6 @@
 
     <!-- 서브 플레이어 컴포넌트 -->
     <sub-player-bar v-show="isSub"/>
-
-    <!-- 커버 이미지 변경 -->
-    <cover-change-modal ref="coverModal" :data="selectedData" @is-success="saveCover"/>
-
-    <collection-register
-      ref="likes"
-      :isLikeToggle="true"
-      :data="data"
-      :playType="playType"
-      @toggle="toggleChange"
-      @callback="albumRemoveCallback"
-      style="visibility: hidden"
-    />
   </div>
 </template>
 
@@ -194,8 +179,6 @@ import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
 import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
 import StoreMixin from "@/components/Commons/Mixin/index";
 import DataUtils from "@/components/Commons/Mixin/db";
-import CoverChangeModal from "./cover/CollectionCoverChange";
-import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import Loading from "@/components/Commons/Loader/PageLoading";
 
@@ -203,8 +186,6 @@ export default {
   name: "Collections",
   mixins: [StoreMixin, CollectionQueryMixin, MyQueryMixin, DataUtils],
   components: {
-    CollectionRegister,
-    CoverChangeModal,
     SubPlayerBar,
     Loading
   },
@@ -220,12 +201,12 @@ export default {
       isSub: false,
       isLikeToggle: false,
       isLogin: false,
+      isCreate: false,
       data: null,
       selectedData: null
     };
   },
   created() {
-    // login user
     this.isLogin = this.getUserId() ? true : false;
   },
   beforeMount() {
@@ -242,9 +223,17 @@ export default {
     this.getChannelList();
   },
   methods: {
-    collectionAdd() {
-      this.isCreate = true;
+    // 컬렉션 생성 팝업 추가
+    create() {
+      this.$set(this, "isCreate", true);
     },
+
+    // 컬렉션 생성 팝업 닫기
+    createClose() {
+      this.$set(this, "isCreate", false);
+    },
+
+    // 컬렉션 삭제
     showRemove(data) {
       this.$modal.show("dialog", {
         title: "Info",
@@ -270,9 +259,7 @@ export default {
         ]
       });
     },
-    toggleChange(value) {
-      this.isLikeToggle = value;
-    },
+
     showMyCollectionList(item) {
       this.$store.commit("setPath", this.$route.path);
       this.$router.push({
@@ -283,6 +270,7 @@ export default {
         }
       });
     },
+
     showMusicList(item) {
       this.$store.commit("setPath", this.$route.path);
       this.$router.push({
@@ -293,6 +281,7 @@ export default {
         }
       });
     },
+
     showCollectionList(type) {
       this.$store.commit("setPath", this.$route.path);
       this.$router.push({
@@ -302,10 +291,7 @@ export default {
         }
       });
     },
-    showCoverModal(item) {
-      this.$refs.coverModal.showModal();
-      this.$set(this, "selectedData", item);
-    },
+
     saveCover(data) {
       if (data) {
         if (data.playType === "play") {
@@ -317,6 +303,7 @@ export default {
         }
       }
     },
+
     signLink() {
       this.$router.push({
         name: "login"
@@ -331,6 +318,12 @@ export default {
   color: #ffffff;
   background: #448aff;
   width: 140px;
+}
+
+.create {
+  position: relative;
+  top: 4px;
+  left: 1px;
 }
 
 .c-add {

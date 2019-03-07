@@ -12,30 +12,11 @@ You can not delete this comment when you deploy an application.
 
     <!-- 하단 네비게이션 -->
     <md-tabs class="tab-navi">
-      <md-tab
-        id="tabSearch"
-        class="md-tab"
-        md-label="Search"
-        @click="route('search')"
-      ></md-tab>
-      <md-tab
-        id="tabCollection"
-        class="md-tab"
-        md-label="Collections"
-        @click="route('collection')"
-      ></md-tab>
-      <md-tab
-        id="tabHistory"
-        class="md-tab"
-        md-label="History"
-        @click="route('history')"
-      ></md-tab>
+      <md-tab id="tabSearch" class="md-tab" md-label="Search" @click="route('search')"></md-tab>
+      <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
+      <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
     </md-tabs>
-    <v-dialog
-      :width="300"
-      :height="300"
-      :clickToClose="false"
-    />
+    <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
 
@@ -61,6 +42,9 @@ export default {
     }
   },
   mounted() {
+
+    this.loopHistoryMonitering()
+
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
@@ -105,6 +89,41 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
+    },
+
+    // 10분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
+    loopHistoryMonitering() {
+      setInterval(() => {
+        let user = this.getUserId();
+        if (user) {
+          this.$test
+            .find({
+              selector: {
+                type: "history",
+                userId: user
+              }
+            })
+            .then(result => {
+              let docs = result.docs;
+              if (docs.length > 0) {
+                let size = docs.length;
+                let defaultNum = 20;
+                let result = size - defaultNum;
+                if (result > defaultNum) {
+                  // 0부터 결과개수-1 만큼 삭제 후 갱신
+                  docs.splice(0, result - 1);
+                  this.$test.bulkDocs(docs).then(res => {
+                    if (res.ok) {
+                      console.log("Success history Remove => ", result - 1);
+                    }
+                  });
+                } else {
+                  console.log("Non Removing. history size: " + size);
+                }
+              }
+            });
+        }
+      }, 6 * 100000);
     },
 
     onNewReleaseCheck() {

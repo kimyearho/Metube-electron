@@ -88,8 +88,8 @@
     "vue-marquee-text-component": "^1.1.1",
     "vue-material": "^1.0.0-beta-10.2",
     "vue-router": "^3.0.1",
-    "vue-scrollto": "^2.13.0",
-    "vuedraggable": "^2.17.0",
+    "vue-scrollto": "^2.14.0",
+    "vuedraggable": "^2.19.1",
     "vuex": "^3.1.0",
     "vuex-electron": "^1.0.3"
   },

@@ -27,7 +27,7 @@
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
             <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
-              <font-awesome-icon class="f20" icon="edit"/>
+              <!-- <font-awesome-icon class="f20" icon="edit"/> -->
             </a>
           </div>
         </div>
@@ -37,11 +37,10 @@
 
     <!-- 재생목록 드래그 지점 -->
     <draggable
-      element="md-list"
-      id="list"
+      tag="md-list"
       class="searchList"
+      animation="150"
       :class="{ dynamicHeight: isMini }"
-      :options="{animation:150}"
       :list="playlist"
       @end="endDrag"
     >

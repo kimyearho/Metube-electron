@@ -37,17 +37,16 @@
 
     <!-- 목록 영역 -->
     <draggable
-      element="md-list"
-      id="myMusicList"
+      tag="md-list"
+      v-model="playlist"
       class="musicPlayList"
       :class="{ dynamicHeight: isMini }"
-      :options="{animation:150}"
-      v-model="playlist"
+      animation="150"
       @end="endDrag"
     >
       <md-list-item
-        :id="`item${index}`"
         v-for="(item, index) in playlist"
+        :id="`item${index}`"
         :key="item.etag"
         :class="selectedIndex === index ? active : ''"
       >
@@ -85,11 +84,6 @@
       @nextVideoTrack="nextPlayItem"
     />
 
-    <!-- 로딩 컴포넌트 -->
-    <transition name="fade">
-      <!-- <loading :init="false" v-show="!load"/> -->
-    </transition>
-
     <!-- 팝업 컴포넌트 -->
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
@@ -101,17 +95,15 @@ import StoreMixin from "@/components/Commons/Mixin/index";
 import DataUtils from "@/components/Commons/Mixin/db";
 import MyCollectionMixin from "@/components/Commons/Mixin/mycollection";
 import MyContextMenu from "@/components/Context/MyContextMenu";
-import Loading from "@/components/Commons/Loader/PageLoading";
 import draggable from "vuedraggable";
 import MarqueeText from "vue-marquee-text-component";
 
-const options = { container: "#myMusicList", offset: -80 };
+const options = { container: ".musicPlayList", offset: -80 };
 
 export default {
   name: "MyMusicPlayList",
   mixins: [StoreMixin, MyCollectionMixin, DataUtils],
   components: {
-    // Loading,
     MainPlayerBar,
     MarqueeText,
     draggable,
@@ -213,7 +205,6 @@ export default {
     videoActive(selectedIndex) {
       const self = this;
       const id = "#item" + selectedIndex;
-      console.log(id)
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;
@@ -504,7 +495,7 @@ export default {
      */
     nextTrackScroll(duration) {
       if (this.$route.name === "MY-PLAYING-PLAYLIST") {
-        let cancelScroll = this.$scrollTo(
+        const cancelScroll = this.$scrollTo(
           `#item${this.selectedIndex}`,
           duration,
           options
