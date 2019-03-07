@@ -194,19 +194,19 @@ const mutations = {
 
 const actions = {
   // 검색목록 각 비디오별 재생타임
-  setSearchDuration() {
+  setSearchDuration(context, { vm }) {
     state.videoList = []
     const videoIds = _.map(state.searchList, "videoId")
     return new Promise((resolve, reject) => {
-      const url = utils.youtubeVideoDuration(videoIds)
+      const url = vm.youtubeVideoDuration(videoIds)
       axios.get(url).then(res => {
         _.forEach(state.searchList, item => {
           let videoId = item.videoId
           _.forEach(res.data.items, videoIdArray => {
             if (videoId === videoIdArray.id) {
               item.duration_code = videoIdArray.contentDetails.duration
-              item.duration_time = utils.convertToSeconds(videoIdArray.contentDetails.duration)
-              item.duration = utils.secondFormat(item.duration_time)
+              item.duration_time = vm.convertToSeconds(videoIdArray.contentDetails.duration)
+              item.duration = vm.secondFormat(item.duration_time)
             }
           })
           state.videoList.push(item)
@@ -216,19 +216,19 @@ const actions = {
     })
   },
   // 연관 비디오 재생타임
-  setRelatedDuration() {
+  setRelatedDuration(context, { vm }) {
     state.relatedVideoList = []
     const videoIds = _.map(state.relatedList, "videoId")
     return new Promise((resolve, reject) => {
-      const url = utils.youtubeVideoDuration(videoIds)
+      const url = vm.youtubeVideoDuration(videoIds)
       axios.get(url).then(res => {
         _.forEach(state.relatedList, item => {
           let videoId = item.videoId
           _.forEach(res.data.items, videoIdArray => {
             if (videoId === videoIdArray.id) {
               item.duration_code = videoIdArray.contentDetails.duration
-              item.duration_time = utils.convertToSeconds(videoIdArray.contentDetails.duration)
-              item.duration = utils.secondFormat(item.duration_time)
+              item.duration_time = vm.convertToSeconds(videoIdArray.contentDetails.duration)
+              item.duration = vm.secondFormat(item.duration_time)
             }
           })
           state.relatedVideoList.push(item)
@@ -238,19 +238,19 @@ const actions = {
     })
   },
   // 그외 재생목록 재생타임
-  setDuration() {
+  setDuration(context, { vm }) {
     let videoIds = _.map(state.musicList, "videoId")
     return new Promise((resolve, reject) => {
-      const url = utils.youtubeVideoDuration(videoIds)
+      const url = vm.youtubeVideoDuration(videoIds)
       axios.get(url).then(res => {
         _.forEach(res.data.items, (item, index) => {
           if (state.musicList[index].videoId === item.id) {
             if (state.musicList[index].imageInfo !== "") {
               state.musicList[index].duration_code = item.contentDetails.duration
-              state.musicList[index].duration_time = utils.convertToSeconds(
+              state.musicList[index].duration_time = vm.convertToSeconds(
                 item.contentDetails.duration
               )
-              state.musicList[index].duration = utils.secondFormat(
+              state.musicList[index].duration = vm.secondFormat(
                 state.musicList[index].duration_time
               )
             }

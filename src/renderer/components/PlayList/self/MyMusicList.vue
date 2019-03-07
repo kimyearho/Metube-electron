@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
 import MyQueryMixin from "@/components/Mixin/mycollection";

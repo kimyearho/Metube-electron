@@ -23,13 +23,13 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
+import ApiMixin from "@/components/Mixin/api";
 import DataUtils from "@/components/Mixin/db";
 
 export default {
   name: "CollectionRegister",
-  mixins: [StoreMixin, DataUtils],
+  mixins: [StoreMixin, ApiMixin, DataUtils],
   props: {
     isLikeToggle: {
       type: Boolean,
@@ -157,7 +157,7 @@ export default {
         });
       } else {
         // CHANNEL
-        let requestURL = $commons.youtubeChannelSearch(data.channelId);
+        let requestURL = this.youtubeChannelSearch(data.channelId);
         this.$http.get(requestURL).then(res => {
           data.thumbnails = res.data.items[0].snippet.thumbnails.medium.url;
           data.title = res.data.items[0].snippet.title;

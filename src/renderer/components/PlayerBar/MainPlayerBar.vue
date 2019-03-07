@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import StoreMixin from "@/components/Mixin/index";
 import GlobalMixin from "@/components/Mixin/common";
 

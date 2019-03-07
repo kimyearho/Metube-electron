@@ -139,8 +139,8 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import IndexMix from "@/components/Mixin/index";
+import ApiMix from "@/components/Mixin/api";
 import DataUtils from "@/components/Mixin/db";
 import CollectionMix from "@/components/Mixin/collections";
 import PlaylistMix from "@/components/Mixin/playlist";
@@ -157,7 +157,7 @@ const options = {
 
 export default {
   name: "MusicPlayList",
-  mixins: [IndexMix, PlaylistMix, CollectionMix, DataUtils],
+  mixins: [IndexMix, ApiMix, PlaylistMix, CollectionMix, DataUtils],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -908,19 +908,20 @@ export default {
       // 토큰을 사용한 새 재생목록 가져오기
       if (this.playType === "play") {
         playlistName = `PLAYLIST:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
+        playlistItem = this.youtubePagingPlaylistItem(
           this.playlistId,
           this.nextPageToken
         );
       } else if (this.playType === "related") {
+        // api -> search 
         playlistName = `RELATED:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingRelatedSearch(
+        playlistItem = this.youtubePagingRelatedSearch(
           this.playlistId,
           this.nextPageToken
         );
       } else if (this.playType === "channel") {
         playlistName = `CHANNEL:${this.playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
+        playlistItem = this.youtubePagingPlaylistItem(
           this.channelPlaylistId,
           this.nextPageToken
         );
@@ -960,7 +961,7 @@ export default {
                   pathName = "setDuration";
                   this.$store.commit("setMusicList", res.data.items);
                 }
-                this.$store.dispatch(pathName).then(results => {
+                this.$store.dispatch(pathName, { vm: this }).then(results => {
                   let list = [];
                   this.$lodash.forEach(results, (item, idx) => {
                     item.type = this.playType;

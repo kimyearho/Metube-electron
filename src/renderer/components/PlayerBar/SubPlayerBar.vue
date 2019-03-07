@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
+import ApiMixin from "@/components/Mixin/api";
 import PlaylistMix from "@/components/Mixin/playlist";
 import StoreMixin from "@/components/Mixin/index";
 import DataMixin from "@/components/Mixin/db";
@@ -259,19 +259,19 @@ export default {
 
       if (playType === "play") {
         playlistName = playlistIdName;
-        playlistItem = $commons.youtubePagingPlaylistItem(
+        playlistItem = this.youtubePagingPlaylistItem(
           playlistId,
           this.lastPageToken
         );
       } else if (playType === "related") {
         playlistName = playlistIdName;
-        playlistItem = $commons.youtubePagingRelatedSearch(
+        playlistItem = this.youtubePagingRelatedSearch(
           playlistId,
           this.lastPageToken
         );
       } else if (playType === "channel") {
         playlistName = playlistIdName;
-        playlistItem = $commons.youtubePagingPlaylistItem(
+        playlistItem = this.youtubePagingPlaylistItem(
           this.channelPlaylistId,
           this.lastPageToken
         );

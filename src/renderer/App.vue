@@ -55,9 +55,6 @@ export default {
     };
   },
   created() {
-    // API 인증
-    // this.apiAuthentication()
-
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
@@ -108,24 +105,6 @@ export default {
           name: "VIDEO-HISTORY"
         });
       }
-    },
-
-    apiAuthentication() {
-      this.$db.get("cfb9d27f0b59d3fbc55073830f009acc").then(result => {
-        let apiKey = ""
-        const keyList = result.key_list
-        if (process.env.NODE_ENV === "development") {
-          // dev
-          const service = this.$lodash.find(keyList, { "service-type": "dev" })
-          apiKey = service.apiKey
-        } else {
-          // production
-          const service = this.$lodash.find(keyList, { "service-type": "production1" })
-          apiKey = service.apiKey
-        }
-        // this.getLog('[App]/[apiAuthentication] ===> API KEY : ', apiKey)
-        this.$store.commit("setKeys", apiKey)
-      })
     },
 
     onNewReleaseCheck() {

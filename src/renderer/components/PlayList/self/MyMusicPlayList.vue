@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
 import DataUtils from "@/components/Mixin/db";

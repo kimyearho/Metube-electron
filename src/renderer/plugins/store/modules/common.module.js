@@ -9,7 +9,9 @@ const state = {
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
-  apiKey: "",
+  apiKeys: [],
+  searchApiKey: null,
+  videoItemsApiKey: null,
   locale: "en"
 }
 
@@ -51,14 +53,15 @@ const getters = {
     return state.isSnow
   },
   getKeys() {
-    return state.apiKey
+    return state.apiKeys
   }
 }
 
 // 동기
 const mutations = {
   setKeys(state, value) {
-    state.apiKey = value
+    state.apiKeys = []
+    state.apiKeys = value
   },
   setPath(state, value) {
     state.path = value
@@ -99,7 +102,21 @@ const mutations = {
 }
 
 // 비동기
-const actions = {}
+const actions = {
+  setAuthKey(context, { vm }) {
+    // 63585eea117ff56b58ea7ea582000d6d
+    // cfb9d27f0b59d3fbc55073830f009acc .. Real
+    vm.$repo.get("63585eea117ff56b58ea7ea582000d6d").then(result => {
+      const auth = result.auth
+      const envType = process.env.NODE_ENV === "development" ? "dev" : "production"
+      const service = vm.$lodash.find(auth, { type: envType })
+      if (service.type === envType) {
+        const keyList = service.key_list
+        vm.$store.commit("setKeys", keyList)
+      }
+    })
+  }
+}
 
 export default {
   state,

@@ -3,19 +3,29 @@ export default {
     return {
       PK_ID: "63585eea117ff56b58ea7ea582000d6d",
       API_URL: "https://www.googleapis.com/youtube/v3",
-      API_KEY: null
+      SEARCH_KEY: null,
+      VIDEO_ITEMS_KEY: null
+    }
+  },
+  created() {
+    const keyList = this.$store.getters.getKeys
+    if(keyList.length > 0) {
+      const searchKey = this.$lodash.find(keyList, { query: 'search' })
+      const videoItemsKey = this.$lodash.find(keyList, { query: 'videoItems' })
+      this.SEARCH_KEY = searchKey.apiKey
+      this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey
     }
   },
   methods: {
     /**
      * Youtube 검색쿼리
      *
-     * @param {*} text - 검색   어
+     * @param {*} text - 검색어
      */
     youtubeSearch(text) {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&q=${text}`)
-        .concat(`&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${this.API_KEY}`)
+        .concat(`&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -26,7 +36,7 @@ export default {
     youtubePlaylistSearch(text) {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&q=${text}`)
-        .concat(`&type=playlist&maxResults=30&safeSearch=strict&key=${this.API_KEY}`)
+        .concat(`&type=playlist&maxResults=30&safeSearch=strict&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -39,7 +49,7 @@ export default {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&q=${text}`)
         .concat(`&type=video,playlist,channel&pageToken=${nextToken}`)
-        .concat(`&maxResults=40&safeSearch=strict&key=${this.API_KEY}`)
+        .concat(`&maxResults=40&safeSearch=strict&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -50,7 +60,7 @@ export default {
     youtubeRelatedSearch(videoId) {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&relatedToVideoId=${videoId}`)
-        .concat(`&type=video&maxResults=30&key=${this.API_KEY}`)
+        .concat(`&type=video&maxResults=30&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -62,7 +72,7 @@ export default {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&relatedToVideoId=${videoId}`)
         .concat(`&pageToken=${nextToken}`)
-        .concat(`&type=video&maxResults=30&key=${this.API_KEY}`)
+        .concat(`&type=video&maxResults=30&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -73,7 +83,7 @@ export default {
     youtubeChannelSearch(channelId) {
       return this.API_URL.concat("/channels?")
         .concat(`part=snippet,contentDetails&fields=items&id=${channelId}`)
-        .concat(`&maxResults=30&key=${this.API_KEY}`)
+        .concat(`&maxResults=30&key=${this.VIDEO_ITEMS_KEY}`)
     },
 
     /**
@@ -87,7 +97,7 @@ export default {
         .concat(playlistId)
         .concat("&maxResults=30")
         .concat("&key=")
-        .concat(this.API_KEY)
+        .concat(this.VIDEO_ITEMS_KEY)
     },
 
     /**
@@ -101,7 +111,7 @@ export default {
         .concat(`part=snippet&playlistId=${playlistId}`)
         .concat(`&pageToken=${nextToken}`)
         .concat("&maxResults=30")
-        .concat(`&key=${this.API_KEY}`)
+        .concat(`&key=${this.VIDEO_ITEMS_KEY}`)
     },
 
     /**
@@ -112,7 +122,7 @@ export default {
     youtubeVideoResult(videoId) {
       return this.API_URL.concat("/videos?")
         .concat(`part=snippet&id=${videoId}`)
-        .concat(`&key=${this.API_KEY}`)
+        .concat(`&key=${this.VIDEO_ITEMS_KEY}`)
     },
 
     /**
@@ -125,7 +135,7 @@ export default {
         .concat(
           `part=contentDetails,snippet&fields=items(id,contentDetails(duration))&id=${videoId}`
         )
-        .concat(`&key=${this.API_KEY}`)
+        .concat(`&key=${this.VIDEO_ITEMS_KEY}`)
     },
 
     /**
@@ -136,7 +146,7 @@ export default {
     youtubePlaylistInfo(playlistId) {
       return this.API_URL.concat("/playlists?")
         .concat(`part=snippet&id=${playlistId}`)
-        .concat(`&key=${this.API_KEY}`)
+        .concat(`&key=${this.VIDEO_ITEMS_KEY}`)
     },
 
     /**

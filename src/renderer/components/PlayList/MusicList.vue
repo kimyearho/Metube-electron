@@ -93,9 +93,9 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import StoreMixin from "@/components/Mixin/index";
+import ApiMixin from "@/components/Mixin/api";
 import DataUtils from "@/components/Mixin/db";
 import PlaylistMix from "@/components/Mixin/playlist";
 import CollectionQueryMixin from "@/components/Mixin/collections";
@@ -105,7 +105,7 @@ import CollectionRegister from "@/components/Collections/regist/CollectionRegist
 
 export default {
   name: "MusicList",
-  mixins: [StoreMixin, DataUtils, PlaylistMix, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, PlaylistMix, ApiMixin, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -205,11 +205,11 @@ export default {
       // 현재 요청하고자 하는 재생목록 타입
       let requestURL = null;
       if (this.playType === "play") {
-        requestURL = $commons.youtubePlaylistInfo(this.playlistId);
+        requestURL = this.youtubePlaylistInfo(this.playlistId);
       } else if (this.playType === "related") {
-        requestURL = $commons.youtubeVideoResult(this.playlistId);
+        requestURL = this.youtubeVideoResult(this.playlistId);
       } else if (this.playType === "channel") {
-        requestURL = $commons.youtubeChannelSearch(this.playlistId);
+        requestURL = this.youtubeChannelSearch(this.playlistId);
       }
 
       // 재생목록 요청
@@ -223,14 +223,14 @@ export default {
           // 재생목록별 하위 조회 섫정
           if (this.playType === "play") {
             plistTitle = res.data.items[0].snippet.title;
-            requestURL = $commons.youtubePlaylistItem(this.playlistId);
+            requestURL = this.youtubePlaylistItem(this.playlistId);
           } else if (this.playType === "related") {
             videoInfo = res.data.items[0];
-            requestURL = $commons.youtubeRelatedSearch(this.playlistId);
+            requestURL = this.youtubeRelatedSearch(this.playlistId);
           } else if (this.playType === "channel") {
             subChannelId =
               res.data.items[0].contentDetails.relatedPlaylists.uploads;
-            requestURL = $commons.youtubePlaylistItem(subChannelId);
+            requestURL = this.youtubePlaylistItem(subChannelId);
           }
 
           // 재생목록 하위 데이터 요청
