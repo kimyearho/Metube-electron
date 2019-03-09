@@ -40,6 +40,7 @@ import {
   Dialog,
   Dropdown,
   DropdownMenu,
+  Autocomplete,
   DropdownItem,
   Input,
   Select,
@@ -93,6 +94,7 @@ Vue.use(VueScrollTo)
 Vue.use(VueClipboard)
 
 /* vue element-ui  */
+Vue.use(Autocomplete)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)

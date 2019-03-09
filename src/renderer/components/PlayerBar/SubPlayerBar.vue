@@ -21,26 +21,17 @@
               <div class="channel">{{ channelTitle }}</div>
             </div>
             <div class="playerButton">
-              <img
-                class="cursor"
-                v-if="!isPlay"
-                @click="pause"
-                width="35"
-                src="@/assets/images/svg/play-button.svg"
-              >
-              <img
-                class="cursor"
-                v-else
-                @click="play"
-                width="35"
-                src="@/assets/images/svg/pause.svg"
-              >
+              <i v-if="!isPlay" @click="pause" class="material-icons">play_arrow</i>
+              <i v-else @click="play" class="material-icons">pause</i>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <global-event-handler @sendSubNextMusicPlay="sendNextMusicPlay" @playVideoSecond="progressRange"></global-event-handler>
+    <global-event-handler
+      @sendSubNextMusicPlay="sendNextMusicPlay"
+      @playVideoSecond="progressRange"
+    ></global-event-handler>
   </div>
 </template>
 
@@ -78,7 +69,6 @@ export default {
   },
   methods: {
     sendNextMusicPlay(nextIndex) {
-
       // 재생중인 음악정보
       const musicInfo = this.getMusicInfos();
       const playingPageNum = musicInfo.pageNum;
@@ -123,7 +113,9 @@ export default {
                 if (playingPageNum === this.playlistLastPage) {
                   // 마지막 번째 음악이 종료됬음.
                   if (this.subList.length === nextIndex) {
-                    this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 마지막 번째 음악이 종료 됨");
+                    this.getLog(
+                      "[SubPlayerBar]/[sendNextMusicPlay] ====> 마지막 번째 음악이 종료 됨"
+                    );
                     // 여기서 1페이지 0번째 음악을 실행시키는 로직이 필요함.
                     this.getPageVideoList(
                       playType,
@@ -140,7 +132,9 @@ export default {
                           return this.$local.put(doc).then(result => {
                             if (result.ok) {
                               // 다음 페이지 목록의 0번째 음악 실행
-                              this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 1페이지 0번째 음악 시작");
+                              this.getLog(
+                                "[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 1페이지 0번째 음악 시작"
+                              );
                               this.subPlay(0);
                             }
                           });
@@ -149,7 +143,9 @@ export default {
                     });
                   }
                 } else {
-                  this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 다음 페이지 조회");
+                  this.getLog(
+                    "[SubPlayerBar]/[sendNextMusicPlay] ====> 다음 페이지 조회"
+                  );
                   // 다음 페이지의 데이터가 DB에 있는지?
                   this.getPlaylistVideoCount(
                     playType,
@@ -173,7 +169,9 @@ export default {
                             doc.pageNum = nextPage;
                             return this.$local.put(doc).then(result => {
                               if (result.ok) {
-                                this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작");
+                                this.getLog(
+                                  "[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작"
+                                );
                                 // 다음 페이지 목록의 0번째 음악 실행
                                 this.subPlay(0);
                               }
@@ -246,7 +244,9 @@ export default {
     },
 
     subNextPlayPageLoad() {
-      this.getLog("[SubPlayerBar]/[subNextPlayPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회");
+      this.getLog(
+        "[SubPlayerBar]/[subNextPlayPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회"
+      );
 
       let playlistName = null;
       let playlistItem = null;
@@ -316,8 +316,13 @@ export default {
                     doc.pageNum = nextPageNum;
                     return this.$local.put(doc).then(result => {
                       if (result.ok) {
-                        this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 현재 페이지번호 : ", nextPageNum);
-                        this.getLog("[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작");
+                        this.getLog(
+                          "[SubPlayerBar]/[sendNextMusicPlay] ====> 현재 페이지번호 : ",
+                          nextPageNum
+                        );
+                        this.getLog(
+                          "[SubPlayerBar]/[sendNextMusicPlay] ====> 재생목록정보 업데이트 완료 및 0번째 음악 시작"
+                        );
                         this.subList = results;
                         this.subPlay(0);
                       }
@@ -355,7 +360,7 @@ export default {
 
         let titleLength = this.countUtf8Bytes(musicInfo.title);
         if (titleLength > 35) {
-          this.coverTitle = musicInfo.title.substring(0, 35).concat("...");
+          this.coverTitle = musicInfo.title.substring(0, 42).concat(" ...");
         } else {
           this.coverTitle = musicInfo.title;
         }
@@ -482,8 +487,14 @@ export default {
   margin-top: 8px;
 }
 
-.zaudio_player:hover {
-  background-color: #2b2b2b;
+.playerButton {
+  margin-bottom: 7px;
+}
+
+.playerButton i {
+  color: #ffffff;
+  padding-top: 6px;
+  padding-right: 10px;
 }
 
 .channelInfo {
@@ -505,21 +516,17 @@ export default {
   padding-bottom: 5px;
 }
 
-.playerButton {
-  margin-bottom: 7px;
-}
-
 progress {
   width: 100%;
-  height: 4px;
+  height: 2px;
   border-radius: 5px;
 }
 
 progress::-webkit-progress-value {
-  background-color: #ffffff;
+  background-color: red;
 }
 
-progress.volume::-webkit-progress-bar {
-  background-color: rgb(182, 182, 182) !important;
+progress::-webkit-progress-bar {
+  background-color: #ffffff !important
 }
 </style>

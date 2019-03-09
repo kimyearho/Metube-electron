@@ -43,7 +43,7 @@
 }
 
 .musicPlayList::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 
 .musicPlayList::-webkit-scrollbar-track {

@@ -323,7 +323,7 @@ export default {
 <style scope>
 progress {
   width: 92.1%;
-  height: 10px;
+  height: 8px;
   border-radius: 5px;
 }
 progress::-webkit-progress-bar {

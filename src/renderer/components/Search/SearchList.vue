@@ -7,39 +7,22 @@
 
 <template>
   <div>
+    
     <!-- 타이틀바 컴포넌트 -->
-    <top-header
-      :data="{ playType: 'list' }"
-      @scrollTop="searchTop"
-    />
+    <top-header ref="header" 
+      :data="{ playType: 'list' }" 
+      @scrollTop="searchTop"/>
 
-    <!-- 검색어 영역 -->
+    <!-- 검색 및 자동완성 영역 -->
     <div class="search">
-      <input
-        type="text"
-        v-model="searchText"
-        @keyup="autoComplateSearch"
-        @keyup.enter="submit(searchText)"
-        placeholder=" Search Youtube"
-      >
-      <a
-        class="searchCancel cursor"
-        @click="searchReset"
-      >
-        <img
-          width="20"
-          src="../../assets/images/svg/cancel.svg"
-        >
-      </a>
+      <auto-complate ref="autoComplate" 
+        :userSearchQuery="searchText" 
+        @searchQuery="itemSelected" />
     </div>
-    <div
-      class="tag"
-      v-show="isTag"
-    >
-      <span
-        v-if="searchKeywords.length === 0"
-        class="no_keyword"
-      >
+
+    <!-- 사용자가 검색한 키워드 -->
+    <div class="tag" v-show="isTag">
+      <span v-if="searchKeywords.length === 0" class="no_keyword">
         <i class="el-icon-warning"></i>
         {{ $t('COMMONS.NO_KEYWORD') }}
       </span>
@@ -52,27 +35,10 @@
         :key="item"
       >{{ item }}</el-button>
     </div>
-    <md-button
-      class="md-raised md-primary searchKeywords"
-      @click="showTag"
-    >Recent search terms</md-button>
+    <md-button class="md-raised md-primary searchKeywords" @click="showTag">Recent search terms</md-button>
+    <!-- END 사용자가 검색한 키워드 -->
 
-    <!-- 자동검색 영역  -->
-    <div
-      class="autoSearch"
-      v-show="isAppend"
-    >
-      <ul class="autoList">
-        <li
-          v-for="(item, index) in autoSearchList"
-          :key="index"
-          @click="itemSelected(item)"
-        >
-          <span>{{ item }}</span>
-        </li>
-      </ul>
-    </div>
-
+    <!-- 다른 사용자가 감상했던 비디오 -->
     <el-carousel
       v-loading="loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"
@@ -82,10 +48,7 @@
       height="100px"
       style="margin:10px;"
     >
-      <el-carousel-item
-        v-for="(item, index) in recommandList"
-        :key="index"
-      >
+      <el-carousel-item v-for="(item, index) in recommandList" :key="index">
         <img
           class="md-image"
           style="border: 1px solid #606266;"
@@ -94,18 +57,12 @@
           :src="item.thumbnail"
           @click="route(item)"
         >
-        <span
-          class="recommandMusic"
-          @click="route(item)"
-        >{{ item.title.substring(0, 30) }} ..</span>
+        <span class="recommandMusic" @click="route(item)">{{ item.title.substring(0, 30) }} ..</span>
       </el-carousel-item>
     </el-carousel>
-
-    <md-list
-      id="list"
-      class="searchList"
-      :class="{ subHightAuto: isMini }"
-    >
+    <!-- END 다른 사용자가 감상했던 비디오 -->
+    <!-- 검색 목록 -->
+    <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in searchList"
@@ -114,69 +71,47 @@
         @click="route(item)"
       >
         <md-avatar style="margin-right: 0;">
-          <img
-            :src="item.imageInfo"
-            alt="People"
-          >
+          <img :src="item.imageInfo" alt="People">
         </md-avatar>
 
         <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
-
-        <span
-          class="label_channel"
-          v-if="item.otherChannelId"
-        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-        <span
-          class="label_playlist"
-          v-if="item.playlistId"
-        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-        <span
-          class="label_video"
-          v-if="item.videoId && item.isLive === 'none'"
-        >{{ item.duration }}</span>
+        
+        <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span class="label_video" v-if="item.videoId && item.isLive === 'none'">{{ item.duration }}</span>
         <span
           class="label_live"
           v-if="item.videoId && item.isLive === 'live'"
         >{{ $t('COMMONS.LABEL.LIVE') }}</span>
       </md-list-item>
       <md-list-item>
-        <span
-          v-if="!isMore"
-          @click="nextPageLoad"
-          class="searchPagingCenter"
-        >
+        <span v-if="!isMore" @click="nextPageLoad" class="searchPagingCenter">
           <a class="cursor">
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span
-          v-if="isMore"
-          class="searchPagingCenter"
-          style="color:#ffffff;"
-        >LOADING ...</span>
+        <span v-if="isMore" class="searchPagingCenter" style="color:#ffffff;">LOADING ...</span>
       </md-list-item>
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
       </div>
     </md-list>
-
+    <!-- 검색 목록 -->
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading
-        :init="initLoading"
-        v-show="!load"
-      />
+      <loading :init="initLoading" v-show="!load"/>
     </transition>
 
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isMini" />
+    <sub-player-bar v-show="isMini"/>
   </div>
 </template>
 
 <script>
 import StoreMixin from "@/components/Commons/Mixin/index";
 import ApiMixin from "@/components/Commons/Mixin/api";
+import AutoComplate from "@/components/Commons/Main/AutoComplate";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import Loading from "@/components/Commons/Loader/PageLoading";
 
@@ -185,6 +120,7 @@ export default {
   mixins: [StoreMixin, ApiMixin],
   components: {
     Loading,
+    AutoComplate,
     SubPlayerBar
   },
   data() {
@@ -192,12 +128,12 @@ export default {
       searchList: [],
       autoSearchList: [],
       autoSearchSize: 0,
+      defaultQuery: "top music 2019",
       searchText: "",
       searchKeywords: [],
       recommandList: [],
       isMini: false,
       isMore: false,
-      isAppend: false,
       isTag: false,
       initLoading: false,
       loading: false,
@@ -220,27 +156,23 @@ export default {
       this.init(this.searchText);
     } else {
       // 최초 로딩 시작
-      this.getLog("[init]/[Search] ===> API KEY 로딩 중 ...")
-      this.$set(this, 'initLoading', true)
+      this.getLog("[init]/[Search] ===> API KEY 로딩 중 ...");
+      this.$set(this, "initLoading", true);
 
       // 앱 구동 후 처음 초기화 세팅 약 5초의 지연을 줌
-      this.$store.dispatch('setAuthKey', { vm: this }).then(() => {
+      this.$store.dispatch("setAuthKey", { vm: this }).then(() => {
         setTimeout(() => {
-          const keyList = this.$store.getters.getKeys
-          const searchKey = this.$lodash.find(keyList, { query: 'search' })
-          const videoItemsKey = this.$lodash.find(keyList, { query: 'videoItems' })
-          this.SEARCH_KEY = searchKey.apiKey
-          this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey
+          const keyList = this.$store.getters.getKeys;
+          const searchKey = this.$lodash.find(keyList, { query: "search" });
+          const videoItemsKey = this.$lodash.find(keyList, {
+            query: "videoItems"
+          });
+          this.SEARCH_KEY = searchKey.apiKey;
+          this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
           this.init(this.searchText);
-        }, 5000);
-      })
-    }
-  },
-  watch: {
-    searchText(value) {
-      if (this.$lodash.size(value) === 0) {
-        this.isAppend = false;
-      }
+          this.$set(this, "initLoading", false);
+        }, 3500);
+      });
     }
   },
   mounted() {
@@ -289,10 +221,6 @@ export default {
         }
       }
     },
-    searchReset() {
-      this.searchText = "";
-      this.isAppend = false;
-    },
     searchTop() {
       let options = {
         container: "#list",
@@ -304,8 +232,8 @@ export default {
       this.isMini = this.getMusicInfos() ? true : false;
       let totalSearchList = this.getNextSearchList();
       if (this.$lodash.size(totalSearchList) === 0) {
-        if (text === null) {
-          text = "top music 2018";
+        if (!text) {
+          text = this.defaultQuery;
         } else {
           this.$store.commit("setSearchText", text);
         }
@@ -317,10 +245,12 @@ export default {
               this.$store.commit("setNextPageToken", res.data.nextPageToken);
             }
             this.$store.commit("setSearchList", res.data.items);
-            this.$store.dispatch("setSearchDuration", { vm: this }).then(results => {
-              this.searchList = results;
-              this.load = true;
-            });
+            this.$store
+              .dispatch("setSearchDuration", { vm: this })
+              .then(results => {
+                this.searchList = results;
+                this.load = true;
+              });
           })
           .catch(error => {
             console.error(error);
@@ -333,14 +263,17 @@ export default {
     },
     submit(text, tag) {
       this.load = false;
-      this.isAppend = false;
       this.$store.commit("setNextSearchList", undefined);
-      if (text === undefined || text === "") {
-        text = "top music 2018";
+      if (!text) {
+        text = this.defaultQuery;
       } else {
         this.$store.commit("setSearchText", text);
       }
       let request = this.youtubeSearch(text);
+
+      // this.$refs.autoComplate.reset()
+      // this.$refs.header.fake()
+
       this.$http
         .get(request)
         .then(res => {
@@ -348,20 +281,20 @@ export default {
             this.$store.commit("setNextPageToken", res.data.nextPageToken);
           }
           this.$store.commit("setSearchList", res.data.items);
-          this.$store.dispatch("setSearchDuration", { vm: this }).then(results => {
-            this.searchList = results;
-            if (tag === undefined) {
-              this.updateKeyword(text);
-            }
-            this.isAppend = false;
-            this.$el.querySelector("#list").scrollTo(0, 0);
-            this.load = true;
-          });
+          this.$store
+            .dispatch("setSearchDuration", { vm: this })
+            .then(results => {
+              this.searchList = results;
+              if (!tag) {
+                this.updateKeyword(text);
+              }
+              this.$el.querySelector("#list").scrollTo(0, 0);
+              this.load = true;
+            });
         })
         .catch(error => {
           console.error(error);
         });
-      this.isAppend = false;
       this.isTag = false;
     },
     getKeyword() {
@@ -456,76 +389,18 @@ export default {
             this.$store.commit("setNextPageToken", res.data.nextPageToken);
           }
           this.$store.commit("setSearchList", res.data.items);
-          this.$store.dispatch("setSearchDuration", { vm: this }).then(results => {
-            this.searchList = this.$lodash.concat(this.searchList, results);
-            this.$store.commit("setNextSearchList", this.searchList);
-            this.isMore = false;
-          });
+          this.$store
+            .dispatch("setSearchDuration", { vm: this })
+            .then(results => {
+              this.searchList = this.$lodash.concat(this.searchList, results);
+              this.$store.commit("setNextSearchList", this.searchList);
+              this.isMore = false;
+            });
         })
         .catch(error => {
           console.error(error);
         });
     },
-    autoComplateSearch(event) {
-      if (
-        event.key !== "Enter" &&
-        event.key !== "Control" &&
-        event.key !== "Shift" &&
-        event.key !== "CapsLock" &&
-        event.key !== "Tab" &&
-        event.keyCode !== 32 &&
-        event.keyCode !== 27 &&
-        event.keyCode !== 112 &&
-        event.keyCode !== 113 &&
-        event.keyCode !== 114 &&
-        event.keyCode !== 115 &&
-        event.keyCode !== 116 &&
-        event.keyCode !== 117 &&
-        event.keyCode !== 118 &&
-        event.keyCode !== 119 &&
-        event.keyCode !== 120 &&
-        event.keyCode !== 121 &&
-        event.keyCode !== 122 &&
-        event.keyCode !== 123
-      ) {
-        let re = /([xEA-xED][x80-xBF]{2}|[a-zA-Z0-9.~!@#$%&*()_+^'\"`~;:<>,?/{}[]|]|[ㄱ-ㅎ가-힣])+/g;
-        if (this.searchText !== "") {
-          if (re.test(this.searchText)) {
-            if (this.timer) {
-              clearTimeout(this.timer);
-              this.timer = null;
-            }
-            this.timer = setTimeout(() => {
-              let url = this.googleSearchPath.concat(this.searchText);
-              this.$http
-                .jsonp(url)
-                .then(res => {
-                  let value = this.$lodash.map(res[1], item => {
-                    return {
-                      name: item[0]
-                    };
-                  });
-                  let searchText = this.$lodash.toLower(this.searchText);
-                  let searchResults = this.$lodash.map(value, "name");
-                  this.autoSearchList = [];
-                  this.$lodash.forEach(searchResults, item => {
-                    this.autoSearchList.push(item);
-                  });
-                  this.isAppend = true;
-                })
-                .catch(error => {
-                  console.error(error);
-                });
-            }, 500);
-          }
-        } else {
-          // 검색어가 없을 때 자동검색목록 닫음.
-          this.isAppend = false;
-          this.$store.commit("setSearchText", this.searchText);
-        }
-      }
-    },
-
     itemSelected(item) {
       this.searchText = item;
       this.submit(this.searchText);

@@ -230,7 +230,7 @@ export default {
       let self = this;
       setTimeout(() => {
         self.$ipcRenderer.send("button:close", null);
-      }, 1000);
+      }, 1500);
     },
     closeModal() {
       this.$modal.hide("input-focus-modal");
@@ -336,7 +336,7 @@ export default {
   font-weight: 700;
   text-align: center;
   border-bottom: 1px solid rgba(35, 35, 35, 0.73);
-  height: 31px;
+  height: 28px;
   z-index: 101;
 }
 

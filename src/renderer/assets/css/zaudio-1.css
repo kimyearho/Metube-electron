@@ -268,9 +268,9 @@ body {
 }
 
 .zaudio_playercontrolbuttons i:hover {
-  transition: all 0.5s;
+  /* transition: all 0.5s;
   background-color: #eeeeee;
-  border-radius: 32px;
+  border-radius: 32px; */
 }
 
 .zaudio_seeker {
