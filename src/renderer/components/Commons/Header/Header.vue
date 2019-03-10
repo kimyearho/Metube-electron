@@ -64,10 +64,17 @@
     <!-- Side Menu -->
     <md-drawer
       :md-active.sync="showNavigation"
-      style="background: #242d40; width: 190px; z-index:300;"
+      style="background: #242d40; width: 190px; z-index:199;"
     >
-      <md-toolbar class="md-transparent" style="background: #03A9F4">
-        <span class="md-title"></span>
+      <md-toolbar class="md-transparent">
+        <div class="picture" v-if="profileData">
+          <img class="userPicture" :src="profileData.googlePicture">
+          <div class="userName">{{ profileData.googleName }}</div>
+        </div>
+
+        <div class="noLogin" v-else>
+          <el-button type="primary" size="medium" @click="route('login')">Login</el-button>
+        </div>
       </md-toolbar>
 
       <md-list>
@@ -102,10 +109,10 @@
         </md-list-item>
 
         <!-- Menu2 -->
-        <md-list-item @click="route('setting')">
+        <!-- <md-list-item @click="route('setting')">
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">FAQ</span>
-        </md-list-item>
+        </md-list-item>-->
       </md-list>
     </md-drawer>
 
@@ -167,6 +174,14 @@ export default {
     }
   },
   methods: {
+    reloadUser() {
+      this.isUser = this.getUserId();
+      if (this.isUser) {
+        this.profileData = this.getProfile();
+      } else {
+        this.profileData = null;
+      }
+    },
     apply() {
       let parseURL;
       let url = this.linkForm;
@@ -384,5 +399,31 @@ export default {
   border: 1px solid #e09e3e;
   border-radius: 50%;
   display: inline-block;
+}
+
+.picture {
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.userPicture {
+  width: 70px;
+  border-radius: 50px;
+}
+
+.userName {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.noLogin {
+  margin-top: 0px;
+  margin-left: 30px;
+}
+
+.noLogin >>> .el-button {
+  padding: 5px 40px 5px 40px;
 }
 </style>

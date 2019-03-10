@@ -176,7 +176,7 @@ export default {
           this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
           this.init(this.searchText);
           this.$set(this, "initLoading", false);
-        }, 2000);
+        }, 3500);
       });
     }
   },

@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
+    <top-header ref="header" :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
     <div class="wrapper">
       <div class="contents">
         <div class="cover">
@@ -93,6 +93,7 @@ export default {
     },
     signout() {
       this.isSignin = false;
+      this.$refs.header.reloadUser();
       this.$store.commit("setGoogleProfile", null);
     },
     success() {
@@ -121,6 +122,8 @@ export default {
               };
               this.$test.post(data);
             }
+
+            this.$refs.header.reloadUser();
           })
           .catch(err => {
             console.log(err);

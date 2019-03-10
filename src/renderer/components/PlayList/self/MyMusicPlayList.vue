@@ -48,12 +48,17 @@
         v-for="(item, index) in playlist"
         :id="`item${index}`"
         :key="item.etag"
-        :class="selectedIndex === index ? active : ''"
+        :class="selectedIndex === index ? 'activeBackground' : ''"
       >
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails">
         </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
+
+        <span
+          class="md-list-item-text music-title cursor"
+          :class="selectedIndex === index ? 'active' : ''"
+          @click="playItem(index)"
+        >{{ item.title }}</span>
         <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
         <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 

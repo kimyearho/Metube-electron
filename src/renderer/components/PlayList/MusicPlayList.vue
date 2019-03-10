@@ -63,9 +63,9 @@
       <!-- 비디오 목록 -->
       <md-list-item
         v-for="(item, index) in playlist"
+        :class="selectedIndex === index ? 'activeBackground' : ''"
         :id="`item${index}`"
         :key="item.id"
-        :class="selectedIndex === index ? active : ''"
       >
         <!-- 라운딩 썸네일 -->
         <md-avatar style="margin-right: 0;">
@@ -74,6 +74,7 @@
 
         <!-- 비디오 제목 -->
         <span
+          :class="selectedIndex === index ? 'active' : ''"
           class="md-list-item-text music-title cursor"
           @click="mainPlayItem(index)"
         >{{ item.title }}</span>
@@ -1032,7 +1033,7 @@ export default {
 };
 </script>
 
-<style>
+<style scope>
 
 .pageCenter {
   color: #ffffff;

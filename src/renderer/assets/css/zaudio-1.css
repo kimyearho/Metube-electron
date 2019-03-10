@@ -121,12 +121,6 @@ body {
   width: 44px;
 }
 
-.active {
-  color: #28b1ff !important;
-  font-weight: 700;
-  background-color: rgba(53, 61, 78, 0.75);
-}
-
 .zaudio_playlist {
   margin: 0px;
   padding: 0px;
