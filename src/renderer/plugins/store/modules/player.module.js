@@ -108,6 +108,7 @@ const mutations = {
     _.forEach(data, item => {
       let trackInfo = {}
       let thumbnails = item.snippet.thumbnails
+      trackInfo.type = "searchList"
       trackInfo.channelId = item.snippet.channelId
       trackInfo.channelTitle = item.snippet.channelTitle
       trackInfo.title = item.snippet.title
@@ -203,7 +204,7 @@ const actions = {
           let videoId = item.videoId
           _.forEach(res.data.items, videoIdArray => {
             if (videoId === videoIdArray.id) {
-              item.duration_code = videoIdArray.contentDetails.duration
+              // item.duration_code = videoIdArray.contentDetails.duration
               item.duration_time = vm.convertToSeconds(videoIdArray.contentDetails.duration)
               item.duration = vm.secondFormat(item.duration_time)
             }
@@ -225,7 +226,7 @@ const actions = {
           let videoId = item.videoId
           _.forEach(res.data.items, videoIdArray => {
             if (videoId === videoIdArray.id) {
-              item.duration_code = videoIdArray.contentDetails.duration
+              // item.duration_code = videoIdArray.contentDetails.duration
               item.duration_time = vm.convertToSeconds(videoIdArray.contentDetails.duration)
               item.duration = vm.secondFormat(item.duration_time)
             }
@@ -245,7 +246,7 @@ const actions = {
         _.forEach(res.data.items, (item, index) => {
           if (state.musicList[index].videoId === item.id) {
             if (state.musicList[index].imageInfo !== "") {
-              state.musicList[index].duration_code = item.contentDetails.duration
+              // state.musicList[index].duration_code = item.contentDetails.duration
               state.musicList[index].duration_time = vm.convertToSeconds(
                 item.contentDetails.duration
               )

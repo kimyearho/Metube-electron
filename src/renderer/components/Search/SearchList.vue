@@ -280,10 +280,6 @@ export default {
         this.$store.commit("setSearchText", text);
       }
       let request = this.youtubeSearch(text);
-
-      // this.$refs.autoComplate.reset()
-      // this.$refs.header.fake()
-
       this.$http
         .get(request)
         .then(res => {
