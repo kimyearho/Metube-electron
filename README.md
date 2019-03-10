@@ -31,8 +31,6 @@ If you like the program, please click on the star! It will help developers a lot
 1. Multiple selection when adding video
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
-4. Improved YouTube playback performance
-5. Typescript conversion
 ***
 
 ### Installation
