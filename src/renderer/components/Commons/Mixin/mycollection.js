@@ -106,6 +106,7 @@ export default {
             })
             .then(result => {
               this.myCollections = result.docs
+              this.isCreate = false
             })
             .catch(error => {
               console.log(error)
@@ -141,6 +142,7 @@ export default {
             })
             .then(result => {
               this.playlists = result.docs
+              this.isCreate = false
             })
             .catch(error => {
               console.log(error)

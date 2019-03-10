@@ -8,7 +8,7 @@
 <template>
   <div>
     <el-dialog
-      title="MY COLLECTION"
+      title="Create Collection"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"

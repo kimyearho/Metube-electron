@@ -28,7 +28,8 @@
       </span>
       <el-button
         size="mini"
-        type="info"
+        type="text"
+        style="width: 100px;"
         v-for="item in searchKeywords"
         class="cursor taginfo tagSize"
         @click="submit(item, 'tag')"
@@ -46,13 +47,14 @@
       type="card"
       indicator-position="none"
       height="100px"
-      style="margin:10px;"
+      style="padding: 10px 0px 10px 0px;
+    background-color: #1e2431 ;"
     >
       <el-carousel-item v-for="(item, index) in recommandList" :key="index">
         <img
           class="md-image"
           style="border: 1px solid #606266;"
-          width="174"
+          width="184"
           height="100"
           :src="item.thumbnail"
           @click="route(item)"
@@ -61,6 +63,7 @@
       </el-carousel-item>
     </el-carousel>
     <!-- END 다른 사용자가 감상했던 비디오 -->
+
     <!-- 검색 목록 -->
     <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
       <md-list-item
@@ -98,6 +101,7 @@
       </div>
     </md-list>
     <!-- 검색 목록 -->
+    
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
       <loading :init="initLoading" v-show="!load"/>
@@ -135,6 +139,7 @@ export default {
       isMini: false,
       isMore: false,
       isTag: false,
+      limit: 3,
       initLoading: false,
       loading: false,
       load: false,
@@ -171,8 +176,13 @@ export default {
           this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
           this.init(this.searchText);
           this.$set(this, "initLoading", false);
-        }, 3500);
+        }, 2000);
       });
+    }
+  },
+  computed: {
+    limitForKeyword() {
+      return this.limit ? this.searchKeywords.slice(0, this.limit) : this.searchKeywords
     }
   },
   mounted() {
@@ -430,5 +440,12 @@ export default {
   overflow-x: hidden;
   max-width: 220px;
   text-overflow: ellipsis;
+}
+
+.allKeyword {
+  font-size: 18px;
+  vertical-align: middle;
+  padding-left: 5px;
+  color: #ffffff;
 }
 </style>

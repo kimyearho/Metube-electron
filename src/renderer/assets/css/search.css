@@ -30,9 +30,12 @@
 }
 
 .tagSize {
-  padding: 5px;
+  font-weight: 700;
   margin-left: 10px;
-  margin-bottom: 5px;
+}
+
+.tagSize:hover {
+  color: #ffffff;
 }
 
 .el-carousel__item h3 {

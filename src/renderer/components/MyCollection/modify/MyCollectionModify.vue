@@ -8,7 +8,7 @@
 <template>
   <div>
     <el-dialog
-      title="MY COLLECTION EDIT"
+      title="Collection Edit"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"

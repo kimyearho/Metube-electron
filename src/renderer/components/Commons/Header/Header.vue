@@ -239,7 +239,6 @@ export default {
       this.$emit("create-close", value);
     },
     myCollectionSync() {
-      this.isCreate = false;
       // 컬렉션 목록이나, 내 컬렉션 목록에서만 싱크 실행
       if (this.$route.name === "collection") {
         this.$emit("my-sync");

@@ -63,7 +63,7 @@
               <div class="myCollectionLabel">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
-              <div class="playWrapper">
+              <div class="playWrapper cursor" @click="showMyCollectionList(item)">
                 <!-- <div class="overlayMenu">
                   <a class="cursor" @click="showMyCollectionList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
@@ -104,7 +104,7 @@
           <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
               <img class="md-image thumbnail" :src="item.thumbnails" width="158" height="100">
-              <div class="playWrapper">
+              <div class="playWrapper cursor" @click="showMusicList(item)">
                 <!-- <div class="overlayMenu">
                   <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
@@ -147,7 +147,7 @@
           <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
               <img class="thumbnail channelThumb" :src="item.thumbnails" width="158" height="100">
-              <div class="playWrapper channelWrapper">
+              <div class="playWrapper channelWrapper cursor" @click="showMusicList(item)">
                 <!-- <div class="overlayMenu channelMenu">
                   <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f30 fa" icon="play"/>

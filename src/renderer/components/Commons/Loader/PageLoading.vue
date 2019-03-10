@@ -31,8 +31,8 @@ export default {
   position: absolute;
   background: #181e2b;
   opacity: 1;
-  height: 88%;
-  top: 31px;
+  height: 89%;
+  top: 28px;
   left: -15px;
   right: 0;
   z-index: 2222;

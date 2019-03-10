@@ -224,7 +224,7 @@ export default {
 
       playingItem.index = index;
       playingItem.name = musicInfo.name;
-      if (this.playType === "related") playingItem.mainId = this.videoId;
+      if (musicInfo.type === "related") playingItem.mainId = playingItem.videoId;
 
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$eventBus.$emit("statusCheck");

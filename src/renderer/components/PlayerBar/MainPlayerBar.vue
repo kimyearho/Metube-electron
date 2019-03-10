@@ -19,7 +19,7 @@
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div class="zaudio_buttonwrapper" style="margin-top: 9px; margin-bottom:10px;">
+        <div class="zaudio_buttonwrapper" style="margin-top: 4px; margin-bottom:15px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img

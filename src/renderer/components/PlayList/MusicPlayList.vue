@@ -323,13 +323,12 @@ export default {
         if (this.playType === "play") {
           parentPlaylistId = musicInfo.playlistId;
         } else if (this.playType === "related") {
-          parentPlaylistId = musicInfo.mainId;
+          parentPlaylistId = musicInfo.name.split(':')[1]
         } else if (this.playType === "channel") {
           parentPlaylistId = musicInfo.channelId;
         }
 
         // (음악이 재생중인경우, 한번이라도 실행한 경우임 (일시정지 여부 관계없음))
-        
         // - 현재 재생목록과, 재생중인 음악정보의 재생목록과 동일한지 체크한다. (playlistId 비교)
         // - 토큰 등록시 주의할 점은 pageNum을 현재 페이지 번호의 +1로 해야한다. 1페이지와, 마지막페이지는 토큰이 없음.
         // - 무조건 첫 페이지의 토큰은 2페이를 조회하기 위한 토큰이다. 즉 토큰은 아래와 같은 규칙이 적용된다.
