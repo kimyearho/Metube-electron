@@ -11,7 +11,7 @@
   background: #448aff;
   width: 100%;
   margin: 0;
-  height: 25px;
+  height: 20px;
 }
 
 .keywords {
@@ -26,7 +26,8 @@
 
 .tag {
   width: 100%;
-  padding: 18px;
+  padding: 5px;
+  text-align: center;
 }
 
 .tagSize {
