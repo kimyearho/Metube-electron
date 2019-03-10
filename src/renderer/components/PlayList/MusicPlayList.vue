@@ -253,7 +253,7 @@ export default {
       let self = this;
       let id = `#item${this.selectedIndex}`;
       setTimeout(() => {
-        self.$scrollTo(id, -1, options);
+        self.$scrollTo(id, 500, options);
         self.load = true;
       }, ms);
     },
@@ -440,7 +440,7 @@ export default {
         this.channelTitle = musicInfo.channelTitle;
         this.cover = musicInfo.imageInfo;
         this.selectedIndex = musicInfo.index;
-        this.videoActive(500);
+        this.videoActive(300);
       }
     },
 
@@ -475,7 +475,7 @@ export default {
       // 재생세팅
       this.playSetting(playingItem);
 
-      this.videoActive(500);
+      this.videoActive(300);
     },
 
     mainPlayItem(index) {
@@ -849,7 +849,7 @@ export default {
                 }
                 this.selectedIndex = playingItem.index;
                 this.playSetting(playingItem);
-                this.videoActive(500);
+                this.videoActive(300);
               }
             } else {
               let playingItem;

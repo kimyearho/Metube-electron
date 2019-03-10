@@ -3,78 +3,79 @@
  *  You can not delete this comment when you deploy an application.
  *-------------------------------------------------------------------------------------------- */
 
-"use strict"
+"use strict";
 
 export default {
   methods: {
     getProfile() {
-      return this.$store.getters.getGoogleProfile
+      return this.$store.getters.getGoogleProfile;
     },
     getUserId() {
-      return this.$store.getters.getGoogleProfile.googleId
+      return this.$store.getters.getGoogleProfile.googleId;
     },
     getMusicInfos() {
-      return this.$store.getters.getPlayingMusicInfo
+      return this.$store.getters.getPlayingMusicInfo;
     },
     getAllPlayList() {
-      return this.$store.getters.getPlayList
+      return this.$store.getters.getPlayList;
     },
     getSearchKeyword() {
-      return this.$store.getters.getSearchText
+      return this.$store.getters.getSearchText;
     },
     getNextSearchList() {
-      return this.$store.getters.getNextSearchList
+      return this.$store.getters.getNextSearchList;
     },
     getNextPageToken() {
-      return this.$store.getters.getNextPageToken
+      return this.$store.getters.getNextPageToken;
     },
     getRepeat() {
-      return this.$store.getters.getRepeat
+      return this.$store.getters.getRepeat;
     },
     getPlayType() {
-      return this.$store.getters.getPlayType
+      return this.$store.getters.getPlayType;
     },
     getVolume() {
-      return this.$store.getters.getVolume
+      return this.$store.getters.getVolume;
     },
     getState() {
-      return this.$store.getters.getPlayerOption
+      return this.$store.getters.getPlayerOption;
     },
     getAlwaysTop() {
-      return this.$store.getters.getAlwaysTopOption
+      return this.$store.getters.getAlwaysTopOption;
     },
     getLocale() {
-      return this.$store.getters.getLocale
+      return this.$store.getters.getLocale;
     },
     getVersionCheck() {
-      return this.$store.getters.getVersionCheck
+      return this.$store.getters.getVersionCheck;
     },
     getScrollPos() {
-      return this.$store.getters.getScrollPos
+      return this.$store.getters.getScrollPos;
     },
     getMyMusicList() {
-      return this.$store.getters.getMyMusicList
+      return this.$store.getters.getMyMusicList;
     },
     getLog(message, data) {
       if (process.env.NODE_ENV !== "production") {
-        // if(data) {
-        //   console.log(message, data)
-        // } else {
-        //   console.log(message)
-        // }
-      } 
-      // 테스트
-      const logger = {
-        message : message,
-        value: data
+        let logger = {};
+        if (data) {
+          logger = {
+            message: message,
+            value: data
+          };
+        } else {
+          logger = {
+            message: message
+          };
+        }
+        this.$ipcRenderer.send("eventLogger", logger);
       }
-      this.$ipcRenderer.send("eventLogger", logger);
     },
     getNextToken() {
-      return this.$store.getters.getNextToken
+      return this.$store.getters.getNextToken;
     },
     closeFab() {
-      this.$refs.fab.MdSpeedDial.active = false
+      this.$refs.fab.MdSpeedDial.active = false;
     },
     insertVideoHistory(data) {
       this.createIndex(["type", "userId", "videoId"]).then(() => {
@@ -93,7 +94,7 @@ export default {
             }
           })
           .then(result => {
-            let docs = result.docs
+            let docs = result.docs;
             if (docs.length <= 0) {
               const postData = {
                 type: "history",
@@ -103,55 +104,59 @@ export default {
                 channelTitle: data.channelTitle,
                 title: data.title,
                 isLive: data.isLive,
-                image: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
+                image:
+                  data.imageInfo !== undefined
+                    ? data.imageInfo
+                    : data.thumbnails,
                 duration_time: data.duration_time,
                 duration: data.duration,
                 creates: this.$moment().format("YYYYMMDDHHmmss"),
                 created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
-              }
-              this.$test.post(postData)
+              };
+              this.$test.post(postData);
             } else {
-              this.getLog("exists item: ", data)
+              this.getLog("exists item: ", data);
             }
-          })
-      })
+          });
+      });
     },
     insertUserRecommand(data) {
       this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
-        let recommand = result.recommand
+        let recommand = result.recommand;
         if (recommand) {
           let item = this.$lodash.find(recommand, {
             videoId: data.videoId
-          })
+          });
           if (!item) {
-            this.insertUserRecommandCallback(data)
+            this.insertUserRecommandCallback(data);
           } else {
-            this.getLog("exists item: ", item)
+            this.getLog("exists item: ", item);
           }
         }
-      })
+      });
     },
     insertUserRecommandCallback(data) {
       let postData = {
         videoId: data.videoId,
         title: data.title,
-        thumbnail: data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
+        thumbnail:
+          data.imageInfo !== undefined ? data.imageInfo : data.thumbnails,
         creates: this.$moment().format("YYYYMMDDHHmmss"),
         created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
-      }
+      };
       this.$db.get("17901f376f4ff226c03adecee00013d5").then(result => {
-        let recommand = result.recommand
+        let recommand = result.recommand;
         if (recommand) {
-          recommand.push(postData)
+          recommand.push(postData);
           return this.$db.put(result).then(res => {
             if (res.ok) {
-              this.getLog("success item: ", data.videoId)
+              this.getLog("success item: ", data.videoId);
             } else {
-              console.error("error")
+              console.error("error");
             }
-          })
+          });
         }
-      })
+      });
     }
   }
-}
+};
