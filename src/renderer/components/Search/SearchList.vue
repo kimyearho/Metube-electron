@@ -445,4 +445,5 @@ export default {
   padding-left: 5px;
   color: #ffffff;
 }
+
 </style>
