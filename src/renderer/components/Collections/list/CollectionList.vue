@@ -60,7 +60,7 @@
               <div class="myCollectionLabel" v-if="playType === 'my-collection'">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
-              <div class="playWrapper" :class="{ channelWrapper: playType === 'channel' }">
+              <div class="playWrapper cursor" @click="showMusicList(item)" :class="{ channelWrapper: playType === 'channel' }">
                 <div class="overlayMenu" :class="{ channelMenu: playType === 'channel' }">
                   <!-- <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
@@ -81,7 +81,7 @@
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub">{{ item.title }}</span>
+                <span class="sub cursor" @click="showMusicList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
