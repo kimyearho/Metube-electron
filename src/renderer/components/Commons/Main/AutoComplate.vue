@@ -8,6 +8,7 @@
           class="inline-input"
           prefix-icon="el-icon-search"
           clearable
+          :debounce="500"
           v-model="keyword"
           @keyup.enter.native="handleSelect(keyword)"
           :fetch-suggestions="querySearch"
@@ -68,7 +69,7 @@ export default {
       }
     },
     reset() {
-      this.keyword = "";
+      this.$refs.auto.suggestions = [];
     }
   }
 };

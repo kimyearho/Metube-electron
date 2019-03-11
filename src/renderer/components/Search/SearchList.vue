@@ -294,6 +294,7 @@ export default {
               if (!tag) {
                 this.updateKeyword(text);
               }
+              this.$refs.autoComplate.reset();
               this.$el.querySelector("#list").scrollTo(0, 0);
               this.load = true;
             });

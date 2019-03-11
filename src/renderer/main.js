@@ -80,6 +80,7 @@ import "./assets/css/commons.css"
 import "./assets/css/playlist.css"
 import "./assets/css/collection.css"
 import "./assets/css/search.css"
+import "./assets/css/autocomplete.css"
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"))
 Vue.config.productionTip = false

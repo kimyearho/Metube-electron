@@ -45,10 +45,6 @@ export default {
 
     this.loopHistoryMonitering()
 
-    this.$trap.bind("enter", () => {
-      console.log('enter')
-    });
-
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
