@@ -9,11 +9,10 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-# Information
-Hi.
-I think some of you have been having problems with apps lately.
-This issue is caused by exceeding the Youtube API daily quota.
-Google does not provide 100.00 per day quota, so I think it is a big issue. In addition, Google does not seem to maintain APIs either. We are currently preparing an alternative. If possible, please use the collection. Thank you.
+### Quota issues
+Google does not provide nearly 10,000 quota. This is a very small number that can be used during the development phase. According to the documentation, API keys have been assigned a quota of 10000 from April 2016. You are currently applying for quota and it is unclear whether you are authorized.
+
+<strong>So if you have a Metaube user with a high YouTube API key, please share it.</strong> There is nothing I can do. I would like to continue this project. If possible, minimize your searches and create your own collections to use as collections. The search API consumes a large amount of quota.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
