@@ -2,22 +2,23 @@ export default {
   MAIN: {
     APP_NAME: "M e t u b e",
     HISTORY: {
-      INDEX: "최근 감상한 비디오 목록"
+      INDEX: "재생된 비디오 목록",
+      RECENT: "최근 검색어"
     },
     MENU: {
-      SEARCH: "Search",
-      COLLECTION: "Collections",
-      HISTORY: "History",
-      SIGN: "Sign",
-      SETTING: "Setting"
+      SEARCH: "검색",
+      COLLECTION: "컬렉션",
+      HISTORY: "기록",
+      SIGN: "로그인",
+      SETTING: "설정"
     }
   },
   COMMONS: {
     LABEL: {
-      CHANNEL: "채널 목록",
-      PLAY_LIST: "재생 목록",
+      CHANNEL: "채널",
+      PLAY_LIST: "재생목록",
       LIVE: "실시간",
-      RELATED: "관련곡 목록"
+      RELATED: "연관목록"
     },
     DIALOG: {
       ERROR_URL: "입력하신 URL은 유효하지 않습니다.",
@@ -65,24 +66,35 @@ export default {
       "미튜브에 로그인 되었습니다. 로그인 사용자는 컬렉션 및 부가기능을 이용하실 수 있습니다."
   },
   COLLECTION: {
-    INDEX: "각 항목에 대해 최근 4개 앨범만 표시 합니다.",
+    INDEX: "각 항목에 대해 최근 4개 컬렉션을 표시 합니다.",
     ALBUM_INDEX: "모든 재생목록을 조회합니다.",
     NO_LOGIN: "로그인 후 이용하실 수 있습니다.",
     NO_LOGIN_BUTTON_LINK: "로그인으로 이동",
     NO_PLAYLIST: "등록된 재생목록이 없습니다. 재생목록을 등록하세요.",
     NO_CHANNEL: "등록된 채널이 없습니다. 채널을 등록하세요.",
-    REMOVE_ALBUM: "이 앨범을 삭제 하시겠습니까?",
+    REMOVE_ALBUM: "이 컬렉션을 삭제 하시겠습니까?",
     REMOVE_VIDEO: "선택한 비디오를 삭제 하시겠습니까?",
-    REMOVE_NOT_ALBUM: "비디오가 현재 재생 목록에서 재생 중이므로 이 컬렉션을 삭제할 수 없습니다.",
+    REMOVE_NOT_ALBUM: "비디오가 현재 컬렉션에서 재생 중이므로 이 컬렉션을 삭제할 수 없습니다.",
     REMOVE_ALBUM_SUCCESS: "컬렉션이 삭제 되었습니다. 버튼을 누르면 목록으로 돌아갑니다.",
     MENU: {
-      COLLECTION: "Collections",
+      COLLECTION: "컬렉션",
+      MY_COLLECTION: "내 컬렉션",
       PLAY_LIST: "재생 목록",
       CHANNEL: "채널"
     },
     ADD_VIDEO_LABEL: "추가"
   },
+  CONTEXT: {
+    MESSAGE: {
+      CLIPBOARD_SAVE: "😁 링크가 클립보드에 저장되었습니다.",
+      CLIPBOARD_FAIL: "😥 링크를 클립보드에 저장에 실패했습니다.",
+      VIDEO_REMOVE_FAIL: "😥 재생중인 비디오는 삭제할 수 없습니다.",
+      COVER_CHANGE: "이 비디오의 썸네일 이미지로 내 컬렉션 커버를 변경하시겠습니까?",
+    }
+  },
   HISTORY: {
-    NO_LOGIN: "로그인 후 이용하실 수 있습니다."
+    NO_LOGIN: "로그인 후 이용하실 수 있습니다.",
+    MENU_NAME: "재생 기록",
+    MENU_DESC: "최근에 재생했던 20개의 비디오를 표시합니다."
   }
 };

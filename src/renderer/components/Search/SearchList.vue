@@ -36,7 +36,7 @@
         :key="item"
       >{{ item }}</el-button>
     </div>
-    <md-button class="md-raised md-primary searchKeywords" @click="showTag">Recent search terms</md-button>
+    <md-button class="md-raised md-primary searchKeywords" @click="showTag">{{ $t('MAIN.HISTORY.RECENT') }}</md-button>
     <!-- END 사용자가 검색한 키워드 -->
 
     <!-- 다른 사용자가 감상했던 비디오 -->

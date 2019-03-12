@@ -73,7 +73,7 @@
         </div>
 
         <div class="noLogin" v-else>
-          <el-button type="primary" size="medium" @click="route('login')">Login</el-button>
+          <el-button type="primary" size="medium" @click="route('login')">{{ $t('MAIN.MENU.SIGN') }}</el-button>
         </div>
       </md-toolbar>
 
@@ -81,31 +81,31 @@
         <!-- Menu1 -->
         <md-list-item @click="route('search')">
           <md-icon>search</md-icon>
-          <span class="md-list-item-text">Search</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SEARCH') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('collection')">
           <md-icon>collections_bookmark</md-icon>
-          <span class="md-list-item-text">Collections</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.COLLECTION') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('history')">
           <md-icon>playlist_play</md-icon>
-          <span class="md-list-item-text">History</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.HISTORY') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('login')">
           <md-icon>vertical_align_bottom</md-icon>
-          <span class="md-list-item-text">Sign in</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SIGN') }}</span>
         </md-list-item>
 
         <!-- Menu2 -->
         <md-list-item @click="route('setting')">
           <md-icon>settings</md-icon>
-          <span class="md-list-item-text">Setting</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SETTING') }}</span>
         </md-list-item>
 
         <!-- Menu2 -->

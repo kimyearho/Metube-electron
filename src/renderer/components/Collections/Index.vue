@@ -43,7 +43,7 @@
         <el-col>
           <div class="menu1">
             <label class="wh">
-              <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
+              <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.MY_COLLECTION') }}</strong>
               <small class="more" v-if="isLogin">
                 <a class="cursor" @click="showCollectionList('my-collection')">（more）</a>
               </small>

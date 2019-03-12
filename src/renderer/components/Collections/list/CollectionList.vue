@@ -35,7 +35,7 @@
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
             </label>
             <label class="wh" v-else>
-              <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
+              <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.MY_COLLECTION') }}</strong>
             </label>
           </div>
         </el-col>

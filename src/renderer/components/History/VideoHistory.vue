@@ -7,9 +7,9 @@
           <div class="menu1_tip">
             <div>
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/playlist.svg">
-              <span class="collections">Play History</span>
+              <span class="collections">{{ $t('HISTORY.MENU_NAME') }}</span>
             </div>
-            <strong class="tr" style="font-size:11px;">A list of 20 videos you recently watched.</strong>
+            <strong class="tr" style="font-size:11px;">{{ $t('HISTORY.MENU_DESC') }}</strong>
           </div>
         </el-col>
       </el-row>

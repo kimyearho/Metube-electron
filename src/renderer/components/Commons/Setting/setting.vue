@@ -82,7 +82,7 @@ export default {
       selected: false,
       isMini: false,
       isCheck: false,
-      locale: null,
+      locale: "en",
       novalue: null,
       localeOptions: [
         {
@@ -98,6 +98,7 @@ export default {
     };
   },
   created() {
+
     this.isMini = this.getMusicInfos() ? true : false;
 
     // 플레이어 숨김 상태 옵션
@@ -125,6 +126,9 @@ export default {
       this.$store.commit("setAlwaysTopOption", v);
       this.$ipcRenderer.send("option:alwaystop", v);
     }
+  },
+  mounted() {
+    this.locale = this.$locale
   },
   methods: {
     openGit() {

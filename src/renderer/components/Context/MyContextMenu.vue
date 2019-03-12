@@ -68,7 +68,7 @@ export default {
           function(e) {
             self.$modal.show("dialog", {
               title: "Success",
-              text: "😁 The link has been saved to the clipboard.",
+              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
               buttons: [
                 {
                   title: "Close"
@@ -79,7 +79,7 @@ export default {
           function(e) {
             self.$modal.show("dialog", {
               title: "Error",
-              text: "😥 Failed to copy link to clipboard.",
+              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
               buttons: [
                 {
                   title: "Close"
@@ -98,7 +98,7 @@ export default {
             } else {
               this.$modal.show("dialog", {
                 title: "Info",
-                text: "You can not delete videos that are playing",
+                text: this.$t("CONTEXT.MESSAGE.VIDEO_REMOVE_FAIL"),
                 buttons: [
                   {
                     title: "Close"
@@ -116,8 +116,7 @@ export default {
         // A5
         this.$modal.show("dialog", {
           title: "Info",
-          text:
-            "Would you like to change the image of the selected video to my collection cover?",
+          text: this.$t("CONTEXT.MESSAGE.COVER_CHANGE"),
           buttons: [
             {
               title: "Yes",
@@ -189,7 +188,7 @@ export default {
 
             // 현재 재생중인데 내 컬렉션일때만,
             // 이 조건이 없으면 유튜브 재생목록 재생 중에, 내 컬렉션 0번째 삭제 후 인덱스가 교체 되버림.
-            if(musicInfos.type === "mycollectionItem") {
+            if (musicInfos.type === "mycollectionItem") {
               let playIndex = musicInfos.index;
               // 내 컬렉션에서 0번째 음악을 삭제했을경우 처리
               if (playIndex > this.index) {
