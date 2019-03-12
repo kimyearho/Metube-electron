@@ -1,9 +1,7 @@
-/*---------------------------------------------------------------------------------------------
- *  Licensed under the GPL-3.0 License. See License.txt in the project root for license information.
- *  You can not delete this comment when you deploy an application.
- *--------------------------------------------------------------------------------------------*/
-
-'use strict';
+/*--------------------------------------------------------------------------------------------- *
+Licensed under the GPL-3.0 License. See License.txt in the project root for license information. *
+You can not delete this comment when you deploy an application.
+*--------------------------------------------------------------------------------------------*/ 
 
 <template>
   <div id="app">
@@ -23,8 +21,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "App",
@@ -37,32 +35,15 @@ export default {
       status: []
     };
   },
-  beforeCreate() {
-    // 비디오 상태 체크 이벤트 종료
-    this.$eventBus.$off("statusCheck");
-    this.$eventBus.$off("playerState");
-  },
   created() {
     // 프로덕션 환경에서만 버전체크 실행
     if (process.env.NODE_ENV !== "development") {
       this.onNewReleaseCheck();
     }
-
-    // 비디오 상태 체크 이벤트 수신
-    this.$eventBus.$on("statusCheck", this.videoStatusCheck);
-
-    // 재생 플레이어 상태 체크 이벤트 수신
-    this.$eventBus.$on("playerState", this.playerStatusCheck);
   },
   mounted() {
-    this.$watch(
-      () => {
-        return this.state;
-      },
-      (newVal, oldVal) => {
-        this.status.push(newVal);
-      }
-    );
+    this.loopHistoryMonitering();
+
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
       if (playType) {
@@ -77,11 +58,22 @@ export default {
         this.$eventBus.$emit("playTypeControl", { playType: true });
       }
     });
+    this.$trap.bind("left", () => {
+      const volume = Number(this.getVolume()) - 5;
+      if (volume >= 0) {
+        this.$store.commit("setVolume", volume);
+        this.$ipcRenderer.send("win2Player", ["setVolume", volume]);
+      }
+    });
+    this.$trap.bind("right", () => {
+      const volume = Number(this.getVolume()) + 5;
+      if (volume <= 100) {
+        this.$store.commit("setVolume", volume);
+        this.$ipcRenderer.send("win2Player", ["setVolume", volume]);
+      }
+    });
   },
   methods: {
-    docs() {
-      get(this);
-    },
     route(path) {
       if (path == "search") {
         this.$router.push({
@@ -98,148 +90,41 @@ export default {
       }
     },
 
-    playerStatusCheck(value) {
-      this.state = value;
-      // 버퍼링 or 일시중지
-      if (this.state === 2) {
-        // 재생모양 아이콘으로 변경
-        this.$eventBus.$emit("playTypeControl", { playType: false });
-      } else if (this.state === 1) {
-        // 일시정지 아이콘으로 변경 (현재 재생 중)
-        this.$eventBus.$emit("playTypeControl", { playType: true });
-      } else if (this.state === 0) {
-        // 종료일 경우
-        // 재생중인 음악정보
-        let musicData = this.getMusicInfos();
-        let isRepeat = this.getRepeat();
-        // 반복여부
-        if (isRepeat) {
-          this.$ipcRenderer.send("win2Player", [
-            "loadVideoById",
-            musicData.videoId
-          ]);
-        } else {
-          // 이전 음악의 인덱스 (현재 종료된 음악)
-          let currentIndex = musicData.index;
-          // 다음 인덱스
-          let nextIndex = currentIndex + 1;
-
-          if (musicData.type) {
-            this.createIndex(["userId", "parentId"]).then(result => {
-              return this.$test
-                .find({
-                  selector: {
-                    userId: {
-                      $eq: this.getUserId()
-                    },
-                    parentId: {
-                      $eq: musicData.parentId
+    // 10분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
+    loopHistoryMonitering() {
+      setInterval(() => {
+        let user = this.getUserId();
+        if (user) {
+          this.$test
+            .find({
+              selector: {
+                type: "history",
+                userId: user
+              }
+            })
+            .then(result => {
+              let docs = result.docs;
+              if (docs.length > 0) {
+                let size = docs.length;
+                let defaultNum = 20;
+                let result = size - defaultNum;
+                if (result > defaultNum) {
+                  // 0부터 결과개수-1 만큼 삭제 후 갱신
+                  docs.splice(0, result - 1);
+                  this.$test.bulkDocs(docs).then(res => {
+                    if (res.ok) {
+                      console.log("Success history Remove => ", result - 1);
                     }
-                  },
-                  limit: 100
-                })
-                .then(result => {
-                  let docs = result.docs;
-                  if (docs) {
-                    if (docs.length > nextIndex) {
-                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                    } else {
-                      this.$eventBus.$emit("playlist-nextMusicPlay", 0);
-                    }
-                  }
-                });
-            });
-          } else {
-            // 전체 재생 목록
-            let allPlaylist = this.getAllPlayList();
-            // 재생목록명으로 재생목록 조회
-            let playlist = this.$lodash.find(allPlaylist, {
-              playlistId: musicData.name
-            });
-
-            if (playlist != undefined) {
-              if (playlist.list.length > nextIndex) {
-                this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-              } else {
-                // 토큰여부
-                let nextPageToken = playlist.nextPageToken;
-                if (nextPageToken === null) {
-                  // 목록의 마지막 번째 음악이 종료되었으므로, 처음부터 재생
-                  this.$eventBus.$emit("playlist-nextMusicPlay", 0);
+                  });
                 } else {
-                  // 다음 페이지 조회
-                  this.$eventBus.$emit("playlist-nextLoad");
+                  console.log("Non Removing. history size: " + size);
                 }
               }
-            }
-          }
-        }
-      }
-    },
-    /**
-     * 비디오 상태 체크
-     * 재생불가능한 비디오를 감시한다
-     */
-    videoStatusCheck() {
-      let isTimer = this.$store.getters.getTimer;
-      if (isTimer) {
-        // clear and set
-        let isTime = this.$store.getters.getTime;
-        clearTimeout(isTime);
-      }
-      this.$store.commit("setTimer", true);
-      setTimeout(() => {
-        this.$store.commit("setTime", 1000);
-        this.statusResult();
-      }, 10000);
-    },
-    statusResult() {
-      this.$store.commit("setTimer", false);
-      let statusSize = this.$lodash.size(this.status);
-      let lastIndex = this.status[statusSize - 1];
-      if (lastIndex) {
-        if (lastIndex === -1) {
-          let musicData = this.getMusicInfos();
-          let nextIndex = musicData.index + 1;
-          if (musicData.type) {
-            this.createIndex(["userId", "parentId"]).then(result => {
-              return this.$test
-                .find({
-                  selector: {
-                    userId: {
-                      $eq: this.getUserId()
-                    },
-                    parentId: {
-                      $eq: musicData.parentId
-                    }
-                  },
-                  limit: 100
-                })
-                .then(result => {
-                  const docs = result.docs;
-                  if (docs) {
-                    if (docs.length > nextIndex) {
-                      this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-                    }
-                  }
-                });
             });
-          } else {
-            let all = this.getAllPlayList();
-            // 다음 인덱스
-            let playlist = this.$lodash.find(all, {
-              playlistId: musicData.name
-            });
-            if (playlist != undefined) {
-              if (playlist.list.length > nextIndex) {
-                this.$eventBus.$emit("playlist-nextMusicPlay", nextIndex);
-              }
-            }
-          }
         }
-      }
-      this.status = [];
+      }, 6 * 100000);
     },
+
     onNewReleaseCheck() {
       this.$db
         .get("17901f376f4ff226c03adecee0004104")
@@ -272,7 +157,6 @@ export default {
   }
 };
 </script>
-
 
 <style scope>
 .position {

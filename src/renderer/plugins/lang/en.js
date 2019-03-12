@@ -2,7 +2,8 @@ export default {
   MAIN: {
     APP_NAME: "M e t u b e",
     HISTORY: {
-      INDEX: "List of recently viewed videos but, The same video will not be registered."
+      INDEX: "List of recently viewed videos but, The same video will not be registered.",
+      RECENT: "Recent Search Terms"
     },
     MENU: {
       SEARCH: "Search",
@@ -72,14 +73,29 @@ export default {
     NO_PLAYLIST: "There are no playlists registered",
     REMOVE_ALBUM: "Are you sure you want to delete this collection?",
     REMOVE_VIDEO: "Are you sure you want to delete the selected video ?",
+    REMOVE_NOT_ALBUM: "The video is currently playing in the playlist and can not be deleted.",
+    REMOVE_ALBUM_SUCCESS: "Collection deleted. Go back to the previous page.",
+    CONTINUE: "Sign in to continue playing your music.",
     MENU: {
       COLLECTION: "Collections",
+      MY_COLLECTION: "MY COLLECTION",
       PLAY_LIST: "PLAY LIST",
       CHANNEL: "CHANNEL"
     },
-    ADD_VIDEO_LABEL: "add"
+    ADD_VIDEO_LABEL: "add",
+    CREATE_COLLECTION_LABEL: "Create"
+  },
+  CONTEXT: {
+    MESSAGE: {
+      CLIPBOARD_SAVE: "😁 The link has been saved to the clipboard.",
+      CLIPBOARD_FAIL: "😥 Failed to copy link to clipboard.",
+      VIDEO_REMOVE_FAIL: "😥 You can not delete videos that are playing",
+      COVER_CHANGE: "Would you like to change the image of the selected video to my collection cover?",
+    }
   },
   HISTORY: {
-    NO_LOGIN: "Please try again after logging in"
+    NO_LOGIN: "Please try again after logging in",
+    MENU_NAME: "Play History",
+    MENU_DESC: "A list of 20 videos you recently watched."
   }
 }

@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
+    <top-header ref="header" :isMenu="true" :isShow="false" :data="{ playType: 'list' }"/>
     <div class="wrapper">
       <div class="contents">
         <div class="cover">
@@ -54,8 +54,8 @@
 
 <script>
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import CommonMixin from "@/components/Mixin/common";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import CommonMixin from "@/components/Commons/Mixin/common";
 
 export default {
   name: "SignInPage",
@@ -93,6 +93,7 @@ export default {
     },
     signout() {
       this.isSignin = false;
+      this.$refs.header.reloadUser();
       this.$store.commit("setGoogleProfile", null);
     },
     success() {
@@ -109,9 +110,7 @@ export default {
             fields: ["_id", "collections"]
           })
           .then(result => {
-            // Documents
             let docs = result.docs[0];
-
             // 프로필이 없으면 새로 프로필을 등록한다
             if (!docs) {
               let data = {
@@ -121,18 +120,10 @@ export default {
                 setting: [],
                 collections: []
               };
-              this.$test
-                .post(data)
-                .then(res => {
-                  // this.$store.commit("setId", _id);
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-            } else {
-              let docs = result.docs[0];
-              this.$store.commit("setId", docs._id);
+              this.$test.post(data);
             }
+
+            this.$refs.header.reloadUser();
           })
           .catch(err => {
             console.log(err);

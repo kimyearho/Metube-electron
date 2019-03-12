@@ -5,6 +5,15 @@
   padding: 1px 0 0 0 !important;
 }
 
+.activeBackground {
+  background-color: rgba(53, 61, 78, 0.75) !important;
+}
+
+.active {
+  color: #50a2f7 !important;
+  font-weight: 700;
+}
+
 .playlistCover {
   width: 100%;
   max-height: 180px;
@@ -15,7 +24,7 @@
 .playlistTrackinfo {
   width: 347px;
   position: absolute;
-  top: 124px;
+  top: 120px;
   left: 10px;
   z-index: 100;
 }
@@ -43,7 +52,7 @@
 }
 
 .musicPlayList::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 
 .musicPlayList::-webkit-scrollbar-track {

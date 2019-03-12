@@ -23,20 +23,21 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import ApiMixin from "@/components/Commons/Mixin/api";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "CollectionRegister",
-  mixins: [StoreMixin, DataUtils],
+  mixins: [StoreMixin, ApiMixin, DataUtils],
   props: {
     isLikeToggle: {
       type: Boolean,
       default: false
     },
     data: null,
-    playType: null
+    playType: null,
+    playlistTitle: null
   },
   data() {
     return {
@@ -69,11 +70,12 @@ export default {
                 playlistId: {
                   $eq:
                     this.playType === "play"
-                      ? this.data.playlistId.split(":")[1]
-                      : this.data.channelPlaylistId
+                      ? this.data[0].playlistId
+                      : this.data[0].channelPlaylistId
                 }
               }
             };
+            console.log(options)
             this.createIndex(["type", "userId", "playlistId"]).then(() => {
               return this.$test.find(options).then(result => {
                 const doc = result.docs[0];
@@ -108,11 +110,11 @@ export default {
                   let findToItem = "";
                   if (this.playType === "play") {
                     findToItem = this.$lodash.find(docs, {
-                      playlistId: this.data.playlistId
+                      playlistId: this.data[0].playlistId
                     });
                   } else {
                     findToItem = this.$lodash.find(docs, {
-                      channelId: this.data.list[0].channelId
+                      channelId: this.data[0].channelId
                     });
                   }
                   if (findToItem) {
@@ -136,17 +138,17 @@ export default {
       let data = {
         playType: this.playType,
         userId: this.getUserId(),
-        playlistId: item.list[0].playlistId,
-        channelId: item.list[0].channelId ? item.list[0].channelId : null,
+        playlistId: item[0].playlistId,
+        channelId: item[0].channelId ? item[0].channelId : null,
         videoId: item.videoId ? item.videoId : null,
-        title: item.playlistTitle,
+        title: this.playlistTitle,
         creates: this.$moment().format("YYYYMMDDHHmmss"),
         created: this.$moment().format("YYYY-MM-DD HH:mm:ss")
       };
       if (this.playType === "play") {
         // PLAY LIST
         data.type = "myplaylist";
-        data.thumbnails = item.list[0].imageInfo;
+        data.thumbnails = item[0].imageInfo;
         this.$test.post(data).then(result => {
           if (result.ok) {
             this.isToggle = true;
@@ -155,7 +157,7 @@ export default {
         });
       } else {
         // CHANNEL
-        let requestURL = $commons.youtubeChannelSearch(data.channelId);
+        let requestURL = this.youtubeChannelSearch(data.channelId);
         this.$http.get(requestURL).then(res => {
           data.thumbnails = res.data.items[0].snippet.thumbnails.medium.url;
           data.title = res.data.items[0].snippet.title;

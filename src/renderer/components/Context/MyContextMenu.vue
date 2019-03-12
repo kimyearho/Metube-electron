@@ -14,6 +14,9 @@ strict';
         <el-dropdown-item class="bold" command="A1" :disabled="user === null">
           <i class="el-icon-news"></i> Open Youtube
         </el-dropdown-item>
+        <el-dropdown-item class="bold" command="A5" :disabled="user === null">
+          <i class="el-icon-edit-outline"></i> Change Cover
+        </el-dropdown-item>
         <!-- <el-dropdown-item class="bold" command="A2" :disabled="user === null">
           <i class="el-icon-share"></i> Social Share
         </el-dropdown-item>-->
@@ -25,21 +28,15 @@ strict';
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
   </div>
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import SocialShareModal from "@/components/Context/modal/SocialShareModal";
+import StoreMixin from "@/components/Commons/Mixin/index";
 
 export default {
   name: "MyContextMenu",
   mixins: [StoreMixin],
-  components: {
-    SocialShareModal
-  },
   props: {
     id: String,
     videoId: String,
@@ -71,7 +68,7 @@ export default {
           function(e) {
             self.$modal.show("dialog", {
               title: "Success",
-              text: "😁 The link has been saved to the clipboard.",
+              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
               buttons: [
                 {
                   title: "Close"
@@ -82,7 +79,7 @@ export default {
           function(e) {
             self.$modal.show("dialog", {
               title: "Error",
-              text: "😥 Failed to copy link to clipboard.",
+              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
               buttons: [
                 {
                   title: "Close"
@@ -91,25 +88,48 @@ export default {
             });
           }
         );
-      } else {
+      } else if (ev === "A4") {
         let musicInfo = this.getMusicInfos();
         if (musicInfo) {
           if (this.videoId === musicInfo.videoId) {
-            this.$modal.show("dialog", {
-              title: "Info",
-              text: "You can not delete videos that are playing",
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
+            if (musicInfo.type !== "mycollectionItem") {
+              // 삭제
+              this.deleteDialog();
+            } else {
+              this.$modal.show("dialog", {
+                title: "Info",
+                text: this.$t("CONTEXT.MESSAGE.VIDEO_REMOVE_FAIL"),
+                buttons: [
+                  {
+                    title: "Close"
+                  }
+                ]
+              });
+            }
           } else {
             this.deleteDialog();
           }
         } else {
           this.deleteDialog();
         }
+      } else {
+        // A5
+        this.$modal.show("dialog", {
+          title: "Info",
+          text: this.$t("CONTEXT.MESSAGE.COVER_CHANGE"),
+          buttons: [
+            {
+              title: "Yes",
+              handler: () => {
+                this.updateMyCollectionCover();
+                this.$modal.hide("dialog");
+              }
+            },
+            {
+              title: "Close"
+            }
+          ]
+        });
       }
     },
     watchYoutube() {
@@ -138,23 +158,55 @@ export default {
         ]
       });
     },
+    updateMyCollectionCover() {
+      this.$test.get(this.data.parentId).then(doc => {
+        doc.thumbnails = this.data.thumbnails;
+        return this.$test.put(doc).then(result => {
+          if (result.ok) {
+            this.$emit("is-cover", true);
+          } else {
+            this.$emit("is-cover", false);
+          }
+        });
+      });
+    },
     delete() {
       this.$test.remove(this.data).then(result => {
+        // 실제 DB에 등록 된 내 컬렉션 재생목록정보의 아이디 값
+        const parentId = this.data.parentId;
+        this.getLog(
+          "[MyContextMenu]/[delete] 실제 DB에 등록 된 내 컬렉션 재생목록정보 아이디 ====> ",
+          parentId
+        );
+        this.getLog(
+          "[MyContextMenu]/[delete] 실제 DB에서 삭제한 비디오 아이디 ====> ",
+          this.videoId
+        );
         if (result.ok) {
-          if (this.getMusicInfos() != undefined) {
+          if (this.getMusicInfos()) {
             let musicInfos = this.getMusicInfos();
-            let playIndex = musicInfos.index;
-            if (playIndex > this.index) {
-              // 삭제한 비디오 인덱스가 0일때
-              musicInfos.index = musicInfos.index - 1;
-              // 재생정보 세팅
-              this.$store.commit("setPlayingMusicInfo", musicInfos);
-              // 재생정보 변경 이벤트
-              this.$eventBus.$emit("playMusicSetting");
+
+            // 현재 재생중인데 내 컬렉션일때만,
+            // 이 조건이 없으면 유튜브 재생목록 재생 중에, 내 컬렉션 0번째 삭제 후 인덱스가 교체 되버림.
+            if (musicInfos.type === "mycollectionItem") {
+              let playIndex = musicInfos.index;
+              // 내 컬렉션에서 0번째 음악을 삭제했을경우 처리
+              if (playIndex > this.index) {
+                // 삭제한 비디오 인덱스가 0일때
+                musicInfos.index = musicInfos.index - 1;
+                // 재생정보 세팅
+                this.$store.commit("setPlayingMusicInfo", musicInfos);
+                // 재생정보 변경 이벤트
+                this.$eventBus.$emit("playMusicSetting");
+              }
             }
           }
+
           // 삭제 후 삭제한 비디오아이디를 전달한다.
-          this.$emit("is-success", { deletedVideoId: this.videoId });
+          this.$emit("is-success", {
+            deletedVideoId: this.videoId,
+            myCollectionId: parentId
+          });
         }
       });
     }

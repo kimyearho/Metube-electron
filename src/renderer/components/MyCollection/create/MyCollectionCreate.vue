@@ -8,7 +8,7 @@
 <template>
   <div>
     <el-dialog
-      title="MY COLLECTION"
+      title="Create Collection"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import CommonMixin from "@/components/Mixin/common";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import CommonMixin from "@/components/Commons/Mixin/common";
 export default {
   name: "MyCollectionCreate",
   mixins: [StoreMixin, CommonMixin],

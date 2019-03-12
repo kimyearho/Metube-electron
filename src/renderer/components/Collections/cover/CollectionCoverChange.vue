@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import StoreMixin from '@/components/Mixin/index'
-import CommonMixin from '@/components/Mixin/common'
+import StoreMixin from '@/components/Commons/Mixin/index'
+import CommonMixin from '@/components/Commons/Mixin/common'
 export default {
   name: 'CollectionCoverChange',
   mixins: [StoreMixin, CommonMixin],

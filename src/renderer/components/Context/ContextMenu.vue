@@ -25,20 +25,17 @@ You can not delete this comment when you deploy an application.
       </el-dropdown-menu>
     </el-dropdown>
     <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
-    <social-share-modal :isOpen="isShare" :videoId="videoId" @closeModal="closeModal"/>
   </div>
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 import RegisteredMusicList from "@/components/PlayList/self/modal/RegisteredMusicList";
-import SocialShareModal from "@/components/Context/modal/SocialShareModal";
 export default {
   name: "ContextMenu",
   mixins: [StoreMixin],
   components: {
-    RegisteredMusicList,
-    SocialShareModal
+    RegisteredMusicList
   },
   props: {
     videoId: String,
@@ -63,7 +60,7 @@ export default {
         this.addCollection();
       } else if (ev === "A3") {
         this.isShare = true;
-      } else {
+      } else if (ev === "A4") {
         let link = `https://www.youtube.com/watch?v=${this.videoId}`;
         let self = this;
         this.$copyText(link).then(

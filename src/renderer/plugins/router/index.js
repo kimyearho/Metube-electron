@@ -37,12 +37,12 @@ export default new VueRouter({
     {
       path: "/setting",
       name: "setting",
-      component: require("@/components/Setting/Setting").default
+      component: require("@/components/Commons/Setting/Setting").default
     },
     {
       path: "/signin",
       name: "login",
-      component: require("@/components/SignIn/SignIn").default
+      component: require("@/components/Commons/SignIn/SignIn").default
     },
     {
       path: "/:playType/:id",
@@ -58,11 +58,6 @@ export default new VueRouter({
       path: "/history",
       name: "VIDEO-HISTORY",
       component: require("@/components/history/VideoHistory").default
-    },
-    {
-      path: "/debug",
-      name: "DEBUG",
-      component: require("@/components/Debug/Debug").default
     }
   ]
 })

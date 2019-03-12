@@ -19,39 +19,25 @@ export default {
       if (user_id) {
         if (this.playType === "play") {
           const playlistId = this.playlist[0].playlistId
-          this.createIndex(["type", "userId", "playlistId"]).then(() => {
-            return this.$test
-              .find({
-                selector: {
-                  type: { $eq: "myplaylist" },
-                  userId: { $eq: user_id },
-                  playlistId: { $eq: playlistId }
-                }
-              })
-              .then(result => {
-                let docs = result.docs
-                if (docs.length > 0) {
-                  this.isLikeToggle = true
-                }
-              })
+          return this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test.find({
+              selector: {
+                type: { $eq: "myplaylist" },
+                userId: { $eq: user_id },
+                playlistId: { $eq: playlistId }
+              }
+            })
           })
         } else if (this.playType === "channel") {
           const channelId = this.playlist[0].channelId
-          this.createIndex(["type", "userId", "playlistId"]).then(() => {
-            return this.$test
-              .find({
-                selector: {
-                  type: { $eq: "mychannel" },
-                  userId: { $eq: user_id },
-                  channelId: { $eq: channelId }
-                }
-              })
-              .then(result => {
-                let docs = result.docs
-                if (docs.length > 0) {
-                  this.isLikeToggle = true
-                }
-              })
+          return this.createIndex(["type", "userId", "playlistId"]).then(() => {
+            return this.$test.find({
+              selector: {
+                type: { $eq: "mychannel" },
+                userId: { $eq: user_id },
+                channelId: { $eq: channelId }
+              }
+            })
           })
         }
       }

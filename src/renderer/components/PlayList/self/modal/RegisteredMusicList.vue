@@ -9,7 +9,7 @@
   <div>
     <el-dialog
       style="z-index:998 !important;"
-      title="MyCollection List"
+      :title="$t('COLLECTION.MENU.MY_COLLECTION')"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
@@ -17,16 +17,9 @@
       @open="getMyCollectionList"
       width="300px"
     >
-      <div
-        class="wrapper"
-        v-loading="loading"
-        element-loading-background="#ffffff"
-      >
+      <div class="wrapper" v-loading="loading" element-loading-background="#ffffff">
         <ul>
-          <li
-            v-for="(item, index) in listData"
-            :key="index"
-          >
+          <li v-for="(item, index) in listData" :key="index">
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -43,8 +36,8 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
 
 export default {
   name: "RegisteredMusicList",
@@ -88,25 +81,29 @@ export default {
       this.$test.post(track).then(result => {
         if (result.ok) {
           this.$test.get(result.id).then(doc => {
-            if(doc) {
-              this.$test.find({
-                selector: {
-                  type: "profile",
-                  userId: this.getUserId()
-                }
-              }).then(result => {
-                let docs = result.docs[0];
-                if(docs) {
-                  let findData = this.$lodash.find(docs.collections, { id: doc.parentId })
-                  findData.list.push(doc);
-                  findData.listCount = findData.list.length;
-                  this.$test.put(docs).then(result => {
-                    if(result.ok) {
-                      console.log("success db store insert and update!")
-                    }
-                  })
-                }
-              })
+            if (doc) {
+              this.$test
+                .find({
+                  selector: {
+                    type: "profile",
+                    userId: this.getUserId()
+                  }
+                })
+                .then(result => {
+                  let docs = result.docs[0];
+                  if (docs) {
+                    let findData = this.$lodash.find(docs.collections, {
+                      id: doc.parentId
+                    });
+                    findData.list.push(doc);
+                    findData.listCount = findData.list.length;
+                    this.$test.put(docs).then(result => {
+                      if (result.ok) {
+                        console.log("success db store insert and update!");
+                      }
+                    });
+                  }
+                });
             }
           });
           // this.createIndex(["type", "parendId"]).then(() => {

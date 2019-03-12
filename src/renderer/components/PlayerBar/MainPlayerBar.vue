@@ -19,7 +19,7 @@
         </div>
 
         <!-- 재생 컨트롤 영역 -->
-        <div class="zaudio_buttonwrapper" style="margin-top: 9px; margin-bottom:10px;">
+        <div class="zaudio_buttonwrapper" style="margin-top: 4px; margin-bottom:15px;">
           <div class="zaudio_playercontrolbuttons">
             <!-- 이전 재생 -->
             <img
@@ -105,16 +105,27 @@
         </div>
       </div>
     </div>
+    <global-event-handler
+      @sendNextMusicPlay="sendNextMusicPlay"
+      @playVideoSecond="progressRange"
+      @sendNextPage="sendNextPage"
+    ></global-event-handler>
   </div>
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import GlobalMixin from "@/components/Commons/Mixin/common";
 
 export default {
   name: "MainPlayerBar",
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, GlobalMixin],
+  props: {
+    videoSetting: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       range: 0,
@@ -131,20 +142,9 @@ export default {
       isVolume: false
     };
   },
-  beforeCreate() {
-    this.$eventBus.$off("playerSecond");
-    this.$eventBus.$off("playTypeControl");
-    this.$eventBus.$off("playMusicSetting");
-  },
   created() {
-    // 영상의 재생시간 수신
-    this.$eventBus.$on("playerSecond", this.progressRange);
-
-    // 재생음악의 정보 수신
-    this.$eventBus.$on("playMusicSetting", this.playMusicSetting);
-
-    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
-    this.$eventBus.$on("playTypeControl", this.playTypeControl);
+    // 재생 기본설정
+    this.playReady();
   },
   watch: {
     // 볼륨 감시
@@ -152,19 +152,33 @@ export default {
       this.volume = v;
       this.$store.commit("setVolume", this.volume);
       this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
+    },
+    // 재생될 비디오 정보 갱신
+    videoSetting(event) {
+      this.playMusicSetting(event);
     }
   },
   mounted() {
-    // 재생 기본설정
-    this.playReady();
-
     // 현재 재생음악의 정보를 설정
     this.fetchData();
 
     // 반복
     this.isRepeat = this.getRepeat();
+
+    // 재생바에 플레이/일시정지 아이콘 변경 이벤트 수신
+    this.$eventBus.$on("playTypeControl", this.playTypeControl);
   },
   methods: {
+    // 다음 재생 이벤트 전달
+    sendNextMusicPlay(value) {
+      this.$emit("nextMusicPlay", value);
+    },
+
+    // 다음 페이지 조회 이벤트 전달
+    sendNextPage(value) {
+      this.$emit("nextPage", value);
+    },
+
     // 재생정보 및 플레이타입 설정
     fetchData() {
       let musicInfo = this.getMusicInfos();
@@ -186,33 +200,31 @@ export default {
     // 재생준비 (기본 볼륨: 50)
     playReady() {
       this.volume = this.getVolume();
-      this.$store.commit("setVolume", this.volume);
       if (this.volume === 0) {
         this.volume = 50;
       }
+      this.$store.commit("setVolume", this.volume);
       this.$ipcRenderer.send("win2Player", ["setVolume", this.volume]);
     },
 
     // 재생정보 세팅
-    playMusicSetting() {
-      console.log("main임");
-      let musicInfo = this.getMusicInfos();
-      this.maxTime = musicInfo.duration_time;
-      this.totalTime = musicInfo.duration;
-      if (musicInfo.isLive) {
-        this.isLive = musicInfo.isLive != "none";
+    playMusicSetting(data) {
+      this.maxTime = data.duration_time;
+      this.totalTime = data.duration;
+      if (data.isLive) {
+        this.isLive = data.isLive != "none";
       }
       this.isPlay = true;
     },
 
     // 프로그레스
-    progressRange($event) {
-      this.range = this.second($event);
+    progressRange(value) {
+      this.range = this.second(value);
     },
 
     // 재생
-    playTypeControl(event) {
-      this.isPlay = event.playType;
+    playTypeControl() {
+      this.isPlay = this.getPlayType();
     },
 
     // 일시정지 -> 재생으로 전환
@@ -301,6 +313,9 @@ export default {
         return 0;
       }
     }
+  },
+  beforeDestroy() {
+    this.$eventBus.$off("playTypeControl");
   }
 };
 </script>
@@ -308,7 +323,7 @@ export default {
 <style scope>
 progress {
   width: 92.1%;
-  height: 10px;
+  height: 8px;
   border-radius: 5px;
 }
 progress::-webkit-progress-bar {

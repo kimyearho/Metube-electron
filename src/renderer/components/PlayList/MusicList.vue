@@ -8,7 +8,7 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="reload"/>
+    <top-header :isShow="false" @reloadMusicList="feachData"/>
 
     <!-- 커버 영역 -->
     <div class="side_menu">
@@ -19,9 +19,10 @@
       <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
         <collection-register
           ref="likes"
-          :isLikeToggle="isLikeToggle"
           :data="data"
+          :isLikeToggle="isLikeToggle"
           :playType="playType"
+          :playlistTitle="playlistTitle"
           @toggle="toggleChange"
         />
       </a>
@@ -68,18 +69,9 @@
         <context-menu :videoId="item.videoId" :data="item"/>
       </md-list-item>
       <md-list-item v-if="isNext">
-        <span v-if="!isMore" class="loadMoreCenter">
-          <a class="cursor" @click="nextPageLoad">
-            <i class="el-icon-refresh"></i>
-            {{ $t('COMMONS.MORE') }}
-          </a>
-        </span>
-        <span v-else class="loadMoreCenter loadMoreLoading">LOADING ...</span>
-      </md-list-item>
-      <md-list-item v-else>
-        <span class="playlistEnd">
-          <i class="el-icon-check"></i>
-          {{ $t('COMMONS.END') }}
+        <span class="loadMoreCenter">
+          <i class="el-icon-check" style="padding-right: 10px;"></i>
+          Total {{ totalPage }} Page
         </span>
       </md-list-item>
       <div class="bottom">
@@ -101,18 +93,19 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
-import CollectionQueryMixin from "@/components/Mixin/collections";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import ApiMixin from "@/components/Commons/Mixin/api";
+import DataUtils from "@/components/Commons/Mixin/db";
+import PlaylistMix from "@/components/Commons/Mixin/playlist";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
 import ContextMenu from "@/components/Context/ContextMenu";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Commons/Loader/PageLoading";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 
 export default {
   name: "MusicList",
-  mixins: [StoreMixin, DataUtils, CollectionQueryMixin],
+  mixins: [StoreMixin, DataUtils, PlaylistMix, ApiMixin, CollectionQueryMixin],
   components: {
     CollectionRegister,
     ContextMenu,
@@ -129,24 +122,257 @@ export default {
       cover: "",
       coverTitle: "",
       channelTitle: "",
-      menu: null,
+      playlistInfoId: null,
+      playlistTitle: null,
       playType: null,
       selected: null,
+      totalPage: 1,
       totalTracks: null,
       nextPageToken: null,
       channelPlaylistId: null,
       videoId: null,
-      clickIdx: null,
       playlist: [],
       data: null
     };
   },
-  created() {
+  mounted() {
     this.feachData();
   },
   methods: {
-    toggleChange(value) {
-      this.isLikeToggle = value;
+    feachData() {
+      // 현재 음악이 재생중인지 여부 체크
+      const musicInfo = this.getMusicInfos();
+      this.isMini = musicInfo ? true : false;
+
+      let playlistName = null;
+      this.playType = this.$route.params.playType;
+      this.playlistId = this.$route.params.id;
+
+      // 재생목록명 설정
+      if (this.playType === "play") {
+        playlistName = `PLAYLIST:${this.playlistId}`;
+      } else if (this.playType === "related") {
+        playlistName = `RELATED:${this.playlistId}`;
+      } else if (this.playType === "channel") {
+        playlistName = `CHANNEL:${this.playlistId}`;
+      }
+
+      // 로컬 디비로 등록 되어있는 재생목록인지 조회
+      this.createLocalIndex(["type", "playlistId"]).then(() => {
+        return this.$local
+          .find({
+            selector: {
+              type: this.playType + "ListInfo",
+              playlistId: playlistName
+            }
+          })
+          .then(result => {
+            let doc = result.docs[0];
+
+            if (doc) {
+
+              // 필요한 정보 설정
+              this.playlistInfoId = doc._id;
+              this.playlistTitle = doc.playlistTitle;
+              this.totalPage = doc.totalPage;
+              this.totalTracks = doc.totalResults;
+              this.nextPageToken = doc.nextPageToken;
+              this.channelPlaylistId = doc.channelPlaylistId
+                ? doc.channelPlaylistId
+                : null;
+
+              this.getPageVideoList(this.playType, doc._id, 1).then(result => {
+                const docs = result.docs;
+                // 커버 및 재생목록정보를 설정한다.
+                this.coverTitle = docs[0].title.substring(0, 35);
+                this.channelTitle = docs[0].channelTitle;
+                this.cover = docs[0].imageInfo;
+                this.playlist = docs;
+                // 체크 콜렉션
+                this.checkCollection();
+                this.data = docs;
+              });
+            } else {
+              // no
+              this.initialSetting(playlistName);
+            }
+          });
+      });
+    },
+
+    // 재생목록이 존재하지 않을경우
+    initialSetting(playlistName) {
+      // 현재 요청하고자 하는 재생목록 타입
+      let requestURL = null;
+      if (this.playType === "play") {
+        requestURL = this.youtubePlaylistInfo(this.playlistId);
+      } else if (this.playType === "related") {
+        requestURL = this.youtubeVideoResult(this.playlistId);
+      } else if (this.playType === "channel") {
+        requestURL = this.youtubeChannelSearch(this.playlistId);
+      }
+
+      // 재생목록 요청
+      this.$http
+        .get(requestURL)
+        .then(res => {
+          let plistTitle = "";
+          let videoInfo = null;
+          let subChannelId = null;
+
+          // 재생목록별 하위 조회 섫정
+          if (this.playType === "play") {
+            plistTitle = res.data.items[0].snippet.title;
+            requestURL = this.youtubePlaylistItem(this.playlistId);
+          } else if (this.playType === "related") {
+            videoInfo = res.data.items[0];
+            requestURL = this.youtubeRelatedSearch(this.playlistId);
+          } else if (this.playType === "channel") {
+            subChannelId =
+              res.data.items[0].contentDetails.relatedPlaylists.uploads;
+            requestURL = this.youtubePlaylistItem(subChannelId);
+          }
+
+          // 재생목록 하위 데이터 요청
+          this.$http.get(requestURL).then(res => {
+            if (this.$lodash.size(res.data.items) > 0) {
+              let pathName = null;
+              if (this.playType === "play") {
+                pathName = "setDuration";
+                this.$store.commit("setMusicList", res.data.items);
+              } else if (this.playType === "related") {
+                pathName = "setRelatedDuration";
+                res.data.items.unshift(videoInfo);
+                this.$store.commit("setRelatedList", res.data.items);
+              } else if (this.playType === "channel") {
+                pathName = "setDuration";
+                this.$store.commit("setMusicList", res.data.items);
+              }
+
+              this.$store.dispatch(pathName, { vm: this }).then(results => {
+                // 만약 갯수가 30가 나누어 참이 아니라면 맨 뒤에 배열을 제거한다.
+                let listSize = this.$lodash.size(results);
+                if (listSize % 30 !== 0) {
+                  results.splice(listSize - 1, listSize);
+                }
+
+                // 재생목록 기본정보 설정
+                const playlistInfo = {
+                  type: this.playType + "ListInfo",
+                  playlistId: playlistName, // PLAYLIST:ID
+                  playlistTitle: plistTitle,
+                  channelPlaylistId: subChannelId || null,
+                  nextPageToken: res.data.nextPageToken
+                    ? res.data.nextPageToken
+                    : null,
+                  lastPageToken: "none",
+                  totalResults: res.data.pageInfo.totalResults,
+                  totalPage: Math.ceil(res.data.pageInfo.totalResults / 30),
+                  pageNum: 1
+                };
+
+                // 재생목록 기본정보 등록 및 하위 데이터 모두 등록
+                this.$local.post(playlistInfo).then(result => {
+                  if (result.ok) {
+                    this.playlistInfoId = result.id;
+                    let list = [];
+                    this.$lodash.forEach(results, (item, idx) => {
+                      item.type = this.playType;
+                      item.parentId = this.playlistInfoId;
+                      item.sortIndex = idx;
+                      item.pageNum = 1;
+                      list.push(item);
+                      if (idx === results.length - 1) {
+                        // 조회된 재생목록 하위 데이터 한꺼번에 등록
+                        this.$local.bulkDocs(results).then(() => {
+                          // 등록이 끝났으면, 랜더링하기 위해 등록된 정보를 모두 조회한다.
+                          this.getData();
+                        });
+                      }
+                    });
+                  }
+                });
+              });
+            } else {
+              this.errorDialog();
+            }
+          });
+        })
+        .catch(error => {
+          this.errorDialog();
+        });
+    },
+
+    // 최초 등록 후 데이터 조회
+    getData() {
+      let playlistName = null;
+      if (this.playType === "play") {
+        playlistName = `PLAYLIST:${this.playlistId}`;
+      } else if (this.playType === "related") {
+        playlistName = `RELATED:${this.playlistId}`;
+      } else if (this.playType === "channel") {
+        playlistName = `CHANNEL:${this.playlistId}`;
+      }
+
+      this.createLocalIndex(["type", "playlistId"]).then(() => {
+        return this.$local
+          .find({
+            selector: {
+              type: this.playType + "ListInfo",
+              playlistId: playlistName
+            }
+          })
+          .then(result => {
+            let docs = result.docs[0];
+
+            this.playlistTitle = docs.playlistTitle;
+
+            // 채널 재생목록 아이디 (채널 아이디 아님)
+            this.channelPlaylistId =
+              this.playType === "channel" ? docs.channelPlaylistId : null;
+            this.totalPage = docs.totalPage;
+            // 총 트랙수
+            this.totalTracks = docs.totalResults;
+            // 다음 페이지 토큰
+            this.nextPageToken = docs.nextPageToken ? docs.nextPageToken : null;
+
+            // 1초후 실행
+            const self = this;
+            setTimeout(() => {
+              // 재생목록 기본정보를 통해 하위 데이터 조회
+
+              self.getPageVideoList(self.playType, docs._id, 1).then(result => {
+                let docs = result.docs;
+                if (docs.length > 0) {
+                  // 커버설정
+                  self.coverTitle = docs[0].title.substring(0, 35);
+                  self.channelTitle = docs[0].channelTitle;
+                  self.cover = docs[0].imageInfo;
+                  self.playlist = docs;
+
+                  self.checkCollection();
+                  self.data = docs;
+                }
+              });
+            }, 10 * 100);
+          });
+      });
+    },
+
+    // 재생목록이 컬렉션에 등록되어있는지 체크
+    checkCollection() {
+      const collection = this.getLike();
+      if (collection) {
+        collection.then(result => {
+          let docs = result.docs;
+          if (docs.length > 0) {
+            this.isLikeToggle = true;
+          }
+          this.load = true;
+        });
+      } else {
+        this.load = true;
+      }
     },
 
     addCollection() {
@@ -185,266 +411,6 @@ export default {
         });
       }
     },
-    reload() {
-      this.feachData();
-    },
-    feachData() {
-      let musicInfo = this.getMusicInfos();
-      if (musicInfo) {
-        this.isMini = true;
-      }
-
-      let playlistName = null;
-      this.playType = this.$route.params.playType;
-      this.playlistId = this.$route.params.id;
-
-      let playlistId = this.$route.params.id;
-
-      if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
-      } else if (this.playType === "related") {
-        playlistName = `RELATED:${playlistId}`;
-      } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
-      }
-
-      // -> 여기서 재생목록 체크해야한다.
-      let allPlaylist = this.getAllPlayList();
-
-      // 현재 페이지의 재생목록이 존재하는가?
-      let findPlaylist = this.$lodash.find(allPlaylist, {
-        playlistId: playlistName
-      });
-
-      // No
-      if (!findPlaylist) {
-        let requestURL = "";
-
-        if (this.playType === "play") {
-          requestURL = $commons.youtubePlaylistInfo(playlistId);
-        } else if (this.playType === "related") {
-          requestURL = $commons.youtubeVideoResult(playlistId);
-        } else if (this.playType === "channel") {
-          requestURL = $commons.youtubeChannelSearch(playlistId);
-        }
-
-        this.$http
-          .get(requestURL)
-          .then(res => {
-            let plistTitle = "";
-            let videoInfo = null;
-            let subChannelId = null;
-
-            if (this.playType === "play") {
-              plistTitle = res.data.items[0].snippet.title;
-              requestURL = $commons.youtubePlaylistItem(playlistId);
-            } else if (this.playType === "related") {
-              videoInfo = res.data.items[0];
-              requestURL = $commons.youtubeRelatedSearch(playlistId);
-            } else if (this.playType === "channel") {
-              subChannelId =
-                res.data.items[0].contentDetails.relatedPlaylists.uploads;
-              requestURL = $commons.youtubePlaylistItem(subChannelId);
-            }
-
-            this.$http.get(requestURL).then(res => {
-              if (this.$lodash.size(res.data.items) > 0) {
-                console.log(res.data.items);
-                let pathName = null;
-                if (this.playType === "play") {
-                  pathName = "setDuration";
-                  this.$store.commit("setMusicList", res.data.items);
-                } else if (this.playType === "related") {
-                  pathName = "setRelatedDuration";
-                  res.data.items.unshift(videoInfo);
-                  this.$store.commit("setRelatedList", res.data.items);
-                } else if (this.playType === "channel") {
-                  pathName = "setDuration";
-                  this.$store.commit("setMusicList", res.data.items);
-                }
-
-                this.$store.dispatch(pathName).then(results => {
-                  // 만약 갯수가 30가 나누어 참이 아니라면 맨 뒤에 배열을 제거한다.
-                  let listSize = this.$lodash.size(results);
-                  if (listSize % 30 !== 0) {
-                    results.splice(listSize - 1, listSize);
-                  }
-
-                  let payload = {
-                    playlistName: playlistName,
-                    playlistId2: subChannelId || null,
-                    nextPageToken: res.data.nextPageToken
-                      ? res.data.nextPageToken
-                      : null,
-                    totalResults: res.data.pageInfo.totalResults,
-                    playlistTitle: plistTitle,
-                    list: results
-                  };
-                  this.$store.commit("setPlayList", payload);
-                  this.getData();
-                });
-              } else {
-                this.errorDialog();
-              }
-            });
-          })
-          .catch(error => {
-            this.errorDialog();
-          });
-      } else {
-        // Yes
-
-        // 커버 및 재생목록정보를 설정한다.
-        this.coverTitle = findPlaylist.list[0].title.substring(0, 35);
-        this.channelTitle = findPlaylist.list[0].channelTitle;
-        this.cover = findPlaylist.list[0].imageInfo;
-        this.totalTracks = findPlaylist.totalTracks;
-        this.playlist = findPlaylist.list;
-        this.nextPageToken = findPlaylist.nextPageToken;
-        this.channelPlaylistId = findPlaylist.channelPlaylistId
-          ? findPlaylist.channelPlaylistId
-          : null;
-        this.isNext = !!findPlaylist.nextPageToken;
-        this.load = true;
-
-        this.data = findPlaylist;
-
-        // Like 조회
-        this.getLike();
-      }
-    },
-    getData() {
-      // 재생목록 아이디 (명칭+아이디)
-      this.playType = this.$route.params.playType;
-      let playlistId = this.$route.params.id;
-      let playlistName = null;
-
-      // 모든 재생목록 가져오기
-      let allPlaylist = this.getAllPlayList();
-
-      if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
-      } else if (this.playType === "related") {
-        playlistName = `RELATED:${playlistId}`;
-      } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
-      }
-
-      // 현재 페이지의 재생목록이 존재하는가?
-      let findPlaylist = this.$lodash.find(allPlaylist, {
-        playlistId: playlistName
-      });
-
-      // 채널 재생목록 아이디 (채널 아이디 아님)
-      if (this.playType === "channel") {
-        this.channelPlaylistId = findPlaylist.channelPlaylistId;
-      }
-
-      // 커버설정
-      this.coverTitle = findPlaylist.list[0].title.substring(0, 35);
-      this.channelTitle = findPlaylist.list[0].channelTitle;
-      this.cover = findPlaylist.list[0].imageInfo;
-
-      // 총 트랙수
-      this.totalTracks = findPlaylist.totalTracks;
-
-      // 모든 재생목록에서 찾아온 현재 페이지 재생목록
-      this.playlist = findPlaylist.list;
-      this.data = findPlaylist;
-
-      // 다음 페이지 토큰
-      this.nextPageToken = findPlaylist.nextPageToken
-        ? findPlaylist.nextPageToken
-        : null;
-
-      // 토큰이 있으면 true / 없으면 false
-      this.isNext = !!findPlaylist.nextPageToken;
-
-      // Like 조회
-      this.getLike();
-
-      // 1초 후 로딩제거
-      setTimeout(() => {
-        this.load = true;
-      }, 1000);
-    },
-    nextPageLoad() {
-      // 재생목록 아이디
-      let playlistName = null;
-      let playlistItem = null;
-
-      this.isMore = true;
-      this.playType = this.$route.params.playType;
-      let playlistId = this.$route.params.id;
-      let allPlaylist = this.getAllPlayList();
-
-      // 토큰을 사용한 새 재생목록 가져오기
-      if (this.playType === "play") {
-        playlistName = `PLAYLIST:${playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
-          playlistId,
-          this.nextPageToken
-        );
-      } else if (this.playType === "related") {
-        playlistName = `RELATED:${playlistId}`;
-        playlistItem = $commons.youtubePagingRelatedSearch(
-          playlistId,
-          this.nextPageToken
-        );
-      } else if (this.playType === "channel") {
-        playlistName = `CHANNEL:${playlistId}`;
-        playlistItem = $commons.youtubePagingPlaylistItem(
-          this.channelPlaylistId,
-          this.nextPageToken
-        );
-      }
-
-      this.$http
-        .get(playlistItem)
-        .then(res => {
-          let pathName = null;
-
-          if (this.playType === "play") {
-            pathName = "setDuration";
-            this.$store.commit("setMusicList", res.data.items);
-          } else if (this.playType === "related") {
-            pathName = "setRelatedDuration";
-            this.$store.commit("setRelatedList", res.data.items);
-          } else if (this.playType === "channel") {
-            pathName = "setDuration";
-            this.$store.commit("setMusicList", res.data.items);
-          }
-
-          this.$store.dispatch(pathName).then(results => {
-            // 기존 재생목록 뒤로, 토큰으로 조회한 목록을 합친다.
-            this.playlist = this.$lodash.concat(this.playlist, results);
-
-            // 토큰여부
-            this.nextPageToken = res.data.nextPageToken
-              ? res.data.nextPageToken
-              : null;
-
-            // 토큰이 있으면 true / 없으면 false
-            this.isNext = !!this.nextPageToken;
-
-            // 전체 재생목록에 등록 된 현재 재생목록에 대한 정보 업데이트
-            this.$lodash.forEach(allPlaylist, item => {
-              if (item.playlistId === playlistName) {
-                let payload = {
-                  playlistId: playlistName,
-                  appendPlaylist: this.playlist,
-                  nextPageToken: this.nextPageToken
-                };
-                this.$store.commit("setPageAppendList", payload);
-              }
-            });
-            this.isMore = false;
-          });
-        })
-        .catch(error => {
-          this.errorDialog();
-        });
-    },
     errorDialog() {
       this.$modal.show("dialog", {
         title: "Error!",
@@ -474,6 +440,9 @@ export default {
     goBack() {
       this.$router.push(this.$store.getters.getIndexPath);
     },
+    toggleChange(value) {
+      this.isLikeToggle = value;
+    },
     route(items, index) {
       this.$store.commit("setPath", this.$route.path);
       this.$router.push({
@@ -502,7 +471,7 @@ export default {
 
 .searchList {
   overflow-y: scroll;
-  max-height: 348px;
+  max-height: 357px;
 }
 
 .music-title {
@@ -514,6 +483,16 @@ export default {
   text-overflow: ellipsis;
   padding-right: 10px;
   color: #ffffff;
+}
+
+.loadMoreCenter {
+  color: #ffffff;
+  margin-left: 100px !important;
+}
+
+.playlistEnd {
+  color: #ffffff;
+  margin-left: 128px;
 }
 
 .cover {

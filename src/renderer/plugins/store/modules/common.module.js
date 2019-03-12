@@ -1,18 +1,18 @@
 const state = {
-  _id: null,
   path: "",
   indexPath: "",
   isTop: false,
   isPlayer: false,
   isTimer: false,
   isTime: 0,
-  isSnow: true,
   isVersion: false,
   searchText: null,
   nextPageToken: null,
   scrollPos: 0,
-  locale: "en",
-  insertVideo: null
+  apiKeys: [],
+  searchApiKey: null,
+  videoItemsApiKey: null,
+  locale: "en"
 }
 
 const getters = {
@@ -28,7 +28,7 @@ const getters = {
   getSearchText() {
     return state.searchText
   },
-  getNextPageToekn() {
+  getNextPageToken() {
     return state.nextPageToken
   },
   getAlwaysTopOption() {
@@ -52,16 +52,17 @@ const getters = {
   getSnow() {
     return state.isSnow
   },
-  getId() {
-    return state._id
-  },
-  getInsertVideo() {
-    return state.insertVideo;
+  getKeys() {
+    return state.apiKeys
   }
 }
 
 // 동기
 const mutations = {
+  setKeys(state, value) {
+    state.apiKeys = []
+    state.apiKeys = value
+  },
   setPath(state, value) {
     state.path = value
   },
@@ -97,20 +98,23 @@ const mutations = {
   },
   setScrollPos(state, value) {
     state.scrollPos = value
-  },
-  setSnow(state, value) {
-    state.isSnow = value
-  },
-  setId(state, value) {
-    state._id = value
-  },
-  setInsertVideo(state, value) {
-    state.insertVideo = value
   }
 }
 
 // 비동기
-const actions = {}
+const actions = {
+  setAuthKey(context, { vm }) {
+    vm.$db.get("cfb9d27f0b59d3fbc55073830f01db05").then(result => {
+      const auth = result.auth
+      const envType = process.env.NODE_ENV === "development" ? "dev" : "production"
+      const service = vm.$lodash.find(auth, { type: envType })
+      if (service.type === envType) {
+        const keyList = service.key_list
+        vm.$store.commit("setKeys", keyList)
+      }
+    })
+  }
+}
 
 export default {
   state,

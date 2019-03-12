@@ -106,6 +106,7 @@ export default {
             })
             .then(result => {
               this.myCollections = result.docs
+              this.isCreate = false
             })
             .catch(error => {
               console.log(error)
@@ -115,7 +116,7 @@ export default {
     },
 
     /**
-     * 내 컬렉션 목록을 가져온다. (최대 7개)
+     * 내 컬렉션 목록을 가져온다. (최대 15개)
      */
     getMyCollectionList() {
       const musicInfo = this.getMusicInfos()
@@ -136,11 +137,12 @@ export default {
                   $gte: null
                 }
               },
-              limit: 7,
+              limit: 15,
               sort: [{ creates: "desc" }]
             })
             .then(result => {
               this.playlists = result.docs
+              this.isCreate = false
             })
             .catch(error => {
               console.log(error)
@@ -168,14 +170,17 @@ export default {
           .then(result => {
             let docs = result.docs[0]
             if (docs) {
-              let collections = docs.collections;
+              let collections = docs.collections
               let findItem = this.$lodash.find(collections, { id: musicData.name })
-
               this.playlist = findItem.list
 
+              let nextIndex = 0;
+              if(this.playlist.length > index) {
+                nextIndex = index
+              } 
               // 재생목록에서 해당하는 트랙번호의 비디오
-              let playingItem = this.playlist[index]
-              playingItem.index = index
+              let playingItem = this.playlist[nextIndex]
+              playingItem.index = nextIndex
               playingItem.name = musicData.name
 
               this.totalTracks = this.playlist.length

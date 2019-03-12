@@ -121,12 +121,6 @@ body {
   width: 44px;
 }
 
-.active {
-  color: #28b1ff !important;
-  font-weight: 700;
-  background-color: rgba(53, 61, 78, 0.75);
-}
-
 .zaudio_playlist {
   margin: 0px;
   padding: 0px;
@@ -215,7 +209,7 @@ body {
 
 .zaudio_songtitle {
   color: #ffffff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -268,9 +262,9 @@ body {
 }
 
 .zaudio_playercontrolbuttons i:hover {
-  transition: all 0.5s;
+  /* transition: all 0.5s;
   background-color: #eeeeee;
-  border-radius: 32px;
+  border-radius: 32px; */
 }
 
 .zaudio_seeker {
@@ -302,7 +296,7 @@ body {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  margin-top: 14px;
+  margin-top: 17px;
 }
 
 .zaudio_icons {

@@ -215,7 +215,7 @@ body {
 
 .zaudio_songtitle {
   color: #ffffff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -268,9 +268,9 @@ body {
 }
 
 .zaudio_playercontrolbuttons i:hover {
-  transition: all 0.5s;
+  /* transition: all 0.5s;
   background-color: #eeeeee;
-  border-radius: 32px;
+  border-radius: 32px; */
 }
 
 .zaudio_seeker {
@@ -302,7 +302,7 @@ body {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  margin-top: 10px;
+  height: 101px;
 }
 
 .zaudio_icons {

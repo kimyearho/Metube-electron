@@ -10,108 +10,139 @@
     <!-- 타이틀바 컴포넌트 -->
     <top-header :isShow="false" @reloadMusicList="feachData"/>
 
-    <!-- 커버 영역 -->
-    <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
-      </a>
-    </div>
-    <div class>
-      <img class="playlistCover" :src="cover">
-      <div class="playlistTrackinfo">
-        <span class="label_related label_v">{{ category }}</span>
-        <br>
-        <br>
-        <div class="titleflow">
-          <marquee-text
-            class="zaudio_songtitle"
-            :key="coverTitle"
-            :duration="coverTitle.length / 2"
-          >&nbsp; {{ coverTitle }}</marquee-text>
-          <span class="zaudio_songartist">{{ channelTitle }}</span>
-          <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+    <div v-if="isLogin">
+      <!-- 커버 영역 -->
+      <div class="side_menu">
+        <a class="cursor" @click="goBack">
+          <img src="@/assets/images/svg/menu-back.svg" title="Back">
+        </a>
+      </div>
+      <div class>
+        <img class="playlistCover" :src="cover">
+        <div class="playlistTrackinfo">
+          <span class="label_related label_v">{{ category }}</span>
+          <br>
+          <br>
+          <div class="titleflow">
+            <marquee-text
+              class="zaudio_songtitle"
+              :key="coverTitle"
+              :duration="coverTitle.length / 2"
+            >&nbsp; {{ coverTitle }}</marquee-text>
+            <span class="zaudio_songartist">{{ channelTitle }}</span>
+            <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="overay"></div>
+      <div class="overay"></div>
 
-    <!-- 목록 영역 -->
-    <draggable
-      element="md-list"
-      id="myMusicList"
-      class="musicPlayList"
-      :class="{ dynamicHeight: isMini }"
-      :options="{animation:150}"
-      v-model="playlist"
-      @end="endDrag"
-    >
-      <md-list-item
-        :id="`item${index}`"
-        v-for="(item, index) in playlist"
-        :key="item.etag"
-        :class="selectedIndex === index ? active : ''"
+      <!-- 목록 영역 -->
+      <draggable
+        tag="md-list"
+        v-model="playlist"
+        class="musicPlayList"
+        :class="{ dynamicHeight: isMini, one: playlist.length === 1  }"
+        animation="150"
+        @end="endDrag"
       >
-        <md-avatar style="margin-right: 0;">
-          <img :src="item.thumbnails">
-        </md-avatar>
-        <span class="md-list-item-text music-title cursor" @click="playItem(index)">{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+        <md-list-item
+          v-for="(item, index) in playlist"
+          :id="`item${index}`"
+          :key="item.etag"
+          :class="selectedIndex === index ? 'activeBackground' : ''"
+        >
+          <md-avatar style="margin-right: 0;">
+            <img :src="item.thumbnails">
+          </md-avatar>
 
-        <my-context-menu
-          :id="id"
-          :index="index"
-          :videoId="item.videoId"
-          :data="item"
-          @is-success="feachSyncData"
-        />
-      </md-list-item>
+          <span
+            class="md-list-item-text music-title cursor"
+            :class="selectedIndex === index ? 'active' : ''"
+            @click="playItem(index)"
+          >{{ item.title }}</span>
+          <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+          <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
-      <md-list-item>
-        <span class="playlistEnd">
-          <span class="playlistEnd">Thanks for using "Metube"</span>
-        </span>
-      </md-list-item>
-      <div class="bottom">
-        <img src="@/assets/images/youtube/dev.png">
-      </div>
-    </draggable>
+          <my-context-menu
+            :id="id"
+            :index="index"
+            :videoId="item.videoId"
+            :data="item"
+            @is-success="feachSyncData"
+          />
+        </md-list-item>
 
-    <!-- 메인 재생바 컴포넌트 -->
-    <main-player-bar
-      @previousVideoTrack="previousPlayItem"
-      @nextVideoTrack="nextPlayItem"
-      @jump="nextTrackScroll(500)"
-    />
+        <md-list-item>
+          <span class="playlistEnd">
+            <span class="playlistEnd">Thanks for using "Metube"</span>
+          </span>
+        </md-list-item>
+        <div class="bottom">
+          <img src="@/assets/images/youtube/dev.png">
+        </div>
+      </draggable>
 
-    <!-- 로딩 컴포넌트 -->
-    <transition name="fade">
-      <loading v-show="!load"/>
-    </transition>
+      <!-- 메인 재생바 컴포넌트 -->
+      <main-player-bar
+        :videoSetting="videoData"
+        @nextMusicPlay="subscribeNextVideo"
+        @previousVideoTrack="previousPlayItem"
+        @nextVideoTrack="nextPlayItem"
+      />
 
-    <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+      <!-- 팝업 컴포넌트 -->
+      <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    </div>
+
+    <!-- 비 로그인 상태 -->
+    <div v-else>
+      <el-row>
+        <el-col>
+          <el-card
+            style="height: 200px; margin-top: 70px; margin-left: 30px; margin-right: 30px;"
+            class="thumb"
+            :body-style="{ padding: '0px' }"
+          >
+            <img
+              class="md-image thumbnail"
+              style="width: 100%; height: 200px;"
+              :src="playingMusicData.thumbnails"
+            >
+          </el-card>
+          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+            <span class="sub">{{ playingMusicData.title }}</span>
+          </div>
+          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+            <span class="sub">{{ $t('COLLECTION.CONTINUE') }}</span>
+          </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <md-button
+              class="cursor md-raised md-primary"
+              style="width: 120px;"
+              @click="signLink"
+            >{{ $t('SIGN.SIGN_IN') }}</md-button>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import DataUtils from "@/components/Mixin/db";
-import MyCollectionMixin from "@/components/Mixin/mycollection";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import DataUtils from "@/components/Commons/Mixin/db";
+import MyCollectionMixin from "@/components/Commons/Mixin/mycollection";
 import MyContextMenu from "@/components/Context/MyContextMenu";
-import Loading from "@/components/Loader/Loader";
 import draggable from "vuedraggable";
 import MarqueeText from "vue-marquee-text-component";
 
-const options = { container: "#myMusicList", offset: -80 };
+const options = { container: ".musicPlayList", offset: -80 };
 
 export default {
   name: "MyMusicPlayList",
   mixins: [StoreMixin, MyCollectionMixin, DataUtils],
   components: {
-    Loading,
     MainPlayerBar,
     MarqueeText,
     draggable,
@@ -120,7 +151,10 @@ export default {
   data() {
     return {
       load: false,
+      isLogin: this.getUserId(),
+      playingMusicData: this.getMusicInfos(),
       isMini: false,
+      videoData: null,
       totalTracks: null,
       playType: null,
       id: null,
@@ -133,22 +167,6 @@ export default {
       startIndex: 0,
       playlist: []
     };
-  },
-  beforeCreate() {
-    /**
-     * 이벤트 중첩을 피하기 위해 작성한다.
-     * 실제 재생목록은 음악이 재생중이라면 외부에서 이벤트를 계속 전달하므로, beforeDestory 훅에서 작성하면 안된다.
-     * beforeDestory 훅에서 작성하게되면 페이지를 벗어날때 이벤트가 제거되므로, 루트에서 전달하는 이벤트를 수신할 수 없다.
-     */
-    this.$eventBus.$off("playlist-nextMusicPlay");
-  },
-  created() {
-    /**
-     * 다음 비디오 시작을 알리는 이벤트를 수신한다.
-     * 이벤트 중첩을 피하기 위해 $once를 사용할 수도 있지만, 사용자가 재생목록에서 벗어나지 않았다면,
-     * 외부에서 이벤트를 전달하면 더 이상 받을 수 없으므로 $on을 사용한다.
-     */
-    this.$eventBus.$on("playlist-nextMusicPlay", this.subscribeNextVideo);
   },
   mounted() {
     this.getCategory();
@@ -231,7 +249,7 @@ export default {
       setTimeout(() => {
         self.$scrollTo(id, -1, options);
         self.load = true;
-      }, 500);
+      }, 250);
     },
 
     /**
@@ -261,6 +279,13 @@ export default {
           this.category = results[0].category;
           let listDocs = results[1].docs;
           if (listDocs.length > 0) {
+            /**
+             * RemoteDB 및 StoreDB 동기화
+             *
+             * @param docs RemoteDB (or LocalDB)
+             * @param deletedItem 삭제한 비디오 아이디 (없으면 undefined)
+             * @param flag 재생여부
+             */
             this.setRemoteSubsetMusicData(listDocs, data, "p");
           }
         });
@@ -333,7 +358,7 @@ export default {
             if (findData.list.length > 0) {
               this.getRemoteDocument().then(result => {
                 const remoteTotalCount = result.docs.length;
-                if (remoteTotalCount != findData.listCount) {
+                if (remoteTotalCount !== findData.listCount) {
                   console.log("========================= list sync!");
                   this.getRemoteList();
                 } else {
@@ -482,17 +507,14 @@ export default {
         ? playingItem.imageInfo
         : playingItem.thumbnails;
 
-      // this.videoActive(playingItem.index);
-
       this.$store.commit("setPlayingMusicInfo", playingItem);
-      this.$eventBus.$emit("playMusicSetting");
-      this.$ipcRenderer.send("win2Player", [
-        "loadVideoById",
-        playingItem.videoId
-      ]);
+      this.$set(this, "videoData", this.getMusicInfos());
 
       this.$store.commit("setPlayType", true);
       this.$eventBus.$emit("statusCheck");
+
+      const videoId = playingItem.videoId;
+      this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */
@@ -514,7 +536,7 @@ export default {
      */
     nextTrackScroll(duration) {
       if (this.$route.name === "MY-PLAYING-PLAYLIST") {
-        let cancelScroll = this.$scrollTo(
+        const cancelScroll = this.$scrollTo(
           `#item${this.selectedIndex}`,
           duration,
           options
@@ -543,7 +565,13 @@ export default {
      * 이전 페이지로 돌아간다.
      */
     goBack() {
-      this.$router.push(this.$store.getters.getCurrentPath);
+      this.$router.push(this.$store.getters.getIndexPath);
+    },
+
+     signLink() {
+      this.$router.push({
+        name: "login"
+      });
     }
   }
 };
@@ -558,5 +586,8 @@ export default {
   padding: 4px 7px;
   font-size: 12px;
   font-weight: 700;
+}
+.one {
+  height: 260px;
 }
 </style>

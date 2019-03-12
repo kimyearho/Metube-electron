@@ -38,7 +38,7 @@
     </modal>
 
     <!-- fab -->
-    <md-speed-dial
+    <!-- <md-speed-dial
       v-if="isFab"
       ref="fab"
       class="md-bottom-right"
@@ -51,9 +51,6 @@
       </md-speed-dial-target>
 
       <md-speed-dial-content>
-        <md-button class="md-icon-button md-accent" title="PlayList Search" @click="showPageSearch">
-          <md-icon>search</md-icon>
-        </md-button>
         <md-button
           v-show="isUser"
           class="md-icon-button b-success"
@@ -63,52 +60,58 @@
           <md-icon>add</md-icon>
         </md-button>
       </md-speed-dial-content>
-    </md-speed-dial>
-
+    </md-speed-dial>-->
     <!-- Side Menu -->
     <md-drawer
       :md-active.sync="showNavigation"
-      style="background: #242d40; width: 190px; z-index:300;"
+      style="background: #242d40; width: 190px; z-index:199;"
     >
-      <md-toolbar class="md-transparent" style="background: #03A9F4">
-        <span class="md-title"></span>
+      <md-toolbar class="md-transparent">
+        <div class="picture" v-if="profileData">
+          <img class="userPicture" :src="profileData.googlePicture">
+          <div class="userName">{{ profileData.googleName }}</div>
+        </div>
+
+        <div class="noLogin" v-else>
+          <el-button type="primary" size="medium" @click="route('login')">{{ $t('MAIN.MENU.SIGN') }}</el-button>
+        </div>
       </md-toolbar>
 
       <md-list>
         <!-- Menu1 -->
         <md-list-item @click="route('search')">
           <md-icon>search</md-icon>
-          <span class="md-list-item-text">Search</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SEARCH') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('collection')">
           <md-icon>collections_bookmark</md-icon>
-          <span class="md-list-item-text">Collections</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.COLLECTION') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('history')">
           <md-icon>playlist_play</md-icon>
-          <span class="md-list-item-text">History</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.HISTORY') }}</span>
         </md-list-item>
 
         <!-- Menu1 -->
         <md-list-item @click="route('login')">
           <md-icon>vertical_align_bottom</md-icon>
-          <span class="md-list-item-text">Sign in</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SIGN') }}</span>
         </md-list-item>
 
         <!-- Menu2 -->
         <md-list-item @click="route('setting')">
           <md-icon>settings</md-icon>
-          <span class="md-list-item-text">Setting</span>
+          <span class="md-list-item-text">{{ $t('MAIN.MENU.SETTING') }}</span>
         </md-list-item>
 
         <!-- Menu2 -->
-        <!-- <md-list-item @click="route('debug')">
+        <!-- <md-list-item @click="route('setting')">
           <md-icon>settings</md-icon>
-          <span class="md-list-item-text">Debug</span>
+          <span class="md-list-item-text">FAQ</span>
         </md-list-item>-->
       </md-list>
     </md-drawer>
@@ -120,8 +123,8 @@
 
 <script>
 import * as query from "querystring";
-import StoreMixin from "@/components/Mixin/index";
-import MyQueryMixin from "@/components/Mixin/mycollection";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
 import CreateFrom from "@/components/MyCollection/create/MyCollectionCreate";
 
 export default {
@@ -134,7 +137,6 @@ export default {
     return {
       isCheck: false,
       isCreate: false,
-      isFab: true,
       isUser: false,
       profileData: "",
       playType: null,
@@ -152,13 +154,15 @@ export default {
       type: Boolean,
       default: true
     },
-    isShow: {
+    create: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
-  created() {
-    this.isFab = this.isShow;
+  watch: {
+    create(val) {
+      this.isCreate = val;
+    }
   },
   mounted() {
     this.isUser = this.getUserId();
@@ -168,11 +172,16 @@ export default {
     if (this.data) {
       this.playType = this.data.playType;
     }
-    if (this.$route.name === "collection" && !this.isUser) {
-      this.isFab = false;
-    }
   },
   methods: {
+    reloadUser() {
+      this.isUser = this.getUserId();
+      if (this.isUser) {
+        this.profileData = this.getProfile();
+      } else {
+        this.profileData = null;
+      }
+    },
     apply() {
       let parseURL;
       let url = this.linkForm;
@@ -227,33 +236,24 @@ export default {
         this.$router.push({
           name: "setting"
         });
-      } else if (name === "debug") {
-        this.$router.push({
-          name: "DEBUG"
-        });
       }
     },
     close() {
-      this.$ipcRenderer.send("button:close", null);
+      // 일단 임시로
+      // this.$local.destroy().then(result => { console.log(result) });
+
+      let self = this;
+      setTimeout(() => {
+        self.$ipcRenderer.send("button:close", null);
+      }, 1500);
     },
     closeModal() {
       this.$modal.hide("input-focus-modal");
     },
-    closeCreateModal(v) {
-      this.isCreate = v;
-    },
-    showCreateMyCollection() {
-      /** @overaide fab 닫기  */
-      this.closeFab();
-      this.isCreate = true;
-    },
-    showPageSearch() {
-      /** @overaide fab 닫기  */
-      this.closeFab();
-      this.$modal.show("input-focus-modal");
+    closeCreateModal(value) {
+      this.$emit("create-close", value);
     },
     myCollectionSync() {
-      this.isCreate = false;
       // 컬렉션 목록이나, 내 컬렉션 목록에서만 싱크 실행
       if (this.$route.name === "collection") {
         this.$emit("my-sync");
@@ -350,7 +350,7 @@ export default {
   font-weight: 700;
   text-align: center;
   border-bottom: 1px solid rgba(35, 35, 35, 0.73);
-  height: 31px;
+  height: 28px;
   z-index: 101;
 }
 
@@ -399,5 +399,31 @@ export default {
   border: 1px solid #e09e3e;
   border-radius: 50%;
   display: inline-block;
+}
+
+.picture {
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.userPicture {
+  width: 70px;
+  border-radius: 50px;
+}
+
+.userName {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.noLogin {
+  margin-top: 0px;
+  margin-left: 30px;
+}
+
+.noLogin >>> .el-button {
+  padding: 5px 40px 5px 40px;
 }
 </style>

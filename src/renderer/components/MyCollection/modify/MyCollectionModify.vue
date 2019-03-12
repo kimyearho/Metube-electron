@@ -8,7 +8,7 @@
 <template>
   <div>
     <el-dialog
-      title="MY COLLECTION EDIT"
+      title="Collection Edit"
       :visible="isOpen"
       :before-close="closeModal"
       :close-on-click-modal="false"
@@ -69,9 +69,9 @@
 </template>
 
 <script>
-import StoreMixin from "@/components/Mixin/index";
-import CommonMixin from "@/components/Mixin/common";
-import DataUtils from "@/components/Mixin/db";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import CommonMixin from "@/components/Commons/Mixin/common";
+import DataUtils from "@/components/Commons/Mixin/db";
 export default {
   name: "MyCollectionModify",
   mixins: [StoreMixin, CommonMixin, DataUtils],

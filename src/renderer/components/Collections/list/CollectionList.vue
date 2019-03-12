@@ -5,7 +5,7 @@
 
 <template>
   <div>
-    <top-header @my-sync-list="getMyCollectionList"/>
+    <top-header :create="isCreate" @create-close="createClose" @my-sync-list="getMyCollectionList"/>
     <div class="wrapper">
       <!-- 로그인 상태 -->
       <el-row>
@@ -14,6 +14,10 @@
             <div>
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
+              <md-button class="md-raised b-primary c-add md-accent" @click="create">
+                <i class="material-icons" style="float:left;">add</i>
+                <span :class="{ en_create: isLocale === 'en', ko_create: isLocale === 'ko' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
+              </md-button>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
           </div>
@@ -31,7 +35,7 @@
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
             </label>
             <label class="wh" v-else>
-              <strong style="margin-left: 5px;">MY COLLECTIONS</strong>
+              <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.MY_COLLECTION') }}</strong>
             </label>
           </div>
         </el-col>
@@ -56,9 +60,9 @@
               <div class="myCollectionLabel" v-if="playType === 'my-collection'">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
-              <div class="playWrapper" :class="{ channelWrapper: playType === 'channel' }">
+              <div class="playWrapper cursor" @click="showMusicList(item)" :class="{ channelWrapper: playType === 'channel' }">
                 <div class="overlayMenu" :class="{ channelMenu: playType === 'channel' }">
-                  <a class="cursor" @click="showMusicList(item)" title="Play">
+                  <!-- <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
                   <a class="cursor" @click="showRemove(item)" title="Remove">
@@ -71,13 +75,13 @@
                     v-if="playType !== 'channel'"
                   >
                     <font-awesome-icon class="f25 fa" icon="images"/>
-                  </a>
+                  </a> -->
                 </div>
               </div>
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span class="sub">{{ item.title }}</span>
+                <span class="sub cursor" @click="showMusicList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
@@ -97,14 +101,13 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
-import DataUtils from "@/components/Mixin/db";
-import CollectionQueryMixin from "@/components/Mixin/collections";
-import MyQueryMixin from "@/components/Mixin/mycollection";
+import DataUtils from "@/components/Commons/Mixin/db";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
 import CoverChangeModal from "@/components/Collections/cover/CollectionCoverChange";
-import StoreMixin from "@/components/Mixin/index";
+import StoreMixin from "@/components/Commons/Mixin/index";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Commons/Loader/PageLoading";
 
 export default {
   name: "CollectionList",
@@ -117,9 +120,11 @@ export default {
   data() {
     return {
       isSub: false,
+      isLocale: this.getLocale(),
       load: false,
       playlists: [],
       data: null,
+      isCreate: false,
       playType: null,
       selectedData: null,
       isLogin: false
@@ -141,6 +146,16 @@ export default {
         this.isLogin = true;
       }
       this.playType = this.$route.params.playType;
+    },
+
+    // 컬렉션 생성 팝업 추가
+    create() {
+      this.$set(this, "isCreate", true);
+    },
+
+    // 컬렉션 생성 팝업 닫기
+    createClose() {
+      this.$set(this, "isCreate", false);
     },
 
     showRemove(data) {
@@ -167,13 +182,15 @@ export default {
       });
     },
     showMusicList(item) {
+      console.log(item)
       this.$store.commit("setPath", this.$route.path);
       if (item.category) {
         this.$router.push({
           name: "NOT-MY-PLAYLIST",
           params: {
             playType: "self",
-            id: item._key
+            id: item._id,
+            doc: item
           }
         });
       } else {
@@ -210,6 +227,12 @@ export default {
   height: 410px !important;
 }
 
+.create {
+  position: relative;
+  top: 4px;
+  left: 1px;
+}
+
 .c-add {
   float: right;
   color: #ffffff;
@@ -217,7 +240,17 @@ export default {
   height: 20px;
   margin-bottom: 0;
 }
+.ko_create {
+  position: relative;
+  top: 2px;
+  left: 1px;
+}
 
+.en_create {
+  position: relative;
+  top: 4px;
+  left: 1px;
+}
 .el-card {
   border: none;
   border-radius: 0px;
@@ -225,5 +258,25 @@ export default {
   color: #303133;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+}
+
+.el-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.el-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.el-scroll::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.el-scroll::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+
+.el-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>

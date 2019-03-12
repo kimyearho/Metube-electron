@@ -8,12 +8,20 @@
     <!-- 타이틀바 컴포넌트 -->
     <top-header :isShow="false" @reloadMusicList="feachData"/>
 
-    <!-- 커버 영역 -->
+    <!-- 시스템 버튼 영역 -->
     <div class="side_menu">
       <a class="cursor" @click="goBack">
         <img src="@/assets/images/svg/menu-back.svg" title="Back">
       </a>
     </div>
+
+    <div class="remove_menu" @click="remove">
+      <a class="cursor">
+        <img src="@/assets/images/svg/close2.svg" title="Remove">
+      </a>
+    </div>
+
+    <!-- 커버 영역 -->
     <div class>
       <img class="playlistCover" :src="cover">
       <div class="playlistTrackinfo">
@@ -27,7 +35,7 @@
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
             <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
-              <font-awesome-icon class="f20" icon="edit"/>
+              <!-- <font-awesome-icon class="f20" icon="edit"/> -->
             </a>
           </div>
         </div>
@@ -37,11 +45,10 @@
 
     <!-- 재생목록 드래그 지점 -->
     <draggable
-      element="md-list"
-      id="list"
+      tag="md-list"
       class="searchList"
+      animation="150"
       :class="{ dynamicHeight: isMini }"
-      :options="{animation:150}"
       :list="playlist"
       @end="endDrag"
     >
@@ -61,6 +68,7 @@
           :index="index"
           :videoId="item.videoId"
           :data="item"
+          @is-cover="reloadCollection"
           @is-success="feachData"
         />
         <!-- End -->
@@ -90,16 +98,15 @@
 </template>
 
 <script>
-import * as $commons from "@/service/commons-service.js";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
-import StoreMixin from "@/components/Mixin/index";
-import MyQueryMixin from "@/components/Mixin/mycollection";
-import DataUtils from "@/components/Mixin/db";
-import CollectionQueryMixin from "@/components/Mixin/collections";
+import StoreMixin from "@/components/Commons/Mixin/index";
+import MyQueryMixin from "@/components/Commons/Mixin/mycollection";
+import DataUtils from "@/components/Commons/Mixin/db";
+import CollectionQueryMixin from "@/components/Commons/Mixin/collections";
 import CollectionModifyForm from "@/components/MyCollection/modify/MyCollectionModify";
 import MyContextMenu from "@/components/Context/MyContextMenu";
 import draggable from "vuedraggable";
-import Loading from "@/components/Loader/Loader";
+import Loading from "@/components/Commons/Loader/PageLoading";
 
 export default {
   name: "MyMusicList",
@@ -119,6 +126,7 @@ export default {
       isModify: false,
       totalTracks: 0,
       id: null,
+      data: null,
       playType: null,
       collectionDoc: null,
       cover: "",
@@ -130,6 +138,9 @@ export default {
   },
   created() {
     this.init();
+  },
+  beforeMount() {
+    this.$store.commit("setPath", this.$route.path);
   },
   mounted() {
     this.feachData();
@@ -215,21 +226,39 @@ export default {
         this.getRemoteProfile().then(result => {
           const dbStoreList = result.collections;
           if (dbStoreList) {
+            this.getLog(
+              "[MyMusicList]/[feachData] 스토어 DB ====> ",
+              dbStoreList
+            );
+
             // 스토어 DB 조회
             const findData = this.$lodash.find(dbStoreList, {
               id: this.collectionDoc._id
             });
+
+            this.getLog(
+              "[MyMusicList]/[feachData] 스토어 DB에서 찾은 findData ====> ",
+              findData
+            );
+
             // DB스토어와 DB문서는 1:1임.
             if (findData) {
+              // 실제 DB에 등록된 목록을 조회
               this.getRemoteDocument().then(doc => {
+                this.getLog(
+                  "[MyMusicList]/[feachData] 삭제 후 실제 DB 목록 ====> ",
+                  doc
+                );
+
                 const remoteTotalCount = doc.docs.length;
                 // 스토어 개수와 DB개수가 다를경우(추가 or 삭제 이벤트가 일어난 경우)
                 if (remoteTotalCount !== findData.listCount) {
-                  console.log("========================= list sync!");
-                  // console.log("DeleteItem => ", dItem)
+                  this.getLog("[MyMusicList]/[feachData] ====> List Sync");
                   this.getRemoteList(doc.docs, deletedItem);
                 } else {
-                  console.log("========================= remote store get!");
+                  this.getLog(
+                    "[MyMusicList]/[feachData] ====> remote store get!"
+                  );
                   this.totalTracks = findData.listCount;
                   this.playlist = findData.list;
                 }
@@ -260,6 +289,12 @@ export default {
       }
     },
 
+    reloadCollection() {
+      this.$test.get(this.collectionDoc._id).then(doc => {
+        this.cover = doc.thumbnails;
+      });
+    },
+
     /**
      * RemoteDB 및 StoreDB 동기화
      *
@@ -271,6 +306,9 @@ export default {
       this.setRemoteSubsetMusicData(docs, deletedItem, "n");
     },
 
+    /**
+     * 실제 DB모델 목록
+     */
     getRemoteDocument() {
       return this.createIndex(["creates"]).then(result => {
         return this.$test.find({
@@ -284,6 +322,73 @@ export default {
           limit: 100,
           sort: [{ creates: "asc" }]
         });
+      });
+    },
+
+    /**
+     * 컬렉션 삭제
+     */
+    remove(data) {
+      const musicInfo = this.getMusicInfos();
+
+      // 비디오가 재생중이면
+      if (musicInfo) {
+        const parentId = musicInfo.parentId;
+
+        // 현재 재생중인 음악의 재생목록아이디가 삭제하고자하는 재생목록이라면
+        if (this.collectionDoc._id === parentId) {
+          this.$modal.show("dialog", {
+            title: "Info",
+            text: this.$t("COLLECTION.REMOVE_NOT_ALBUM"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+          return false;
+        }
+      }
+
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: this.$t("COLLECTION.REMOVE_ALBUM"),
+        buttons: [
+          {
+            title: "Yes",
+            handler: () => {
+              /**
+               * 기본적으로 컬렉션 삭제는 두가지 타입으로 나뉜다.
+               * 내 컬렉션 삭제와, 그외 유튜브 재생목록 삭제로 나뉨.
+               * 그 후 재생목록 정보 데이터를 넘겨주면 됨.
+               */
+              // this.getLog("collecton => ", this.collectionDoc);
+              this.myCollectionRemove(this.collectionDoc, "list");
+
+              // 1.5초 뒤 실행
+              setTimeout(() => {
+                this.$modal.show("dialog", {
+                  title: "Info",
+                  text: this.$t("COLLECTION.REMOVE_ALBUM_SUCCESS"),
+                  buttons: [
+                    {
+                      title: "close",
+                      handler: () => {
+                        setTimeout(() => {
+                          this.goBack();
+                          this.$modal.hide("dialog");
+                        }, 500);
+                      }
+                    }
+                  ]
+                });
+              }, 1000);
+            }
+          },
+          {
+            title: "Close"
+          }
+        ]
       });
     },
 
@@ -317,6 +422,16 @@ export default {
 <style scoped>
 .dynamicHeight {
   max-height: 300px;
+}
+
+.remove_menu {
+  position: absolute;
+  right: 5px;
+  top: 32px;
+  width: 20px;
+  height: 20px;
+  background: #00000047;
+  z-index: 100;
 }
 
 .playlistEnd {

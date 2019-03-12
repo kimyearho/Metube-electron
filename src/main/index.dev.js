@@ -7,10 +7,11 @@
 
 // Set environment for development
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 process.setMaxListeners(0)
 
 // Install `electron-debug` with `devtron`
-require("electron-debug")({ showDevTools: false })
+require("electron-debug")({ showDevTools: true })
 
 // Install `vue-devtools`
 require("electron").app.on("ready", () => {

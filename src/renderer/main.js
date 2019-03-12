@@ -6,14 +6,11 @@ import i18n from "./plugins/lang"
 import "expose-loader?$!jquery"
 import "electron-disable-file-drop"
 import "./plugins/pouchdb"
-import "./plugins/ipc"
-
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { fas } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
 /* topHeader */
-import topHeader from "./components/Header/Header"
+import topHeader from "./components/Commons/Header/Header"
+
+import GlobalEventHandler from "./components/PlayerBar/GlobalEventHandler"
 
 /* vue-modal */
 import VModal from "vue-js-modal"
@@ -36,11 +33,14 @@ import VueClipboard from "vue-clipboard2"
 /* mousetrap */
 import mousetrap from "mousetrap"
 
+import { ipcRenderer } from "electron"
+
 /* ElementUI */
 import {
   Dialog,
   Dropdown,
   DropdownMenu,
+  Autocomplete,
   DropdownItem,
   Input,
   Select,
@@ -80,14 +80,13 @@ import "./assets/css/commons.css"
 import "./assets/css/playlist.css"
 import "./assets/css/collection.css"
 import "./assets/css/search.css"
-
-library.add(fas)
+import "./assets/css/autocomplete.css"
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"))
 Vue.config.productionTip = false
 
 /* global component */
-Vue.component("font-awesome-icon", FontAwesomeIcon)
+Vue.component("global-event-handler", GlobalEventHandler)
 Vue.component("top-header", topHeader)
 
 /* side lib */
@@ -96,6 +95,7 @@ Vue.use(VueScrollTo)
 Vue.use(VueClipboard)
 
 /* vue element-ui  */
+Vue.use(Autocomplete)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
@@ -135,6 +135,8 @@ Vue.prototype.$loading = Loading.service
 Vue.prototype.$message = Message
 Vue.prototype.$version = require("../../package.json").version
 Vue.prototype.$locale = require("electron").remote.app.getLocale()
+Vue.prototype.$ipcRenderer = ipcRenderer
+Vue.prototype.$eventBus = new Vue()
 
 /* eslint-disable no-new */
 const vm = new Vue({
@@ -145,37 +147,8 @@ const vm = new Vue({
   template: "<App/>"
 }).$mount("#app")
 
-// 10분 간격으로 최근 히스토리 20개를 제외하고 삭제한다.
-// 히스토리의 총 개수에서 20개를 뺀 나머지 만큼 오름차순 정렬 후 삭제한다.
-let timer = 6 * 100000
-setInterval(() => {
-  let user = vm.$store.getters.getGoogleProfile.googleId
-  if (user) {
-    vm.$test
-      .find({
-        selector: {
-          type: "history",
-          userId: user
-        }
-      })
-      .then(result => {
-        let docs = result.docs
-        if (docs.length > 0) {
-          let size = docs.length
-          let defaultNum = 20
-          let result = size - defaultNum
-          if (result > defaultNum) {
-            // 0부터 결과개수-1 만큼 삭제 후 갱신
-            docs.splice(0, result - 1)
-            vm.$test.bulkDocs(docs).then(res => {
-              if (res.ok) {
-                console.log("Success history Remove => ", result - 1)
-              }
-            })
-          } else {
-            console.log("Non Removing. history size: " + size)
-          }
-        }
-      })
-  }
-}, timer)
+if (process.env.NODE_ENV !== "development") {
+  setInterval(() => {
+    ipcRenderer.send("event:appStart", {})
+  }, 30000)
+}

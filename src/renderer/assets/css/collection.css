@@ -28,10 +28,11 @@
 }
 
 .channelForm {
-  background-color: #3a8ee6;
+  background-color: #2488f147;
   color: white;
-  font-size: 16px;
-  padding: 6px 15px;
+  font-size: 15px;
+  padding: 2px 15px;
+  border: 1px solid #2488f12e;
 }
 
 .channel-form {
