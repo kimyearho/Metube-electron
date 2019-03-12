@@ -3,8 +3,7 @@ import { googleLogin, getOauth2Client } from "../auth/auth";
 import { exec } from "child_process";
 import log from "electron-log";
 import request from "request";
-import fs from "fs";
-import path from "path";
+import { autoUpdater } from "electron-updater";
 
 let player;
 let mainWindow;
@@ -15,37 +14,7 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
-const deleteChromeCache = function() {
-  log.info("====================== CHROME CACHE CLEAR ======================");
-  var chromeCacheDir = path.join(app.getPath("userData"), "Cache");
-  if (fs.existsSync(chromeCacheDir)) {
-    var files = fs.readdirSync(chromeCacheDir);
-    for (var i = 0; i < files.length; i++) {
-      var filename = path.join(chromeCacheDir, files[i]);
-      if (fs.existsSync(filename)) {
-        try {
-          fs.unlinkSync(filename);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
-  }
-};
-
-// deleteChromeCache()
-
-// if (process.env.NODE_ENV !== "development") {
-//   let shouldQuit = app.makeSingleInstance(() => {
-//     if (mainWindow) {
-//       if (mainWindow.isMinimized()) mainWindow.restore()
-//       mainWindow.focus()
-//     }
-//   })
-//   if (shouldQuit) {
-//     app.quit()
-//   }
-// }
+const gotTheLock = app.requestSingleInstanceLock();
 
 if (process.platform === "darwin") {
   app.dock.hide();
@@ -68,6 +37,8 @@ if (process.env.NODE_ENV !== "production") {
 
 // Create Main Window
 function createWindow() {
+  log.info("================ >>> APP START");
+
   mainWindow = new BrowserWindow({
     width: 368,
     height: 612,
@@ -135,21 +106,34 @@ function createWindow() {
   });
 }
 
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // App start
+  app.on("ready", () => {
+    // local player server
+    if (process.env.NODE_ENV !== "production") {
+      if (process.platform !== "darwin") {
+        exec(".\\node_modules\\.bin\\http-server ./player -p 7070");
+      }
+    }
+    createWindow();
+  });
+}
+
 app.on("activate", () => {
   mainWindow.show();
 });
 app.on("before-quit", () => {
   willQuitApp = true;
-});
-// App start
-app.on("ready", () => {
-  // local player server
-  if (process.env.NODE_ENV !== "production") {
-    if (process.platform !== "darwin") {
-      exec(".\\node_modules\\.bin\\http-server ./player -p 7070");
-    }
-  }
-  createWindow();
 });
 
 app.on("window-all-closed", () => {
@@ -286,3 +270,34 @@ ipcMain.on("player2Win", (e, args) => {
 });
 
 require("../analiytics/analytics")(app);
+
+if (process.env.NODE_ENV === "production") {
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 10 * 3000);
+
+  autoUpdater.on("update-not-available", () => {
+    log.info(">>> No Updates, urrent version is up-to-date.");
+    updater.enabled = true;
+    updater = null;
+  });
+
+  autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: "info",
+      buttons: ["Restart", "Later"],
+      title: "Application Update",
+      message: process.platform === "win32" ? releaseNotes : releaseName,
+      detail: "Found updates, do you want update now?"
+    };
+
+    dialog.showMessageBox(dialogOpts, response => {
+      if (response === 0) autoUpdater.quitAndInstall();
+    });
+  });
+
+  autoUpdater.on("error", message => {
+    log.info(">>> 애플리케이션을 업데이트하는 도중 오류가 발생하였습니다.");
+    log.info(message);
+  });
+}
