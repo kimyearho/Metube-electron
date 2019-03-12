@@ -1,14 +1,19 @@
-# [2019-02-03] v1.4.6 UPDATE
- - MacOS UPDATE
+# [2019-03-12] v1.6.0 UPDATE
 
 <p align="center">
-  <img src="https://i.imgur.com/YdDRBqN.png" />
-  <img src="https://i.imgur.com/tD9fxw4.png" />
+  <img src="https://i.imgur.com/URxMOdv.png" />
+  <img src="https://i.imgur.com/vaQ453k.png" />
 </p>
 
 <p align="center">
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
+
+# Information
+Hi.
+I think some of you have been having problems with apps lately.
+This issue is caused by exceeding the Youtube API daily quota.
+Google does not provide 100.00 per day quota, so I think it is a big issue. In addition, Google does not seem to maintain APIs either. We are currently preparing an alternative. If possible, please use the collection. Thank you.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
@@ -26,8 +31,6 @@ If you like the program, please click on the star! It will help developers a lot
 1. Multiple selection when adding video
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
-4. Improved YouTube playback performance
-5. Typescript conversion
 ***
 
 ### Installation
