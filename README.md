@@ -10,9 +10,9 @@
 </p>
 
 ### Quota issues
-Google does not provide nearly 10,000 quota. This is a very small number that can be used during the development phase. According to the documentation, API keys have been assigned a quota of 10000 from April 2016. You are currently applying for quota and it is unclear whether you are authorized.
+Google does not provide nearly 10,000 quota. This is a very small number that can be used during the development phase. According to the documentation, 10000 quotas have been assigned to API keys since April 2016. You are currently applying for quota and it is unclear whether you are authorized.
 
-<strong>So if you have a Metube user with a high Quota YouTube API key, please me share it.</strong> There is nothing I can do. I would like to continue this project. If possible, minimize your searches and create your own collections to use as collections. The search API consumes a large amount of quota.
+So if you have Metaube users with high quota YouTube API keys, please contribute to me. I would like to continue this project. If possible, minimize your searches and create your own collections to use as collections. The Search API uses a large amount of quota.
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
