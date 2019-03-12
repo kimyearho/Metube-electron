@@ -40,7 +40,7 @@
       tag="md-list"
       v-model="playlist"
       class="musicPlayList"
-      :class="{ dynamicHeight: isMini }"
+      :class="{ dynamicHeight: isMini, one: playlist.length === 1  }"
       animation="150"
       @end="endDrag"
     >
@@ -529,7 +529,7 @@ export default {
      * 이전 페이지로 돌아간다.
      */
     goBack() {
-      this.$router.push(this.$store.getters.getCurrentPath);
+      this.$router.push(this.$store.getters.getIndexPath);
     }
   }
 };
@@ -544,5 +544,8 @@ export default {
   padding: 4px 7px;
   font-size: 12px;
   font-weight: 700;
+}
+.one {
+  height: 260px;
 }
 </style>

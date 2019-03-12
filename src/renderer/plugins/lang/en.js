@@ -72,6 +72,8 @@ export default {
     NO_PLAYLIST: "There are no playlists registered",
     REMOVE_ALBUM: "Are you sure you want to delete this collection?",
     REMOVE_VIDEO: "Are you sure you want to delete the selected video ?",
+    REMOVE_NOT_ALBUM: "The video is currently playing in the playlist and can not be deleted.",
+    REMOVE_ALBUM_SUCCESS: "Collection deleted. Go back to the previous page.",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "PLAY LIST",

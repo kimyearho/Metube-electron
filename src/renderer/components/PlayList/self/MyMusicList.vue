@@ -139,6 +139,9 @@ export default {
   created() {
     this.init();
   },
+  beforeMount() {
+    this.$store.commit("setPath", this.$route.path);
+  },
   mounted() {
     this.feachData();
   },
@@ -303,6 +306,9 @@ export default {
       this.setRemoteSubsetMusicData(docs, deletedItem, "n");
     },
 
+    /**
+     * 실제 DB모델 목록
+     */
     getRemoteDocument() {
       return this.createIndex(["creates"]).then(result => {
         return this.$test.find({
@@ -319,7 +325,31 @@ export default {
       });
     },
 
+    /**
+     * 컬렉션 삭제
+     */
     remove(data) {
+      const musicInfo = this.getMusicInfos();
+
+      // 비디오가 재생중이면
+      if (musicInfo) {
+        const parentId = musicInfo.parentId;
+
+        // 현재 재생중인 음악의 재생목록아이디가 삭제하고자하는 재생목록이라면
+        if (this.collectionDoc._id === parentId) {
+          this.$modal.show("dialog", {
+            title: "Info",
+            text: this.$t("COLLECTION.REMOVE_NOT_ALBUM"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+          return false;
+        }
+      }
+
       this.$modal.show("dialog", {
         title: "Info",
         text: this.$t("COLLECTION.REMOVE_ALBUM"),
@@ -339,14 +369,14 @@ export default {
               setTimeout(() => {
                 this.$modal.show("dialog", {
                   title: "Info",
-                  text: 'Collection deleted. Go back to the previous page.',
+                  text: this.$t("COLLECTION.REMOVE_ALBUM_SUCCESS"),
                   buttons: [
                     {
                       title: "close",
                       handler: () => {
                         setTimeout(() => {
                           this.goBack();
-                          this.$modal.hide('dialog')
+                          this.$modal.hide("dialog");
                         }, 500);
                       }
                     }

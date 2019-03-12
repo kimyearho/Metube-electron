@@ -73,6 +73,8 @@ export default {
     NO_CHANNEL: "등록된 채널이 없습니다. 채널을 등록하세요.",
     REMOVE_ALBUM: "이 앨범을 삭제 하시겠습니까?",
     REMOVE_VIDEO: "선택한 비디오를 삭제 하시겠습니까?",
+    REMOVE_NOT_ALBUM: "비디오가 현재 재생 목록에서 재생 중이므로 이 컬렉션을 삭제할 수 없습니다.",
+    REMOVE_ALBUM_SUCCESS: "컬렉션이 삭제 되었습니다. 버튼을 누르면 목록으로 돌아갑니다.",
     MENU: {
       COLLECTION: "Collections",
       PLAY_LIST: "재생 목록",

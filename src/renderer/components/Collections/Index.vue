@@ -351,4 +351,25 @@ export default {
   color: yellow;
   font-weight: 700;
 }
+
+.el-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.el-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.el-scroll::-webkit-scrollbar-track {
+  background: #1d232f;
+}
+
+.el-scroll::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+
+.el-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 </style>
