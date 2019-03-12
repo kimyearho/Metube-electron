@@ -2,7 +2,7 @@
   "name": "metube",
   "version": "1.6.0",
   "author": "kstory8715 <kstory8715@gmail.com>",
-  "description": "Metube 1.4.5 Pre-Releases!",
+  "description": "Metube 1.6.0",
   "license": "GPL-3.0",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "metube",
+    "productName": "Metube",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
