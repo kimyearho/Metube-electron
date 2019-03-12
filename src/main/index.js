@@ -272,14 +272,14 @@ ipcMain.on("player2Win", (e, args) => {
 require("../analiytics/analytics")(app);
 
 if (process.env.NODE_ENV === "production") {
+
+  // 30분 간격으로 업데이트 조회
   setInterval(() => {
     autoUpdater.checkForUpdates();
-  }, 10 * 3000);
+  }, 1800000);
 
   autoUpdater.on("update-not-available", () => {
-    log.info(">>> No Updates, urrent version is up-to-date.");
-    updater.enabled = true;
-    updater = null;
+    log.info(">>> No Updates, Current version is up-to-date.");
   });
 
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
