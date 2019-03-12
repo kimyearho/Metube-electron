@@ -28,9 +28,9 @@
               <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
 
-              <md-button class="md-raised b-primary c-add" @click="create">
+              <md-button class="md-raised b-primary c-add md-accent" @click="create">
                 <i class="material-icons" style="float:left;">add</i>
-                <span class="create">Create</span>
+                <span :class="{ en_create: isLocale === 'en', ko_create: isLocale === 'ko' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
               </md-button>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>
@@ -192,6 +192,7 @@ export default {
   data() {
     return {
       activeName: "first",
+      isLocale: this.getLocale(),
       playlists: [],
       playlistId: null,
       playType: null,
@@ -320,7 +321,13 @@ export default {
   width: 140px;
 }
 
-.create {
+.ko_create {
+  position: relative;
+  top: 2px;
+  left: 1px;
+}
+
+.en_create {
   position: relative;
   top: 4px;
   left: 1px;

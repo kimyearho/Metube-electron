@@ -83,7 +83,8 @@ export default {
       PLAY_LIST: "재생 목록",
       CHANNEL: "채널"
     },
-    ADD_VIDEO_LABEL: "추가"
+    ADD_VIDEO_LABEL: "추가",
+    CREATE_COLLECTION_LABEL: "생성"
   },
   CONTEXT: {
     MESSAGE: {

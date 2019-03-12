@@ -82,7 +82,8 @@ export default {
       PLAY_LIST: "PLAY LIST",
       CHANNEL: "CHANNEL"
     },
-    ADD_VIDEO_LABEL: "add"
+    ADD_VIDEO_LABEL: "add",
+    CREATE_COLLECTION_LABEL: "Create"
   },
   CONTEXT: {
     MESSAGE: {
