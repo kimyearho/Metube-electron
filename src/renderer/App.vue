@@ -42,8 +42,7 @@ export default {
     }
   },
   mounted() {
-
-    this.loopHistoryMonitering()
+    this.loopHistoryMonitering();
 
     this.$trap.bind("space", () => {
       let playType = this.getPlayType();
@@ -127,33 +126,33 @@ export default {
     },
 
     onNewReleaseCheck() {
-      // this.$db
-      //   .get("17901f376f4ff226c03adecee0004104")
-      //   .then(doc => {
-      //     let live_version = `${doc.version}`;
-      //     let local_version = this.$version;
-      //     if (live_version != local_version) {
-      //       this.$modal.show("dialog", {
-      //         title: "Info",
-      //         text: this.$t("SETTING.NEW_RELEASE"),
-      //         buttons: [
-      //           {
-      //             title: "Yes",
-      //             handler: () => {
-      //               this.$ipcRenderer.send("showGit", null);
-      //               this.$modal.hide("dialog");
-      //             }
-      //           },
-      //           {
-      //             title: "Close"
-      //           }
-      //         ]
-      //       });
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
+      this.$db
+        .get("17901f376f4ff226c03adecee0004104")
+        .then(doc => {
+          let live_version = `${doc.version}`;
+          let local_version = this.$version;
+          if (live_version != local_version) {
+            this.$modal.show("dialog", {
+              title: "Info",
+              text: this.$t("SETTING.NEW_RELEASE"),
+              buttons: [
+                {
+                  title: "Yes",
+                  handler: () => {
+                    this.$ipcRenderer.send("showGit", null);
+                    this.$modal.hide("dialog");
+                  }
+                },
+                {
+                  title: "Close"
+                }
+              ]
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
