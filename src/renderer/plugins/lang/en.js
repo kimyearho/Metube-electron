@@ -75,6 +75,7 @@ export default {
     REMOVE_VIDEO: "Are you sure you want to delete the selected video ?",
     REMOVE_NOT_ALBUM: "The video is currently playing in the playlist and can not be deleted.",
     REMOVE_ALBUM_SUCCESS: "Collection deleted. Go back to the previous page.",
+    CONTINUE: "Sign in to continue playing your music.",
     MENU: {
       COLLECTION: "Collections",
       MY_COLLECTION: "MY COLLECTION",

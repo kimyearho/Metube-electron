@@ -105,7 +105,11 @@
 
       <!-- 페이지의 끝 -->
       <md-list-item v-else>
-        <div v-if="pageNum === lastPageNum && nextPageToken !== null" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
+        <div
+          v-if="pageNum === lastPageNum && nextPageToken !== null"
+          class="loadMoreCenter"
+          :class="{ prev: pageNum !== 1 }"
+        >
           <a class="cursor" @click="prevPageLoad('self')">
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
@@ -263,7 +267,6 @@ export default {
      * 인스턴스 초기화 시 조회되는 재생목록
      */
     feachData() {
-
       this.playlistId = this.$route.params.id;
       this.playType = this.$route.params.playType;
 
@@ -290,41 +293,37 @@ export default {
       const musicInfo = this.getMusicInfos();
 
       initPromise.then(doc => {
-
         // 토큰조회
         this.lastPageToken = doc.lastPageToken;
         this.lastPageNum = doc.totalPage;
 
         // 재생목록 총 개수가 30개 이상일때
         if (doc.totalResults > 30) {
-
           // 토큰이 없으면 처음 조회
           if (this.lastPageToken === "none") {
             this.initWithStart(playlistName, "init");
           } else {
-            this.initWithPlayStart(playlistName)
+            this.initWithPlayStart(playlistName);
           }
         } else {
           // 페이지가 1페이지 뿐일때
           // this.initWithStart(playlistName, "init");
-          this.initWithPlayStart(playlistName)
+          this.initWithPlayStart(playlistName);
         }
       });
     },
 
     initWithPlayStart(playlistName) {
-
       // 재생중인 음악정보
       const musicInfo = this.getMusicInfos();
 
       if (musicInfo) {
-
         let parentPlaylistId = null;
 
         if (this.playType === "play") {
           parentPlaylistId = musicInfo.playlistId;
         } else if (this.playType === "related") {
-          parentPlaylistId = musicInfo.name.split(':')[1]
+          parentPlaylistId = musicInfo.name.split(":")[1];
         } else if (this.playType === "channel") {
           parentPlaylistId = musicInfo.channelId;
         }
@@ -355,11 +354,9 @@ export default {
           // 현재 재생중인 음악정보의 페이지번호와 일치하는 DB 비디오 레코드를 조회하여 랜더링 한다.
           this.initPlaySetting(playlistName, "same");
         }
-        
       } else {
         this.initWithStart(playlistName, "init");
       }
-
     },
 
     /**
@@ -557,9 +554,8 @@ export default {
             result => {
               const docs = result.docs;
               if (docs) {
-
                 let playingItem = docs[nextIndex];
-                if(!playingItem && docs.length === nextIndex) {
+                if (!playingItem && docs.length === nextIndex) {
                   playingItem = docs[0];
                   playingItem.index = 0;
                   playingItem.name = musicInfo.name;
@@ -699,10 +695,9 @@ export default {
         let playingItem = this.playlist[nextIndex];
 
         // 재생목록 총 페이지 수가 1이면 (페이징이 없는 1페이지인경우)
-        if(this.lastPageNum === 1) {
-
+        if (this.lastPageNum === 1) {
           // 그럼 여긴 undefined임
-          if(!playingItem && this.playlist.length === nextIndex) {
+          if (!playingItem && this.playlist.length === nextIndex) {
             playingItem = this.playlist[0];
             playingItem.index = 0;
             playingItem.name = musicInfo.name;
@@ -717,7 +712,7 @@ export default {
         }
 
         if (this.playType === "related") playingItem.mainId = this.videoId;
-  
+
         this.playSetting(playingItem);
         this.nextTrackScroll(500);
       }
@@ -874,7 +869,9 @@ export default {
           });
           return this.$local.put(doc).then(result => {
             if (result.ok) {
-              this.getLog("[MusicPlayList]/[pagingReload] ====> 재생목록정보 업데이트 완료");
+              this.getLog(
+                "[MusicPlayList]/[pagingReload] ====> 재생목록정보 업데이트 완료"
+              );
             }
           });
         }
@@ -913,7 +910,7 @@ export default {
           this.nextPageToken
         );
       } else if (this.playType === "related") {
-        // api -> search 
+        // api -> search
         playlistName = `RELATED:${this.playlistId}`;
         playlistItem = this.youtubePagingRelatedSearch(
           this.playlistId,
@@ -945,7 +942,9 @@ export default {
             this.pagingReload("next", nextPageNum, eventType);
             this.isMore = false;
           } else {
-            this.getLog("[MusicPlayList]/[nextPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회");
+            this.getLog(
+              "[MusicPlayList]/[nextPageLoad] ====> 다음 페이지가 DB에 없어 API를 통해서 조회"
+            );
             // 다음 페이지가 없으므로 새로 조회한다.
             this.$http
               .get(playlistItem)
@@ -1034,7 +1033,6 @@ export default {
 </script>
 
 <style scope>
-
 .pageCenter {
   color: #ffffff;
   margin-left: 140px;

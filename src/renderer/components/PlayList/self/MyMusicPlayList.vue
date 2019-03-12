@@ -10,87 +10,121 @@
     <!-- 타이틀바 컴포넌트 -->
     <top-header :isShow="false" @reloadMusicList="feachData"/>
 
-    <!-- 커버 영역 -->
-    <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
-      </a>
-    </div>
-    <div class>
-      <img class="playlistCover" :src="cover">
-      <div class="playlistTrackinfo">
-        <span class="label_related label_v">{{ category }}</span>
-        <br>
-        <br>
-        <div class="titleflow">
-          <marquee-text
-            class="zaudio_songtitle"
-            :key="coverTitle"
-            :duration="coverTitle.length / 2"
-          >&nbsp; {{ coverTitle }}</marquee-text>
-          <span class="zaudio_songartist">{{ channelTitle }}</span>
-          <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+    <div v-if="isLogin">
+      <!-- 커버 영역 -->
+      <div class="side_menu">
+        <a class="cursor" @click="goBack">
+          <img src="@/assets/images/svg/menu-back.svg" title="Back">
+        </a>
+      </div>
+      <div class>
+        <img class="playlistCover" :src="cover">
+        <div class="playlistTrackinfo">
+          <span class="label_related label_v">{{ category }}</span>
+          <br>
+          <br>
+          <div class="titleflow">
+            <marquee-text
+              class="zaudio_songtitle"
+              :key="coverTitle"
+              :duration="coverTitle.length / 2"
+            >&nbsp; {{ coverTitle }}</marquee-text>
+            <span class="zaudio_songartist">{{ channelTitle }}</span>
+            <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="overay"></div>
+      <div class="overay"></div>
 
-    <!-- 목록 영역 -->
-    <draggable
-      tag="md-list"
-      v-model="playlist"
-      class="musicPlayList"
-      :class="{ dynamicHeight: isMini, one: playlist.length === 1  }"
-      animation="150"
-      @end="endDrag"
-    >
-      <md-list-item
-        v-for="(item, index) in playlist"
-        :id="`item${index}`"
-        :key="item.etag"
-        :class="selectedIndex === index ? 'activeBackground' : ''"
+      <!-- 목록 영역 -->
+      <draggable
+        tag="md-list"
+        v-model="playlist"
+        class="musicPlayList"
+        :class="{ dynamicHeight: isMini, one: playlist.length === 1  }"
+        animation="150"
+        @end="endDrag"
       >
-        <md-avatar style="margin-right: 0;">
-          <img :src="item.thumbnails">
-        </md-avatar>
+        <md-list-item
+          v-for="(item, index) in playlist"
+          :id="`item${index}`"
+          :key="item.etag"
+          :class="selectedIndex === index ? 'activeBackground' : ''"
+        >
+          <md-avatar style="margin-right: 0;">
+            <img :src="item.thumbnails">
+          </md-avatar>
 
-        <span
-          class="md-list-item-text music-title cursor"
-          :class="selectedIndex === index ? 'active' : ''"
-          @click="playItem(index)"
-        >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
+          <span
+            class="md-list-item-text music-title cursor"
+            :class="selectedIndex === index ? 'active' : ''"
+            @click="playItem(index)"
+          >{{ item.title }}</span>
+          <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
+          <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
 
-        <my-context-menu
-          :id="id"
-          :index="index"
-          :videoId="item.videoId"
-          :data="item"
-          @is-success="feachSyncData"
-        />
-      </md-list-item>
+          <my-context-menu
+            :id="id"
+            :index="index"
+            :videoId="item.videoId"
+            :data="item"
+            @is-success="feachSyncData"
+          />
+        </md-list-item>
 
-      <md-list-item>
-        <span class="playlistEnd">
-          <span class="playlistEnd">Thanks for using "Metube"</span>
-        </span>
-      </md-list-item>
-      <div class="bottom">
-        <img src="@/assets/images/youtube/dev.png">
-      </div>
-    </draggable>
+        <md-list-item>
+          <span class="playlistEnd">
+            <span class="playlistEnd">Thanks for using "Metube"</span>
+          </span>
+        </md-list-item>
+        <div class="bottom">
+          <img src="@/assets/images/youtube/dev.png">
+        </div>
+      </draggable>
 
-    <!-- 메인 재생바 컴포넌트 -->
-    <main-player-bar
-      :videoSetting="videoData"
-      @nextMusicPlay="subscribeNextVideo"
-      @previousVideoTrack="previousPlayItem"
-      @nextVideoTrack="nextPlayItem"
-    />
+      <!-- 메인 재생바 컴포넌트 -->
+      <main-player-bar
+        :videoSetting="videoData"
+        @nextMusicPlay="subscribeNextVideo"
+        @previousVideoTrack="previousPlayItem"
+        @nextVideoTrack="nextPlayItem"
+      />
 
-    <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+      <!-- 팝업 컴포넌트 -->
+      <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    </div>
+
+    <!-- 비 로그인 상태 -->
+    <div v-else>
+      <el-row>
+        <el-col>
+          <el-card
+            style="height: 200px; margin-top: 70px; margin-left: 30px; margin-right: 30px;"
+            class="thumb"
+            :body-style="{ padding: '0px' }"
+          >
+            <img
+              class="md-image thumbnail"
+              style="width: 100%; height: 200px;"
+              :src="playingMusicData.thumbnails"
+            >
+          </el-card>
+          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+            <span class="sub">{{ playingMusicData.title }}</span>
+          </div>
+          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+            <span class="sub">{{ $t('COLLECTION.CONTINUE') }}</span>
+          </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <md-button
+              class="cursor md-raised md-primary"
+              style="width: 120px;"
+              @click="signLink"
+            >{{ $t('SIGN.SIGN_IN') }}</md-button>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -117,6 +151,8 @@ export default {
   data() {
     return {
       load: false,
+      isLogin: this.getUserId(),
+      playingMusicData: this.getMusicInfos(),
       isMini: false,
       videoData: null,
       totalTracks: null,
@@ -530,6 +566,12 @@ export default {
      */
     goBack() {
       this.$router.push(this.$store.getters.getIndexPath);
+    },
+
+     signLink() {
+      this.$router.push({
+        name: "login"
+      });
     }
   }
 };

@@ -76,6 +76,7 @@ export default {
     REMOVE_VIDEO: "선택한 비디오를 삭제 하시겠습니까?",
     REMOVE_NOT_ALBUM: "비디오가 현재 컬렉션에서 재생 중이므로 이 컬렉션을 삭제할 수 없습니다.",
     REMOVE_ALBUM_SUCCESS: "컬렉션이 삭제 되었습니다. 버튼을 누르면 목록으로 돌아갑니다.",
+    CONTINUE: "음악을 계속 재생하려면 로그인하십시오.",
     MENU: {
       COLLECTION: "컬렉션",
       MY_COLLECTION: "내 컬렉션",
