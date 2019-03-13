@@ -16,6 +16,7 @@ So if you have Metube users with high quota YouTube API keys, please contribute 
 
 ### Issue alternative
 the application is implemented so that the application of KEY authentication can be applied by changing the key from the outside. I use the app all day except for sleeping time. As a result, you are always monitoring, so if the quota is exceeded, you can temporarily resolve this problem by changing the KEY from the outside.
+***
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
