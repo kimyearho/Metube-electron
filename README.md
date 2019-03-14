@@ -9,11 +9,6 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
-### Quota issues
-Google does not provide nearly 10,000 quota. This is a very small number that can be used during the development phase. According to the documentation, 10000 quotas have been assigned to API keys since April 2016. You are currently applying for quota and it is unclear whether you are authorized.
-
-So if you have Metube users with high quota YouTube API keys, please contribute to me. I would like to continue this project. If possible, minimize your searches and create your own collections to use as collections. The Search API uses a large amount of quota.
-
 ### Issue alternative
 the application is implemented so that the application of KEY authentication can be applied by changing the key from the outside. I use the app all day except for sleeping time. As a result, you are always monitoring, so if the quota is exceeded, you can temporarily resolve this problem by changing the KEY from the outside.
 ***
