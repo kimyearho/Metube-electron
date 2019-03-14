@@ -12,7 +12,7 @@ const state = {
   apiKeys: [],
   searchApiKey: null,
   videoItemsApiKey: null,
-  locale: "en"
+  locale: ""
 }
 
 const getters = {

@@ -30,7 +30,7 @@
 
               <md-button class="md-raised b-primary c-add md-accent" @click="create">
                 <i class="material-icons" style="float:left;">add</i>
-                <span :class="{ en_create: isLocale === 'en', ko_create: isLocale === 'ko' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
+                <span :class="{ en_create: isLocale === 'en-US', ko_create: isLocale === 'ko' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
               </md-button>
             </div>
             <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.INDEX') }}</strong>

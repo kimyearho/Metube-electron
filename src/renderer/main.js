@@ -138,6 +138,9 @@ Vue.prototype.$locale = require("electron").remote.app.getLocale()
 Vue.prototype.$ipcRenderer = ipcRenderer
 Vue.prototype.$eventBus = new Vue()
 
+const osLocale = i18n.locale
+console.log(osLocale)
+
 /* eslint-disable no-new */
 const vm = new Vue({
   components: { App },
@@ -146,6 +149,8 @@ const vm = new Vue({
   i18n,
   template: "<App/>"
 }).$mount("#app")
+
+vm.$store.commit('setLocale', osLocale)
 
 if (process.env.NODE_ENV !== "development") {
   setInterval(() => {

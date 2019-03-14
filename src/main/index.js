@@ -273,6 +273,8 @@ require("../analiytics/analytics")(app);
 
 if (process.env.NODE_ENV === "production") {
 
+  autoUpdater.checkForUpdates();
+
   // 30분 간격으로 업데이트 조회
   setInterval(() => {
     autoUpdater.checkForUpdates();
