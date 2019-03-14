@@ -113,6 +113,20 @@ const actions = {
         vm.$store.commit("setKeys", keyList)
       }
     })
+  },
+  setAuthKeyChange(context, { vm }) {
+    vm.$db.get("cfb9d27f0b59d3fbc55073830f01db05").then(result => {
+      const auth = result.auth
+      let envType = process.env.NODE_ENV === "development" ? "dev" : "production"
+      if(envType === 'production') {
+        envType = 'etc1'
+      }
+      const service = vm.$lodash.find(auth, { type: envType })
+      if (service.type === envType) {
+        const keyList = service.key_list
+        vm.$store.commit("setKeys", keyList)
+      }
+    })
   }
 }
 

@@ -7,22 +7,32 @@
 
 <template>
   <div>
-    
+
     <!-- 타이틀바 컴포넌트 -->
-    <top-header ref="header" 
-      :data="{ playType: 'list' }" 
-      @scrollTop="searchTop"/>
+    <top-header
+      ref="header"
+      :data="{ playType: 'list' }"
+      @scrollTop="searchTop"
+    />
 
     <!-- 검색 및 자동완성 영역 -->
     <div class="search">
-      <auto-complate ref="autoComplate" 
-        :userSearchQuery="searchText" 
-        @searchQuery="itemSelected" />
+      <auto-complate
+        ref="autoComplate"
+        :userSearchQuery="searchText"
+        @searchQuery="itemSelected"
+      />
     </div>
 
     <!-- 사용자가 검색한 키워드 -->
-    <div class="tag" v-show="isTag">
-      <span v-if="searchKeywords.length === 0" class="no_keyword">
+    <div
+      class="tag"
+      v-show="isTag"
+    >
+      <span
+        v-if="searchKeywords.length === 0"
+        class="no_keyword"
+      >
         <i class="el-icon-warning"></i>
         {{ $t('COMMONS.NO_KEYWORD') }}
       </span>
@@ -36,7 +46,10 @@
         :key="item"
       >{{ item }}</el-button>
     </div>
-    <md-button class="md-raised md-primary searchKeywords" @click="showTag">{{ $t('MAIN.HISTORY.RECENT') }}</md-button>
+    <md-button
+      class="md-raised md-primary searchKeywords"
+      @click="showTag"
+    >{{ $t('MAIN.HISTORY.RECENT') }}</md-button>
     <!-- END 사용자가 검색한 키워드 -->
 
     <!-- 다른 사용자가 감상했던 비디오 -->
@@ -50,7 +63,10 @@
       style="padding: 10px 0px 10px 0px;
     background-color: #1e2431 ;"
     >
-      <el-carousel-item v-for="(item, index) in recommandList" :key="index">
+      <el-carousel-item
+        v-for="(item, index) in recommandList"
+        :key="index"
+      >
         <img
           class="md-image"
           style="border: 1px solid #606266;"
@@ -59,13 +75,20 @@
           :src="item.thumbnail"
           @click="route(item)"
         >
-        <span class="recommandMusic" @click="route(item)">{{ item.title.substring(0, 30) }} ..</span>
+        <span
+          class="recommandMusic"
+          @click="route(item)"
+        >{{ item.title.substring(0, 30) }} ..</span>
       </el-carousel-item>
     </el-carousel>
     <!-- END 다른 사용자가 감상했던 비디오 -->
 
     <!-- 검색 목록 -->
-    <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
+    <md-list
+      id="list"
+      class="searchList"
+      :class="{ subHightAuto: isMini }"
+    >
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in searchList"
@@ -74,41 +97,64 @@
         @click="route(item)"
       >
         <md-avatar style="margin-right: 0;">
-          <img :src="item.imageInfo" alt="People">
+          <img
+            :src="item.imageInfo"
+            alt="People"
+          >
         </md-avatar>
 
         <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
-        
-        <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-        <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive === 'none'">{{ item.duration }}</span>
+
+        <span
+          class="label_channel"
+          v-if="item.otherChannelId"
+        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span
+          class="label_playlist"
+          v-if="item.playlistId"
+        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive === 'none'"
+        >{{ item.duration }}</span>
         <span
           class="label_live"
           v-if="item.videoId && item.isLive === 'live'"
         >{{ $t('COMMONS.LABEL.LIVE') }}</span>
       </md-list-item>
       <md-list-item>
-        <span v-if="!isMore" @click="nextPageLoad" class="searchPagingCenter">
+        <span
+          v-if="!isMore"
+          @click="nextPageLoad"
+          class="searchPagingCenter"
+        >
           <a class="cursor">
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span v-if="isMore" class="searchPagingCenter" style="color:#ffffff;">LOADING ...</span>
+        <span
+          v-if="isMore"
+          class="searchPagingCenter"
+          style="color:#ffffff;"
+        >LOADING ...</span>
       </md-list-item>
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
       </div>
     </md-list>
     <!-- 검색 목록 -->
-    
+
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading :init="initLoading" v-show="!load"/>
+      <loading
+        :init="initLoading"
+        v-show="!load"
+      />
     </transition>
 
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
   </div>
 </template>
 
@@ -262,8 +308,24 @@ export default {
                 this.load = true;
               });
           })
-          .catch(error => {
-            console.error(error);
+          .catch(err => {
+            // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
+            console.error(err)
+
+            this.$store.dispatch("setAuthKeyChange", { vm: this }).then(() => {
+              setTimeout(() => {
+                const keyList = this.$store.getters.getKeys;
+                const searchKey = this.$lodash.find(keyList, { query: "search" });
+                const videoItemsKey = this.$lodash.find(keyList, {
+                  query: "videoItems"
+                });
+                this.SEARCH_KEY = searchKey.apiKey;
+                this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
+                this.init(this.searchText);
+                this.$set(this, "initLoading", false);
+              }, 3500);
+            })
+
           });
       } else {
         this.searchList = totalSearchList;
@@ -445,5 +507,4 @@ export default {
   padding-left: 5px;
   color: #ffffff;
 }
-
 </style>

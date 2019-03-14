@@ -35,12 +35,6 @@ export default {
       status: []
     };
   },
-  created() {
-    // 프로덕션 환경에서만 버전체크 실행
-    if (process.env.NODE_ENV !== "development") {
-      // this.onNewReleaseCheck();
-    }
-  },
   mounted() {
     this.loopHistoryMonitering();
 
@@ -123,37 +117,8 @@ export default {
             });
         }
       }, 6 * 100000);
-    },
-
-    onNewReleaseCheck() {
-      this.$db
-        .get("17901f376f4ff226c03adecee0004104")
-        .then(doc => {
-          let live_version = `${doc.version}`;
-          let local_version = this.$version;
-          if (live_version != local_version) {
-            this.$modal.show("dialog", {
-              title: "Info",
-              text: this.$t("SETTING.NEW_RELEASE"),
-              buttons: [
-                {
-                  title: "Yes",
-                  handler: () => {
-                    this.$ipcRenderer.send("showGit", null);
-                    this.$modal.hide("dialog");
-                  }
-                },
-                {
-                  title: "Close"
-                }
-              ]
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
+
   }
 };
 </script>
