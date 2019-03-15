@@ -4,7 +4,11 @@ import koLocale from "./ko"
 import VueI18n from "vue-i18n"
 Vue.use(VueI18n)
 
-const defaultLocale = require("electron").remote.app.getLocale()
+let defaultLocale = require("electron").remote.app.getLocale()
+
+if(defaultLocale !== 'ko' && defaultLocale !== 'en-US') {
+  defaultLocale = 'en-US'
+}
 
 const messages = {
   'ko': {

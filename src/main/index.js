@@ -149,6 +149,7 @@ ipcMain.on("main:googleAuth", () => {
     getOauth2Client()
       .getToken(code)
       .then(res => {
+        console.log(res)
         if (res.tokens.access_token) {
           let requestURL = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${
             res.tokens.access_token

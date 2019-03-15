@@ -245,7 +245,7 @@ export default {
           this.recommandList = this.$lodash
             .chain(data)
             .orderBy(["creates"], ["desc"])
-            .take(30)
+            .take(50)
             .shuffle()
             .value();
           this.loading = false;
@@ -312,19 +312,19 @@ export default {
             // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
             console.error(err)
 
-            this.$store.dispatch("setAuthKeyChange", { vm: this }).then(() => {
-              setTimeout(() => {
-                const keyList = this.$store.getters.getKeys;
-                const searchKey = this.$lodash.find(keyList, { query: "search" });
-                const videoItemsKey = this.$lodash.find(keyList, {
-                  query: "videoItems"
-                });
-                this.SEARCH_KEY = searchKey.apiKey;
-                this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
-                this.init(this.searchText);
-                this.$set(this, "initLoading", false);
-              }, 3500);
-            })
+            // this.$store.dispatch("setAuthKeyChange", { vm: this }).then(() => {
+            //   setTimeout(() => {
+            //     const keyList = this.$store.getters.getKeys;
+            //     const searchKey = this.$lodash.find(keyList, { query: "search" });
+            //     const videoItemsKey = this.$lodash.find(keyList, {
+            //       query: "videoItems"
+            //     });
+            //     this.SEARCH_KEY = searchKey.apiKey;
+            //     this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
+            //     this.init(this.searchText);
+            //     this.$set(this, "initLoading", false);
+            //   }, 3500);
+            // })
 
           });
       } else {
