@@ -8,8 +8,12 @@ const osLocale = require("os-locale");
 let defaultLocale = osLocale.sync()
 console.log(defaultLocale)
 
-if (defaultLocale !== "ko_KR" && defaultLocale !== "en_US") {
-  defaultLocale = "en_US";
+if(defaultLocale === 'ko_KR') {
+  defaultLocale = 'ko_KR'
+} else if(defaultLocale === 'en_US') {
+  defaultLocale = 'en_US'
+} else {
+  defaultLocale = 'en_US'
 }
 
 const messages = {
