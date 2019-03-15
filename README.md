@@ -9,6 +9,11 @@
   <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
 </p>
 
+### A must read
+Hello.
+Now many of you are using different versions. "Metube" updates very quickly. Automatic updates are not supported for versions 1.6.0 or earlier, and we cannot provide additional support. So please always keep the latest version. Thank you.
+<strong>Automatic updates are supported from 1.6.0 version.</strong>
+
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
 We are creating a simple  YouTube video player. The main purpose is a music player, but YouTube is video-based, so you can use it as a video player or you can watch all videos without advertising. Please see below for details.
