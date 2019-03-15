@@ -73,6 +73,7 @@
     "moment": "^2.22.2",
     "mousetrap": "^1.6.2",
     "nprogress": "^0.2.0",
+    "os-locale": "^3.1.0",
     "pouchdb-adapter-http": "^7.0.0",
     "pouchdb-adapter-idb": "^7.0.0",
     "pouchdb-browser": "^7.0.0",

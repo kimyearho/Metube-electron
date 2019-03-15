@@ -86,11 +86,11 @@ export default {
       novalue: null,
       localeOptions: [
         {
-          value: "en-US",
+          value: "en_US",
           label: "English"
         },
         {
-          value: "ko",
+          value: "ko_KR",
           label: "한국어"
         }
       ],
