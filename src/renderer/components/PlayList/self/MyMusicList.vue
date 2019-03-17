@@ -62,15 +62,9 @@
         >{{ item.title }}</span>
         <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
         <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-        <!-- 내 확장메뉴 -->
-        <my-context-menu
-          :id="id"
-          :index="index"
-          :videoId="item.videoId"
-          :data="item"
-          @is-cover="reloadCollection"
-          @is-success="feachData"
-        />
+        <a class="cursor" @click="openContext(item, index)">
+          <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        </a>
         <!-- End -->
       </md-list-item>
       <md-list-item>
@@ -94,6 +88,16 @@
 
     <!-- 팝업 컴포넌트 -->
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
+
+    <!-- 내 확장메뉴 -->
+    <my-context-menu
+      :index="selectedIndex"
+      :data="selectedData"
+      :isShow="contextShow"
+      @close="contextShow = false"
+      @is-cover="reloadCollection"
+      @is-success="feachData"
+    />
   </div>
 </template>
 
@@ -124,6 +128,9 @@ export default {
       load: false,
       isMini: false,
       isModify: false,
+      contextShow: false,
+      selectedIndex: 0,
+      selectedData: null,
       totalTracks: 0,
       id: null,
       data: null,
@@ -153,6 +160,12 @@ export default {
       this.category = this.collectionDoc.category;
       this.cover = this.collectionDoc.thumbnails;
       this.coverTitle = this.collectionDoc.title;
+    },
+
+    openContext(data, index) {
+      this.$set(this, 'selectedIndex', index);
+      this.$set(this, 'selectedData', data);
+      this.contextShow = true
     },
 
     endDrag(value) {

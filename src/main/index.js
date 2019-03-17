@@ -213,16 +213,7 @@ ipcMain.on("button:minimize", () => {
 
 // Youtube Watch
 ipcMain.on("button:watchYoutubePopup", (e, url) => {
-  popupWindow = new BrowserWindow({
-    width: 1200,
-    height: 720,
-    title: "MeTube - Watch Youtube"
-  });
-  popupWindow.loadURL(url);
-  popupWindow.on("close", e => {
-    popupWindow.hide();
-    popupWindow = null;
-  });
+  shell.openExternal(url);
 });
 
 // Setting - AlwaysStop

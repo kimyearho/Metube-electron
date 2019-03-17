@@ -92,6 +92,7 @@ export default {
       CLIPBOARD_FAIL: "😥 링크를 클립보드에 저장에 실패했습니다.",
       VIDEO_REMOVE_FAIL: "😥 재생중인 비디오는 삭제할 수 없습니다.",
       COVER_CHANGE: "이 비디오의 썸네일 이미지로 내 컬렉션 커버를 변경하시겠습니까?",
+      COVER_CHANGE_SUCCESS: "😁 이 컬렉션의 커버 이미지가 변경 되었습니다. (재생중일때는 표시 되지 않습니다)"
     }
   },
   HISTORY: {

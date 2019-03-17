@@ -1,33 +1,32 @@
 /*--------------------------------------------------------------------------------------------- *
 Licensed under the GPL-3.0 License. See License.txt in the project root for license information. *
 You can not delete this comment when you deploy an application.
-*--------------------------------------------------------------------------------------------*/ 'use
-strict';
+*--------------------------------------------------------------------------------------------*/ 
+'use strict';
 
 <template>
   <div>
-    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
-      <a class="cursor">
-        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
-      </a>
-      <el-dropdown-menu slot="dropdown" v-if="videoId === data.videoId">
-        <el-dropdown-item class="bold" command="A1" :disabled="user === null">
-          <i class="el-icon-news"></i> Open Youtube
-        </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A5" :disabled="user === null">
-          <i class="el-icon-edit-outline"></i> Change Cover
-        </el-dropdown-item>
-        <!-- <el-dropdown-item class="bold" command="A2" :disabled="user === null">
-          <i class="el-icon-share"></i> Social Share
-        </el-dropdown-item>-->
-        <el-dropdown-item class="bold" command="A3" :disabled="user === null">
-          <i class="el-icon-star-on"></i> Link Copy
-        </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A4" :disabled="user === null">
-          <i class="el-icon-delete"></i> Remove
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-dialog
+      class="contextModal"
+      :visible="isShow"
+      style="text-align:center;padding: 14px;"
+      :show-close="false"
+      :before-close="closeModal"
+      :append-to-body="true"
+    >
+      <md-button class="md-raised" @click="watchYoutube">
+        <i class="el-icon-news"></i> Open Youtube
+      </md-button>
+      <md-button class="md-raised md-primary" @click="changeCover">
+        <i class="el-icon-edit-outline"></i> Change Cover
+      </md-button>
+      <md-button class="md-raised" @click="copyClipboard">
+        <i class="el-icon-star-on"></i> Link Copy
+      </md-button>
+      <md-button class="md-raised md-accent" @click="remove">
+        <i class="el-icon-delete"></i> Remove
+      </md-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -38,15 +37,16 @@ export default {
   name: "MyContextMenu",
   mixins: [StoreMixin],
   props: {
-    id: String,
-    videoId: String,
+    isShow: {
+      type: Boolean,
+      default: false
+    },
     index: Number,
     data: Object
   },
   data() {
     return {
-      user: null,
-      isShare: false
+      user: null
     };
   },
   mounted() {
@@ -54,93 +54,92 @@ export default {
   },
   methods: {
     closeModal() {
-      this.isShare = false;
+      this.$emit("close");
     },
-    menuEvent(ev) {
-      if (ev === "A1") {
-        this.watchYoutube();
-      } else if (ev === "A2") {
-        this.isShare = true;
-      } else if (ev === "A3") {
-        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
-        let self = this;
-        this.$copyText(link).then(
-          function(e) {
-            self.$modal.show("dialog", {
-              title: "Success",
-              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
-          },
-          function(e) {
-            self.$modal.show("dialog", {
-              title: "Error",
-              text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
-          }
-        );
-      } else if (ev === "A4") {
-        let musicInfo = this.getMusicInfos();
-        if (musicInfo) {
-          if (this.videoId === musicInfo.videoId) {
-            if (musicInfo.type !== "mycollectionItem") {
-              // 삭제
-              this.deleteDialog();
-            } else {
-              this.$modal.show("dialog", {
-                title: "Info",
-                text: this.$t("CONTEXT.MESSAGE.VIDEO_REMOVE_FAIL"),
-                buttons: [
-                  {
-                    title: "Close"
-                  }
-                ]
-              });
+    copyClipboard() {
+      let link = `https://www.youtube.com/watch?v=${this.data.videoId}`;
+      let self = this;
+      this.$copyText(link).then(
+        function(e) {
+          self.closeModal();
+          self.$modal.show("dialog", {
+            title: "Success",
+            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+        },
+        function(e) {
+          self.$modal.show("dialog", {
+            title: "Error",
+            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+        }
+      );
+    },
+    changeCover() {
+      this.closeModal();
+      this.$modal.show("dialog", {
+        title: "Info",
+        text: this.$t("CONTEXT.MESSAGE.COVER_CHANGE"),
+        buttons: [
+          {
+            title: "Yes",
+            handler: () => {
+              this.updateMyCollectionCover();
+              this.$modal.hide("dialog");
             }
-          } else {
+          },
+          {
+            title: "Close"
+          }
+        ]
+      });
+    },
+    remove() {
+      let musicInfo = this.getMusicInfos();
+      if (musicInfo) {
+        if (this.data.videoId === musicInfo.videoId) {
+          if (musicInfo.type !== "mycollectionItem") {
+            // 삭제
             this.deleteDialog();
+          } else {
+            this.$modal.show("dialog", {
+              title: "Info",
+              text: this.$t("CONTEXT.MESSAGE.VIDEO_REMOVE_FAIL"),
+              buttons: [
+                {
+                  title: "Close"
+                }
+              ]
+            });
           }
         } else {
           this.deleteDialog();
         }
       } else {
-        // A5
-        this.$modal.show("dialog", {
-          title: "Info",
-          text: this.$t("CONTEXT.MESSAGE.COVER_CHANGE"),
-          buttons: [
-            {
-              title: "Yes",
-              handler: () => {
-                this.updateMyCollectionCover();
-                this.$modal.hide("dialog");
-              }
-            },
-            {
-              title: "Close"
-            }
-          ]
-        });
+        this.deleteDialog();
       }
     },
     watchYoutube() {
-      if (this.videoId) {
+      if (this.data.videoId) {
+        this.closeModal();
         this.$ipcRenderer.send(
           "button:watchYoutubePopup",
-          `https://www.youtube.com/watch?v=${this.videoId}`
+          `https://www.youtube.com/watch?v=${this.data.videoId}`
         );
       }
     },
     deleteDialog() {
+      this.closeModal()
       this.$modal.show("dialog", {
         title: "Info",
         text: this.$t("COLLECTION.REMOVE_VIDEO"),
@@ -180,7 +179,7 @@ export default {
         );
         this.getLog(
           "[MyContextMenu]/[delete] 실제 DB에서 삭제한 비디오 아이디 ====> ",
-          this.videoId
+          this.data.videoId
         );
         if (result.ok) {
           if (this.getMusicInfos()) {
@@ -204,7 +203,7 @@ export default {
 
           // 삭제 후 삭제한 비디오아이디를 전달한다.
           this.$emit("is-success", {
-            deletedVideoId: this.videoId,
+            deletedVideoId: this.data.videoId,
             myCollectionId: parentId
           });
         }
@@ -218,6 +217,23 @@ export default {
 .wrapper {
   width: 320px;
   height: 42px;
+}
+
+.contextModal >>> .el-dialog {
+  position: relative;
+  margin-top: 35vh !important;
+  margin: 0 auto 50px;
+  background: #242d40de;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 340px !important;
+}
+
+.contextModal >>> .el-dialog__header {
+  padding: 0px;
 }
 
 .el-mgn {

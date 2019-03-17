@@ -67,7 +67,7 @@ export default {
   COLLECTION: {
     INDEX: "Only the top 4 are displayed for each item",
     ALBUM_INDEX: "All playlists are registered here.",
-    NO_LOGIN: "Please try again after logging in",
+    NO_LOGIN: "You must be signed in to use this feature.",
     NO_LOGIN_BUTTON_LINK: "Go to login",
     NO_CHANNEL: "You do not have any Channel registered.",
     NO_PLAYLIST: "There are no playlists registered",
@@ -91,10 +91,11 @@ export default {
       CLIPBOARD_FAIL: "😥 Failed to copy link to clipboard.",
       VIDEO_REMOVE_FAIL: "😥 You can not delete videos that are playing",
       COVER_CHANGE: "Would you like to change the image of the selected video to my collection cover?",
+      COVER_CHANGE_SUCCESS: "😁 The cover of this collection has changed. (Not displayed during playback)"
     }
   },
   HISTORY: {
-    NO_LOGIN: "Please try again after logging in",
+    NO_LOGIN: "You must be signed in to use this feature.",
     MENU_NAME: "Play History",
     MENU_DESC: "A list of 20 videos you recently watched."
   }

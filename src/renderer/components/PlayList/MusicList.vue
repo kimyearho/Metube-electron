@@ -66,7 +66,9 @@
         >{{ item.title }}</span>
         <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
         <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <a class="cursor" @click="openContext(item)">
+          <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        </a>
       </md-list-item>
       <md-list-item v-if="isNext">
         <span class="loadMoreCenter">
@@ -86,6 +88,8 @@
 
     <!-- 서브 플레이어 -->
     <sub-player-bar v-show="isMini"/>
+
+    <context-menu :isShow="contextShow" :data="selectedData" @close="contextShow = false"/>
 
     <!-- 팝업 컴포넌트 -->
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
@@ -119,6 +123,8 @@ export default {
       isNext: true,
       isMore: false,
       isLikeToggle: false,
+      contextShow: false,
+      selectedData: null,
       cover: "",
       coverTitle: "",
       channelTitle: "",
@@ -139,6 +145,10 @@ export default {
     this.feachData();
   },
   methods: {
+    openContext(data) {
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
+    },
     feachData() {
       // 현재 음악이 재생중인지 여부 체크
       const musicInfo = this.getMusicInfos();
@@ -170,7 +180,6 @@ export default {
             let doc = result.docs[0];
 
             if (doc) {
-
               // 필요한 정보 설정
               this.playlistInfoId = doc._id;
               this.playlistTitle = doc.playlistTitle;

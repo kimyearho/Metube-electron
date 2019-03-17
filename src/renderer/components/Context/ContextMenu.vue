@@ -5,25 +5,24 @@ You can not delete this comment when you deploy an application.
 
 <template>
   <div>
-    <el-dropdown trigger="click" @command="menuEvent" style="padding-left:5px;">
-      <a class="cursor">
-        <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
-      </a>
-      <el-dropdown-menu slot="dropdown" v-show="videoId === data.videoId">
-        <el-dropdown-item class="bold" command="A1">
-          <i class="el-icon-news"></i> Open Youtube
-        </el-dropdown-item>
-        <el-dropdown-item class="bold" command="A2" :disabled="isCheck || isSign === null">
-          <i class="el-icon-plus"></i> Add to Collection
-        </el-dropdown-item>
-        <!-- <el-dropdown-item class="bold" command="A3">
-          <i class="el-icon-share"></i> Social Share
-        </el-dropdown-item>-->
-        <el-dropdown-item class="bold" command="A4">
-          <i class="el-icon-star-on"></i> Link Copy
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-dialog
+      class="contextModal"
+      :visible="isShow"
+      style="text-align:center;padding: 14px;"
+      :show-close="false"
+      :before-close="closeContextModal"
+      :append-to-body="true"
+    >
+      <md-button class="md-raised md-primary" @click="addCollection">
+        <i class="el-icon-plus"></i> Add to Collection
+      </md-button>
+      <md-button class="md-raised" @click="watchYoutube">
+        <i class="el-icon-news"></i> Open Youtube
+      </md-button>
+      <md-button class="md-raised" @click="copyClipboard">
+        <i class="el-icon-star-on"></i> Link Copy
+      </md-button>
+    </el-dialog>
     <registered-music-list :isOpen="registerOpen" :data="data" @closeModal="closeModal"/>
   </div>
 </template>
@@ -38,7 +37,10 @@ export default {
     RegisteredMusicList
   },
   props: {
-    videoId: String,
+    isShow: {
+      type: Boolean,
+      default: false
+    },
     data: Object
   },
   data() {
@@ -53,56 +55,65 @@ export default {
     this.isSign = this.getUserId();
   },
   methods: {
-    menuEvent(ev) {
-      if (ev === "A1") {
-        this.watchYoutube();
-      } else if (ev === "A2") {
-        this.addCollection();
-      } else if (ev === "A3") {
-        this.isShare = true;
-      } else if (ev === "A4") {
-        let link = `https://www.youtube.com/watch?v=${this.videoId}`;
-        let self = this;
-        this.$copyText(link).then(
-          function(e) {
-            self.$modal.show("dialog", {
-              title: "Success",
-              text: "😁 The link has been saved to the clipboard.",
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
-          },
-          function(e) {
-            self.$modal.show("dialog", {
-              title: "Error",
-              text: "😥 Failed to copy link to clipboard.",
-              buttons: [
-                {
-                  title: "Close"
-                }
-              ]
-            });
-          }
-        );
-      }
+    closeContextModal() {
+      this.$emit("close");
+    },
+    copyClipboard() {
+      let link = `https://www.youtube.com/watch?v=${this.data.videoId}`;
+      let self = this;
+      this.$copyText(link).then(
+        function(e) {
+          self.closeContextModal();
+          self.$modal.show("dialog", {
+            title: "Success",
+            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+        },
+        function(e) {
+          self.$modal.show("dialog", {
+            title: "Error",
+            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
+            buttons: [
+              {
+                title: "Close"
+              }
+            ]
+          });
+        }
+      );
     },
     watchYoutube() {
-      if (this.videoId) {
+      this.closeContextModal();
+      if (this.data.videoId) {
         this.$ipcRenderer.send(
           "button:watchYoutubePopup",
-          `https://www.youtube.com/watch?v=${this.videoId}`
+          `https://www.youtube.com/watch?v=${this.data.videoId}`
         );
       }
     },
     addCollection() {
-      this.registerOpen = true;
+      this.closeContextModal();
+      if (this.isSign) {
+        this.registerOpen = true;
+      } else {
+        this.$modal.show("dialog", {
+          title: "Info",
+          text: this.$t("COLLECTION.NO_LOGIN"),
+          buttons: [
+            {
+              title: "Close"
+            }
+          ]
+        });
+      }
     },
     closeModal(is) {
       this.registerOpen = is;
-      this.isShare = is;
     }
   }
 };
@@ -112,6 +123,23 @@ export default {
 .wrapper {
   width: 320px;
   height: 42px;
+}
+
+.contextModal >>> .el-dialog {
+  position: relative;
+  margin-top: 35vh !important;
+  margin: 0 auto 50px;
+  background: #242d40de;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 340px !important;
+}
+
+.contextModal >>> .el-dialog__header {
+  padding: 0px;
 }
 
 .el-mgn {

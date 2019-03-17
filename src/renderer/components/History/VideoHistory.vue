@@ -22,7 +22,9 @@
 
           <span class="md-list-item-text music-title cursor">{{ item.title }}</span>
           <span class="label_video">{{ item.duration }}</span>
-          <context-menu :videoId="item.videoId" :data="item"/>
+          <a class="cursor" @click="openContext(item)">
+            <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+          </a>
         </md-list-item>
         <div class="bottom" v-if="playlist.length > 0">
           <img src="@/assets/images/youtube/dev.png">
@@ -46,6 +48,8 @@
       <loading v-show="!load"/>
     </transition>
 
+    <context-menu :isShow="contextShow" :data="selectedData" @close="contextShow = false"/>
+
     <!-- 서브 플레이어 -->
     <sub-player-bar v-show="isMini"/>
   </div>
@@ -68,9 +72,11 @@ export default {
   },
   data() {
     return {
+      contextShow: false,
       isLogin: false,
       isMini: false,
       load: false,
+      selectedData: null,
       playlist: []
     };
   },
@@ -89,6 +95,10 @@ export default {
     }
   },
   methods: {
+    openContext(data) {
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
+    },
     getHistory() {
       this.createIndex(["creates"]).then(() => {
         this.$test

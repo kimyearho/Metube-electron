@@ -62,14 +62,9 @@
           >{{ item.title }}</span>
           <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
           <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-
-          <my-context-menu
-            :id="id"
-            :index="index"
-            :videoId="item.videoId"
-            :data="item"
-            @is-success="feachSyncData"
-          />
+          <a class="cursor" @click="openContext(item, index)">
+            <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+          </a>
         </md-list-item>
 
         <md-list-item>
@@ -88,6 +83,15 @@
         @nextMusicPlay="subscribeNextVideo"
         @previousVideoTrack="previousPlayItem"
         @nextVideoTrack="nextPlayItem"
+      />
+
+      <my-context-menu
+        :index="selectedContextIndex"
+        :data="selectedData"
+        :isShow="contextShow"
+        @close="contextShow = false"
+        @is-cover="reloadCollection"
+        @is-success="feachSyncData"
       />
 
       <!-- 팝업 컴포넌트 -->
@@ -153,6 +157,9 @@ export default {
       load: false,
       isLogin: this.getUserId(),
       playingMusicData: this.getMusicInfos(),
+      selectedContextIndex: 0,
+      selectedData: null,
+      contextShow: false,
       isMini: false,
       videoData: null,
       totalTracks: null,
@@ -169,7 +176,7 @@ export default {
     };
   },
   mounted() {
-    this.$ga.screenview('MyMusicPlayList')
+    this.$ga.screenview("MyMusicPlayList");
     this.getCategory();
   },
   methods: {
@@ -182,6 +189,24 @@ export default {
           this.category = result.category;
           this.feachData();
         }
+      });
+    },
+
+    openContext(data, index) {
+      this.$set(this, "selectedContextIndex", index);
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
+    },
+
+    reloadCollection() {
+      this.$modal.show("dialog", {
+        title: "Success",
+        text: this.$t('CONTEXT.COVER_CHANGE_SUCCESS'),
+        buttons: [
+          {
+            title: "Close"
+          }
+        ]
       });
     },
 
@@ -516,10 +541,17 @@ export default {
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
-      this.$ga.event("MyCollection", this.getUserId(), this.selectedIndex, videoId);
+      this.$ga.event(
+        "MyCollection",
+        this.getUserId(),
+        this.selectedIndex,
+        videoId
+      );
       this.$ga.page({
-        page: `MyCollection/${this.getUserId()}/${this.selectedIndex}/${videoId}`,
-        title: "MyCollectionPlay",
+        page: `MyCollection/${this.getUserId()}/${
+          this.selectedIndex
+        }/${videoId}`,
+        title: "MyCollectionPlay"
       });
 
       if (process.env.NODE_ENV !== "development") {
