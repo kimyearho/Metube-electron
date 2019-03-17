@@ -68,14 +68,11 @@ export default {
             message: message
           };
         }
-        this.$ipcRenderer.send("eventLogger", logger);
+        // this.$ipcRenderer.send("eventLogger", logger);
       }
     },
     getNextToken() {
       return this.$store.getters.getNextToken;
-    },
-    closeFab() {
-      this.$refs.fab.MdSpeedDial.active = false;
     },
     insertVideoHistory(data) {
       this.createIndex(["type", "userId", "videoId"]).then(() => {

@@ -146,14 +146,16 @@ app.on("window-all-closed", () => {
 ipcMain.on("main:googleAuth", () => {
   console.log("Google Youtube Oauth2.0 Start");
   googleLogin(mainWindow).then(code => {
+    console.log('code => ', code)
     getOauth2Client()
       .getToken(code)
       .then(res => {
-        console.log(res)
+        console.log('res => ', res)
         if (res.tokens.access_token) {
           let requestURL = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${
             res.tokens.access_token
           }`;
+          console.log('requestUrl => ', requestURL)
           request.get(requestURL, (error, response, body) => {
             if (response.statusCode === 200) {
               mainWindow.webContents.send("render:googleAuth", {

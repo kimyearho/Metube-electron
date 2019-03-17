@@ -4,18 +4,6 @@ import koLocale from "./ko";
 import VueI18n from "vue-i18n";
 Vue.use(VueI18n);
 
-const osLocale = require("os-locale");
-let defaultLocale = osLocale.sync()
-console.log(defaultLocale)
-
-if(defaultLocale === 'ko_KR') {
-  defaultLocale = 'ko_KR'
-} else if(defaultLocale === 'en_US') {
-  defaultLocale = 'en_US'
-} else {
-  defaultLocale = 'en_US'
-}
-
 const messages = {
   "ko_KR": {
     ...koLocale
@@ -25,7 +13,7 @@ const messages = {
   }
 };
 const i18n = new VueI18n({
-  locale: defaultLocale,
+  locale: 'en_US',
   messages,
   silentTranslationWarn: true
 });

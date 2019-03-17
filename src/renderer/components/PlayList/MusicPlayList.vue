@@ -744,6 +744,24 @@ export default {
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
+      let gaTitle = null;
+      if (this.playType === "related") {
+        gaTitle = "Related";
+      } else if (this.playType === "play") {
+        gaTitle = "Playlist";
+      } else if (this.playType === "channel") {
+        gaTitle = "Channel";
+      } else {
+        gaTitle = "Live";
+      }
+
+      this.$ga.page({
+        page: `${gaTitle}/${this.getUserId()}/${this.pageNum}/${
+          this.selectedIndex
+        }/${videoId}`,
+        title: gaTitle
+      });
+
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */
         this.insertVideoHistory(playingItem);
