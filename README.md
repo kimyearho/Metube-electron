@@ -1,4 +1,4 @@
-# [2019-03-15] v1.6.1 UPDATE
+# [2019-03-15] v1.6.2 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/URxMOdv.png" />
@@ -12,7 +12,7 @@
 ### A must read
 Hello.
 Now many of you are using different versions. "Metube" updates very quickly. Automatic updates are not supported for versions 1.6.0 or earlier, and we cannot provide additional support. So please always keep the latest version. Thank you.
-<strong>Automatic updates are supported from 1.6.0 version.</strong>
+<strong>Automatic updates are supported from 1.6.x version.</strong>
 
 ### Project Information
 This project is a personal project developed with the excellent Electron and Vue.JS.
