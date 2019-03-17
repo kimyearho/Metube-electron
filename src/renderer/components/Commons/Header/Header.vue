@@ -37,31 +37,7 @@
       </el-form>
     </modal>
 
-    <!-- fab -->
-    <!-- <md-speed-dial
-      v-if="isFab"
-      ref="fab"
-      class="md-bottom-right"
-      md-event="click"
-      md-direction="top"
-    >
-      <md-speed-dial-target class="md-primary">
-        <md-icon class="md-morph-initial">add</md-icon>
-        <md-icon class="md-morph-final">close</md-icon>
-      </md-speed-dial-target>
-
-      <md-speed-dial-content>
-        <md-button
-          v-show="isUser"
-          class="md-icon-button b-success"
-          title="Create Collection"
-          @click="showCreateMyCollection"
-        >
-          <md-icon>add</md-icon>
-        </md-button>
-      </md-speed-dial-content>
-    </md-speed-dial>-->
-    <!-- Side Menu -->
+    <!-- Left 메뉴 -->
     <md-drawer
       :md-active.sync="showNavigation"
       style="background: #242d40; width: 190px; z-index:199;"
@@ -109,10 +85,10 @@
         </md-list-item>
 
         <!-- Menu2 -->
-        <!-- <md-list-item @click="route('setting')">
+        <md-list-item @click="route('faq')">
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">FAQ</span>
-        </md-list-item>-->
+        </md-list-item>
       </md-list>
     </md-drawer>
 
@@ -236,10 +212,18 @@ export default {
         this.$router.push({
           name: "setting"
         });
+      } else if(name === "faq") {
+        this.$router.push({
+          name: "faq"
+        })
       }
     },
     close() {
       // 일단 임시로
+      // PLAY LIST 및 채널은 토큰을 많이 소비하지 않음.
+      // 검색 및 연관검색이 토큰을 많이 소모한다.
+      // 따라서, DB를 세가지로 나눌필요가 있음.
+      // 연관검색은 보관처리하고, PLAY LIST 및 채널은 주기별로 캐싱한 뒤 초기화 하는 방식으로 구현해야한다.
       // this.$local.destroy().then(result => { console.log(result) });
 
       let self = this;
@@ -314,33 +298,11 @@ export default {
   margin-left: 15px !important;
 }
 
-.md-fab {
-  width: 50px !important;
-  height: 50px !important;
-}
-
-.md-speed-dial.md-bottom-left,
-.md-speed-dial.md-bottom-right {
-  position: absolute;
-  z-index: 1000;
-  padding-right: 1px;
-  padding-bottom: 40px;
-  bottom: 66px !important;
-}
-
 .md-list-item-text {
   color: #ffffff;
 }
 .md-list-item-text:hover {
   color: #28b1ff;
-}
-
-.mdc-icon-button {
-  width: 20px;
-  min-width: 20px;
-  height: 20px !important;
-  color: #ffffff !important;
-  border-radius: 0 !important;
 }
 
 .titlebar {
