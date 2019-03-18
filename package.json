@@ -1,6 +1,6 @@
 {
   "name": "metube",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "author": "kstory8715 <kstory8715@gmail.com>",
   "description": "Metube 1.6.0",
   "license": "GPL-3.0",
@@ -84,7 +84,6 @@
     "querystring": "^0.2.0",
     "request": "^2.88.0",
     "vue": "^2.6.6",
-    "vue-analytics": "^5.16.4",
     "vue-clipboard2": "^0.2.1",
     "vue-electron": "^1.0.6",
     "vue-i18n": "^8.7.0",

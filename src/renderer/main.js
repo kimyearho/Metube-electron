@@ -7,25 +7,6 @@ import "expose-loader?$!jquery";
 import "electron-disable-file-drop";
 import "./plugins/pouchdb";
 
-import VueAnalytics from "vue-analytics";
-Vue.use(VueAnalytics, {
-  id: "UA-128591940-1",
-  autoTracking: {
-    screenview: true,
-    untracked: false
-  },
-  batch: {
-    enabled: true, // enable/disable
-    amount: 1, // amount of events fired
-    delay: 5000 // delay in milliseconds
-  },
-  debug: {
-    enabled: false, // default value
-    trace: false, // default value
-    sendHitTask: true // default value
-  }
-});
-
 /* topHeader */
 import topHeader from "./components/Commons/Header/Header";
 
@@ -170,8 +151,8 @@ const vm = new Vue({
 
 vm.$store.commit("setLocale", osLocale);
 
-// if (process.env.NODE_ENV !== "development") {
-//   setInterval(() => {
-//     ipcRenderer.send("event:appStart", {})
-//   }, 30000)
-// }
+if (process.env.NODE_ENV !== "development") {
+  setInterval(() => {
+    ipcRenderer.send("event:appStart", {})
+  }, 30000)
+}
