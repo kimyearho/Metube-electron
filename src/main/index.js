@@ -180,7 +180,6 @@ ipcMain.on("event:social", (e, args) => {
     width: 800,
     height: 600
   });
-  console.log(args);
   popupWindow.loadURL(args.socialUrl);
   popupWindow.on("close", e => {
     popupWindow.hide();
@@ -267,7 +266,7 @@ require("../analiytics/analytics")(app);
 
 if (process.env.NODE_ENV === "production") {
 
-  // autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdates();
 
   // 30분 간격으로 업데이트 조회
   setInterval(() => {
