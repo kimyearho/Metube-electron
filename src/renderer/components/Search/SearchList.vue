@@ -245,57 +245,57 @@ export default {
       }
 
       // 캐시 DB 조회
-      // this.$searchCacheDB.get("cfb9d27f0b59d3fbc55073830f0507ee").then(docs => {
-      //   let keywords = docs.keywords;
-      //   // 일치하는 키워드 찾음
-      //   let findData = this.$lodash.find(keywords, { keyword: text });
-      //   // 일치하는 키워드 데이터가 있으면, 해당 목록 조회
-      //   if (findData) {
-      //     console.log("========= DB 캐싱 조회 성공");
-      //     this.$store.commit("setNextPageToken", findData.lastPageToken);
-      //     this.searchList = findData.list[0];
-      //     this.load = true;
-      //   } else {
-      //     console.log("========= DB 캐싱 조회 실패, 신규 조회");
-      //     // 없으면 처음부터 조회
-      //     let request = this.youtubeSearch(text);
-      //     this.$http
-      //       .get(request)
-      //       .then(res => {
-      //         if (res.data.nextPageToken)
-      //           this.$store.commit("setNextPageToken", res.data.nextPageToken);
-      //         this.$store.commit("setSearchList", res.data.items);
-      //         this.$store
-      //           .dispatch("setSearchDuration", { vm: this })
-      //           .then(results => {
-      //             this.$searchCacheDB
-      //               .get("cfb9d27f0b59d3fbc55073830f0507ee")
-      //               .then(docs => {
-      //                 let keywords = docs.keywords;
-      //                 if (keywords.length === 0) {
-      //                   let data = {
-      //                     keyword: text,
-      //                     startPageToken: res.data.nextPageToken,
-      //                     lastPageToken: res.data.nextPageToken,
-      //                     list: []
-      //                   };
-      //                   data.list.push(results);
-      //                   docs.keywords.push(data);
-      //                   this.$searchCacheDB.put(docs).then(res => {
-      //                     if (res.ok) {
-      //                       console.log("========= DB 캐싱 신규 업데이트!");
-      //                     }
-      //                   });
-      //                 }
-      //                 this.searchList = results;
-      //               });
-      //             this.load = true;
-      //           });
-      //       })
-      //       .catch(err => {
-      //         // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
-      //         console.error(err);
-      //       });
+      this.$searchCacheDB.get("cfb9d27f0b59d3fbc55073830f0507ee").then(docs => {
+        let keywords = docs.keywords;
+        // 일치하는 키워드 찾음
+        let findData = this.$lodash.find(keywords, { keyword: text });
+        // 일치하는 키워드 데이터가 있으면, 해당 목록 조회
+        if (findData) {
+          console.log("========= DB 캐싱 조회 성공");
+          this.$store.commit("setNextPageToken", findData.lastPageToken);
+          this.searchList = findData.list[0];
+          this.load = true;
+        } else {
+          console.log("========= DB 캐싱 조회 실패, 신규 조회");
+          // 없으면 처음부터 조회
+          let request = this.youtubeSearch(text);
+          this.$http
+            .get(request)
+            .then(res => {
+              if (res.data.nextPageToken)
+                this.$store.commit("setNextPageToken", res.data.nextPageToken);
+              this.$store.commit("setSearchList", res.data.items);
+              this.$store
+                .dispatch("setSearchDuration", { vm: this })
+                .then(results => {
+                  this.$searchCacheDB
+                    .get("cfb9d27f0b59d3fbc55073830f0507ee")
+                    .then(docs => {
+                      let keywords = docs.keywords;
+                      if (keywords.length === 0) {
+                        let data = {
+                          keyword: text,
+                          startPageToken: res.data.nextPageToken,
+                          lastPageToken: res.data.nextPageToken,
+                          list: []
+                        };
+                        data.list.push(results);
+                        docs.keywords.push(data);
+                        this.$searchCacheDB.put(docs).then(res => {
+                          if (res.ok) {
+                            console.log("========= DB 캐싱 신규 업데이트!");
+                          }
+                        });
+                      }
+                      this.searchList = results;
+                    });
+                  this.load = true;
+                });
+            })
+            .catch(err => {
+              // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
+              console.error(err);
+            });
         }
       });
     },

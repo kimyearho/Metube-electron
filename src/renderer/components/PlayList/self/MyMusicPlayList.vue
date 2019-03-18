@@ -176,7 +176,6 @@ export default {
     };
   },
   mounted() {
-    this.$ga.screenview("MyMusicPlayList");
     this.getCategory();
   },
   methods: {
@@ -540,19 +539,6 @@ export default {
 
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
-
-      this.$ga.event(
-        "MyCollection",
-        this.getUserId(),
-        this.selectedIndex,
-        videoId
-      );
-      this.$ga.page({
-        page: `MyCollection/${this.getUserId()}/${
-          this.selectedIndex
-        }/${videoId}`,
-        title: "MyCollectionPlay"
-      });
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */
