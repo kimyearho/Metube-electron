@@ -154,6 +154,9 @@ export default {
   },
   methods: {
     init() {
+      this.$ga.page({
+        page: "MyCollection/Playlist"
+      });
       this.isMini = this.getMusicInfos() ? true : false;
       this.playType = this.$route.params.playType;
       this.collectionDoc = this.$route.params.doc;
@@ -163,9 +166,9 @@ export default {
     },
 
     openContext(data, index) {
-      this.$set(this, 'selectedIndex', index);
-      this.$set(this, 'selectedData', data);
-      this.contextShow = true
+      this.$set(this, "selectedIndex", index);
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
     },
 
     endDrag(value) {

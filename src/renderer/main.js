@@ -92,19 +92,13 @@ import VueAnalytics from "vue-analytics";
 Vue.use(VueAnalytics, {
   id: "UA-128591940-1",
   autoTracking: {
-    screenview: true,
-    untracked: false
+    pageviewOnLoad: false
   },
   batch: {
     enabled: true, // enable/disable
     amount: 1, // amount of events fired
     delay: 5000 // delay in milliseconds
   },
-  debug: {
-    enabled: false, // default value
-    trace: false, // default value
-    sendHitTask: true // default value
-  }
 });
 
 /* global component */

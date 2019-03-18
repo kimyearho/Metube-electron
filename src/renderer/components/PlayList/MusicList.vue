@@ -154,18 +154,26 @@ export default {
       const musicInfo = this.getMusicInfos();
       this.isMini = musicInfo ? true : false;
 
+      let pathName = null
       let playlistName = null;
       this.playType = this.$route.params.playType;
       this.playlistId = this.$route.params.id;
 
       // 재생목록명 설정
       if (this.playType === "play") {
+        pathName = 'Playlist'
         playlistName = `PLAYLIST:${this.playlistId}`;
       } else if (this.playType === "related") {
+        pathName = 'Related'
         playlistName = `RELATED:${this.playlistId}`;
       } else if (this.playType === "channel") {
+        pathName = 'Channel'
         playlistName = `CHANNEL:${this.playlistId}`;
       }
+
+      this.$ga.page({
+        page: "Youtube/" + pathName 
+      });
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회
       this.createLocalIndex(["type", "playlistId"]).then(() => {

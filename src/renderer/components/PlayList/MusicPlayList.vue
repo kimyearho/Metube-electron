@@ -270,16 +270,24 @@ export default {
       this.playlistId = this.$route.params.id;
       this.playType = this.$route.params.playType;
 
+      let pathName = null;
       let playlistName = null;
 
       if (this.playType === "play") {
+        pathName = 'Playlist'
         playlistName = `PLAYLIST:${this.playlistId}`;
       } else if (this.playType === "related") {
+        pathName = 'Related'
         this.videoId = this.playlistId;
         playlistName = `RELATED:${this.playlistId}`;
       } else if (this.playType === "channel") {
+        pathName = 'Channel'
         playlistName = `CHANNEL:${this.playlistId}`;
       }
+
+      this.$ga.page({
+        page: "Youtube/" + pathName + "/Play"
+      });
 
       // 재생목록 정보 조회
       const initPromise = this.getPlaylistInfoData(
@@ -743,24 +751,6 @@ export default {
       // 비디오 재생 이벤트 전송
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
-
-      let gaTitle = null;
-      if (this.playType === "related") {
-        gaTitle = "Related";
-      } else if (this.playType === "play") {
-        gaTitle = "Playlist";
-      } else if (this.playType === "channel") {
-        gaTitle = "Channel";
-      } else {
-        gaTitle = "Live";
-      }
-
-      this.$ga.page({
-        page: `${gaTitle}/${this.getUserId()}/${this.pageNum}/${
-          this.selectedIndex
-        }/${videoId}`,
-        title: gaTitle
-      });
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */
