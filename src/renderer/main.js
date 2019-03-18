@@ -37,8 +37,11 @@ import VModal from "vue-js-modal";
 /* vue-scroll */
 import VueScrollTo from "vue-scrollto";
 
-/* axios or jsonp */
-import axios from "./plugins/http";
+/* axios */
+import axios from "./plugins/http/axios";
+
+/* jsonp  */
+import axiosp from "./plugins/http/axiosp";
 
 /* moment */
 import moment from "moment";
@@ -147,6 +150,7 @@ Vue.use(MdSwitch);
 
 /* vue prototype */
 Vue.prototype.$http = axios;
+Vue.prototype.$jsonp = axiosp;
 Vue.prototype.$moment = moment;
 Vue.prototype.$lodash = lodash;
 Vue.prototype.$trap = mousetrap;

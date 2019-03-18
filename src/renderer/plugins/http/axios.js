@@ -1,9 +1,10 @@
-import axios from "axios-jsonp-pro"
+import axios from "axios"
 
 /* global loading */
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"
 NProgress.configure({ showSpinner: false })
+
 
 const service = axios.create({
   timeout: 5000,
@@ -22,7 +23,6 @@ service.interceptors.request.use(
     return config
   },
   function(error) {
-    console.log('11 : ' + error)
     return Promise.reject(error)
   }
 )
@@ -34,7 +34,6 @@ service.interceptors.response.use(
     return response
   },
   function(error) {
-    console.log('22 : ' + error)
     return Promise.reject(error)
   }
 )

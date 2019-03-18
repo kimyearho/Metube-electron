@@ -20,3 +20,6 @@ Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
 
 // 서비스
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
+
+// 테스트는 우선 여기에 쓰고, 나중에는 로컬에다가 써야함.
+Vue.prototype.$searchCacheDB = new PouchDB("http://202.182.100.137/search")

@@ -25,7 +25,7 @@ export default {
     youtubeSearch(text) {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&q=${text}`)
-        .concat(`&type=video,playlist,channel&maxResults=40&safeSearch=strict&key=${this.SEARCH_KEY}`)
+        .concat(`&type=video,playlist,channel&maxResults=50&safeSearch=strict&key=${this.SEARCH_KEY}`)
     },
 
     /**
@@ -49,7 +49,7 @@ export default {
       return this.API_URL.concat("/search?")
         .concat(`part=snippet&q=${text}`)
         .concat(`&type=video,playlist,channel&pageToken=${nextToken}`)
-        .concat(`&maxResults=40&safeSearch=strict&key=${this.SEARCH_KEY}`)
+        .concat(`&maxResults=50&safeSearch=strict&key=${this.SEARCH_KEY}`)
     },
 
     /**

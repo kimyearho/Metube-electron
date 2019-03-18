@@ -285,53 +285,73 @@ export default {
       this.$scrollTo("#item0", 0, options);
     },
     init(text) {
+
+      // 현재 음악 재생중인지 여부
       this.isMini = this.getMusicInfos() ? true : false;
-      let totalSearchList = this.getNextSearchList();
-      if (this.$lodash.size(totalSearchList) === 0) {
-        if (!text) {
-          text = this.defaultQuery;
-        } else {
-          this.$store.commit("setSearchText", text);
-        }
-        let request = this.youtubeSearch(text);
-        this.$http
-          .get(request)
-          .then(res => {
-            if (res.data.nextPageToken) {
-              this.$store.commit("setNextPageToken", res.data.nextPageToken);
-            }
-            this.$store.commit("setSearchList", res.data.items);
-            this.$store
-              .dispatch("setSearchDuration", { vm: this })
-              .then(results => {
-                this.searchList = results;
-                this.load = true;
-              });
-          })
-          .catch(err => {
-            // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
-            console.error(err)
-
-            // this.$store.dispatch("setAuthKeyChange", { vm: this }).then(() => {
-            //   setTimeout(() => {
-            //     const keyList = this.$store.getters.getKeys;
-            //     const searchKey = this.$lodash.find(keyList, { query: "search" });
-            //     const videoItemsKey = this.$lodash.find(keyList, {
-            //       query: "videoItems"
-            //     });
-            //     this.SEARCH_KEY = searchKey.apiKey;
-            //     this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
-            //     this.init(this.searchText);
-            //     this.$set(this, "initLoading", false);
-            //   }, 3500);
-            // })
-
-          });
+      if (!text) {
+        text = this.defaultQuery;
       } else {
-        this.searchList = totalSearchList;
-        this.load = true;
+        this.$store.commit("setSearchText", text);
       }
-      this.getKeyword();
+
+      // 캐시 DB 조회
+      this.$searchCacheDB.get('cfb9d27f0b59d3fbc55073830f0507ee')
+        .then(docs => {
+          let keywords = docs.keywords;
+          // 일치하는 키워드 찾음
+          let findData = this.$lodash.find(keywords, { keyword: text })
+          // 일치하는 키워드 데이터가 있으면, 해당 목록 조회
+          if (findData) {
+            console.log(findData)
+            console.log('========= DB 캐싱 조회 성공')
+            if (findData.lastPageToken === null) {
+              this.$store.commit("setNextPageToken", findData.startPageToken);
+            } else {
+              this.$store.commit("setNextPageToken", findData.lastPageToken);
+            }
+            this.searchList = findData.list[0];
+            this.load = true;
+          } else {
+            console.log('========= DB 캐싱 조회 실패, 신규 조회')
+            // 없으면 처음부터 조회
+            let request = this.youtubeSearch(text);
+            this.$http
+              .get(request)
+              .then(res => {
+                if (res.data.nextPageToken) this.$store.commit("setNextPageToken", res.data.nextPageToken);
+                this.$store.commit("setSearchList", res.data.items);
+                this.$store
+                  .dispatch("setSearchDuration", { vm: this })
+                  .then(results => {
+                    this.$searchCacheDB.get('cfb9d27f0b59d3fbc55073830f0507ee')
+                      .then(docs => {
+                        let keywords = docs.keywords;
+                        if (keywords.length === 0) {
+                          let data = {
+                            keyword: text,
+                            startPageToken: res.data.nextPageToken,
+                            lastPageToken: null,
+                            list: []
+                          }
+                          data.list.push(results)
+                          docs.keywords.push(data)
+                          this.$searchCacheDB.put(docs).then(res => {
+                            if (res.ok) {
+                              console.log('========= DB 캐싱 신규 업데이트!')
+                            }
+                          })
+                        }
+                        this.searchList = results;
+                      })
+                    this.load = true;
+                  });
+              })
+              .catch(err => {
+                // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
+                console.error(err)
+              });
+          }
+        })
     },
     submit(text, tag) {
       this.load = false;
@@ -345,9 +365,7 @@ export default {
       this.$http
         .get(request)
         .then(res => {
-          if (res.data.nextPageToken) {
-            this.$store.commit("setNextPageToken", res.data.nextPageToken);
-          }
+          if (res.data.nextPageToken) this.$store.commit("setNextPageToken", res.data.nextPageToken);
           this.$store.commit("setSearchList", res.data.items);
           this.$store
             .dispatch("setSearchDuration", { vm: this })
@@ -448,14 +466,39 @@ export default {
       this.isMore = true;
       let text =
         this.getSearchKeyword() === null
-          ? "top music 2018"
+          ? this.defaultQuery
           : this.getSearchKeyword();
+
+      this.$searchCacheDB.get('cfb9d27f0b59d3fbc55073830f0507ee')
+        .then(docs => {
+          let keywords = docs.keywords;
+          // 일치하는 키워드 찾음
+          let findData = this.$lodash.find(keywords, { keyword: text })
+          // 일치하는 키워드 데이터가 있으면, 동일 키워드내 페이징 조회
+          if (findData && findData.lastPageToken !== null) {
+            console.log('========= DB 페이징 캐싱 조회 성공')
+            this.$store.commit("setNextPageToken", docs.lastPageToken);
+            this.next(text, findData)
+          } else {
+            console.log('========= DB 페이징 캐싱 조회 실패, 신규 조회')
+            this.next(text)
+          }
+        })
+    },
+    
+    // TODO: 수정 해야함!!!!!!!!!!!!!!
+    next(text, findData) {
       let request = this.youtubePagingSearch(text, this.getNextPageToken());
       this.$http
         .get(request)
         .then(res => {
+          // 유튜브 응답 토큰
           if (res.data.nextPageToken) {
             this.$store.commit("setNextPageToken", res.data.nextPageToken);
+            // 최근 토큰 업데이트
+            findData.lastPageToken = res.data.nextPageToken
+          } else {
+            findData.lastPageToken = 'end'
           }
           this.$store.commit("setSearchList", res.data.items);
           this.$store
@@ -463,6 +506,15 @@ export default {
             .then(results => {
               this.searchList = this.$lodash.concat(this.searchList, results);
               this.$store.commit("setNextSearchList", this.searchList);
+
+              // 검색목록에 추가
+              findData.list[0] = this.searchList
+
+              this.$searchCacheDB.put(docs).then(res => {
+                if (res.ok) {
+                  console.log('========= DB 페이징 캐싱 업데이트!')
+                }
+              })
               this.isMore = false;
             });
         })

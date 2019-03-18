@@ -45,7 +45,7 @@ export default {
   methods: {
     querySearch(queryString, cb) {
       const url = this.googleSearch.concat(queryString);
-      this.$http.jsonp(url).then(res => {
+      this.$jsonp.jsonp(url).then(res => {
         let value = this.$lodash.map(res[1], item => {
           return {
             name: item[0]
