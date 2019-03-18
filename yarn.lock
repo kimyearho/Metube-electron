@@ -3121,14 +3121,6 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
-electron-google-analytics@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/electron-google-analytics/-/electron-google-analytics-0.1.0.tgz#29cd0d51a23613af1cceccc00487206ed617e900"
-  integrity sha1-Kc0NUaI2E68czszABIcgbtYX6QA=
-  dependencies:
-    request "^2.85.0"
-    uuid "^3.2.1"
-
 electron-is-accelerator@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/electron-is-accelerator/-/electron-is-accelerator-0.1.2.tgz#509e510c26a56b55e17f863a4b04e111846ab27b"
@@ -7501,7 +7493,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.45.0, request@^2.85.0, request@^2.87.0, request@^2.88.0:
+request@^2.45.0, request@^2.87.0, request@^2.88.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==

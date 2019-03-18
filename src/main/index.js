@@ -175,19 +175,6 @@ ipcMain.on("main:googleAuth", () => {
   });
 });
 
-ipcMain.on("event:social", (e, args) => {
-  popupWindow = new BrowserWindow({
-    width: 800,
-    height: 600
-  });
-  console.log(args);
-  popupWindow.loadURL(args.socialUrl);
-  popupWindow.on("close", e => {
-    popupWindow.hide();
-    popupWindow = null;
-  });
-});
-
 // Window Close
 ipcMain.on("button:close", () => {
   if (process.platform !== "darwin") {
@@ -262,8 +249,6 @@ ipcMain.on("player2Win", (e, args) => {
     /* window already closed */
   }
 });
-
-require("../analiytics/analytics")(app);
 
 if (process.env.NODE_ENV === "production") {
 

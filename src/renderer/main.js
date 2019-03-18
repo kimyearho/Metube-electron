@@ -88,6 +88,25 @@ import "./assets/css/autocomplete.css";
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.config.productionTip = false;
 
+import VueAnalytics from "vue-analytics";
+Vue.use(VueAnalytics, {
+  id: "UA-128591940-1",
+  autoTracking: {
+    screenview: true,
+    untracked: false
+  },
+  batch: {
+    enabled: true, // enable/disable
+    amount: 1, // amount of events fired
+    delay: 5000 // delay in milliseconds
+  },
+  debug: {
+    enabled: false, // default value
+    trace: false, // default value
+    sendHitTask: true // default value
+  }
+});
+
 /* global component */
 Vue.component("global-event-handler", GlobalEventHandler);
 Vue.component("top-header", topHeader);
@@ -154,9 +173,3 @@ const vm = new Vue({
 }).$mount("#app");
 
 vm.$store.commit("setLocale", osLocale);
-
-// if (process.env.NODE_ENV !== "development") {
-//   setInterval(() => {
-//     ipcRenderer.send("event:appStart", {})
-//   }, 30000)
-// }

@@ -60,7 +60,6 @@
     "axios-jsonp-pro": "^1.1.4",
     "debug": "^4.1.0",
     "electron-disable-file-drop": "^1.0.2",
-    "electron-google-analytics": "^0.1.0",
     "electron-log": "^3.0.1",
     "electron-updater": "^4.0.6",
     "element-ui": "^2.5.4",
