@@ -82,4 +82,7 @@ export default {
 .inline-input >>> .el-input__inner {
   border-radius: 0px;
 }
+.el-select-dropdown {
+  left: 54px !important;
+}
 </style>

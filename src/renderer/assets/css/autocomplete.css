@@ -591,7 +591,3 @@
 .el-autocomplete-suggestion.is-loading .el-icon-loading {
     vertical-align: middle
 }
-
-.el-select-dropdown {
-    left: 54px !important;
-}

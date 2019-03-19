@@ -85,10 +85,10 @@
         </md-list-item>
 
         <!-- Menu2 -->
-        <md-list-item @click="route('faq')">
+        <!-- <md-list-item @click="route('faq')">
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">FAQ</span>
-        </md-list-item>
+        </md-list-item> -->
       </md-list>
     </md-drawer>
 

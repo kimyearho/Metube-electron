@@ -5,10 +5,13 @@
 
 <template>
   <div>
-    <top-header :isShow="false"/>
-    <div class="wrapper" :class="{ updateHeight: isCheck }">
+    <top-header :isShow="false" />
+    <div
+      class="wrapper"
+      :class="{ updateHeight: isCheck }"
+    >
       <form>
-        <div class="menu1">
+        <!-- <div class="menu1">
           <label class="wh">
             <strong v-html="$tc('SETTING.MENU.PLAYER_HIDE')"></strong>
           </label>
@@ -16,12 +19,15 @@
         </div>
         <div class="menu1_tip">
           <strong class="gr">{{ $t('SETTING.PLAYER_HIDE') }}</strong>
-        </div>
+        </div> -->
         <div class="menu1">
           <label class="wh">
             <strong>{{ $t('SETTING.MENU.ALWAYS_TOP') }}</strong>
           </label>
-          <md-switch v-model="topState" class="switchStyle md-primary"/>
+          <md-switch
+            v-model="topState"
+            class="switchStyle md-primary"
+          />
         </div>
         <div class="menu1_tip">
           <strong class="tr">{{ $t('SETTING.ALWAYS_TOP') }}</strong>
@@ -31,6 +37,7 @@
             <strong>{{ $t('SETTING.MENU.LOCALE') }}</strong>
           </label>
           <el-select
+            class="select"
             v-model="locale"
             :size="`mini`"
             placeholder="Select"
@@ -54,14 +61,20 @@
           </label>
         </div>
         <div class="menu1_tip">
-          <strong class="tr" style="color: #ffeb3b;">
+          <strong
+            class="tr"
+            style="color: #ffeb3b;"
+          >
             {{ $version }}
             <br>
           </strong>
         </div>
       </form>
     </div>
-    <sub-player-bar class="md-top-61" v-show="isMini"/>
+    <sub-player-bar
+      class="md-top-61"
+      v-show="isMini"
+    />
   </div>
 </template>
 
@@ -142,6 +155,11 @@ export default {
 .wrapper {
   margin: 5px;
   height: 510px;
+}
+
+.el-select-dropdown {
+  top: 150px !important;
+  left: 253px !important;
 }
 
 .updateHeight {
