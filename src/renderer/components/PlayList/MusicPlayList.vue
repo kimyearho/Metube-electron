@@ -286,7 +286,7 @@ export default {
       }
 
       this.$ga.page({
-        page: "Youtube/" + pathName + "/Play"
+        page: `${this.$version}/Youtube/${pathName}/Play`
       });
 
       // 재생목록 정보 조회
@@ -751,6 +751,23 @@ export default {
       // 비디오 재생 이벤트 전송
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
+
+      let category = '';
+
+      if(this.playType === 'play') {
+        category = 'Playlist'
+      } else if(this.playType === 'channel') {
+        category = 'Channel'
+      } else if(this.playType === 'related') {
+        category = 'Related'
+      }
+
+      this.$ga.event({
+        eventCategory: category,
+        eventAction: 'Play',
+        eventLabel: this.coverTitle,
+        eventValue: 0
+      })
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */

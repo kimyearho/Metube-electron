@@ -84,6 +84,9 @@ export default {
     this.load = false;
   },
   created() {
+    this.$ga.page({
+      page: `${this.$version}/VideoHistorys`
+    });
     this.isLogin = this.getUserId() ? true : false;
     this.isMini = this.getMusicInfos() ? true : false;
   },

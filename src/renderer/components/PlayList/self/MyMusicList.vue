@@ -155,7 +155,7 @@ export default {
   methods: {
     init() {
       this.$ga.page({
-        page: "MyCollection/Playlist"
+        page: `${this.$version}/MyCollection/Playlist`
       });
       this.isMini = this.getMusicInfos() ? true : false;
       this.playType = this.$route.params.playType;

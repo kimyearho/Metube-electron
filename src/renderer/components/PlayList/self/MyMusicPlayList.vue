@@ -8,17 +8,29 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <div v-if="isLogin">
       <!-- 커버 영역 -->
       <div class="side_menu">
-        <a class="cursor" @click="goBack">
-          <img src="@/assets/images/svg/menu-back.svg" title="Back">
+        <a
+          class="cursor"
+          @click="goBack"
+        >
+          <img
+            src="@/assets/images/svg/menu-back.svg"
+            title="Back"
+          >
         </a>
       </div>
       <div class>
-        <img class="playlistCover" :src="cover">
+        <img
+          class="playlistCover"
+          :src="cover"
+        >
         <div class="playlistTrackinfo">
           <span class="label_related label_v">{{ category }}</span>
           <br>
@@ -60,10 +72,22 @@
             :class="selectedIndex === index ? 'active' : ''"
             @click="playItem(index)"
           >{{ item.title }}</span>
-          <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-          <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-          <a class="cursor" @click="openContext(item, index)">
-            <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+          <span
+            class="label_video"
+            v-if="item.videoId && item.isLive != 'live'"
+          >{{ item.duration }}</span>
+          <span
+            class="label_live"
+            v-if="item.videoId && item.isLive == 'live'"
+          >LIVE</span>
+          <a
+            class="cursor"
+            @click="openContext(item, index)"
+          >
+            <img
+              class="contextMenu"
+              src="@/assets/images/svg/context-menu.svg"
+            >
           </a>
         </md-list-item>
 
@@ -95,7 +119,11 @@
       />
 
       <!-- 팝업 컴포넌트 -->
-      <v-dialog :width="300" :height="300" :clickToClose="false"/>
+      <v-dialog
+        :width="300"
+        :height="300"
+        :clickToClose="false"
+      />
     </div>
 
     <!-- 비 로그인 상태 -->
@@ -113,10 +141,16 @@
               :src="playingMusicData.thumbnails"
             >
           </el-card>
-          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+          <div
+            class="titleflow"
+            style="text-align: center; margin-top: 30px;"
+          >
             <span class="sub">{{ playingMusicData.title }}</span>
           </div>
-          <div class="titleflow" style="text-align: center; margin-top: 30px;">
+          <div
+            class="titleflow"
+            style="text-align: center; margin-top: 30px;"
+          >
             <span class="sub">{{ $t('COLLECTION.CONTINUE') }}</span>
           </div>
           <div style="text-align: center; margin-top: 20px;">
@@ -177,7 +211,7 @@ export default {
   },
   created() {
     this.$ga.page({
-      page: 'MyCollection/Playlist/Play',
+      page: `${this.$version}/MyCollection/Playlist/Play`,
     });
   },
   mounted() {
@@ -544,6 +578,13 @@ export default {
 
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
+
+      this.$ga.event({
+        eventCategory: 'MyCollection',
+        eventAction: 'Play',
+        eventLabel: this.coverTitle,
+        eventValue: 0
+      })
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */

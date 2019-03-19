@@ -172,7 +172,7 @@ export default {
       }
 
       this.$ga.page({
-        page: "Youtube/" + pathName 
+        page: `${this.$version}/Youtube/${pathName}/Play`
       });
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회

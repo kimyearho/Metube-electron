@@ -144,6 +144,11 @@ export default {
     };
   },
   created() {
+
+    this.$ga.page({
+      page: `${this.$version}/SearchList`
+    });
+
     // DB에서 추천트랙 조회
     this.recommandTrack();
 
@@ -429,7 +434,6 @@ export default {
       });
     },
 
-    // TODO: 수정 해야함!!!!!!!!!!!!!!
     next(text, docs, findData) {
       let request = this.youtubePagingSearch(text, this.getNextPageToken());
       this.$http
