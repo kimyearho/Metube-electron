@@ -8,16 +8,30 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header ref="header" :data="{ playType: 'list' }" @scrollTop="searchTop"/>
+    <top-header
+      ref="header"
+      :data="{ playType: 'list' }"
+      @scrollTop="searchTop"
+    />
 
     <!-- 검색 및 자동완성 영역 -->
     <div class="search">
-      <auto-complate ref="autoComplate" :userSearchQuery="searchText" @searchQuery="itemSelected"/>
+      <auto-complate
+        ref="autoComplate"
+        :userSearchQuery="searchText"
+        @searchQuery="itemSelected"
+      />
     </div>
 
     <!-- 사용자가 검색한 키워드 -->
-    <div class="tag" v-show="isTag">
-      <span v-if="searchKeywords.length === 0" class="no_keyword">
+    <div
+      class="tag"
+      v-show="isTag"
+    >
+      <span
+        v-if="searchKeywords.length === 0"
+        class="no_keyword"
+      >
         <i class="el-icon-warning"></i>
         {{ $t('COMMONS.NO_KEYWORD') }}
       </span>
@@ -47,7 +61,10 @@
       style="padding: 10px 0px 10px 0px;
     background-color: #1e2431 ;"
     >
-      <el-carousel-item v-for="(item, index) in recommandList" :key="index">
+      <el-carousel-item
+        v-for="(item, index) in recommandList"
+        :key="index"
+      >
         <img
           class="md-image"
           style="border: 1px solid #606266;"
@@ -56,12 +73,19 @@
           :src="item.thumbnail"
           @click="route(item)"
         >
-        <span class="recommandMusic" @click="route(item)">{{ item.title.substring(0, 30) }} ..</span>
+        <span
+          class="recommandMusic"
+          @click="route(item)"
+        >{{ item.title.substring(0, 30) }} ..</span>
       </el-carousel-item>
     </el-carousel>
     <!-- END 다른 사용자가 감상했던 비디오 -->
     <!-- 검색 목록 -->
-    <md-list id="list" class="searchList" :class="{ subHightAuto: isMini }">
+    <md-list
+      id="list"
+      class="searchList"
+      :class="{ subHightAuto: isMini }"
+    >
       <md-list-item
         :id="`item${index}`"
         v-for="(item, index) in searchList"
@@ -70,27 +94,47 @@
         @click="route(item)"
       >
         <md-avatar style="margin-right: 0;">
-          <img :src="item.imageInfo" alt="People">
+          <img
+            :src="item.imageInfo"
+            alt="People"
+          >
         </md-avatar>
 
         <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
-        
-        <span class="label_channel" v-if="item.otherChannelId">{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
-        <span class="label_playlist" v-if="item.playlistId">{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive === 'none'">{{ item.duration }}</span>
+
+        <span
+          class="label_channel"
+          v-if="item.otherChannelId"
+        >{{ $t('COMMONS.LABEL.CHANNEL') }}</span>
+        <span
+          class="label_playlist"
+          v-if="item.playlistId"
+        >{{ $t('COMMONS.LABEL.PLAY_LIST') }}</span>
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive === 'none'"
+        >{{ item.duration }}</span>
         <span
           class="label_live"
           v-if="item.videoId && item.isLive === 'live'"
         >{{ $t('COMMONS.LABEL.LIVE') }}</span>
       </md-list-item>
       <md-list-item>
-        <span v-if="!isMore" @click="nextPageLoad" class="searchPagingCenter">
+        <span
+          v-if="!isMore"
+          @click="nextPageLoad"
+          class="searchPagingCenter"
+        >
           <a class="cursor">
             <i class="el-icon-refresh"></i>
             {{ $t('COMMONS.MORE') }}
           </a>
         </span>
-        <span v-if="isMore" class="searchPagingCenter" style="color:#ffffff;">LOADING ...</span>
+        <span
+          v-if="isMore"
+          class="searchPagingCenter"
+          style="color:#ffffff;"
+        >LOADING ...</span>
       </md-list-item>
       <div class="bottom">
         <img src="@/assets/images/youtube/dev.png">
@@ -99,11 +143,14 @@
     <!-- 검색 목록 -->
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading :init="initLoading" v-show="!load"/>
+      <loading
+        :init="initLoading"
+        v-show="!load"
+      />
     </transition>
 
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
   </div>
 </template>
 
@@ -241,68 +288,51 @@ export default {
       this.$scrollTo("#item0", 0, options);
     },
     init(text) {
-      // 현재 음악 재생중인지 여부
       this.isMini = this.getMusicInfos() ? true : false;
-      if (!text) {
-        text = this.defaultQuery;
-      } else {
-        this.$store.commit("setSearchText", text);
-      }
-
-      // 캐시 DB 조회
-      this.$searchCacheDB.get("cfb9d27f0b59d3fbc55073830f0507ee").then(docs => {
-        let keywords = docs.keywords;
-        // 일치하는 키워드 찾음
-        let findData = this.$lodash.find(keywords, { keyword: text });
-        // 일치하는 키워드 데이터가 있으면, 해당 목록 조회
-        if (findData) {
-          console.log("========= DB 캐싱 조회 성공");
-          this.$store.commit("setNextPageToken", findData.lastPageToken);
-          this.searchList = findData.list[0];
-          this.load = true;
+      let totalSearchList = this.getNextSearchList();
+      if (this.$lodash.size(totalSearchList) === 0) {
+        if (!text) {
+          text = this.defaultQuery;
         } else {
-          console.log("========= DB 캐싱 조회 실패, 신규 조회");
-          // 없으면 처음부터 조회
-          let request = this.youtubeSearch(text);
-          this.$http
-            .get(request)
-            .then(res => {
-              if (res.data.nextPageToken)
-                this.$store.commit("setNextPageToken", res.data.nextPageToken);
-              this.$store.commit("setSearchList", res.data.items);
-              this.$store
-                .dispatch("setSearchDuration", { vm: this })
-                .then(results => {
-                  this.$searchCacheDB
-                    .get("cfb9d27f0b59d3fbc55073830f0507ee")
-                    .then(docs => {
-                      let keywords = docs.keywords;
-                      if (keywords.length === 0) {
-                        let data = {
-                          keyword: text,
-                          startPageToken: res.data.nextPageToken,
-                          lastPageToken: res.data.nextPageToken,
-                          list: []
-                        };
-                        data.list.push(results);
-                        docs.keywords.push(data);
-                        this.$searchCacheDB.put(docs).then(res => {
-                          if (res.ok) {
-                            console.log("========= DB 캐싱 신규 업데이트!");
-                          }
-                        });
-                      }
-                      this.searchList = results;
-                    });
-                  this.load = true;
-                });
-            })
-            .catch(err => {
-              // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
-              console.error(err);
-            });
+          this.$store.commit("setSearchText", text);
         }
-      });
+        let request = this.youtubeSearch(text);
+        this.$http
+          .get(request)
+          .then(res => {
+            if (res.data.nextPageToken) {
+              this.$store.commit("setNextPageToken", res.data.nextPageToken);
+            }
+            this.$store.commit("setSearchList", res.data.items);
+            this.$store
+              .dispatch("setSearchDuration", { vm: this })
+              .then(results => {
+                this.searchList = results;
+                this.load = true;
+              });
+          })
+          .catch(err => {
+            // TODO: 에러 코드가 안잡힌다. 그냥 오류나면 API 토큰 재갱신하자
+            console.error(err)
+            // this.$store.dispatch("setAuthKeyChange", { vm: this }).then(() => {
+            //   setTimeout(() => {
+            //     const keyList = this.$store.getters.getKeys;
+            //     const searchKey = this.$lodash.find(keyList, { query: "search" });
+            //     const videoItemsKey = this.$lodash.find(keyList, {
+            //       query: "videoItems"
+            //     });
+            //     this.SEARCH_KEY = searchKey.apiKey;
+            //     this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
+            //     this.init(this.searchText);
+            //     this.$set(this, "initLoading", false);
+            //   }, 3500);
+            // })
+          });
+      } else {
+        this.searchList = totalSearchList;
+        this.load = true;
+      }
+      this.getKeyword();
     },
     submit(text, tag) {
       this.load = false;
@@ -420,34 +450,12 @@ export default {
         this.getSearchKeyword() === null
           ? this.defaultQuery
           : this.getSearchKeyword();
-
-      this.$searchCacheDB.get("cfb9d27f0b59d3fbc55073830f0507ee").then(docs => {
-        let keywords = docs.keywords;
-        // 일치하는 키워드 찾음
-        let findData = this.$lodash.find(keywords, { keyword: text });
-        // 일치하는 키워드 데이터가 있으면, 동일 키워드내 페이징 조회
-        if (findData && findData.lastPageToken !== 'end') {
-          console.log("========= DB 캐싱 조회목록 조회");
-          this.$store.commit("setNextPageToken", findData.lastPageToken);
-          this.next(text, docs, findData);
-        } 
-      });
-    },
-
-    next(text, docs, findData) {
       let request = this.youtubePagingSearch(text, this.getNextPageToken());
       this.$http
         .get(request)
         .then(res => {
-          // 유튜브 응답 토큰
           if (res.data.nextPageToken) {
             this.$store.commit("setNextPageToken", res.data.nextPageToken);
-            if (findData) {
-              // 최근 토큰 업데이트
-              findData.lastPageToken = res.data.nextPageToken;
-            }
-          } else {
-            findData.lastPageToken = "end";
           }
           this.$store.commit("setSearchList", res.data.items);
           this.$store
@@ -455,14 +463,6 @@ export default {
             .then(results => {
               this.searchList = this.$lodash.concat(this.searchList, results);
               this.$store.commit("setNextSearchList", this.searchList);
-              // 검색목록에 추가
-              findData.list[0] = this.searchList;
-
-              this.$searchCacheDB.put(docs).then(res => {
-                if (res.ok) {
-                  console.log("========= DB 페이징 캐싱 업데이트!");
-                }
-              });
               this.isMore = false;
             });
         })
