@@ -9,17 +9,17 @@ let PouchDB = require("pouchdb-core")
   .plugin(require("pouchdb-find"));
 
 // 개발용
-Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
-Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
+// Vue.prototype.$test = new PouchDB("http://localhost:5984/sample")
+// Vue.prototype.$local = new PouchDB("http://localhost:5984/local")
 
 // 내 콜렉션 로컬
-// Vue.prototype.$test = new PouchDB("collecton/160/release")
+Vue.prototype.$test = new PouchDB("collecton/160/release")
 
 // 유튜브 로컬
-// Vue.prototype.$local = new PouchDB("local/160/release")
+Vue.prototype.$local = new PouchDB("local/160/release")
 
 // 서비스
 Vue.prototype.$db = new PouchDB("http://202.182.100.137/metube")
 
 // 테스트는 우선 여기에 쓰고, 나중에는 로컬에다가 써야함.
-Vue.prototype.$searchCacheDB = new PouchDB("http://202.182.100.137/search")
+// Vue.prototype.$searchCacheDB = new PouchDB("http://202.182.100.137/search")
