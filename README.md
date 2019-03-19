@@ -50,8 +50,11 @@ If you like the program, please click on the star! It will help developers a lot
 
 ***
 
-### Trello (for korean)
-<https://trello.com/b/qj4gO2br/metube>
+### Donate
+
+If you find this project useful, you can buy author a glass of juice 🍹
+
+<a href="https://www.buymeacoffee.com/vpe1XQ0Us" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 ## License
 GNU General Public License v3.0
