@@ -285,10 +285,9 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      this.$ga.page({
-        page: `${this.$version}/Youtube/${pathName}/Play`
-      });
-
+      const data = { url: `${this.$version}/Youtube/${pathName}/Play`}
+      this.$ipcRenderer.send('pageView', data)
+      
       // 재생목록 정보 조회
       const initPromise = this.getPlaylistInfoData(
         this.playType,
@@ -762,12 +761,13 @@ export default {
         category = 'Related'
       }
 
-      this.$ga.event({
+      const data = {
         eventCategory: category,
         eventAction: 'Play',
         eventLabel: this.coverTitle,
-        eventValue: 0
-      })
+      }
+
+      this.$ipcRenderer.send("eventView", data);
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */

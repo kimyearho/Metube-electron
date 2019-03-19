@@ -154,9 +154,10 @@ export default {
   },
   methods: {
     init() {
-      this.$ga.page({
-        page: `${this.$version}/MyCollection/Playlist`
-      });
+
+      const data = {url: `${this.$version}/MyCollection/Playlist`}
+      this.$ipcRenderer.send('pageView', data)
+
       this.isMini = this.getMusicInfos() ? true : false;
       this.playType = this.$route.params.playType;
       this.collectionDoc = this.$route.params.doc;

@@ -192,9 +192,8 @@ export default {
   },
   created() {
 
-    this.$ga.page({
-      page: `${this.$version}/SearchList`
-    });
+    const data = { url: `${this.$version}/SearchList` }
+    this.$ipcRenderer.send('pageView', data)
 
     // DB에서 추천트랙 조회
     this.recommandTrack();

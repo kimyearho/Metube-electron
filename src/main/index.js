@@ -106,6 +106,8 @@ function createWindow() {
   });
 }
 
+require("../analiytics/analytics")(app);
+
 if (!gotTheLock) {
   app.quit();
 } else {

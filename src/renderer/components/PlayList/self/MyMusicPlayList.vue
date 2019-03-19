@@ -210,9 +210,8 @@ export default {
     };
   },
   created() {
-    this.$ga.page({
-      page: `${this.$version}/MyCollection/Playlist/Play`,
-    });
+    const data = { url: `${this.$version}/MyCollection/Playlist/Play` }
+    this.$ipcRenderer.send('pageView', data)
   },
   mounted() {
     this.getCategory();
@@ -579,12 +578,13 @@ export default {
       const videoId = playingItem.videoId;
       this.$ipcRenderer.send("win2Player", ["loadVideoById", videoId]);
 
-      this.$ga.event({
+      const data = {
         eventCategory: 'MyCollection',
         eventAction: 'Play',
         eventLabel: this.coverTitle,
-        eventValue: 0
-      })
+      }
+
+      this.$ipcRenderer.send("eventView", data);
 
       if (process.env.NODE_ENV !== "development") {
         /** @overade 히스토리 등록 */

@@ -307,9 +307,10 @@ export default {
     };
   },
   created() {
-    this.$ga.page({
-      page: `${this.$version}/CollectionList`
-    });
+    
+    const data = { url: `${this.$version}/CollectionList` }
+    this.$ipcRenderer.send('pageView', data)
+
     this.isLogin = this.getUserId() ? true : false;
   },
   beforeMount() {

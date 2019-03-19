@@ -84,9 +84,10 @@ export default {
     this.load = false;
   },
   created() {
-    this.$ga.page({
-      page: `${this.$version}/VideoHistorys`
-    });
+
+    const data = { url: `${this.$version}/VideoHistorys` }
+    this.$ipcRenderer.send('pageView', data)
+
     this.isLogin = this.getUserId() ? true : false;
     this.isMini = this.getMusicInfos() ? true : false;
   },

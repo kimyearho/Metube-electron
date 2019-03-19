@@ -171,9 +171,8 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      this.$ga.page({
-        page: `${this.$version}/Youtube/${pathName}/Play`
-      });
+      const data = { url: `${this.$version}/Youtube/${pathName}/Play`}
+      this.$ipcRenderer.send('pageView', data)
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회
       this.createLocalIndex(["type", "playlistId"]).then(() => {

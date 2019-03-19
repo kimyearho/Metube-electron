@@ -88,19 +88,6 @@ import "./assets/css/autocomplete.css";
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.config.productionTip = false;
 
-import VueAnalytics from "vue-analytics";
-Vue.use(VueAnalytics, {
-  id: "UA-128591940-1",
-  autoTracking: {
-    pageviewOnLoad: false
-  },
-  batch: {
-    enabled: true, // enable/disable
-    amount: 1, // amount of events fired
-    delay: 5000 // delay in milliseconds
-  },
-});
-
 /* global component */
 Vue.component("global-event-handler", GlobalEventHandler);
 Vue.component("top-header", topHeader);
