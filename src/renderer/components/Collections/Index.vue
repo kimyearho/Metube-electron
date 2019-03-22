@@ -307,7 +307,7 @@ export default {
     };
   },
   created() {
-    
+
     const data = { url: `${this.$version}/CollectionList` }
     this.$ipcRenderer.send('pageView', data)
 

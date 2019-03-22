@@ -1,8 +1,8 @@
 {
   "name": "metube",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "author": "kstory8715 <kstory8715@gmail.com>",
-  "description": "Metube 1.6.0",
+  "description": "Metube 1.6.5",
   "license": "GPL-3.0",
   "main": "./dist/electron/main.js",
   "scripts": {

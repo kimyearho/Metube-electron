@@ -8,15 +8,28 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :data="data"
@@ -28,7 +41,10 @@
       </a>
     </div>
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -54,25 +70,51 @@
     </div>
     <div class="overay"></div>
 
-    <md-list id="list" class="searchList" :class="{ dynamicHeight: isMini }">
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+    <md-list
+      id="list"
+      class="searchList"
+      :class="{ dynamicHeight: isMini }"
+    >
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
-          <img :src="item.imageInfo" alt="People">
+          <img
+            :src="item.imageInfo"
+            alt="People"
+          >
         </md-avatar>
 
         <span
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-        <a class="cursor" @click="openContext(item)">
-          <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
+        <a
+          class="cursor"
+          @click="openContext(item)"
+        >
+          <img
+            class="contextMenu"
+            src="@/assets/images/svg/context-menu.svg"
+          >
         </a>
       </md-list-item>
       <md-list-item v-if="isNext">
         <span class="loadMoreCenter">
-          <i class="el-icon-check" style="padding-right: 10px;"></i>
+          <i
+            class="el-icon-check"
+            style="padding-right: 10px;"
+          ></i>
           Total {{ totalPage }} Page
         </span>
       </md-list-item>
@@ -83,16 +125,25 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
-    <context-menu :isShow="contextShow" :data="selectedData" @close="contextShow = false"/>
+    <!-- 비디오 확장메뉴 -->
+    <context-menu
+      :isShow="contextShow"
+      :data="selectedData"
+      @close="contextShow = false"
+    />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -171,7 +222,7 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      const data = { url: `${this.$version}/Youtube/${pathName}/Play`}
+      const data = { url: `${this.$version}/Youtube/${pathName}/Play` }
       this.$ipcRenderer.send('pageView', data)
 
       // 로컬 디비로 등록 되어있는 재생목록인지 조회

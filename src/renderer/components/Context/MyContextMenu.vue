@@ -14,16 +14,28 @@ You can not delete this comment when you deploy an application.
       :before-close="closeModal"
       :append-to-body="true"
     >
-      <md-button class="md-raised" @click="watchYoutube">
+      <md-button
+        class="md-raised"
+        @click="watchYoutube"
+      >
         <i class="el-icon-news"></i> Open Youtube
       </md-button>
-      <md-button class="md-raised md-primary" @click="changeCover">
+      <md-button
+        class="md-raised md-primary"
+        @click="changeCover"
+      >
         <i class="el-icon-edit-outline"></i> Change Cover
       </md-button>
-      <md-button class="md-raised" @click="copyClipboard">
+      <md-button
+        class="md-raised"
+        @click="copyClipboard"
+      >
         <i class="el-icon-star-on"></i> Link Copy
       </md-button>
-      <md-button class="md-raised md-accent" @click="remove">
+      <md-button
+        class="md-raised md-accent"
+        @click="remove"
+      >
         <i class="el-icon-delete"></i> Remove
       </md-button>
     </el-dialog>
@@ -60,7 +72,7 @@ export default {
       let link = `https://www.youtube.com/watch?v=${this.data.videoId}`;
       let self = this;
       this.$copyText(link).then(
-        function(e) {
+        function (e) {
           self.closeModal();
           self.$modal.show("dialog", {
             title: "Success",
@@ -72,7 +84,7 @@ export default {
             ]
           });
         },
-        function(e) {
+        function (e) {
           self.$modal.show("dialog", {
             title: "Error",
             text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),

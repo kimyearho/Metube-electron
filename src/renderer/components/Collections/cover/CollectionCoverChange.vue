@@ -7,9 +7,21 @@
 
 <template>
   <div>
-    <modal name="modal" :width="300" :height="150" :clickToClose="false" :adaptive="true">
-      <el-form ref="form" style="margin:5px;">
-        <el-form-item label="Change Cover Thumbnail" class="linkform">
+    <modal
+      name="modal"
+      :width="300"
+      :height="150"
+      :clickToClose="false"
+      :adaptive="true"
+    >
+      <el-form
+        ref="form"
+        style="margin:5px;"
+      >
+        <el-form-item
+          label="Change Cover Thumbnail"
+          class="linkform"
+        >
           <el-input
             v-model="linkForm"
             :autofocus="true"
@@ -17,8 +29,15 @@
           />
         </el-form-item>
         <el-form-item class="buttonform">
-          <el-button type="primary" size="small" @click="apply">Apply</el-button>
-          <el-button size="small" @click="closeModal">Close</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="apply"
+          >Apply</el-button>
+          <el-button
+            size="small"
+            @click="closeModal"
+          >Close</el-button>
         </el-form-item>
       </el-form>
     </modal>
@@ -37,19 +56,19 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       linkForm: null
     }
   },
   methods: {
-    showModal () {
+    showModal() {
       this.$modal.show('modal')
     },
-    closeModal () {
+    closeModal() {
       this.$modal.hide('modal')
     },
-    apply () {
+    apply() {
       let self = this
       let url = self.linkForm
       if (url) {
@@ -66,11 +85,11 @@ export default {
         self.messageDialog('Info', self.$t('COMMONS.DIALOG.BLANK_FORM'))
       }
     },
-    CollectionCoverChange (url) {
+    CollectionCoverChange(url) {
       this.$test.get(this.data._id).then(doc => {
         doc.thumbnails = url;
         return this.$test.put(doc).then(result => {
-          if(result.ok) {
+          if (result.ok) {
             this.$emit('is-success', {
               playType: this.data.playType
             })

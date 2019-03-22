@@ -1,32 +1,57 @@
 <template>
   <div>
-    <top-header :isShow="false"/>
+    <top-header :isShow="false" />
     <div class="wrapper">
       <el-row v-if="isLogin">
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/playlist.svg">
+              <img
+                width="20"
+                style="margin-bottom: 10px;"
+                src="@/assets/images/svg/playlist.svg"
+              >
               <span class="collections">{{ $t('HISTORY.MENU_NAME') }}</span>
             </div>
-            <strong class="tr" style="font-size:11px;">{{ $t('HISTORY.MENU_DESC') }}</strong>
+            <strong
+              class="tr"
+              style="font-size:11px;"
+            >{{ $t('HISTORY.MENU_DESC') }}</strong>
           </div>
         </el-col>
       </el-row>
 
-      <md-list v-if="isLogin" id="list" class="historyList" :class="{ staticHeight: isMini }">
-        <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="index">
+      <md-list
+        v-if="isLogin"
+        id="list"
+        class="historyList"
+        :class="{ staticHeight: isMini }"
+      >
+        <md-list-item
+          :id="`item${index}`"
+          v-for="(item, index) in playlist"
+          :key="index"
+        >
           <md-avatar style="margin-right: 0;">
             <img :src="item.image">
           </md-avatar>
 
           <span class="md-list-item-text music-title cursor">{{ item.title }}</span>
           <span class="label_video">{{ item.duration }}</span>
-          <a class="cursor" @click="openContext(item)">
-            <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+          <a
+            class="cursor"
+            @click="openContext(item)"
+          >
+            <img
+              class="contextMenu"
+              src="@/assets/images/svg/context-menu.svg"
+            >
           </a>
         </md-list-item>
-        <div class="bottom" v-if="playlist.length > 0">
+        <div
+          class="bottom"
+          v-if="playlist.length > 0"
+        >
           <img src="@/assets/images/youtube/dev.png">
         </div>
       </md-list>
@@ -34,7 +59,10 @@
         <el-col>
           <p class="notLogin">{{ $t('HISTORY.NO_LOGIN') }}</p>
         </el-col>
-        <el-col class="link" style="margin-top:10px;">
+        <el-col
+          class="link"
+          style="margin-top:10px;"
+        >
           <md-button
             class="md-raised md-primary btn"
             @click="signLink"
@@ -45,13 +73,17 @@
 
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
-      <loading v-show="!load"/>
+      <loading v-show="!load" />
     </transition>
 
-    <context-menu :isShow="contextShow" :data="selectedData" @close="contextShow = false"/>
+    <context-menu
+      :isShow="contextShow"
+      :data="selectedData"
+      @close="contextShow = false"
+    />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
   </div>
 </template>
 

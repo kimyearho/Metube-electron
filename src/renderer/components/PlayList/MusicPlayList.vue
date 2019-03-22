@@ -8,15 +8,29 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" :data="{ playType: 'list' }" @scrollTop="endScrollTop"/>
+    <top-header
+      :isShow="false"
+      :data="{ playType: 'list' }"
+      @scrollTop="endScrollTop"
+    />
 
     <!-- 커버 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="route">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="route"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
       <!-- 컬렉션 등록 -->
-      <a class="cursor" v-if="playType !== 'related'" @click="addCollection">
+      <a
+        class="cursor"
+        v-if="playType !== 'related'"
+        @click="addCollection"
+      >
         <collection-register
           ref="likes"
           :isLikeToggle="isLikeToggle"
@@ -29,7 +43,10 @@
 
     <!-- 커버 영역 -->
     <div>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span
           class="label_channel label_v"
@@ -59,7 +76,10 @@
     <div class="overay"></div>
 
     <!-- 재생목록 -->
-    <md-list id="list" class="musicPlayList">
+    <md-list
+      id="list"
+      class="musicPlayList"
+    >
       <!-- 비디오 목록 -->
       <md-list-item
         v-for="(item, index) in playlist"
@@ -79,28 +99,55 @@
           @click="mainPlayItem(index)"
         >{{ item.title }}</span>
         <!-- 비디오 재생시간 -->
-        <span v-if="item.videoId && item.isLive != 'live'" class="label_video">{{ item.duration }}</span>
+        <span
+          v-if="item.videoId && item.isLive != 'live'"
+          class="label_video"
+        >{{ item.duration }}</span>
         <!-- 비디오 라이브 여부 -->
-        <span v-if="item.videoId && item.isLive == 'live'" class="label_live">LIVE</span>
+        <span
+          v-if="item.videoId && item.isLive == 'live'"
+          class="label_live"
+        >LIVE</span>
 
-        <!-- 확장메뉴 -->
-        <context-menu :videoId="item.videoId" :data="item"/>
+        <a
+          class="cursor"
+          @click="openContext(item)"
+        >
+          <img
+            class="contextMenu"
+            src="@/assets/images/svg/context-menu.svg"
+          >
+        </a>
       </md-list-item>
 
       <!-- 페이징 -->
       <md-list-item v-if="pageNum !== lastPageNum">
-        <div v-if="!isMore" class="loadMoreCenter" :class="{ prev: pageNum !== 1 }">
-          <a v-if="pageNum !== 1" class="cursor" @click="prevPageLoad('self')">
+        <div
+          v-if="!isMore"
+          class="loadMoreCenter"
+          :class="{ prev: pageNum !== 1 }"
+        >
+          <a
+            v-if="pageNum !== 1"
+            class="cursor"
+            @click="prevPageLoad('self')"
+          >
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
           </a>
           <span>{{ pageNum }} / {{ totalPage }}</span>
-          <a class="cursor" @click="nextPageLoad('self')">
+          <a
+            class="cursor"
+            @click="nextPageLoad('self')"
+          >
             <span style="margin-left: 15px;">Next</span>
             <md-icon class="md-size-2x">navigate_next</md-icon>
           </a>
         </div>
-        <div v-else class="loadMoreCenter loadMoreLoading">LOADING ...</div>
+        <div
+          v-else
+          class="loadMoreCenter loadMoreLoading"
+        >LOADING ...</div>
       </md-list-item>
 
       <!-- 페이지의 끝 -->
@@ -110,13 +157,19 @@
           class="loadMoreCenter"
           :class="{ prev: pageNum !== 1 }"
         >
-          <a class="cursor" @click="prevPageLoad('self')">
+          <a
+            class="cursor"
+            @click="prevPageLoad('self')"
+          >
             <md-icon class="md-size-2x">navigate_before</md-icon>
             <span style="margin-right: 15px;">Prev</span>
           </a>
           <span>{{ pageNum }} / {{ totalPage }}</span>
         </div>
-        <div v-else class="loadMoreCenter noPage">
+        <div
+          v-else
+          class="loadMoreCenter noPage"
+        >
           <span>{{ pageNum }} / {{ totalPage }}</span>
         </div>
       </md-list-item>
@@ -136,10 +189,21 @@
     />
 
     <!-- 로딩 컴포넌트 -->
-    <loading v-show="!load"/>
+    <loading v-show="!load" />
+
+    <!-- 비디오 확장메뉴 -->
+    <context-menu
+      :isShow="contextShow"
+      :data="selectedData"
+      @close="contextShow = false"
+    />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
   </div>
 </template>
 
@@ -188,6 +252,8 @@ export default {
       isLikeToggle: false,
       isMore: false,
       selectedIndex: 0,
+      selectedData: null,
+      contextShow: false,
       active: "active",
       cover: null,
       load: false,
@@ -200,6 +266,12 @@ export default {
     this.feachData();
   },
   methods: {
+
+    openContext(data) {
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
+    },
+
     /**
      * 다음 순번의 비디오 수신
      */
@@ -285,9 +357,9 @@ export default {
         playlistName = `CHANNEL:${this.playlistId}`;
       }
 
-      const data = { url: `${this.$version}/Youtube/${pathName}/Play`}
+      const data = { url: `${this.$version}/Youtube/${pathName}/Play` }
       this.$ipcRenderer.send('pageView', data)
-      
+
       // 재생목록 정보 조회
       const initPromise = this.getPlaylistInfoData(
         this.playType,
@@ -753,11 +825,11 @@ export default {
 
       let category = '';
 
-      if(this.playType === 'play') {
+      if (this.playType === 'play') {
         category = 'Playlist'
-      } else if(this.playType === 'channel') {
+      } else if (this.playType === 'channel') {
         category = 'Channel'
-      } else if(this.playType === 'related') {
+      } else if (this.playType === 'related') {
         category = 'Related'
       }
 

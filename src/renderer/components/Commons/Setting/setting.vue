@@ -11,7 +11,7 @@
       :class="{ updateHeight: isCheck }"
     >
       <form>
-        <div class="menu1">
+        <!-- <div class="menu1">
           <label class="wh">
             <strong v-html="$tc('SETTING.MENU.PLAYER_HIDE')"></strong>
           </label>
@@ -19,7 +19,7 @@
         </div>
         <div class="menu1_tip">
           <strong class="gr">{{ $t('SETTING.PLAYER_HIDE') }}</strong>
-        </div>
+        </div> -->
         <div class="menu1">
           <label class="wh">
             <strong>{{ $t('SETTING.MENU.ALWAYS_TOP') }}</strong>
