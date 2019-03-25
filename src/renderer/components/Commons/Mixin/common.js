@@ -41,6 +41,7 @@ export default {
         if (isRepeat) {
           this.$ipcRenderer.send("win2Player", ["loadVideoById", musicData.videoId])
         } else {
+
           // 이전 음악의 인덱스 (현재 종료된 음악)
           let currentIndex = musicData.index
           // 다음 인덱스

@@ -64,10 +64,10 @@
         <br>
         <div class="titleflow">
           <marquee-text
-              class="zaudio_songtitle"
-              :key="coverTitle"
-              :duration="coverTitle.length / 2"
-            >&nbsp; {{ coverTitle }}</marquee-text>
+            class="zaudio_songtitle"
+            :key="coverTitle"
+            :duration="coverTitle.length / 2"
+          >&nbsp; {{ coverTitle }}</marquee-text>
           <div style="margin-top:5px;">
             <span class="zaudio_songartist">{{ channelTitle }}</span>
             <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
@@ -282,7 +282,7 @@ export default {
      * 다음 순번의 비디오 수신
      */
     subscribeNextVideo(index) {
-      this.playItem(index);
+      this.playItem(index, 'typeEvent');
     },
 
     /**
@@ -581,7 +581,7 @@ export default {
      *
      * @param {index} - 다음곡
      */
-    playItem(index) {
+    playItem(index, event) {
       // 재생음악 정보
       const musicInfo = this.getMusicInfos();
       const playType = musicInfo.type;
@@ -652,7 +652,7 @@ export default {
                 if (this.playType === "related") {
                   playingItem.mainId = this.videoId;
                 }
-                this.playSetting(playingItem);
+                this.playSetting(playingItem, event);
                 this.nextTrackScroll(500);
               }
             }
@@ -808,7 +808,7 @@ export default {
      *
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
-    playSetting(playingItem) {
+    playSetting(playingItem, event) {
       // 현재 페이지와, 재생하고자하는 페이지가 동일할때
       if (this.pageNum === playingItem.pageNum) {
         this.selectedIndex = playingItem.index;
@@ -818,6 +818,20 @@ export default {
       this.coverTitle = playingItem.title;
       this.channelTitle = playingItem.channelTitle;
       this.cover = playingItem.imageInfo;
+
+      if (process.env.NODE_ENV !== "development") {
+        /** @overade 히스토리 등록 */
+        this.insertVideoHistory(playingItem);
+
+        // 사용자가 감상한 비디오를 등록하기 위한 조건이 변경 됨.
+        // 이제는 음악이 종료된 시점에 등록이 되도록 변경함.
+        // 무번별하게 등록되는 문제를 보완함.
+        if (event !== undefined) {
+          const currentMusic = this.getMusicInfos()
+          /** @overade 사용자 재생 등록 */
+          this.insertUserRecommand(playingItem);
+        }
+      }
 
       // 재생될 비디오 정보를 갱신
       this.$store.commit("setPlayingMusicInfo", playingItem);
@@ -846,14 +860,6 @@ export default {
       }
 
       this.$ipcRenderer.send("eventView", data);
-
-      if (process.env.NODE_ENV !== "development") {
-        /** @overade 히스토리 등록 */
-        this.insertVideoHistory(playingItem);
-
-        /** @overade 사용자 재생 등록 */
-        this.insertUserRecommand(playingItem);
-      }
     },
 
     /**

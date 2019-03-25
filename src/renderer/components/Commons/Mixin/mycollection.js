@@ -184,7 +184,7 @@ export default {
               playingItem.name = musicData.name
 
               this.totalTracks = this.playlist.length
-              this.playSetting(playingItem)
+              this.playSetting(playingItem, 'event')
               if (index === 0) {
                 this.nextTrackScroll(-1)
               } else {

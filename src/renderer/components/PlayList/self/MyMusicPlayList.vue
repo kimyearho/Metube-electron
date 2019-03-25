@@ -561,13 +561,27 @@ export default {
      *
      * @param {playingItem} 재생될 재생정보의 데이터 객체
      */
-    playSetting(playingItem) {
+    playSetting(playingItem, event) {
       this.selectedIndex = playingItem.index;
       this.coverTitle = playingItem.title;
       this.channelTitle = playingItem.channelTitle;
       this.cover = playingItem.imageInfo
         ? playingItem.imageInfo
         : playingItem.thumbnails;
+
+      if (process.env.NODE_ENV !== "development") {
+        /** @overade 히스토리 등록 */
+        this.insertVideoHistory(playingItem);
+
+        // 사용자가 감상한 비디오를 등록하기 위한 조건이 변경 됨.
+        // 이제는 음악이 종료된 시점에 등록이 되도록 변경함.
+        // 무번별하게 등록되는 문제를 보완함.
+        if (event !== undefined) {
+          const currentMusic = this.getMusicInfos()
+          /** @overade 사용자 재생 등록 */
+          this.insertUserRecommand(playingItem);
+        }
+      }
 
       this.$store.commit("setPlayingMusicInfo", playingItem);
       this.$store.commit("setPlayType", true);
@@ -585,14 +599,6 @@ export default {
       }
 
       this.$ipcRenderer.send("eventView", data);
-
-      if (process.env.NODE_ENV !== "development") {
-        /** @overade 히스토리 등록 */
-        this.insertVideoHistory(playingItem);
-
-        /** @overade 사용자 재생 등록 */
-        this.insertUserRecommand(playingItem);
-      }
 
       this.load = true;
     },
