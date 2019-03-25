@@ -21,8 +21,6 @@ if (process.platform === "darwin") {
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
-const playerPath = "http://sharepod.kr";
-
 // Create Main Window
 function createWindow() {
   log.info("================ >>> APP START");
@@ -60,6 +58,14 @@ function createWindow() {
       title: "Player"
     });
     player.setMenu(null);
+
+    let playerPath;
+
+    if (process.env.NODE_ENV !== "production") {
+      playerPath = "http://localhost:7070";
+    } else {
+      playerPath = '"http://sharepod.kr";';
+    }
     player.loadURL(playerPath);
     player.on("close", e => {
       if (!willQuitApp) {
@@ -136,17 +142,18 @@ app.on("window-all-closed", () => {
 ipcMain.on("main:googleAuth", () => {
   console.log("Google Youtube Oauth2.0 Start");
   googleLogin(mainWindow).then(code => {
-    console.log('code => ', code)
+    console.log("code => ", code);
     getOauth2Client()
       .getToken(code)
       .then(res => {
-        console.log('res => ', res)
+        console.log("res => ", res);
         if (res.tokens.access_token) {
           let requestURL = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${
             res.tokens.access_token
           }`;
-          console.log('requestUrl => ', requestURL)
+          console.log("requestUrl => ", requestURL);
           request.get(requestURL, (error, response, body) => {
+            console.log(response)
             if (response.statusCode === 200) {
               mainWindow.webContents.send("render:googleAuth", {
                 resultCode: 200,
@@ -241,7 +248,6 @@ ipcMain.on("player2Win", (e, args) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-
   // 프로덕션 상태라면 업데이트 요청을 앱 시작 시 요청함.
   autoUpdater.checkForUpdates();
 
@@ -257,7 +263,8 @@ if (process.env.NODE_ENV === "production") {
       buttons: ["Restart"],
       title: "Application Update",
       message: process.platform === "win32" ? releaseNotes : releaseName,
-      detail: "The update has been verified. Click the `Restart` button to update"
+      detail:
+        "The update has been verified. Click the `Restart` button to update"
     };
 
     dialog.showMessageBox(dialogOpts, response => {

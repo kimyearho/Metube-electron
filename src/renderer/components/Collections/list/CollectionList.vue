@@ -5,65 +5,38 @@
 
 <template>
   <div>
-    <top-header
-      :create="isCreate"
-      @create-close="createClose"
-      @my-sync-list="getMyCollectionList"
-    />
+    <top-header :create="isCreate" @create-close="createClose" @my-sync-list="getMyCollectionList"/>
     <div class="wrapper">
       <!-- 로그인 상태 -->
       <el-row>
         <el-col>
           <div class="menu1_tip">
             <div>
-              <img
-                width="20"
-                style="margin-bottom: 10px;"
-                src="@/assets/images/svg/collection.svg"
-              >
+              <img width="20" style="margin-bottom: 10px;" src="@/assets/images/svg/collection.svg">
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
-              <md-button
-                class="md-raised b-primary c-add md-primary"
-                @click="create"
-              >
-                <i
-                  class="material-icons"
-                  style="float:left;"
-                >add</i>
-                <span :class="{ en_create: isLocale === 'en_US', ko_create: isLocale === 'ko_KR' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
+              <md-button class="md-raised b-primary c-add md-primary" @click="create" v-if="playType !== 'play' && playType !== 'channel'">
+                <i class="material-icons" style="float:left;">add</i>
+                <span
+                  :class="{ en_create: isLocale === 'en_US', ko_create: isLocale === 'ko_KR' }"
+                >{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
               </md-button>
             </div>
-            <strong
-              class="tr"
-              style="font-size:11px;"
-            >{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
+            <strong class="tr" style="font-size:11px;">{{ $t('COLLECTION.ALBUM_INDEX') }}</strong>
           </div>
         </el-col>
       </el-row>
       <!-- 로그인 상태 -->
-      <el-row
-        class="el-scroll"
-        :class="{ dynamicHeight: isSub }"
-      >
+      <el-row class="el-scroll" :class="{ dynamicHeight: isSub }">
         <!-- 재생목록 -->
         <el-col>
           <div class="menu1">
-            <label
-              class="wh"
-              v-if="playType === 'play'"
-            >
+            <label class="wh" v-if="playType === 'play'">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.PLAY_LIST') }}</strong>
             </label>
-            <label
-              class="wh"
-              v-else-if="playType === 'channel'"
-            >
+            <label class="wh" v-else-if="playType === 'channel'">
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.CHANNEL') }}</strong>
             </label>
-            <label
-              class="wh"
-              v-else
-            >
+            <label class="wh" v-else>
               <strong style="margin-left: 5px;">{{ $t('COLLECTION.MENU.MY_COLLECTION') }}</strong>
             </label>
           </div>
@@ -76,17 +49,8 @@
         >{{ $t('COLLECTION.NO_PLAYLIST') }}</el-col>
 
         <!-- PLAY LIST -->
-        <el-col
-          v-else
-          class="cols"
-          v-for="item in playlists"
-          :key="item._id"
-          :span="12"
-        >
-          <el-card
-            class="thumb"
-            :body-style="{ padding: '0px' }"
-          >
+        <el-col v-else class="cols" v-for="item in playlists" :key="item._id" :span="12">
+          <el-card class="thumb" :body-style="{ padding: '0px' }">
             <div class="overlay">
               <img
                 class="md-image thumbnail"
@@ -95,10 +59,7 @@
                 width="158"
                 height="100"
               >
-              <div
-                class="myCollectionLabel"
-                v-if="playType === 'my-collection'"
-              >
+              <div class="myCollectionLabel" v-if="playType === 'my-collection'">
                 <span class="label_related label_v">{{ item.category }}</span>
               </div>
               <div
@@ -106,10 +67,7 @@
                 @click="showMusicList(item)"
                 :class="{ channelWrapper: playType === 'channel' }"
               >
-                <div
-                  class="overlayMenu"
-                  :class="{ channelMenu: playType === 'channel' }"
-                >
+                <div class="overlayMenu" :class="{ channelMenu: playType === 'channel' }">
                   <!-- <a class="cursor" @click="showMusicList(item)" title="Play">
                     <font-awesome-icon class="f25 fa" icon="play"/>
                   </a>
@@ -123,16 +81,13 @@
                     v-if="playType !== 'channel'"
                   >
                     <font-awesome-icon class="f25 fa" icon="images"/>
-                  </a> -->
+                  </a>-->
                 </div>
               </div>
             </div>
             <div class="channelForm">
               <div class="titleflow">
-                <span
-                  class="sub cursor"
-                  @click="showMusicList(item)"
-                >{{ item.title }}</span>
+                <span class="sub cursor" @click="showMusicList(item)">{{ item.title }}</span>
               </div>
             </div>
           </el-card>
@@ -141,17 +96,13 @@
       </el-row>
     </div>
     <!-- 서브 플레이어 컴포넌트 -->
-    <sub-player-bar v-show="isSub" />
+    <sub-player-bar v-show="isSub"/>
 
     <!-- 로딩 컴포넌트 -->
     <loading v-show="!load"></loading>
 
     <!-- 커버 이미지 변경 -->
-    <cover-change-modal
-      ref="coverModal"
-      :data="selectedData"
-      @is-success="saveCover"
-    />
+    <cover-change-modal ref="coverModal" :data="selectedData" @is-success="saveCover"/>
   </div>
 </template>
 
@@ -237,7 +188,7 @@ export default {
       });
     },
     showMusicList(item) {
-      console.log(item)
+      console.log(item);
       this.$store.commit("setPath", this.$route.path);
       if (item.category) {
         this.$router.push({

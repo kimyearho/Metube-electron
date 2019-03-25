@@ -68,14 +68,11 @@ export default {
                   $eq: user
                 },
                 playlistId: {
-                  $eq:
-                    this.playType === "play"
-                      ? this.data[0].playlistId
-                      : this.data[0].channelPlaylistId
+                  $eq: this.data[0].playlistId
                 }
               }
             };
-            console.log(options)
+            console.log(options);
             this.createIndex(["type", "userId", "playlistId"]).then(() => {
               return this.$test.find(options).then(result => {
                 const doc = result.docs[0];

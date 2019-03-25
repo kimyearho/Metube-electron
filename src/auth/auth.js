@@ -17,7 +17,6 @@ export function googleLogin(mainWindow) {
     })
 
     const authWindow = new BrowserWindow({ width: 400, height: 580 })
-    console.log(authURL)
     authWindow.setMenu(null)
     authWindow.loadURL(authURL)
     authWindow.show()
