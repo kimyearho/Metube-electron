@@ -48,8 +48,11 @@
           <div class="userName">{{ profileData.googleName }}</div>
         </div>
 
-        <div class="noLogin" v-else>
-          <el-button type="primary" size="medium" @click="route('login')">{{ $t('MAIN.MENU.SIGN') }}</el-button>
+        <div v-else>
+          <img
+            width="190"
+            src="@/assets/images/logo.jpg"
+          >
         </div>
       </md-toolbar>
 
