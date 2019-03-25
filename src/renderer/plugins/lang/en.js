@@ -60,7 +60,7 @@ export default {
     SIGN_OUT: "Sign out",
     NOTICE: "Notice",
     NO_LOGIN_NOTICE:
-      "When you sign in to MeTube, videos you watch on MeTube can sync to YouTube and manage your collection. Sign in to use all other features in MeTube",
+      "I can not log in the first time I log in. Please close the login window and log in again. We are currently working on this issue.",
     YES_LOGIN_NOTICE:
       "Thank you for using MeTube. Users who are logged in can use the History and Collections functions"
   },

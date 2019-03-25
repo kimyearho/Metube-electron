@@ -7,7 +7,6 @@ import { autoUpdater } from "electron-updater";
 
 let player;
 let mainWindow;
-let popupWindow;
 let willQuitApp = false;
 const winURL =
   process.env.NODE_ENV === "development"
@@ -22,18 +21,7 @@ if (process.platform === "darwin") {
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
-let playerPath;
-if (process.env.NODE_ENV !== "production") {
-  if (process.platform !== "darwin") {
-    // windows
-    playerPath = "http://localhost:7070";
-  } else {
-    // other
-    playerPath = "http://sharepod.kr";
-  }
-} else {
-  playerPath = "http://sharepod.kr";
-}
+const playerPath = "http://sharepod.kr";
 
 // Create Main Window
 function createWindow() {
@@ -254,24 +242,22 @@ ipcMain.on("player2Win", (e, args) => {
 
 if (process.env.NODE_ENV === "production") {
 
+  // 프로덕션 상태라면 업데이트 요청을 앱 시작 시 요청함.
   autoUpdater.checkForUpdates();
 
-  // 30분 간격으로 업데이트 조회
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, 1800000);
-
+  // 업데이트할 내용이 없음
   autoUpdater.on("update-not-available", () => {
     log.info(">>> No Updates, Current version is up-to-date.");
   });
 
+  // 업데이트가 있으므로 사용자에게 알림.
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
     const dialogOpts = {
       type: "info",
-      buttons: ["Restart", "Later"],
+      buttons: ["Restart"],
       title: "Application Update",
       message: process.platform === "win32" ? releaseNotes : releaseName,
-      detail: "Found updates, do you want update now?"
+      detail: "The update has been verified. Click the `Restart` button to update"
     };
 
     dialog.showMessageBox(dialogOpts, response => {
@@ -279,6 +265,7 @@ if (process.env.NODE_ENV === "production") {
     });
   });
 
+  // 업데이트 오류
   autoUpdater.on("error", message => {
     log.info(">>> 애플리케이션을 업데이트하는 도중 오류가 발생하였습니다.");
     log.info(message);
