@@ -113,7 +113,14 @@
         <span
           class="label_video"
           v-if="item.videoId && item.isLive === 'none'"
-        >{{ item.duration }}</span>
+        >{{ item.duration }}
+          <a class="cursor">
+            <img
+              class="contextMenu"
+              src="@/assets/images/svg/context-menu.svg"
+            >
+          </a>
+        </span>
         <span
           class="label_live"
           v-if="item.videoId && item.isLive === 'live'"

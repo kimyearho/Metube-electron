@@ -87,6 +87,7 @@
         <div class="description">
           <strong
             class="gr"
+            style="color:#ff1744;"
             v-if="!isSignin"
           >{{ $t('SIGN.NO_LOGIN_NOTICE') }}</strong>
           <strong
@@ -174,6 +175,11 @@ export default {
               };
               this.$test.post(data);
             }
+
+            this.$message({
+              message: 'Login Success.',
+              type: 'success'
+            });
 
             this.$refs.header.reloadUser();
           })
@@ -278,4 +284,5 @@ export default {
   font-weight: bold;
   font-family: "Roboto", arial, sans-serif;
 }
+
 </style>

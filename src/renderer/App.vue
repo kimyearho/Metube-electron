@@ -16,6 +16,7 @@ You can not delete this comment when you deploy an application.
       <md-tab id="tabCollection" class="md-tab" md-label="Collections" @click="route('collection')"></md-tab>
       <md-tab id="tabHistory" class="md-tab" md-label="History" @click="route('history')"></md-tab>
     </md-tabs>
+
     <v-dialog :width="300" :height="300" :clickToClose="false"/>
   </div>
 </template>
@@ -143,6 +144,7 @@ export default {
 .md-list-item {
   border-bottom: 1px solid #171e2d;
 }
+
 
 .md-tabs-navigation {
   background-color: #1d232f !important;

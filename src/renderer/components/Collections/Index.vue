@@ -37,7 +37,7 @@
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
 
               <md-button
-                class="md-raised b-primary c-add md-accent"
+                class="md-raised b-primary c-add md-primary"
                 @click="create"
               >
                 <i

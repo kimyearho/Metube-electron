@@ -23,14 +23,14 @@
               >
               <span class="collections">{{ $t('COLLECTION.MENU.COLLECTION') }}</span>
               <md-button
-                class="md-raised b-primary c-add md-accent"
+                class="md-raised b-primary c-add md-primary"
                 @click="create"
               >
                 <i
                   class="material-icons"
                   style="float:left;"
                 >add</i>
-                <span :class="{ en_create: isLocale === 'en', ko_create: isLocale === 'ko' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
+                <span :class="{ en_create: isLocale === 'en_US', ko_create: isLocale === 'ko_KR' }">{{ $t('COLLECTION.CREATE_COLLECTION_LABEL') }}</span>
               </md-button>
             </div>
             <strong
