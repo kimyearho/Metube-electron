@@ -21,7 +21,7 @@ We are creating a simple  YouTube video player. The main purpose is a music play
 ### Reference
 New version releases are always deployed in the repository. The new version update is fast
 To keep up to date, always subscribe to the parent "watch release".
-If you like the program, please click on the star! It will help developers a lot.
+<strong>If you like the program, please click on the star! It will help developers a lot.</strong>
 
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
