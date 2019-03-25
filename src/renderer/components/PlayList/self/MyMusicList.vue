@@ -6,24 +6,42 @@
 <template>
   <div>
     <!-- 타이틀바 컴포넌트 -->
-    <top-header :isShow="false" @reloadMusicList="feachData"/>
+    <top-header
+      :isShow="false"
+      @reloadMusicList="feachData"
+    />
 
     <!-- 시스템 버튼 영역 -->
     <div class="side_menu">
-      <a class="cursor" @click="goBack">
-        <img src="@/assets/images/svg/menu-back.svg" title="Back">
+      <a
+        class="cursor"
+        @click="goBack"
+      >
+        <img
+          src="@/assets/images/svg/menu-back.svg"
+          title="Back"
+        >
       </a>
     </div>
 
-    <div class="remove_menu" @click="remove">
+    <div
+      class="remove_menu"
+      @click="remove"
+    >
       <a class="cursor">
-        <img src="@/assets/images/svg/close2.svg" title="Remove">
+        <img
+          src="@/assets/images/svg/close2.svg"
+          title="Remove"
+        >
       </a>
     </div>
 
     <!-- 커버 영역 -->
     <div class>
-      <img class="playlistCover" :src="cover">
+      <img
+        class="playlistCover"
+        :src="cover"
+      >
       <div class="playlistTrackinfo">
         <span class="label_related label_v">{{ category }}</span>
         <br>
@@ -34,8 +52,15 @@
           <span class="zaudio_songartist">{{ channelTitle }}</span>
           <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
           <div class="sideMenu">
-            <a class="cursor" title="Collection edit" style="color:#fff;" @click="collectionEdit">
-              <!-- <font-awesome-icon class="f20" icon="edit"/> -->
+            <a
+              class="cursor"
+              title="Collection edit"
+              style="color:#fff;"
+              @click="collectionEdit"
+            >
+              <i class="material-icons">
+                edit
+              </i>
             </a>
           </div>
         </div>
@@ -52,7 +77,11 @@
       :list="playlist"
       @end="endDrag"
     >
-      <md-list-item :id="`item${index}`" v-for="(item, index) in playlist" :key="item.etag">
+      <md-list-item
+        :id="`item${index}`"
+        v-for="(item, index) in playlist"
+        :key="item.etag"
+      >
         <md-avatar style="margin-right: 0;">
           <img :src="item.thumbnails !== undefined ? item.thumbnails : item.image">
         </md-avatar>
@@ -60,10 +89,22 @@
           class="md-list-item-text music-title cursor"
           @click="route(item, index)"
         >{{ item.title }}</span>
-        <span class="label_video" v-if="item.videoId && item.isLive != 'live'">{{ item.duration }}</span>
-        <span class="label_live" v-if="item.videoId && item.isLive == 'live'">LIVE</span>
-        <a class="cursor" @click="openContext(item, index)">
-          <img class="contextMenu" src="@/assets/images/svg/context-menu.svg">
+        <span
+          class="label_video"
+          v-if="item.videoId && item.isLive != 'live'"
+        >{{ item.duration }}</span>
+        <span
+          class="label_live"
+          v-if="item.videoId && item.isLive == 'live'"
+        >LIVE</span>
+        <a
+          class="cursor"
+          @click="openContext(item, index)"
+        >
+          <img
+            class="contextMenu"
+            src="@/assets/images/svg/context-menu.svg"
+          >
         </a>
         <!-- End -->
       </md-list-item>
@@ -75,19 +116,24 @@
       </div>
     </draggable>
     <!-- // END 재생목록 드래그 지점 -->
+
     <!-- 컬렉션 수정 -->
     <collection-modify-form
-      :data="collectionDoc"
+      :data="modifyDocId"
       :isOpen="isModify"
       @is-close="closeModal"
       @is-success="syncCollectionInfo"
     />
 
     <!-- 서브 플레이어 -->
-    <sub-player-bar v-show="isMini"/>
+    <sub-player-bar v-show="isMini" />
 
     <!-- 팝업 컴포넌트 -->
-    <v-dialog :width="300" :height="300" :clickToClose="false"/>
+    <v-dialog
+      :width="300"
+      :height="300"
+      :clickToClose="false"
+    />
 
     <!-- 내 확장메뉴 -->
     <my-context-menu
@@ -131,6 +177,7 @@ export default {
       contextShow: false,
       selectedIndex: 0,
       selectedData: null,
+      modifyDocId: null,
       totalTracks: 0,
       id: null,
       data: null,
@@ -155,15 +202,19 @@ export default {
   methods: {
     init() {
 
-      const data = {url: `${this.$version}/MyCollection/Playlist`}
-      this.$ipcRenderer.send('pageView', data)
-
       this.isMini = this.getMusicInfos() ? true : false;
       this.playType = this.$route.params.playType;
-      this.collectionDoc = this.$route.params.doc;
-      this.category = this.collectionDoc.category;
-      this.cover = this.collectionDoc.thumbnails;
-      this.coverTitle = this.collectionDoc.title;
+
+      const docId = this.$route.params.doc;
+      const data = { url: `${this.$version}/MyCollection/Playlist` }
+      this.$ipcRenderer.send('pageView', data)
+
+      this.modifyDocId = docId
+      this.$test.get(this.modifyDocId).then(result => {
+        this.category = result.category
+        this.cover = result.thumbnails
+        this.coverTitle = result.title
+      })
     },
 
     openContext(data, index) {
@@ -173,6 +224,7 @@ export default {
     },
 
     endDrag(value) {
+
       // 현재 인덱스와 새인덱스가 다를경우
       if (value.newIndex !== value.oldIndex) {
         // 드래그로인한 정렬은 DB와 연관이 없으므로, 별도 업데이트 처리는 하지 않고, DB스토어만 동기화한다.
@@ -181,10 +233,10 @@ export default {
           const collections = result.collections;
           if (collections) {
             const findIndex = this.$lodash.findIndex(collections, {
-              id: this.collectionDoc._id
+              id: this.modifyDocId
             });
             let findData = this.$lodash.find(collections, {
-              id: this.collectionDoc._id
+              id: this.modifyDocId
             });
             if (findData) {
               // 현재 목록의 순서로 갱신
@@ -195,12 +247,12 @@ export default {
                   const musicInfo = this.getMusicInfos();
                   if (musicInfo) {
                     // 재생중...
-                    if (musicInfo.name === this.collectionDoc._id) {
+                    if (musicInfo.name === this.modifyDocId) {
                       // 현재 재생중인 비디오의 재생목록이 현재 재생목록과 동일한경우,
                       this.getRemoteProfile().then(res => {
                         const syncCollections = res.collections;
                         let findData = this.$lodash.find(collections, {
-                          id: this.collectionDoc._id
+                          id: this.modifyDocId
                         });
                         if (findData) {
                           // 동기화 된 재생목록의 비디오중 현재 재생중인 음악과 동일한 비디오를 찾는다.
@@ -229,7 +281,7 @@ export default {
     },
 
     syncCollectionInfo() {
-      this.$test.get(this.collectionDoc._id).then(result => {
+      this.$test.get(this.modifyDocId).then(result => {
         this.category = result.category;
         this.coverTitle = result.title;
         this.closeModal();
@@ -250,7 +302,7 @@ export default {
 
             // 스토어 DB 조회
             const findData = this.$lodash.find(dbStoreList, {
-              id: this.collectionDoc._id
+              id: this.modifyDocId
             });
 
             this.getLog(
@@ -307,7 +359,7 @@ export default {
     },
 
     reloadCollection() {
-      this.$test.get(this.collectionDoc._id).then(doc => {
+      this.$test.get(this.modifyDocId).then(doc => {
         this.cover = doc.thumbnails;
       });
     },
@@ -331,7 +383,7 @@ export default {
         return this.$test.find({
           selector: {
             userId: this.getUserId(),
-            parentId: this.collectionDoc._id,
+            parentId: this.modifyDocId,
             creates: {
               $gte: null
             }
@@ -353,7 +405,7 @@ export default {
         const parentId = musicInfo.parentId;
 
         // 현재 재생중인 음악의 재생목록아이디가 삭제하고자하는 재생목록이라면
-        if (this.collectionDoc._id === parentId) {
+        if (this.modifyDocId === parentId) {
           this.$modal.show("dialog", {
             title: "Info",
             text: this.$t("COLLECTION.REMOVE_NOT_ALBUM"),
@@ -380,7 +432,7 @@ export default {
                * 그 후 재생목록 정보 데이터를 넘겨주면 됨.
                */
               // this.getLog("collecton => ", this.collectionDoc);
-              this.myCollectionRemove(this.collectionDoc, "list");
+              this.myCollectionRemove(this.modifyDocId, "list");
 
               // 1.5초 뒤 실행
               setTimeout(() => {
@@ -415,7 +467,7 @@ export default {
         name: "MY-PLAYING-PLAYLIST",
         params: {
           playType: this.playType,
-          id: this.collectionDoc._id,
+          id: this.modifyDocId,
           start: index
         }
       });

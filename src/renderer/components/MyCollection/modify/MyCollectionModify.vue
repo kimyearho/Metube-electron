@@ -136,7 +136,7 @@ export default {
         this.createIndex(["type", "userId", "_id"])
           .then(() => {
             return this.$test
-              .get(this.data._id)
+              .get(this.data)
               .then(result => {
                 this.form.name = result.title;
                 this.form.category = result.category;
@@ -151,13 +151,20 @@ export default {
         if (valid) {
           let user = this.getUserId();
           if (user) {
-            this.data.title = this.form.name;
-            this.data.category = this.form.category;
-            this.$test.put(this.data).then(res => {
-              if(res.ok) {
-                this.$emit('is-success', true)
-              }
-            })
+            this.createIndex(["type", "userId", "_id"])
+              .then(() => {
+                return this.$test
+                  .get(this.data)
+                  .then(doc => {
+                    doc.title = this.form.name
+                    doc.category = this.form.category
+                    return this.$test.put(doc).then(res => {
+                      if (res.ok) {
+                        this.$emit('is-success', true)
+                      }
+                    })
+                  })
+              })
           }
         }
       });

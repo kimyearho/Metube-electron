@@ -63,7 +63,11 @@
         <br>
         <br>
         <div class="titleflow">
-          <span class="zaudio_songtitle">{{ coverTitle }}</span>
+          <marquee-text
+              class="zaudio_songtitle"
+              :key="coverTitle"
+              :duration="coverTitle.length / 2"
+            >&nbsp; {{ coverTitle }}</marquee-text>
           <div style="margin-top:5px;">
             <span class="zaudio_songartist">{{ channelTitle }}</span>
             <span class="zaudio_songartist">/ {{ totalTracks }} Tracks</span>
@@ -216,6 +220,7 @@ import PlaylistMix from "@/components/Commons/Mixin/playlist";
 import CollectionRegister from "@/components/Collections/regist/CollectionRegister";
 import ContextMenu from "@/components/Context/ContextMenu";
 import MainPlayerBar from "@/components/PlayerBar/MainPlayerBar";
+import MarqueeText from "vue-marquee-text-component";
 import Loading from "@/components/Commons/Loader/PageLoading";
 import { resolve } from "dns";
 
@@ -231,6 +236,7 @@ export default {
     CollectionRegister,
     ContextMenu,
     MainPlayerBar,
+    MarqueeText,
     Loading
   },
   data() {

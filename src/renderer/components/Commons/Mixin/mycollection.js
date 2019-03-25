@@ -14,7 +14,7 @@ export default {
      * @param {*} data - 컬렉션 데이터
      * @param {*} type - 타입
      */
-    myCollectionRemove(data, type) {
+    myCollectionRemove(_id, type) {
       this.$test
         .createIndex({
           index: {
@@ -30,7 +30,7 @@ export default {
                   $eq: this.getUserId()
                 },
                 parentId: {
-                  $eq: data._id
+                  $eq: _id
                 }
               },
               limit: 100
@@ -45,7 +45,7 @@ export default {
             })
             .then(() => {
               // 내 컬렉션이 삭제되면, 내 컬렉션에 포함된 하위 데이터들을 모두 삭제한다.
-              this.$test.get(data._id).then(doc => {
+              this.$test.get(_id).then(doc => {
                 return this.$test.remove(doc).then(result => {
                   if (result.ok) {
                     if (type === "index") {
@@ -65,7 +65,7 @@ export default {
                         const docs = result.docs[0]
                         if (docs) {
                           let collections = docs.collections
-                          docs.collections = this.$lodash.reject(collections, { id: data._id })
+                          docs.collections = this.$lodash.reject(collections, { id: _id })
                           this.$test.put(docs).then(result => {
                             if (result.ok) {
                               this.getLog("DB Stroe Remove Update!", {})

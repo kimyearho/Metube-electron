@@ -20,7 +20,7 @@
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="Category" :label-width="formLabelWidth">
-          <el-select v-model="form.category" placeholder="Please select a category">
+          <el-select class="select" v-model="form.category" placeholder="Please select a category">
             <el-option
               v-for="item in form.categories"
               :key="item.label"
@@ -152,5 +152,9 @@ export default {
   padding: 10px 20px !important;
   color: #606266;
   font-size: 14px;
+}
+.select >>> .el-select-dropdown {
+  top: 150px !important;
+  left: 253px !important;
 }
 </style>

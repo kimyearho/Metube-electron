@@ -370,7 +370,7 @@ export default {
         name: "NOT-MY-PLAYLIST",
         params: {
           playType: "self",
-          doc: item
+          doc: item._id
         }
       });
     },
