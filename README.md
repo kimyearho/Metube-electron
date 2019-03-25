@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
+  <img width="190" src="https://i.imgur.com/u8LTA5J.png">
 </p>
 
 ### A must read
