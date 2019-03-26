@@ -1,4 +1,4 @@
-# [2019-03-15] v1.6.2 UPDATE
+# [2019-03-26] v1.6.6 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/URxMOdv.png" />
@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="https://cdn-images-1.medium.com/max/500/1*4JNvT8VJrbLKzwmfvkFFAQ.png" />
+  <img width="190" src="https://i.imgur.com/u8LTA5J.png">
 </p>
 
 ### A must read
@@ -21,7 +21,7 @@ We are creating a simple  YouTube video player. The main purpose is a music play
 ### Reference
 New version releases are always deployed in the repository. The new version update is fast
 To keep up to date, always subscribe to the parent "watch release".
-If you like the program, please click on the star! It will help developers a lot.
+<strong>If you like the program, please click on the star! It will help developers a lot.</strong>
 
 ### Feature
 "Metube" is simple and very fast. While basic search lookup is network dependent, collection management is very fast because it uses IndexedDB
@@ -30,6 +30,7 @@ If you like the program, please click on the star! It will help developers a lot
 1. Multiple selection when adding video
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
+4. Caching strategy
 ***
 
 ### Installation
@@ -48,8 +49,11 @@ If you like the program, please click on the star! It will help developers a lot
 
 ***
 
-### Trello (for korean)
-<https://trello.com/b/qj4gO2br/metube>
+### Donate
+
+If you find this project useful, you can buy author a glass of juice 🍹
+
+<a href="https://www.buymeacoffee.com/vpe1XQ0Us" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 ## License
 GNU General Public License v3.0
