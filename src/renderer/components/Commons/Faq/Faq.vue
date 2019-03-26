@@ -7,11 +7,7 @@
       <el-col>
         <div class="menu1_tip">
           <div>
-            <img
-              width="20"
-              style="margin-bottom: 10px;"
-              src="@/assets/images/svg/playlist.svg"
-            >
+             <md-icon>comment</md-icon>
             <span class="collections">FAQ</span>
           </div>
           <strong

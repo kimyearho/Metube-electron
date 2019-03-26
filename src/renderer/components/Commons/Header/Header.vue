@@ -89,7 +89,7 @@
 
         <!-- Menu2 -->
         <md-list-item @click="route('faq')">
-          <md-icon>settings</md-icon>
+          <md-icon>comment</md-icon>
           <span class="md-list-item-text">FAQ</span>
         </md-list-item>
       </md-list>
