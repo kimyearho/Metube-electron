@@ -64,7 +64,7 @@ function createWindow() {
     if (process.env.NODE_ENV !== "production") {
       playerPath = "http://localhost:7070";
     } else {
-      playerPath = '"http://sharepod.kr";';
+      playerPath = "http://sharepod.kr";
     }
     player.loadURL(playerPath);
     player.on("close", e => {
@@ -249,7 +249,12 @@ ipcMain.on("player2Win", (e, args) => {
 
 if (process.env.NODE_ENV === "production") {
   // 프로덕션 상태라면 업데이트 요청을 앱 시작 시 요청함.
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdates();
+
+  // 1시간 간격으로 최신 업데이트 조회
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 3600000);
 
   // 업데이트할 내용이 없음
   autoUpdater.on("update-not-available", () => {
