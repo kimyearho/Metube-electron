@@ -53,6 +53,8 @@ import {
   FormItem,
   Row,
   Col,
+  Collapse,
+  CollapseItem,
   Card,
   Carousel,
   CarouselItem,
@@ -83,7 +85,10 @@ import "./assets/css/commons.css";
 import "./assets/css/playlist.css";
 import "./assets/css/collection.css";
 import "./assets/css/search.css";
+
+
 import "./assets/css/message.css";
+import "./assets/css/collapse.css";
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.config.productionTip = false;
@@ -111,6 +116,8 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Row);
 Vue.use(Col);
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 Vue.use(Card);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
