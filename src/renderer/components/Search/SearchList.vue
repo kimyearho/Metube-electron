@@ -90,8 +90,6 @@
         :id="`item${index}`"
         v-for="(item, index) in searchList"
         :key="item.etag"
-        class="cursor"
-        @click="route(item)"
       >
         <md-avatar style="margin-right: 0;">
           <img
@@ -100,7 +98,10 @@
           >
         </md-avatar>
 
-        <span class="md-list-item-text music-title">{{ item.title.substring(0, 60) }}</span>
+        <span
+          class="md-list-item-text music-title cursor"
+          @click="route(item)"
+        >{{ item.title.substring(0, 60) }}</span>
 
         <span
           class="label_channel"
@@ -114,7 +115,7 @@
           class="label_video"
           v-if="item.videoId && item.isLive === 'none'"
         >{{ item.duration }}
-          <a class="cursor">
+          <a class="cursor" @click="openContext(item)">
             <img
               class="contextMenu"
               src="@/assets/images/svg/context-menu.svg"
@@ -148,6 +149,7 @@
       </div>
     </md-list>
     <!-- 검색 목록 -->
+
     <!-- 로딩 컴포넌트 -->
     <transition name="fade">
       <loading
@@ -155,6 +157,13 @@
         v-show="!load"
       />
     </transition>
+
+    <!-- 비디오 확장메뉴 -->
+    <context-menu
+      :isShow="contextShow"
+      :data="selectedData"
+      @close="contextShow = false"
+    />
 
     <!-- 서브 플레이어 컴포넌트 -->
     <sub-player-bar v-show="isMini" />
@@ -165,6 +174,7 @@
 import StoreMixin from "@/components/Commons/Mixin/index";
 import ApiMixin from "@/components/Commons/Mixin/api";
 import AutoComplate from "@/components/Commons/Main/AutoComplate";
+import ContextMenu from "@/components/Context/ContextMenu";
 import SubPlayerBar from "@/components/PlayerBar/SubPlayerBar";
 import Loading from "@/components/Commons/Loader/PageLoading";
 
@@ -174,6 +184,7 @@ export default {
   components: {
     Loading,
     AutoComplate,
+    ContextMenu,
     SubPlayerBar
   },
   data() {
@@ -181,9 +192,11 @@ export default {
       searchList: [],
       autoSearchList: [],
       autoSearchSize: 0,
+      contextShow: false,
       defaultQuery: "top music 2019",
       searchText: "",
       searchKeywords: [],
+      selectedData: null,
       recommandList: [],
       isMini: false,
       isMore: false,
@@ -229,7 +242,7 @@ export default {
           this.VIDEO_ITEMS_KEY = videoItemsKey.apiKey;
           this.init(this.searchText);
           this.$set(this, "initLoading", false);
-        }, 3500);
+        }, 2500);
       });
     }
   },
@@ -245,6 +258,10 @@ export default {
     this.$el.querySelector("#list").scrollTo(0, pos);
   },
   methods: {
+    openContext(data) {
+      this.$set(this, "selectedData", data);
+      this.contextShow = true;
+    },
     recommandTrack() {
       this.loading = true;
       this.$db

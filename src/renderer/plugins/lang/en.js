@@ -91,7 +91,9 @@ export default {
       CLIPBOARD_FAIL: "😥 Failed to copy link to clipboard.",
       VIDEO_REMOVE_FAIL: "😥 You can not delete videos that are playing",
       COVER_CHANGE: "Would you like to change the image of the selected video to my collection cover?",
-      COVER_CHANGE_SUCCESS: "😁 The cover of this collection has changed. (Not displayed during playback)"
+      COVER_CHANGE_SUCCESS: "😁 The cover of this collection has changed. (Not displayed during playback)",
+      ADD_COLLECTION_SUCCESS: "😁 You are registered to the selected collection.",
+      ADD_COLLECTION_FAIL: "There was an error registering the collection. Please retry or let the developer know about the issue."
     }
   },
   HISTORY: {

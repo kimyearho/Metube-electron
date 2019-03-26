@@ -13,24 +13,42 @@ You can not delete this comment when you deploy an application.
       :before-close="closeContextModal"
       :append-to-body="true"
     >
-      <md-button
-        class="md-raised md-primary"
-        @click="addCollection"
-      >
-        <i class="el-icon-plus"></i> Add to Collection
-      </md-button>
-      <md-button
-        class="md-raised"
-        @click="watchYoutube"
-      >
-        <i class="el-icon-news"></i> Open Youtube
-      </md-button>
-      <md-button
-        class="md-raised"
-        @click="copyClipboard"
-      >
-        <i class="el-icon-star-on"></i> Link Copy
-      </md-button>
+      <el-row>
+        <el-col>
+          <md-button
+            class="md-raised md-primary"
+            style="width:100%"
+            @click="addCollection"
+          >
+            <i class="el-icon-plus"></i> Add to Collection
+          </md-button>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col>
+          <md-button
+            class="md-raised"
+            style="width:100%"
+            @click="watchYoutube"
+          >
+            <i class="el-icon-news"></i> Open Youtube
+          </md-button>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col>
+          <md-button
+            class="md-raised"
+            style="width:100%"
+            @click="copyClipboard"
+          >
+            <i class="el-icon-star-on"></i> Link Copy
+          </md-button>
+        </el-col>
+      </el-row>
+
     </el-dialog>
     <registered-music-list
       :isOpen="registerOpen"
@@ -77,25 +95,18 @@ export default {
       this.$copyText(link).then(
         function (e) {
           self.closeContextModal();
-          self.$modal.show("dialog", {
-            title: "Success",
-            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
-            buttons: [
-              {
-                title: "Close"
-              }
-            ]
+          self.$message({
+            showClose: true,
+            message: self.$t("CONTEXT.MESSAGE.CLIPBOARD_SAVE"),
+            type: 'success'
           });
         },
         function (e) {
-          self.$modal.show("dialog", {
-            title: "Error",
-            text: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
-            buttons: [
-              {
-                title: "Close"
-              }
-            ]
+          self.closeContextModal();
+          self.$message({
+            showClose: true,
+            message: self.$t("CONTEXT.MESSAGE.CLIPBOARD_FAIL"),
+            type: 'error'
           });
         }
       );

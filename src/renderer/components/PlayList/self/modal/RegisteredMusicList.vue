@@ -17,9 +17,16 @@
       @open="getMyCollectionList"
       width="300px"
     >
-      <div class="wrapper" v-loading="loading" element-loading-background="#ffffff">
+      <div
+        class="wrapper"
+        v-loading="loading"
+        element-loading-background="#ffffff"
+      >
         <ul>
-          <li v-for="(item, index) in listData" :key="index">
+          <li
+            v-for="(item, index) in listData"
+            :key="index"
+          >
             <div>{{ item.title }}</div>
             <div class="selected">
               <md-button
@@ -99,29 +106,24 @@ export default {
                     findData.listCount = findData.list.length;
                     this.$test.put(docs).then(result => {
                       if (result.ok) {
+                        this.$message({
+                          showClose: true,
+                          message: this.$t("CONTEXT.MESSAGE.ADD_COLLECTION_SUCCESS"),
+                          type: 'success'
+                        });
                         console.log("success db store insert and update!");
+                      } else {
+                        this.$message({
+                          showClose: true,
+                          message: this.$t("CONTEXT.MESSAGE.ADD_COLLECTION_FAIL"),
+                          type: 'error'
+                        });
                       }
                     });
                   }
                 });
             }
           });
-          // this.createIndex(["type", "parendId"]).then(() => {
-          //   return this.$test.find({
-          //     selector: {
-          //       type: "mycollectionItem",
-          //       userId: this.getUserId(),
-          //       parentId: listData._id,
-          //       videoId: this.data.videoId
-          //     }
-          //   }).then(result => {
-          //     const docs = result.docs[0]
-          //     if(docs) {
-          //       // 등록한 비디오 아이디를 저장.
-          //       this.$store.commit("setInsertVideo", docs)
-          //     }
-          //   })
-          // })
           this.closeModal();
         }
       });
