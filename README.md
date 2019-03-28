@@ -31,23 +31,6 @@ To keep up to date, always subscribe to the parent "watch release".
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
 4. Caching strategy
-***
-
-### Installation
-```
-# install
-> yarn
-
-# run
-> yarn run dev
-> (Default Player Port: 7070)
-
-# build
-> project root create 'static' folder (require)
-> yarn run build
-```
-
-***
 
 ### Donate
 
