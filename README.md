@@ -1,4 +1,4 @@
-# [2019-03-31] v1.6.7 UPDATE
+# [2019-04-08] v1.7.1 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/URxMOdv.png" />
