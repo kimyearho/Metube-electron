@@ -30,7 +30,6 @@ To keep up to date, always subscribe to the parent "watch release".
 1. Multiple selection when adding video
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
-4. MP4 Video Download.
 5. Local audio file load to play
 
 ### Donate
