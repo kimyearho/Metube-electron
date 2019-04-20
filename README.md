@@ -1,8 +1,8 @@
-# [2019-04-16] v1.7.5 UPDATE
+# [2019-04-21] v1.7.6 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/URxMOdv.png" />
-  <img src="https://i.imgur.com/doHbPhV.png" />
+  <img src="https://i.imgur.com/M5xVj4S.png" />
 </p>
 
 <p align="center">
