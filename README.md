@@ -1,7 +1,7 @@
 # [2019-04-21] v1.7.6 UPDATE
 
 <p align="center">
-  <img src="https://i.imgur.com/URxMOdv.png" />
+  <img src="https://i.imgur.com/RLjsRbR.png" />
   <img src="https://i.imgur.com/M5xVj4S.png" />
 </p>
 
