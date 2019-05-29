@@ -52,8 +52,8 @@ To keep up to date, always subscribe to the parent "watch release".
 
 ***
 
-# history
-[History](https://trello.com/b/qj4gO2br/metube)
+# History
+[Click Trello](https://trello.com/b/qj4gO2br/metube)
 
 ## License
 MIT
