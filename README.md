@@ -1,5 +1,8 @@
 # [2019-04-21] v1.7.6 UPDATE
 
+# 현재 서비스 도메인 만료로 임시로 서비스 사용이 불가능합니다.
+# 곧 업데이트를 통해 서비스를 정상화할 예정이오니 참고 바랍니다.
+
 <p align="center">
   <img src="https://i.imgur.com/RLjsRbR.png" />
   <img src="https://i.imgur.com/M5xVj4S.png" />
