@@ -17,5 +17,8 @@ Hello.
 Now many of you are using different versions. "Metube" updates very quickly. Automatic updates are not supported for versions 1.6.0 or earlier, and we cannot provide additional support. So please always keep the latest version. Thank you.
 <strong>Automatic updates are supported from 1.6.x version.</strong>
 
+# history
+[History](https://trello.com/b/qj4gO2br/metube)
+
 ## License
 MIT
