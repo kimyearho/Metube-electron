@@ -1,4 +1,4 @@
-# [2019-05-29] v1.7.7 UPDATE
+# [2019-06-24] v1.7.8 UPDATE
 
 <p align="center">
   <img src="https://i.imgur.com/RLjsRbR.png" />
