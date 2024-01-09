@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-# [2019-03-26] v1.6.6 UPDATE
-
-<p align="center">
-  <img src="https://i.imgur.com/URxMOdv.png" />
-  <img src="https://i.imgur.com/vaQ453k.png" />
-=======
 # [2019-06-24] v1.7.8 UPDATE
+- 이 프로젝트는 2019 06월을 마지막으로 개발이 중단되었습니다.
 
 <p align="center">
   <img src="https://i.imgur.com/RLjsRbR.png" />
   <img src="https://i.imgur.com/M5xVj4S.png" />
->>>>>>> 677aea9c1d1d1721965b9acb5960561e8d449be6
 </p>
 
 <p align="center">
@@ -38,10 +31,6 @@ To keep up to date, always subscribe to the parent "watch release".
 1. Multiple selection when adding video
 2. Copy and move videos added to my collection
 3. PouchDB Backup and Restore
-<<<<<<< HEAD
-4. Caching strategy
-=======
->>>>>>> 677aea9c1d1d1721965b9acb5960561e8d449be6
 ***
 
 ### Installation
@@ -60,16 +49,8 @@ To keep up to date, always subscribe to the parent "watch release".
 
 ***
 
-<<<<<<< HEAD
-### Donate
-
-If you find this project useful, you can buy author a glass of juice 🍹
-
-<a href="https://www.buymeacoffee.com/vpe1XQ0Us" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-=======
 # History
 [Click Trello](https://trello.com/b/qj4gO2br/metube)
->>>>>>> 677aea9c1d1d1721965b9acb5960561e8d449be6
 
 ## License
 MIT
