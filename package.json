@@ -58,7 +58,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "axios-jsonp-pro": "^1.1.4",
-    "debug": "^4.1.0",
+    "debug": "^4.3.1",
     "electron-disable-file-drop": "^1.0.2",
     "electron-log": "^3.0.1",
     "electron-updater": "^4.0.6",
