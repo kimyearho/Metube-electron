@@ -10,6 +10,11 @@
   <img width="190" src="https://i.imgur.com/u8LTA5J.png">
 </p>
 
+### Feature Stack
+1. Vue 2
+2. Element UI
+3. PouchDB
+
 ### A must read
 Hello.
 Now many of you are using different versions. "Metube" updates very quickly. Automatic updates are not supported for versions 1.6.0 or earlier, and we cannot provide additional support. So please always keep the latest version. Thank you.
